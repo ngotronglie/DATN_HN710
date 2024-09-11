@@ -10,5 +10,5 @@ class Size extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = 
+    
 }
