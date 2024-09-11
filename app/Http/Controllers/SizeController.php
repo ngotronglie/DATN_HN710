@@ -13,7 +13,8 @@ class SizeController extends Controller
      */
     public function index()
     {
-        //
+        $sizes = Size::orderBy('id' , 'desc')->get();
+        return view('admin.layout.sizes.index', compact('sizes'));
     }
 
     /**
