@@ -42,7 +42,8 @@ class VoucherController extends Controller
      */
     public function show(Voucher $voucher)
     {
-        //
+        
+       return  view(self::PATH_VIEW. 'show',compact('voucher'));
     }
 
     /**
@@ -50,7 +51,8 @@ class VoucherController extends Controller
      */
     public function edit(Voucher $voucher)
     {
-        
+        // dd($voucher) ;
+        return view(self::PATH_VIEW.__FUNCTION__ ,compact('voucher') );
     }
 
     /**
@@ -58,7 +60,9 @@ class VoucherController extends Controller
      */
     public function update(UpdateVoucherRequest $request, Voucher $voucher)
     {
-        //
+        // dd($request) ;
+            $voucher->update($request->all());
+        return redirect()->route('vouchers.index')->with('success', 'Sửa Vouchers thành công!');
     }
 
     /**
