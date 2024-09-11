@@ -35,11 +35,11 @@
 <div class="content">
     <div class="animated fadeIn">
         <div class="row">
-
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
                         <strong class="card-title">Danh sách Vouchers</strong>
+                        <a href="{{ route('vouchers.create') }}" class="btn btn-primary float-right">Thêm Voucher</a>
                     </div>
                     <div class="card-body">
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
@@ -47,6 +47,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Code</th>
+                                    <th>Giảm giá</th>
                                     <th>Số lượng</th>
                                     <th>Ngày bắt đầu</th>
                                     <th>Ngày kết thúc</th>
@@ -61,21 +62,23 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->code }}</td>
-                                    <td>{{ $item->quantity}}</td>
-                                    <td>{{$item->start_date}}</td>
-                                    <td>{{$item->end_date}}</td>
-                                    <td>{{ $item->min_money}}</td>
-                                    <td>{{$item->max_money}}</td>
-
-                                    <td>{!! $item->is_active ? '<span class="badge bg-success text-white">Hoạt
+                                    <td>{{ $item->discount}}</td>
+                                    <td>{{ $item->quantity }}</td>
+                                    <td>{{ $item->start_date }}</td>
+                                    <td>{{ $item->end_date }}</td>
+                                    <td>{{ number_format($item->min_money, 2) }} VNĐ</td>
+                                    <td>{{ number_format($item->max_money, 2) }} VNĐ</td>
+                                    <td>
+                                        {!! $item->is_active ? '<span class="badge bg-success text-white">Hoạt
                                             động</span>' : '<span class="badge bg-danger text-white">Không hoạt
-                                            động</span>' !!}</td>
+                                            động</span>' !!}
+                                    </td>
                                     <td class="d-flex">
-                                        <a class="btn btn-primary mr-2" href="{{route('vouchers.show', $item)}}"
+                                        <a class="btn btn-primary mr-2" href="{{ route('vouchers.show', $item) }}"
                                             title="Xem chi tiết"><i class="fa fa-eye"></i></a>
-                                        <a class="btn btn-warning mr-2" href="{{route('vouchers.edit', $item)}}"
+                                        <a class="btn btn-warning mr-2" href="{{ route('vouchers.edit', $item) }}"
                                             title="Sửa"><i class="fa fa-edit"></i></a>
-                                        <form action="{{route('vouchers.destroy', $item)}}" method="POST">
+                                        <form action="{{ route('vouchers.destroy', $item) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger"
@@ -90,8 +93,6 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div><!-- .animated -->
 </div><!-- .content -->
@@ -112,7 +113,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-    $('#bootstrap-data-table-export').DataTable();
+    $('#bootstrap-data-table').DataTable();
 });
 </script>
 @endsection

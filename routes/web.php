@@ -21,4 +21,5 @@ Route::get('/', function () {
 Route::resource(
     'vouchers',VoucherController::class 
 );
+
 // {{route('vouchers.index')}}

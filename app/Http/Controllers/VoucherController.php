@@ -17,7 +17,7 @@ class VoucherController extends Controller
     public function index()
     {
          $vouchers = Voucher::all();
-        return view(self::PATH_VIEW.__FUNCTION__ ,compact('vouchers')); ;
+        return view(self::PATH_VIEW.__FUNCTION__ ,compact('vouchers')); 
         
     }
 
@@ -26,7 +26,7 @@ class VoucherController extends Controller
      */
     public function create()
     {
-        //
+        return view(self::PATH_VIEW.__FUNCTION__ );
     }
 
     /**
@@ -34,7 +34,13 @@ class VoucherController extends Controller
      */
     public function store(StoreVoucherRequest $request)
     {
-        //
+        // Lấy tất cả dữ liệu đã được xác thực
+    $data = $request->validated();
+    // dd($data);
+    // Tạo voucher mới với dữ liệu đầy đủ
+    Voucher::create($data);
+    
+    return redirect()->route('vouchers.index')->with('success', 'Thêm Voucher thành công!');
     }
 
     /**
@@ -62,7 +68,7 @@ class VoucherController extends Controller
     {
         // dd($request) ;
             $voucher->update($request->all());
-        return redirect()->route('vouchers.index')->with('success', 'Sửa Vouchers thành công!');
+        return redirect()->route('vouchers.index')->with('success','Sửa Vouchers thành công!');
     }
 
     /**
