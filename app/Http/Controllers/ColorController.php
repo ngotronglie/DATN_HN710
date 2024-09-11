@@ -13,7 +13,8 @@ class ColorController extends Controller
      */
     public function index()
     {
-        //
+        $colors = Color::orderBy('id', 'desc')->get();
+        return view('admin.layout.colors.index', compact('colors'));
     }
 
     /**
