@@ -7,6 +7,19 @@
                         <a href="index.html"><i class="menu-icon fa fa-laptop"></i>Dashboard </a>
                     </li>
                     <li class="menu-title">UI elements</li><!-- /.menu-title -->
+                    {{-- category --}}
+                    <li class="menu-item-has-children dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="menu-icon fa fa-folder"></i>Quản lý danh mục
+                        </a>
+                        <ul class="sub-menu children dropdown-menu">
+                            <li><i class="menu-icon fa fa-list"></i><a href="{{ route('categories.index') }}">Danh sách danh mục</a></li>
+                            <li><i class="menu-icon fa fa-plus-circle"></i><a href="{{ route('categories.create') }}">Thêm danh mục</a></li>
+                            {{-- <li><i class="menu-icon fa fa-edit"></i><a href="edit-category.html">Chỉnh sửa danh mục</a></li>
+                            <li><i class="menu-icon fa fa-trash"></i><a href="delete-category.html">Xóa danh mục</a></li> --}}
+                        </ul>
+                    </li>
+                    {{-- end category --}}
                     <li class="menu-item-has-children dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false"> <i class="menu-icon fa fa-cogs"></i>Components</a>
