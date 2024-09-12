@@ -1,5 +1,7 @@
 @extends('admin.dashboard')
 @section('style')
+<link href="{{ asset('node_modules/toastr/build/toastr.min.css') }}" rel="stylesheet" />
+
     <link rel="stylesheet" href="{{ asset('admin/assets/css/lib/datatable/dataTables.bootstrap.min.css') }}">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
 @endsection
@@ -22,8 +24,7 @@
                                         <th style="white-space: nowrap;">Email</th>
                                         <th style="white-space: nowrap;">Địa chỉ</th>
                                         <th style="white-space: nowrap;">Điện thoại</th>
-                                        <th style="white-space: nowrap;">Avata</th>
-                                        <th style="white-space: nowrap;">Ngày sinh</th>
+                                        <th style="white-space: nowrap;">Ảnh</th>
                                         <th style="white-space: nowrap;">Chức vụ</th>
                                         <th style="white-space: nowrap;">Trạng thái</th>
                                         <th style="white-space: nowrap;">Hành động</th>
@@ -39,8 +40,7 @@
                                                 {{ $user->address }}
                                             </td>
                                             <td>{{ $user->phone }}</td>
-                                            <td>{{ $user->avata }}</td>
-                                            <td>{{ $user->date_of_birth }}</td>
+                                            <td><img width="100px" src="{{Storage::url($user->avatar)}}" alt=""></td>
                                             <td style="white-space: nowrap;">
                                                 @if ($user->role == 0)
                                                     Người dùng
@@ -52,17 +52,18 @@
                                                     Không xác định
                                                 @endif
                                             </td>
-                                            <td style="white-space: nowrap;">
-                                                {{ $user->is_active == 0 ? 'Không hoạt động' : 'Hoạt động' }}</td>
-                                            <td style="white-space: nowrap;">
-                                                <a href="{{route('accounts.show',$user)}}" class="btn btn-primary">Xem</a>
-                                                <a href="{{route('accounts.edit',$user)}}" class="btn btn-success">Sửa</a>
-                                                <form action="{{route('accounts.destroy',$user)}}" method="post" style="display: inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-warning">Xóa</button>
-                                                </form>
+                                            <td style="text-align: center">
+                                                <input type="checkbox" class="js-switch"  {{ $user->is_active ? 'checked' : '' }} disabled>
                                             </td>
+                                                <td class="d-flex">
+                                                    <a class="btn btn-primary mr-2" href="{{route('accounts.show', $user)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
+                                                    <a class="btn btn-warning mr-2" href="{{route('accounts.edit', $user)}}" title="Sửa"><i class="fa fa-edit"></i></a>
+                                                    <form action="{{route('accounts.destroy', $user)}}" method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa không?')" title="Xóa"><i class="fa fa-trash"></i></button>
+                                                    </form>
+                                                </td>
 
                                         </tr>
                                     @endforeach
@@ -77,6 +78,8 @@
             </div>
         </div><!-- .animated -->
     </div>
+    
+    
 @endsection
 
 @section('script')
@@ -90,6 +93,7 @@
     <script src="{{ asset('admin/assets/js/lib/data-table/buttons.print.min.js') }}"></script>
     <script src="{{ asset('admin/assets/js/lib/data-table/buttons.colVis.min.js') }}"></script>
     <script src="{{ asset('admin/assets/js/init/datatables-init.js') }}"></script>
+    <script src="{{ asset('node_modules/toastr/build/toastr.min.js') }}"></script>
 
 
     <script type="text/javascript">

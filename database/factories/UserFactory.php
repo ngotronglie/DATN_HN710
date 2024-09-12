@@ -22,7 +22,7 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'address' => $this->faker->address,
             'phone' => $this->faker->phoneNumber,
-            'avata' => '',
+            'avatar' => '',
             'password' => Hash::make('password'), 
             'role' => $this->faker->randomElement([0,1,2]),
             'is_active' => $this->faker->randomElement([0,1]),
