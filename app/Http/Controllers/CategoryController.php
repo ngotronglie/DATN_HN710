@@ -23,7 +23,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view(self::PATH_VIEW.__FUNCTION__);
     }
 
     /**
@@ -31,7 +31,10 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        //
+        $data = $request->all();
+        $data['is_active'] ??= 0;
+        Category::create($data);
+        return redirect()->route('categories.index')->with('success', 'Thêm mới thành công');
     }
 
     /**
@@ -39,7 +42,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return view(self::PATH_VIEW.__FUNCTION__, compact('category'));
     }
 
     /**
@@ -47,7 +50,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view(self::PATH_VIEW.__FUNCTION__, compact('category'));
     }
 
     /**
@@ -55,7 +58,7 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        //
+        
     }
 
     /**

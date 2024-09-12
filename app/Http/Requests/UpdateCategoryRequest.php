@@ -21,8 +21,22 @@ class UpdateCategoryRequest extends FormRequest
      */
     public function rules(): array
     {
+        // Lấy ID từ route
+        $id = $this->route('category')->id; 
+
         return [
-            //
+            'name' => 'required|string|min:3|max:255|unique:categories,name,'.$id,
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Tên danh mục là bắt buộc',
+            'name.string' => 'Tên danh mục phải là một chuỗi văn bản',
+            'name.min' => 'Tên danh mục không được ít hơn 3 ký tự',
+            'name.max' => 'Tên danh mục không được dài quá 255 ký tự',
+            'name.unique' => 'Tên danh mục này đã tồn tại trong hệ thống',
         ];
     }
 }
