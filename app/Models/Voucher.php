@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class Voucher extends Model
 {
@@ -43,24 +44,4 @@ class Voucher extends Model
     // }
 
 
-    /**
-     * Kiểm tra xem voucher có đang hoạt động hay không dựa trên ngày hiện tại.
-     *
-     * @return bool
-     */
-    public function getIsStatusAttribute()
-    {
-        $currentDate = now(); // Lấy ngày giờ hiện tại
-
-        // Chuyển đổi start_date và end_date thành đối tượng Carbon nếu cần
-        $startDate = \Carbon\Carbon::parse($this->start_date);
-        $endDate = \Carbon\Carbon::parse($this->end_date);
-
-        // Kiểm tra trạng thái hoạt động
-        if ($currentDate->lt($startDate) || $currentDate->gt($endDate)) {
-            return 1; // Không hoạt động
-        }
-
-        return 1; // Hoạt động
-    }
 }

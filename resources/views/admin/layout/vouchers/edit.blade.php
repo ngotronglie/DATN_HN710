@@ -81,15 +81,6 @@
                                     value="{{ old('min_money', $voucher->min_money) }}" class="form-control" required>
                             </div>
 
-                            <!-- <div class="form-group">
-                                <label for="is_active" class="form-control-label">Trạng thái</label>
-                                <select id="is_active" name="is_active" class="form-control" required>
-                                    <option value="1" {{ $voucher->is_active ? 'selected' : '' }}>Hoạt động</option>
-                                    <option value="0" {{ !$voucher->is_active ? 'selected' : '' }}>Không hoạt động
-                                    </option>
-                                </select>
-                            </div> -->
-
                             <div class="form-group text-right">
                                 <button type="submit" class="btn btn-warning">Cập nhật</button>
                                 <a href="{{ route('vouchers.index') }}" class="btn btn-secondary">Hủy</a>

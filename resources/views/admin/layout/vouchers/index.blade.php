@@ -67,9 +67,9 @@
                                     <td>{{ \Carbon\Carbon::parse($item->end_date)->format('d/m/Y') }}</td>
                                     <td>{{ number_format($item->min_money, 0, ',', '.') }} VNĐ</td>
                                     <td>
-                                        @if ($item->is_active == 0)
+                                        @if ($item->status == 0)
                                         <span class="badge bg-success text-white">Hoạt động</span>
-                                        @elseif ($item->is_active == 1)
+                                        @elseif ($item->status == 1)
                                         <span class="badge bg-danger text-white">Không hoạt động</span>
                                         @endif
                                     </td>
