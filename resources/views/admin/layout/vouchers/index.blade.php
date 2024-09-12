@@ -45,14 +45,13 @@
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>STT</th>
                                     <th>Code</th>
                                     <th>Giảm giá</th>
                                     <th>Số lượng</th>
                                     <th>Ngày bắt đầu</th>
                                     <th>Ngày kết thúc</th>
                                     <th>Giá nhỏ nhất</th>
-                                    <th>Giá lớn nhất</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
@@ -60,30 +59,32 @@
                             <tbody>
                                 @foreach ($vouchers as $item)
                                 <tr>
-                                    <td>{{ $item->id }}</td>
+                                    <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->code }}</td>
-                                    <td>{{ $item->discount}}</td>
+                                    <td>{{ $item->discount }}%</td>
                                     <td>{{ $item->quantity }}</td>
-                                    <td>{{ $item->start_date }}</td>
-                                    <td>{{ $item->end_date }}</td>
-                                    <td>{{ number_format($item->min_money, 2) }} VNĐ</td>
-                                    <td>{{ number_format($item->max_money, 2) }} VNĐ</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->start_date)->format('d/m/Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->end_date)->format('d/m/Y') }}</td>
+                                    <td>{{ number_format($item->min_money, 0, ',', '.') }} VNĐ</td>
                                     <td>
-                                        {!! $item->is_active ? '<span class="badge bg-success text-white">Hoạt
-                                            động</span>' : '<span class="badge bg-danger text-white">Không hoạt
-                                            động</span>' !!}
+                                        @if ($item->is_active == 0)
+                                        <span class="badge bg-success text-white">Hoạt động</span>
+                                        @elseif ($item->is_active == 1)
+                                        <span class="badge bg-danger text-white">Không hoạt động</span>
+                                        @endif
                                     </td>
                                     <td class="d-flex">
                                         <a class="btn btn-primary mr-2" href="{{ route('vouchers.show', $item) }}"
                                             title="Xem chi tiết"><i class="fa fa-eye"></i></a>
                                         <a class="btn btn-warning mr-2" href="{{ route('vouchers.edit', $item) }}"
                                             title="Sửa"><i class="fa fa-edit"></i></a>
-                                        <form action="{{ route('vouchers.destroy', $item) }}" method="POST">
+                                        <form action="{{ route('vouchers.destroy', $item) }}" method="POST"
+                                            onsubmit="return confirm('Bạn có chắc chắn muốn xóa không?')"
+                                            style="display: inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger"
-                                                onclick="return confirm('Bạn có chắc chắn muốn xóa không?')"
-                                                title="Xóa"><i class="fa fa-trash"></i></button>
+                                            <button type="submit" class="btn btn-danger" title="Xóa"><i
+                                                    class="fa fa-trash"></i></button>
                                         </form>
                                     </td>
                                 </tr>

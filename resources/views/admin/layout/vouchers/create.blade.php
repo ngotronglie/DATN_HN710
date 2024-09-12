@@ -35,7 +35,7 @@
 <div class="content">
     <div class="animated fadeIn">
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
                         <strong>Thêm Voucher</strong>
@@ -43,7 +43,6 @@
                     <div class="card-body">
                         <form action="{{ route('vouchers.store') }}" method="POST">
                             @csrf
-
                             <div class="form-group">
                                 <label for="code" class="form-control-label">Mã Voucher</label>
                                 <input type="text" id="code" name="code" value="{{ old('code') }}" class="form-control"
@@ -97,16 +96,7 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group">
-                                <label for="max_money" class="form-control-label">Giá trị lớn nhất</label>
-                                <input type="number" step="0.01" id="max_money" name="max_money"
-                                    value="{{ old('max_money') }}" class="form-control" required>
-                                @error('max_money')
-                                <small class="form-text text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label for="is_active" class="form-control-label">Trạng thái</label>
                                 <select id="is_active" name="is_active" class="form-control" required>
                                     <option value="1" {{ old('is_active') == '1' ? 'selected' : '' }}>Hoạt động</option>
@@ -116,7 +106,7 @@
                                 @error('is_active')
                                 <small class="form-text text-danger">{{ $message }}</small>
                                 @enderror
-                            </div>
+                            </div> -->
 
                             <button type="submit" class="btn btn-primary">Thêm Voucher</button>
                             <a href="{{ route('vouchers.index') }}" class="btn btn-secondary">Quay lại</a>

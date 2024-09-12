@@ -81,20 +81,14 @@
                                     value="{{ old('min_money', $voucher->min_money) }}" class="form-control" required>
                             </div>
 
-                            <div class="form-group">
-                                <label for="max_money" class="form-control-label">Giá trị lớn nhất</label>
-                                <input type="number" step="0.01" id="max_money" name="max_money"
-                                    value="{{ old('max_money', $voucher->max_money) }}" class="form-control" required>
-                            </div>
-
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label for="is_active" class="form-control-label">Trạng thái</label>
                                 <select id="is_active" name="is_active" class="form-control" required>
                                     <option value="1" {{ $voucher->is_active ? 'selected' : '' }}>Hoạt động</option>
                                     <option value="0" {{ !$voucher->is_active ? 'selected' : '' }}>Không hoạt động
                                     </option>
                                 </select>
-                            </div>
+                            </div> -->
 
                             <div class="form-group text-right">
                                 <button type="submit" class="btn btn-warning">Cập nhật</button>

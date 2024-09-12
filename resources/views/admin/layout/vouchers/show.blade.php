@@ -70,10 +70,6 @@
                                     <td>{{ number_format($voucher->min_money, 2) }} VNĐ</td>
                                 </tr>
                                 <tr>
-                                    <th>Giá trị lớn nhất</th>
-                                    <td>{{ number_format($voucher->max_money, 2) }} VNĐ</td>
-                                </tr>
-                                <tr>
                                     <th>Trạng thái</th>
                                     <td>
                                         @if($voucher->is_active)

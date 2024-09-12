@@ -6,76 +6,60 @@ use App\Models\Voucher;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreVoucherRequest;
 use App\Http\Requests\UpdateVoucherRequest;
+use Carbon\Carbon;
 
 class VoucherController extends Controller
 {
     const PATH_VIEW = 'admin.layout.vouchers.';
-    
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-         $vouchers = Voucher::all();
-        return view(self::PATH_VIEW.__FUNCTION__ ,compact('vouchers')); 
-        
+        $vouchers = Voucher::all();
+
+        return view(self::PATH_VIEW . 'index', compact('vouchers'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return view(self::PATH_VIEW.__FUNCTION__ );
+        return view(self::PATH_VIEW . 'create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreVoucherRequest $request)
     {
-        // Lấy tất cả dữ liệu đã được xác thực
-    $data = $request->validated();
-    // dd($data);
-    // Tạo voucher mới với dữ liệu đầy đủ
-    Voucher::create($data);
-    
-    return redirect()->route('vouchers.index')->with('success', 'Thêm Voucher thành công!');
+        $data = $request->validated();
+        Voucher::create($data);
+
+        return redirect()->route('vouchers.index')->with('success', 'Thêm Voucher thành công!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Voucher $voucher)
     {
-        
-       return  view(self::PATH_VIEW. 'show',compact('voucher'));
+        return view(self::PATH_VIEW . 'show', compact('voucher'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Voucher $voucher)
     {
-        // dd($voucher) ;
-        return view(self::PATH_VIEW.__FUNCTION__ ,compact('voucher') );
+        return view(self::PATH_VIEW . 'edit', compact('voucher'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateVoucherRequest $request, Voucher $voucher)
     {
-        // dd($request) ;
-            $voucher->update($request->all());
-        return redirect()->route('vouchers.index')->with('success','Sửa Vouchers thành công!');
+        $data = $request->validated();
+
+        // Xác định trạng thái hoạt động dựa trên ngày hiện tại
+        $startDate = Carbon::parse($data['start_date']);
+        $endDate = Carbon::parse($data['end_date']);
+        $isActive = $startDate->lessThanOrEqualTo(Carbon::now()) && $endDate->greaterThanOrEqualTo(Carbon::now());
+
+        // Cập nhật voucher với dữ liệu mới và trạng thái hoạt động
+        $voucher->update(array_merge($data, ['is_active' => $isActive]));
+
+        return redirect()->route('vouchers.index')->with('success', 'Sửa Voucher thành công!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Voucher $voucher)
     {
-        //
+        $voucher->delete();
+        return redirect()->route('vouchers.index')->with('success', 'Xóa Voucher thành công!');
     }
 }

@@ -28,8 +28,8 @@ class StoreVoucherRequest extends FormRequest
         'start_date' => 'required|date',
         'end_date' => 'required|date',
         'min_money' => 'required|numeric',
-        'max_money' => 'required|numeric',
-        'is_active' => 'required|boolean',
+        // 'max_money' => 'required|numeric',
+        // 'is_active' => 'required|boolean',
     ];
 }
 
