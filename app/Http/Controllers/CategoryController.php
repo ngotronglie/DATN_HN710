@@ -58,7 +58,10 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        
+        $data = $request->all();
+        $data['is_active'] ??= 0;
+        $category->update($data);
+        return redirect()->route('categories.index')->with('success', 'Sửa thành công');
     }
 
     /**
