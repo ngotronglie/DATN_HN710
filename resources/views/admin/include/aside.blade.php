@@ -30,6 +30,8 @@
                         <ul class="sub-menu children dropdown-menu">
                             <li><i class="fa fa-table"></i><a href="{{route('accounts.create')}}">Thêm mới</a></li>
                             <li><i class="fa fa-table"></i><a href="{{route('accounts.index')}}">Danh sách</a></li>
+                            <li><i class="fa fa-table"></i><a href="{{route('accounts.trashed')}}">Khôi Phục</a></li>
+
                         </ul>
                     </li>
                     <li class="menu-item-has-children dropdown">

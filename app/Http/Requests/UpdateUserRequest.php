@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -21,8 +22,28 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id=$this->segment(2);
         return [
-            //
+            'name' => 'required|string|max:255',
+            'email' => "required|email|unique:users,email,$id",
+            'address' => 'nullable|string|max:255',
+            'phone' => 'nullable|regex:/^0[0-9]{9}$/',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'date_of_birth' => 'nullable|date|before:today',
+        ];
+    }
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Tên là bắt buộc.',
+            'email.required' => 'Email là bắt buộc.',
+            'email.email' => 'Email không hợp lệ.',
+            'email.unique' => 'Email đã được sử dụng.', 
+            'avatar.image' => 'Avatar phải là hình ảnh.',
+            'avatar.mimes' => 'Avatar phải có định dạng: jpeg, png, jpg, hoặc gif.',
+            'avatar.max' => 'Kích thước tệp avatar không được vượt quá 2MB.',
+            'date_of_birth.before' => 'Ngày sinh phải trước ngày hôm nay.',
+            'phone.regex' => 'Số điện thoại phải bắt đầu bằng số 0 và có 10 số.',
         ];
     }
 }

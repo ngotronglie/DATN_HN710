@@ -18,4 +18,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('admin.layout.yeld');
 });
-Route::resource('accounts',UserController::class);
+//  Route::resource('accounts', UserController::class);
+Route::get('/accounts',[UserController::class,'index'])->name('accounts.index');
+Route::get('/accounts/create',[UserController::class,'create'])->name('accounts.create');
+Route::get('/accounts/{id}/show',[UserController::class,'show'])->name('accounts.show');
+Route::get('/accounts/{id}/edit',[UserController::class,'edit'])->name('accounts.edit');
+Route::post('/accounts/store',[UserController::class,'store'])->name('accounts.store');
+Route::put('/accounts/{id}/update',[UserController::class,'update'])->name('accounts.update');
+Route::delete('/accounts/{id}/destroy',[UserController::class,'destroy'])->name('accounts.destroy');
+
+Route::get('accounts/trashed', [UserController::class, 'trashed'])->name('accounts.trashed');
+Route::post('accounts/{user}/restore', [UserController::class, 'restore'])->name('accounts.restore');
+

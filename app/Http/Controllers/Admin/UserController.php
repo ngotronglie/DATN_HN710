@@ -7,7 +7,8 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
+
 
 use Illuminate\Support\Facades\Storage;
 
@@ -57,35 +58,74 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show($id)
     {
-        //
+        $user = User::find($id);
+        return view(self::PATH_VIEW.__FUNCTION__, compact('user'));
     }
+    
+    
+    
+    
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
-    {
-        //
-    }
+  public function edit($id)
+{
+    $user = User::find($id);
+    return view(self::PATH_VIEW . __FUNCTION__, compact('user'));
+}
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdateUserRequest $request, string $id)
     {
-        //
+        $User=User::find($id);
+        $data=$request->except('avatar');
+        $data['is_active']??=0;
+        if($request->hasFile('avatar')){
+            $data['avatar']=Storage::put('users',$request->file('avatar'));
+            if($User->avatar){
+                Storage::delete($User->avatar);  
+            }
+        }else{
+            $data['avatar']=$User->avatar;
+        }
+        $User->update($data);
+        return redirect()->route('accounts.index')->with('success', 'Sửa thành công');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        //
+        $User=User::find($id);
+        if($User->avatar){
+            Storage::delete($User->avatar);
+        }
+        $User->delete();
+        return redirect()->route('accounts.index')->with('success', 'Xóa thành công');
+
+
     }
-   
+    public function trashed()
+    {
+        
+        $trashedUsers = User::onlyTrashed()->get();       
+        return view('admin.layout.account.trashed', compact('trashedUsers'));
+    }
+    public function restore($id)
+{
+    $user = User::withTrashed()->find($id);
+
+    $user->restore();
+    return redirect()->route('accounts.trashed')->with('success', 'Khôi phục thành công');
+}
+
     
 
 }
