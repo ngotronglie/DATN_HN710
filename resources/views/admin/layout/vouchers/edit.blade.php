@@ -49,36 +49,57 @@
                                 <label for="code" class="form-control-label">Mã Voucher</label>
                                 <input type="text" id="code" name="code" value="{{ old('code', $voucher->code) }}"
                                     class="form-control" required>
+                                @error('code')
+                                <small class="form-text text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
 
                             <div class="form-group">
-                                <label for="discount" class="form-control-label">Giảm giá</label>
-                                <input type="text" id="discount" name="discount"
-                                    value="{{ old('discount', $voucher->discount) }}" class="form-control" required>
+                                <label for="discount" class="form-control-label">Giảm giá (%)</label>
+                                <input type="number" id="discount" name="discount"
+                                    value="{{ old('discount', $voucher->discount) }}" class="form-control" step="0.01"
+                                    min="0" required>
+                                @error('discount')
+                                <small class="form-text text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
 
                             <div class="form-group">
                                 <label for="quantity" class="form-control-label">Số lượng</label>
                                 <input type="number" id="quantity" name="quantity"
-                                    value="{{ old('quantity', $voucher->quantity) }}" class="form-control" required>
+                                    value="{{ old('quantity', $voucher->quantity) }}" class="form-control" min="1"
+                                    required>
+                                @error('quantity')
+                                <small class="form-text text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
 
                             <div class="form-group">
                                 <label for="start_date" class="form-control-label">Ngày bắt đầu</label>
                                 <input type="date" id="start_date" name="start_date"
                                     value="{{ old('start_date', $voucher->start_date) }}" class="form-control" required>
+                                @error('start_date')
+                                <small class="form-text text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
 
                             <div class="form-group">
                                 <label for="end_date" class="form-control-label">Ngày kết thúc</label>
                                 <input type="date" id="end_date" name="end_date"
                                     value="{{ old('end_date', $voucher->end_date) }}" class="form-control" required>
+                                @error('end_date')
+                                <small class="form-text text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
 
                             <div class="form-group">
                                 <label for="min_money" class="form-control-label">Giá trị nhỏ nhất</label>
                                 <input type="number" step="0.01" id="min_money" name="min_money"
-                                    value="{{ old('min_money', $voucher->min_money) }}" class="form-control" required>
+                                    value="{{ old('min_money', $voucher->min_money) }}" class="form-control" min="0"
+                                    required>
+                                @error('min_money')
+                                <small class="form-text text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
 
                             <div class="form-group text-right">

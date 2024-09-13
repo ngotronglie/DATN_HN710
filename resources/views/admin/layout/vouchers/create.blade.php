@@ -52,9 +52,9 @@
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label for="discount" class="form-control-label">Giảm giá</label>
-                                <input type="text" id="discount" name="discount" value="{{ old('discount') }}"
-                                    class="form-control" required>
+                                <label for="discount" class="form-control-label">Giảm giá (%)</label>
+                                <input type="number" id="discount" name="discount" value="{{ old('discount') }}"
+                                    class="form-control" step="0.01" min="0" required>
                                 @error('discount')
                                 <small class="form-text text-danger">{{ $message }}</small>
                                 @enderror
@@ -63,7 +63,7 @@
                             <div class="form-group">
                                 <label for="quantity" class="form-control-label">Số lượng</label>
                                 <input type="number" id="quantity" name="quantity" value="{{ old('quantity') }}"
-                                    class="form-control" required>
+                                    class="form-control" min="1" required>
                                 @error('quantity')
                                 <small class="form-text text-danger">{{ $message }}</small>
                                 @enderror
@@ -88,25 +88,15 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="min_money" class="form-control-label">Giá trị nhỏ nhất</label>
+                                <label for="min_money" class="form-control-label">Khoảng tiền</label>
                                 <input type="number" step="0.01" id="min_money" name="min_money"
-                                    value="{{ old('min_money') }}" class="form-control" required>
+                                    value="{{ old('min_money') }}" class="form-control" min="0" required>
                                 @error('min_money')
                                 <small class="form-text text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
 
-                            <!-- <div class="form-group">
-                                <label for="is_active" class="form-control-label">Trạng thái</label>
-                                <select id="is_active" name="is_active" class="form-control" required>
-                                    <option value="1" {{ old('is_active') == '1' ? 'selected' : '' }}>Hoạt động</option>
-                                    <option value="0" {{ old('is_active') == '0' ? 'selected' : '' }}>Không hoạt động
-                                    </option>
-                                </select>
-                                @error('is_active')
-                                <small class="form-text text-danger">{{ $message }}</small>
-                                @enderror
-                            </div> -->
+                            <!-- Phần trạng thái đã được loại bỏ. Nếu cần thiết, có thể thêm lại sau -->
 
                             <button type="submit" class="btn btn-primary">Thêm Voucher</button>
                             <a href="{{ route('vouchers.index') }}" class="btn btn-secondary">Quay lại</a>
