@@ -19,8 +19,9 @@ Route::get('/', function () {
     return view('admin.layout.yeld');
 });
 
-Route::resource('categories', CategoryController::class);
 // Quản lý các danh mục đã bị xóa mềm
 Route::get('categories/trashed', [CategoryController::class, 'trashed'])->name('categories.trashed');
 Route::put('categories/restore/{id}', [CategoryController::class, 'restore'])->name('categories.restore');
 Route::delete('categories/forceDelete/{id}', [CategoryController::class, 'forceDelete'])->name('categories.forceDelete');
+
+Route::resource('categories', CategoryController::class);

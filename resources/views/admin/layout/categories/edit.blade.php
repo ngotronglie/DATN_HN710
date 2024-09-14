@@ -31,7 +31,12 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header"><strong>Sửa danh mục</strong></div>
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <strong>Sửa danh mục</strong>
+                        <a href="{{ route('categories.index') }}" class="btn btn-primary">
+                            <i class="fa fa-arrow-left mr-1"></i> Quay lại
+                        </a>
+                    </div>
                     <div class="card-body card-block">
                         <form action="{{ route('categories.update', $category) }}" method="post">
                             @csrf
@@ -47,7 +52,7 @@
                                 <label for="is_active">Hoạt động</label>
                             </div>
                             <div class="form-actions form-group">
-                                <button type="submit" class="btn btn-success btn-sm">Submit</button>
+                                <button type="submit" class="btn btn-success btn-sm">Cập nhật</button>
                             </div>
                         </form>
                     </div>

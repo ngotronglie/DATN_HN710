@@ -23,7 +23,7 @@
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Dashboard</a></li>
                             <li><a href="#">Quản lí danh mục</a></li>
-                            <li class="active">Danh sách danh mục</li>
+                            <li class="active">Thùng rác</li>
                         </ol>
                     </div>
                 </div>
@@ -38,16 +38,11 @@
 
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">
-                        <strong class="card-title">Danh sách danh mục</strong>
-                        <div>
-                            <a class="btn btn-success mr-2 mt-2" href="{{ route('categories.create') }}">
-                                <i class="fa fa-plus"></i> Thêm mới
-                            </a>
-                            <a class="btn btn-secondary mt-2" href="{{ route('categories.trashed') }}">
-                                <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
-                            </a>
-                        </div>
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <strong class="card-title">Danh sách thùng rác</strong>
+                        <a href="{{ route('categories.index') }}" class="btn btn-primary">
+                            <i class="fa fa-arrow-left mr-1"></i> Quay lại
+                        </a>
                     </div>
                     <div class="card-body">
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
@@ -60,18 +55,21 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($categories as $item)
+                                @foreach ($trashedCategories as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>{!! $item->is_active ? '<span class="badge bg-success text-white">Hoạt động</span>' : '<span class="badge bg-danger text-white">Không hoạt động</span>' !!}</td>
-                                    <td class="d-flex">
-                                        <a class="btn btn-primary mr-2" href="{{route('categories.show', $item)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
-                                        <a class="btn btn-warning mr-2" href="{{route('categories.edit', $item)}}" title="Sửa"><i class="fa fa-edit"></i></a>
-                                        <form action="{{route('categories.destroy', $item)}}" method="POST">
+                                    <td>
+                                        <form action="{{ route('categories.restore', $item->id) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn btn-success" onclick="return confirm('Bạn muốn khôi phục?')" title="Khôi phục"><i class="fa fa-repeat"></i> Khôi phục</button>
+                                        </form>
+                                        <form action="{{ route('categories.forceDelete', $item->id) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn muốn xóa?')" title="Xóa"><i class="fa fa-trash"></i></button>
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn muốn xóa vĩnh viễn?')" title="Xóa vĩnh viễn"><i class="fa fa-trash"></i> Xóa vĩnh viễn</button>
                                         </form>
                                     </td>
                                 </tr>
