@@ -22,7 +22,7 @@ class ColorController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.layout.colors.create');
     }
 
     /**
@@ -62,6 +62,7 @@ class ColorController extends Controller
      */
     public function destroy(Color $color)
     {
-        //
+        $color->delete();
+        return redirect()->route('color.index')->with('success', ' Color deleted successfully.');
     }
 }

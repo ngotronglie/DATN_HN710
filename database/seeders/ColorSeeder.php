@@ -21,6 +21,6 @@ class ColorSeeder extends Seeder
 
         // Optionally soft delete a color as an example
         Color::create(['name' => 'Soft Deleted Color', 'hex_code' => '#FFFFFF'])->delete();
-        // This color will be soft-deleted
+        // This color will b e soft-deleted
     }
 }
