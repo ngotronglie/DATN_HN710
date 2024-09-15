@@ -21,6 +21,7 @@
                                 <thead>
                                     <tr>
                                         <th style="white-space: nowrap;">Tên</th>
+                                        <th style="white-space: nowrap;">Ảnh</th>
                                         <th style="white-space: nowrap;">Email</th>
                                         <th style="white-space: nowrap;">Địa chỉ</th>
                                         <th style="white-space: nowrap;">Điện thoại</th>
@@ -33,6 +34,7 @@
                                     @foreach ($trashedUsers as $user)
                                         <tr>
                                             <td>{{ $user->name }}</td>
+                                            <td><img width="50" src="{{Storage::url($user->avatar)}}" alt=""></td>
                                             <td>{{ $user->email }}</td>
                                             <td
                                                 style="display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">
@@ -53,13 +55,23 @@
                                             <td style="text-align: center">
                                                 <input type="checkbox" class="js-switch"  {{ $user->is_active ? 'checked' : '' }} disabled>
                                             </td>
-                                                <td class="text-center">
-                                                   
-                                                    <form action="{{ route('accounts.restore', $user->id) }}" method="POST">
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-warning"><i class="fa fa-repeat"></i></button>
-                                                    </form>
-                                                </td>
+                                            <td class="text-center">
+                                                <form action="{{ route('accounts.restore', $user->id) }}" method="POST" style="display: inline-block;">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-warning">
+                                                        <i class="fa fa-repeat"></i>
+                                                    </button>
+                                                </form>
+                                            
+                                                <form action="{{ route('accounts.forceDelete', $user->id) }}" method="POST" style="display: inline-block;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                            
 
                                         </tr>
                                     @endforeach

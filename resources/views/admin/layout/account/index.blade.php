@@ -17,7 +17,6 @@
                             <strong class="card-title">Tài Khoản</strong>
                         </div>
                         <div class="card-body">
-                            <a href="{{ route('accounts.trashed') }}">Danh sách đã xóa</a>
 
                             <table id="bootstrap-data-table" class="table table-striped table-bordered">
                                 <thead>
@@ -60,7 +59,7 @@
                                                 <td class="d-flex">
                                                     <a class="btn btn-primary mr-2" href="{{route('accounts.show', $user->id)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
                                                     <a class="btn btn-warning mr-2" href="{{route('accounts.edit', $user->id)}}" title="Sửa"><i class="fa fa-edit"></i></a>
-                                                    <form action="{{route('accounts.destroy', $user->id)}}" method="POST">
+                                                    <form action="{{route('accounts.softDelete', $user->id)}}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa không?')" title="Xóa"><i class="fa fa-trash"></i></button>

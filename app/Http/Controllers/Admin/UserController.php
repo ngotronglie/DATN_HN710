@@ -101,17 +101,29 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function softDelete($id)
     {
         $User=User::find($id);
-        if($User->avatar){
-            Storage::delete($User->avatar);
-        }
+       
         $User->delete();
-        return redirect()->route('accounts.index')->with('success', 'Xóa thành công');
+        return redirect()->route('accounts.index')->with('success', 'Xóa mềm thành công');
 
 
     }
+    public function forceDelete($id)
+{
+    $user = User::withTrashed()->find($id); 
+    if ($user) {
+        if ($user->avatar) {
+            Storage::delete($user->avatar);
+        }
+        $user->forceDelete();
+        return redirect()->route('accounts.index')->with('success', 'Tài khoản đã được xóa vĩnh viễn.');
+    }
+
+    return redirect()->route('accounts.index')->with('error', 'Tài khoản không tồn tại.');
+}
+
     public function trashed()
     {
         

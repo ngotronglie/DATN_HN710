@@ -25,7 +25,8 @@ Route::get('/accounts/{id}/show',[UserController::class,'show'])->name('accounts
 Route::get('/accounts/{id}/edit',[UserController::class,'edit'])->name('accounts.edit');
 Route::post('/accounts/store',[UserController::class,'store'])->name('accounts.store');
 Route::put('/accounts/{id}/update',[UserController::class,'update'])->name('accounts.update');
-Route::delete('/accounts/{id}/destroy',[UserController::class,'destroy'])->name('accounts.destroy');
+Route::delete('/accounts/{id}/softDelete',[UserController::class,'softDelete'])->name('accounts.softDelete');
+Route::delete('/accounts/{id}/forceDelete', [UserController::class, 'forceDelete'])->name('accounts.forceDelete');
 
 Route::get('accounts/trashed', [UserController::class, 'trashed'])->name('accounts.trashed');
 Route::post('accounts/{user}/restore', [UserController::class, 'restore'])->name('accounts.restore');
