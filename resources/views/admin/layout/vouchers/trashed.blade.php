@@ -13,7 +13,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Dashboard</h1>
+                        <h1>Danh sách Voucher đã xóa</h1>
                     </div>
                 </div>
             </div>
@@ -23,7 +23,7 @@
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Dashboard</a></li>
                             <li><a href="#">Quản lí Vouchers</a></li>
-                            <li class="active">Danh sách Vouchers</li>
+                            <li class="active">Danh sách Voucher đã xóa</li>
                         </ol>
                     </div>
                 </div>
@@ -38,11 +38,8 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <strong class="card-title">Danh sách Vouchers</strong>
-                        <a href="{{ route('vouchers.create') }}" class="btn btn-primary float-right"
-                            style="margin-right: 10px;">Thêm Voucher</a>
-                        <a href="{{ route('vouchers.trashed') }}" class="btn btn-danger float-right"
-                            style="margin-right: 10px;">Danh sách xóa</a>
+                        <strong class="card-title">Danh sách Voucher đã xóa</strong>
+                        <a href="{{ route('vouchers.index') }}" class="btn btn-primary float-right">Quay lại</a>
                     </div>
                     <div class="card-body">
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
@@ -77,27 +74,22 @@
                                         @endif
                                     </td>
                                     <td class="d-flex">
-                                        <a class="btn btn-primary mr-2" href="{{ route('vouchers.show', $item) }}"
-                                            title="Xem chi tiết"><i class="fa fa-eye"></i></a>
-                                        <a class="btn btn-warning mr-2" href="{{ route('vouchers.edit', $item) }}"
-                                            title="Sửa"><i class="fa fa-edit"></i></a>
-                                        <form action="{{ route('vouchers.destroy', $item) }}" method="POST"
-                                            onsubmit="return confirm('Bạn có chắc chắn muốn xóa không?')"
+                                        <form action="{{ route('vouchers.restore', $item) }}" method="POST"
                                             style="display: inline;">
                                             @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-secondary mr-2" title="Xóa mềm"><i
-                                                    class="fa fa-trash"></i></button>
+                                            @method('PUT')
+                                            <button type="submit" class="btn btn-success mr-2" title="Khôi phục"><i
+                                                    class="fa fa-undo"></i></button>
                                         </form>
-                                        <!-- <form action="{{ route('vouchers.forceDelete', $item) }}" method="POST"
+                                        <form action="{{ route('vouchers.forceDelete', $item->id) }}" method="POST"
                                             onsubmit="return confirm('Xóa vĩnh viễn sẽ mất hết dữ liệu! Bạn có chắc chắn không?')"
                                             style="display: inline;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger" title="Xóa vĩnh viễn">
-                                                <i class="fa fa-trash"></i> Xóa vĩnh viễn
+                                                <i class="fa fa-trash"></i>
                                             </button>
-                                        </form> -->
+                                        </form>
                                     </td>
                                 </tr>
                                 @endforeach

@@ -67,7 +67,15 @@
                                 </tr>
                                 <tr>
                                     <th>Giá trị nhỏ nhất</th>
-                                    <td>{{ number_format($voucher->min_money, 2) }} VNĐ</td>
+                                    <td>{{ number_format($voucher->min_money, 0) }} VNĐ</td>
+                                </tr>
+                                <tr>
+                                    <th>Thời gian sửa</th>
+                                    <td>{{ $voucher->updated_at}} </td>
+                                </tr>
+                                <tr>
+                                    <th>Thời gian tạo</th>
+                                    <td>{{ $voucher->created_at}} </td>
                                 </tr>
                                 <tr>
                                     <th>Trạng thái</th>
@@ -91,6 +99,7 @@
                             <button type="submit" class="btn btn-danger"
                                 onclick="return confirm('Bạn có chắc chắn muốn xóa không?')">Xóa</button>
                         </form>
+
                     </div>
                 </div>
             </div>

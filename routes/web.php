@@ -18,8 +18,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('admin.layout.yeld');
 });
+
+
+Route::get('/vouchers/trashed', [VoucherController::class, 'trashed'])->name('vouchers.trashed');
+Route::delete('vouchers/forceDelete/{id}', [VoucherController::class, 'forceDelete'])->name('vouchers.forceDelete');
+Route::put('vouchers/restore/{id}', [VoucherController::class, 'restore'])->name('vouchers.restore');
 Route::resource(
     'vouchers',VoucherController::class 
 );
+
+
 
 // {{route('vouchers.index')}}

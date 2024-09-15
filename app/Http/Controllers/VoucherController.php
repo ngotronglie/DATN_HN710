@@ -73,4 +73,26 @@ class VoucherController extends Controller
         $voucher->delete();
         return redirect()->route('vouchers.index')->with('success', 'Xóa Voucher thành công!');
     }
+    public function trashed()
+    {
+        $vouchers = Voucher::onlyTrashed()->get();
+        return view(self::PATH_VIEW . 'trashed', compact('vouchers'));
+    }
+    
+    public function restore($id)
+    {
+        $voucher = Voucher::onlyTrashed()->findOrFail($id);
+        $voucher->restore();
+        return redirect()->route('vouchers.index')->with('success', 'Voucher đã được khôi phục.');
+    }
+    
+    public function forceDelete($id)
+    {
+        $vouchers = Voucher::withTrashed()->findOrFail($id);
+        $vouchers->forceDelete();
+        return redirect()->route('vouchers.index')->with('success', 'Vouchers đã bị xóa vĩnh viễn');
+    }
+    
+    
+
 }
