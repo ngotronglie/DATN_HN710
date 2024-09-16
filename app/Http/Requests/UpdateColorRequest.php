@@ -22,7 +22,19 @@ class UpdateColorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'hex_code' => ['required'],
+
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'Tên màu không được để trống',
+            'name.string' => 'Tên màu phải là kiểu chuỗi',
+            'name.max' => 'Tên màu không quá 255 ký tự',
+            'hex_code.required' => 'Mã màu HEX không được để trống',
         ];
     }
 }

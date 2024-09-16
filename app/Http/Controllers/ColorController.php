@@ -65,8 +65,16 @@ class ColorController extends Controller
      */
     public function update(UpdateColorRequest $request, Color $color)
     {
-        //
+        // Lấy dữ liệu đã được xác thực từ request
+        $validatedData = $request->validated();
+
+        // Cập nhật thông tin của đối tượng Color trong database
+        $color->update($validatedData);
+
+        // Chuyển hướng về trang index với thông báo thành công
+        return redirect()->route('color.index')->with('success', 'Màu đã được cập nhật thành công.');
     }
+
 
     /**
      * Remove the specified resource from storage.
