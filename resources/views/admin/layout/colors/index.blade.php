@@ -14,13 +14,7 @@
                     </div>
                     <div class="col-sm-8">
                         <div class="page-header float-right">
-                            <div class="page-title">
-                                <ol class="breadcrumb text-right">
-                                    <li><a href="#">Dashboard</a></li>
-                                    <li><a href="#">Quản lý màu sắc</a></li>
-                                    <li class="active">Danh sách màu sắc</li>
-                                </ol>
-                            </div>
+                            <a href="{{ route('color.create') }}" class="btn btn-primary">thêm màu</a>
                         </div>
                     </div>
                 </div>

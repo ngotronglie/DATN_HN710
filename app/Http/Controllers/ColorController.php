@@ -30,8 +30,18 @@ class ColorController extends Controller
      */
     public function store(StoreColorRequest $request)
     {
-        //
+        // Lấy dữ liệu đã được xác thực từ request
+        $validatedData = $request->validated();
+
+        // dd($validatedData);
+
+        // Tạo một đối tượng Color mới và lưu vào database
+        $color = Color::create($validatedData);
+
+        // Chuyển hướng người dùng về trang index với thông báo thành công
+        return redirect()->route('color.index')->with('success', 'Màu đã được tạo thành công.');
     }
+
 
     /**
      * Display the specified resource.
@@ -46,7 +56,8 @@ class ColorController extends Controller
      */
     public function edit(Color $color)
     {
-        //
+        return view('admin.layout.colors.edit', compact('color'));
+
     }
 
     /**
