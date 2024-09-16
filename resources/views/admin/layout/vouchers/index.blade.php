@@ -89,15 +89,7 @@
                                             <button type="submit" class="btn btn-secondary mr-2" title="Xóa mềm"><i
                                                     class="fa fa-trash"></i></button>
                                         </form>
-                                        <!-- <form action="{{ route('vouchers.forceDelete', $item) }}" method="POST"
-                                            onsubmit="return confirm('Xóa vĩnh viễn sẽ mất hết dữ liệu! Bạn có chắc chắn không?')"
-                                            style="display: inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger" title="Xóa vĩnh viễn">
-                                                <i class="fa fa-trash"></i> Xóa vĩnh viễn
-                                            </button>
-                                        </form> -->
+
                                     </td>
                                 </tr>
                                 @endforeach

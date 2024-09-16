@@ -80,7 +80,7 @@
                                 <tr>
                                     <th>Trạng thái</th>
                                     <td>
-                                        @if($voucher->is_active)
+                                        @if($voucher->status == 0)
                                         <span class="badge badge-success">Hoạt động</span>
                                         @else
                                         <span class="badge badge-danger">Không hoạt động</span>

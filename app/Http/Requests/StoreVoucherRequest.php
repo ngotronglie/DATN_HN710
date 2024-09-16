@@ -21,6 +21,7 @@ class StoreVoucherRequest extends FormRequest
      */
     public function rules()
     {
+        
         return [
             'code' => 'required|string|max:255|unique:vouchers,code', // Mã voucher phải là duy nhất
             'discount' => 'required|numeric|min:0|max:100', // Discount phải là số và nằm trong khoảng từ 0 đến 100

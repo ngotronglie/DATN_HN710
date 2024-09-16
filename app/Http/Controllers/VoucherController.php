@@ -49,6 +49,19 @@ class VoucherController extends Controller
 
     public function show(Voucher $voucher)
     {
+        $currentDate = Carbon::now()->startOfDay(); // Đảm bảo rằng bạn so sánh ngày mà không có giờ
+
+        // Chuyển đổi giá trị ngày tháng từ cơ sở dữ liệu thành đối tượng Carbon
+        $startDate = Carbon::parse($voucher->start_date)->startOfDay();
+        $endDate = Carbon::parse($voucher->end_date)->endOfDay();
+
+        // Xác định trạng thái của voucher
+        if ($currentDate->lessThan($startDate) || $currentDate->greaterThan($endDate)) {
+            $voucher->status = 1; // Không hoạt động nếu hiện tại trước ngày bắt đầu hoặc sau ngày kết thúc
+        } else {
+            $voucher->status = 0; // Hoạt động nếu hiện tại nằm trong khoảng thời gian, bao gồm ngày kết thúc
+        }
+        
         return view(self::PATH_VIEW . 'show', compact('voucher'));
     }
 
@@ -76,6 +89,20 @@ class VoucherController extends Controller
     public function trashed()
     {
         $vouchers = Voucher::onlyTrashed()->get();
+        $currentDate = Carbon::now()->startOfDay(); // Đảm bảo rằng bạn so sánh ngày mà không có giờ
+
+        foreach ($vouchers as $voucher) {
+            // Chuyển đổi giá trị ngày tháng từ cơ sở dữ liệu thành đối tượng Carbon
+            $startDate = Carbon::parse($voucher->start_date)->startOfDay();
+            $endDate = Carbon::parse($voucher->end_date)->endOfDay();
+
+            // Xác định trạng thái của voucher
+            if ($currentDate->lessThan($startDate) || $currentDate->greaterThan($endDate)) {
+                $voucher->status = 1; // Không hoạt động nếu hiện tại trước ngày bắt đầu hoặc sau ngày kết thúc
+            } else {
+                $voucher->status = 0; // Hoạt động nếu hiện tại nằm trong khoảng thời gian, bao gồm ngày kết thúc
+            }
+        }    
         return view(self::PATH_VIEW . 'trashed', compact('vouchers'));
     }
     

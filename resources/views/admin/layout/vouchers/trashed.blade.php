@@ -52,7 +52,7 @@
                                     <th>Ngày bắt đầu</th>
                                     <th>Ngày kết thúc</th>
                                     <th>Giá nhỏ nhất</th>
-                                    <th>Trạng thái</th>
+                                    <!-- <th>Trạng thái</th> -->
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
@@ -66,13 +66,13 @@
                                     <td>{{ \Carbon\Carbon::parse($item->start_date)->format('d/m/Y') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->end_date)->format('d/m/Y') }}</td>
                                     <td>{{ number_format($item->min_money, 0, ',', '.') }} VNĐ</td>
-                                    <td>
+                                    <!-- <td>
                                         @if ($item->status == 0)
                                         <span class="badge bg-success text-white">Hoạt động</span>
                                         @elseif ($item->status == 1)
                                         <span class="badge bg-danger text-white">Không hoạt động</span>
                                         @endif
-                                    </td>
+                                    </td> -->
                                     <td class="d-flex">
                                         <form action="{{ route('vouchers.restore', $item) }}" method="POST"
                                             style="display: inline;">
