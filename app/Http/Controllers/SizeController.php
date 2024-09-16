@@ -22,7 +22,7 @@ class SizeController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.layout.sizes.create');
     }
 
     /**
@@ -30,7 +30,10 @@ class SizeController extends Controller
      */
     public function store(StoreSizeRequest $request)
     {
-        //
+        $listSize = $request->validated();
+        // dd($listSize);
+        $size = Size::create($listSize);
+        return redirect()->route('size.index')->with('success', 'Thêm size thành công!');
     }
 
     /**

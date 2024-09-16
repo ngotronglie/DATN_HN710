@@ -34,6 +34,7 @@
                     <div class="card">
                         <div class="card-header">
                             <strong class="card-title">Danh sách màu sắc</strong>
+                            <a href="{{ route('size.create')}}" class="btn btn-primary float-right">Thêm size</a>
                         </div>
                         <div class="card-body">
                             <table id="bootstrap-data-table" class="table table-striped table-bordered">
@@ -92,3 +93,6 @@
         });
     </script>
 @endsection
+
+
+

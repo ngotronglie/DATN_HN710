@@ -11,7 +11,7 @@ class StoreSizeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,15 @@ class StoreSizeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|max:255'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'trường này không được bỏ trống!',
+            'name.max' => 'không được quá 255 kí tự!'
         ];
     }
 }
