@@ -50,9 +50,9 @@
                                 <input type="checkbox" id="is_active" name="is_active" value="1" checked>
                                 <label for="is_active">Hoạt động</label>
                             </div>
-                            <div class="form-actions form-group">
-                                <button type="submit" class="btn btn-success btn-sm">Thêm mới</button>
-                            </div>
+
+                            <!-- Phần trạng thái đã được loại bỏ. Nếu cần thiết, có thể thêm lại sau -->
+                            <button type="submit" class="btn btn-success">Thêm mới</button>
                         </form>
                     </div>
                 </div>

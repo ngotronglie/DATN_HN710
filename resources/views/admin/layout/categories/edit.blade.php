@@ -51,9 +51,7 @@
                                 <input type="checkbox" id="is_active" name="is_active" value="1" @checked($category->is_active)>
                                 <label for="is_active">Hoạt động</label>
                             </div>
-                            <div class="form-actions form-group">
-                                <button type="submit" class="btn btn-success btn-sm">Cập nhật</button>
-                            </div>
+                            <button type="submit" class="btn btn-success">Cập nhật</button>
                         </form>
                     </div>
                 </div>

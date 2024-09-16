@@ -38,13 +38,13 @@
 
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <strong class="card-title">Danh sách danh mục</strong>
                         <div>
-                            <a class="btn btn-success mr-2 mt-2" href="{{ route('categories.create') }}">
+                            <a class="btn btn-primary mr-2" href="{{ route('categories.create') }}">
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
-                            <a class="btn btn-secondary mt-2" href="{{ route('categories.trashed') }}">
+                            <a class="btn btn-secondary" href="{{ route('categories.trashed') }}">
                                 <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
                             </a>
                         </div>
@@ -53,28 +53,56 @@
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>STT</th>
                                     <th>Tên danh mục</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($categories as $item)
+                                @foreach ($categories as $key => $item)
                                 <tr>
-                                    <td>{{ $item->id }}</td>
-                                    <td>{{ $item->name }}</td>
-                                    <td>{!! $item->is_active ? '<span class="badge bg-success text-white">Hoạt động</span>' : '<span class="badge bg-danger text-white">Không hoạt động</span>' !!}</td>
-                                    <td class="d-flex">
-                                        <a class="btn btn-primary mr-2" href="{{route('categories.show', $item)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
-                                        <a class="btn btn-warning mr-2" href="{{route('categories.edit', $item)}}" title="Sửa"><i class="fa fa-edit"></i></a>
-                                        <form action="{{route('categories.destroy', $item)}}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn muốn xóa?')" title="Xóa"><i class="fa fa-trash"></i></button>
-                                        </form>
-                                    </td>
+                                <td>{{ $key+1 }}</td>
+                                <td>{{ $item->name }}</td>
+                                <td>{!! $item->is_active ? '<span class="badge bg-success text-white">Hoạt động</span>' : '<span class="badge bg-danger text-white">Không hoạt động</span>' !!}</td>
+                                <td class="d-flex">
+                                    <a class="btn btn-primary mr-2" href="{{route('categories.show', $item)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
+                                    <a class="btn btn-warning mr-2" href="{{route('categories.edit', $item)}}" title="Sửa"><i class="fa fa-edit"></i></a>
+                                    {{-- <form action="{{route('categories.destroy', $item)}}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn muốn xóa?')" title="Xóa"><i class="fa fa-trash"></i></button>
+                                    </form> --}}
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $item->id }}" title="Xóa">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
                                 </tr>
+
+                                <!-- Modal Xóa -->
+                                <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ $item->id }}" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title font-weight-bold" id="deleteModalLabel{{ $item->id }}">XÁC NHẬN XÓA</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Bạn có chắc chắn muốn xóa danh mục "{{ $item->name }}" không?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
+                                                <form action="{{ route('categories.destroy', $item) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 @endforeach
                             </tbody>
                         </table>

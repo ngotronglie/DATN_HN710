@@ -50,7 +50,6 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Tên danh mục</th>
-                                    <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
@@ -59,20 +58,75 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
-                                    <td>{!! $item->is_active ? '<span class="badge bg-success text-white">Hoạt động</span>' : '<span class="badge bg-danger text-white">Không hoạt động</span>' !!}</td>
                                     <td>
-                                        <form action="{{ route('categories.restore', $item->id) }}" method="POST" style="display:inline;">
+                                        {{-- <form action="{{ route('categories.restore', $item->id) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('PUT')
-                                            <button type="submit" class="btn btn-success" onclick="return confirm('Bạn muốn khôi phục?')" title="Khôi phục"><i class="fa fa-repeat"></i> Khôi phục</button>
-                                        </form>
-                                        <form action="{{ route('categories.forceDelete', $item->id) }}" method="POST" style="display:inline;">
+                                            <button type="submit" class="btn btn-success" onclick="return confirm('Bạn muốn khôi phục?')" title="Khôi phục"><i class="fa fa-repeat"></i></button>
+                                        </form> --}}
+                                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#restoreModal{{ $item->id }}" title="Khôi phục">
+                                            <i class="fa fa-repeat"></i>
+                                        </button>
+                                        {{-- <form action="{{ route('categories.forceDelete', $item->id) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn muốn xóa vĩnh viễn?')" title="Xóa vĩnh viễn"><i class="fa fa-trash"></i> Xóa vĩnh viễn</button>
-                                        </form>
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn muốn xóa vĩnh viễn?')" title="Xóa vĩnh viễn"><i class="fa fa-trash"></i></button>
+                                        </form> --}}
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $item->id }}" title="Xóa">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
+
+                                <!-- Modal Khôi phục -->
+                                <div class="modal fade" id="restoreModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="restoreModalLabel{{ $item->id }}" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title font-weight-bold" id="restoreModalLabel{{ $item->id }}">XÁC NHẬN KHÔI PHỤC</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Bạn có chắc chắn muốn khôi phục danh mục "{{ $item->name }}" không?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
+                                                <form action="{{ route('categories.restore', $item->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-success">Xác nhận khôi phục</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Modal Xóa -->
+                                <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ $item->id }}" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title font-weight-bold" id="deleteModalLabel{{ $item->id }}">XÁC NHẬN XÓA</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Bạn có muốn xóa vĩnh viễn danh mục "{{ $item->name }}" không?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
+                                                <form action="{{ route('categories.forceDelete', $item->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 @endforeach
                             </tbody>
                         </table>

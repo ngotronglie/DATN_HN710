@@ -14,7 +14,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::orderBy('id', 'desc')->get();
         $trashedCount = Category::onlyTrashed()->count();
         return view(self::PATH_VIEW . __FUNCTION__, compact('categories', 'trashedCount'));
     }
