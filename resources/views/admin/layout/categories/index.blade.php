@@ -44,7 +44,7 @@
                             <a class="btn btn-primary mr-2" href="{{ route('categories.create') }}">
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
-                            <a class="btn btn-secondary" href="{{ route('categories.trashed') }}">
+                            <a class="btn btn-danger" href="{{ route('categories.trashed') }}">
                                 <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
                             </a>
                         </div>

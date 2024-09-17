@@ -66,7 +66,9 @@
                         </table>
                     </div>
                     <div class="card-footer">
-                        <a href="{{ route('categories.edit', $category) }}" class="btn btn-warning">Sửa</a>
+                        <a href="{{ route('categories.edit', $category) }}" class="btn btn-warning btn-icon-split">
+                                <i class="fa fa-edit"></i> Sửa
+                        </a>
                     </div>
                 </div>
             </div>
