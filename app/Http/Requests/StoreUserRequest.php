@@ -27,7 +27,7 @@ class StoreUserRequest extends FormRequest
             'address' => 'nullable|string|max:255',
             'phone' => 'nullable|regex:/^0[0-9]{9}$/',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'password' => 'required|string|min:8|',
+            'password' => ['required','string','min:8','regex:/[A-Z]/','regex:/[a-z]/','regex:/[0-9]/'],    
             'date_of_birth' => 'nullable|date|before:today',
         ];
     }
@@ -40,6 +40,7 @@ class StoreUserRequest extends FormRequest
             'email.unique' => 'Email đã được sử dụng.',
             'password.required' => 'Mật khẩu là bắt buộc.',
             'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
+            'password.regex' => 'Mật khẩu phải có chữ in hoa,chữ thường và số',  
             'avatar.image' => 'Avatar phải là hình ảnh.',
             'avatar.mimes' => 'Avatar phải có định dạng: jpeg, png, jpg, hoặc gif.',
             'avatar.max' => 'Kích thước tệp avatar không được vượt quá 2MB.',

@@ -21,9 +21,9 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::latest('id')->get();
-        // dd($users);
-        return view(self::PATH_VIEW . __FUNCTION__, compact('users'));
+        $users = User::orderBy('id', 'desc')->get();
+        $trashedCount = User::onlyTrashed()->count();
+        return view(self::PATH_VIEW . __FUNCTION__, compact('users','trashedCount'));
     }
 
     /**
@@ -39,6 +39,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
+        
         $data = $request->except('avatar');
         $data['is_active'] ??= 0;
         $data['password'] = Hash::make($request->input('password'));
@@ -58,12 +59,15 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+  
+    public function show(User $account)
     {
-        $user = User::find($id);
-        return view(self::PATH_VIEW.__FUNCTION__, compact('user'));
+        // dd($account);
+        return view(self::PATH_VIEW.__FUNCTION__, compact('account'));
     }
+
     
+
     
     
     
@@ -71,45 +75,43 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-  public function edit($id)
-{
-    $user = User::find($id);
-    return view(self::PATH_VIEW . __FUNCTION__, compact('user'));
-}
+    public function edit(User $account)
+    {
+      
+        return view(self::PATH_VIEW.__FUNCTION__, compact('account'));
+    }
 
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserRequest $request, string $id)
+    
+    public function update(UpdateUserRequest $request, User $account) {
     {
-        $User=User::find($id);
+        
         $data=$request->except('avatar');
-        $data['is_active']??=0;
-        if($request->hasFile('avatar')){
-            $data['avatar']=Storage::put('users',$request->file('avatar'));
-            if($User->avatar){
-                Storage::delete($User->avatar);  
+            $data['is_active']??=0;
+            if($request->hasFile('avatar')){
+                $data['avatar']=Storage::put('users',$request->file('avatar'));
+                if($account->avatar){
+                    Storage::delete($account->avatar);  
+                }
+            }else{
+                $data['avatar']=$account->avatar;
             }
-        }else{
-            $data['avatar']=$User->avatar;
-        }
-        $User->update($data);
-        return redirect()->route('accounts.index')->with('success', 'Sửa thành công');
+            $account->update($data);
+            return redirect()->route('accounts.index')->with('success', 'Sửa thành công');
     }
-
+    }
     /**
      * Remove the specified resource from storage.
      */
-    public function softDelete($id)
-    {
-        $User=User::find($id);
-       
-        $User->delete();
-        return redirect()->route('accounts.index')->with('success', 'Xóa mềm thành công');
+    public function destroy(User $account) 
+{
+    $account->delete();
+    return redirect()->route('accounts.index')->with('success', 'Xóa mềm thành công');
+}
 
-
-    }
     public function forceDelete($id)
 {
     $user = User::withTrashed()->find($id); 
@@ -127,7 +129,8 @@ class UserController extends Controller
     public function trashed()
     {
         
-        $trashedUsers = User::onlyTrashed()->get();       
+        $trashedUsers = User::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
+        
         return view('admin.layout.account.trashed', compact('trashedUsers'));
     }
     public function restore($id)
