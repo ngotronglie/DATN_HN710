@@ -48,15 +48,15 @@
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>STT</th></th>
                                     <th>Tên danh mục</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($trashedCategories as $item)
+                                @foreach ($trashedCategories as $key => $item)
                                 <tr>
-                                    <td>{{ $item->id }}</td>
+                                    <td>{{ $key+1 }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>
                                         {{-- <form action="{{ route('categories.restore', $item->id) }}" method="POST" style="display:inline;">
@@ -82,7 +82,7 @@
                                 <div class="modal fade" id="restoreModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="restoreModalLabel{{ $item->id }}" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
-                                            <div class="modal-header">
+                                            <div class="modal-header d-flex">
                                                 <h5 class="modal-title font-weight-bold" id="restoreModalLabel{{ $item->id }}">XÁC NHẬN KHÔI PHỤC</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
@@ -107,7 +107,7 @@
                                 <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ $item->id }}" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
-                                            <div class="modal-header">
+                                            <div class="modal-header d-flex">
                                                 <h5 class="modal-title font-weight-bold" id="deleteModalLabel{{ $item->id }}">XÁC NHẬN XÓA</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>

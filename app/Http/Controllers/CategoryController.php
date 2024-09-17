@@ -79,7 +79,7 @@ class CategoryController extends Controller
      */
     public function trashed()
     {
-        $trashedCategories = Category::onlyTrashed()->get();
+        $trashedCategories = Category::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
         return view(self::PATH_VIEW . 'trashed', compact('trashedCategories'));
     }
 
