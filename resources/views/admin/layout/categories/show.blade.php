@@ -1,7 +1,7 @@
 @extends('admin.dashboard')
 
 @section('content')
-<div class="breadcrumbs">
+<div class="breadcrumbs mb-5">
     <div class="breadcrumbs-inner">
         <div class="row m-0">
             <div class="col-sm-4">
@@ -26,7 +26,7 @@
     </div>
 </div>
 
-<div class="content">
+<div class="content mb-5">
     <div class="animated fadeIn">
         <div class="row">
             <div class="col-lg-12">
@@ -45,14 +45,6 @@
                                     <td>{{ $category->name }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Thời gian tạo</th>
-                                    <td>{{ $category->created_at }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Thời gian sửa</th>
-                                    <td>{{ $category->updated_at }}</td>
-                                </tr>
-                                <tr>
                                     <th>Trạng thái</th>
                                     <td>
                                         @if($category->is_active)
@@ -61,6 +53,14 @@
                                         <span class="badge badge-danger">Không hoạt động</span>
                                         @endif
                                     </td>
+                                </tr>
+                                <tr>
+                                    <th>Thời gian tạo</th>
+                                    <td>{{ $category->created_at }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Thời gian sửa</th>
+                                    <td>{{ $category->updated_at }}</td>
                                 </tr>
                             </tbody>
                         </table>

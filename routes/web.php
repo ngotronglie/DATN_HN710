@@ -14,10 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
 Route::get('/', function () {
     return view('admin.layout.yeld');
-});
+})->name('dashboard');
 
 // Quản lý các danh mục đã bị xóa mềm
 Route::get('categories/trashed', [CategoryController::class, 'trashed'])->name('categories.trashed');

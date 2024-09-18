@@ -1,7 +1,7 @@
 @extends('admin.dashboard')
 
 @section('content')
-<div class="breadcrumbs">
+<div class="breadcrumbs mb-5">
     <div class="breadcrumbs-inner">
         <div class="row m-0">
             <div class="col-sm-4">
@@ -16,7 +16,7 @@
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Dashboard</a></li>
-                            <li><a href="#">Quản lí danh mục</a></li>
+                            <li><a href="{{ route('categories.index') }}">Danh sách danh mục</a></li>
                             <li class="active">Sửa danh mục</li>
                         </ol>
                     </div>
@@ -26,7 +26,7 @@
     </div>
 </div>
 
-<div class="content">
+<div class="content mb-5">
     <div class="animated fadeIn">
         <div class="row">
             <div class="col-md-12">
@@ -51,7 +51,7 @@
                                 <input type="checkbox" id="is_active" name="is_active" value="1" @checked($category->is_active)>
                                 <label for="is_active">Hoạt động</label>
                             </div>
-                            <button type="submit" class="btn btn-success">Cập nhật</button>
+                            <button type="submit" class="btn btn-success mb-1">Cập nhật</button>
                         </form>
                     </div>
                 </div>

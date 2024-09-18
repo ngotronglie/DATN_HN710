@@ -7,7 +7,7 @@
 
 @section('content')
 
-<div class="breadcrumbs">
+<div class="breadcrumbs mb-5">
     <div class="breadcrumbs-inner">
         <div class="row m-0">
             <div class="col-sm-4">
@@ -22,7 +22,7 @@
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Dashboard</a></li>
-                            <li><a href="#">Quản lí danh mục</a></li>
+                            <li><a href="{{ route('categories.index') }}">Danh sách danh mục</a></li>
                             <li class="active">Thùng rác</li>
                         </ol>
                     </div>
@@ -32,7 +32,7 @@
     </div>
 </div>
 
-<div class="content">
+<div class="content mb-5">
     <div class="animated fadeIn">
         <div class="row">
 

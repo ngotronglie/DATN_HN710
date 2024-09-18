@@ -1,7 +1,7 @@
 @extends('admin.dashboard')
 
 @section('content')
-<div class="breadcrumbs">
+<div class="breadcrumbs mb-5">
     <div class="breadcrumbs-inner">
         <div class="row m-0">
             <div class="col-sm-4">
@@ -16,7 +16,7 @@
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Dashboard</a></li>
-                            <li><a href="#">Quản lí danh mục</a></li>
+                            <li><a href="{{ route('categories.index') }}">Danh sách danh mục</a></li>
                             <li class="active">Thêm danh mục</li>
                         </ol>
                     </div>
@@ -26,7 +26,7 @@
     </div>
 </div>
 
-<div class="content">
+<div class="content mb-5">
     <div class="animated fadeIn">
         <div class="row">
             <div class="col-md-12">
@@ -52,7 +52,7 @@
                             </div>
 
                             <!-- Phần trạng thái đã được loại bỏ. Nếu cần thiết, có thể thêm lại sau -->
-                            <button type="submit" class="btn btn-success">Thêm mới</button>
+                            <button type="submit" class="btn btn-success mb-1">Thêm mới</button>
                         </form>
                     </div>
                 </div>
