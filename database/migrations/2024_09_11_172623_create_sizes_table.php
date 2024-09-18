@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sizes', function (Blueprint $table) {
-            $table->id(); // Tạo cột id với kiểu dữ liệu BIGINT AUTO_INCREMENT
-            $table->string('name'); // Thay đổi độ dài của cột name nếu cần thiết
-            $table->softDeletes(); // Tạo cột deleted_at cho soft deletes
-            $table->timestamps(); // Tạo cột created_at và updated_at
+            $table->id();
+            $table->string('name');
+            $table->softDeletes();
+            $table->timestamps();
         });
     }
 

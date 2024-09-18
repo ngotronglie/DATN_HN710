@@ -17,7 +17,7 @@
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Dashboard</a></li>
                             <li><a href="{{ route('sizes.index') }}">Danh sách size</a></li>
-                            <li class="active">Thêm size</li>
+                            <li class="active">Sửa size</li>
                         </ol>
                     </div>
                 </div>
@@ -32,23 +32,23 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong>Thêm size</strong>
+                        <strong>Sửa size</strong>
                         <a href="{{ route('sizes.index') }}" class="btn btn-primary">
                             <i class="fa fa-arrow-left mr-1"></i> Quay lại
                         </a>
                     </div>
                     <div class="card-body card-block">
-                        <form action="{{ route('sizes.store') }}" method="post">
+                        <form action="{{ route('sizes.update', $size) }}" method="post">
                             @csrf
+                            @method('PUT')
                             <div class="form-group">
-                                <label for="name" class=" form-control-label">Tên size</label><input type="text" id="name" name="name" placeholder="Nhập tên size" class="form-control" value="{{ old('name') }}" requied>
+                                <label for="name" class=" form-control-label">Tên size</label><input type="text" id="name" name="name" placeholder="Nhập tên size" class="form-control" value="{{ old('name', $size->name) }}" requied>
                                 @error('name')
                                 <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
 
-                            <!-- Phần trạng thái đã được loại bỏ. Nếu cần thiết, có thể thêm lại sau -->
-                            <button type="submit" class="btn btn-success mb-1">Thêm mới</button>
+                            <button type="submit" class="btn btn-success mb-1">Cập nhật</button>
                         </form>
                     </div>
                 </div>

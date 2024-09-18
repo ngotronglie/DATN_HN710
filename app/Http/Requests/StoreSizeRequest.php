@@ -22,15 +22,17 @@ class StoreSizeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|max:255'
+            'name' => 'required|string|max:255|unique:sizes,name',
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
-            'name.required' => 'trường này không được bỏ trống!',
-            'name.max' => 'không được quá 255 kí tự!'
+            'name.required' => 'Tên size là bắt buộc',
+            'name.string' => 'Tên size phải là một chuỗi văn bản',
+            'name.max' => 'Tên size không được dài quá 255 ký tự',
+            'name.unique' => 'Tên size này đã tồn tại trong hệ thống',
         ];
     }
 }

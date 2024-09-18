@@ -6,6 +6,7 @@
 @endsection
 
 @section('content')
+
 <div class="breadcrumbs mb-5">
     <div class="breadcrumbs-inner">
         <div class="row m-0">
@@ -21,8 +22,8 @@
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Dashboard</a></li>
-                            <li><a href="#">Quản lí size</a></li>
-                            <li class="active">Danh sách size</li>
+                            <li><a href="{{ route('sizes.index') }}">Danh sách size</a></li>
+                            <li class="active">Thùng rác</li>
                         </ol>
                     </div>
                 </div>
@@ -38,38 +39,59 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong class="card-title">Danh sách size</strong>
-                        <div>
-                            <a class="btn btn-primary mr-2" href="{{ route('sizes.create') }}">
-                                <i class="fa fa-plus"></i> Thêm mới
-                            </a>
-                            <a class="btn btn-danger" href="{{ route('sizes.trashed') }}">
-                                <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
-                            </a>
-                        </div>
+                        <strong class="card-title">Danh sách thùng rác</strong>
+                        <a href="{{ route('sizes.index') }}" class="btn btn-primary">
+                            <i class="fa fa-arrow-left mr-1"></i> Quay lại
+                        </a>
                     </div>
                     <div class="card-body">
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th>STT</th>
+                                    <th>STT</th></th>
                                     <th>Tên size</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($sizes as $key => $item)
+                                @foreach ($trashedSizes as $key => $item)
                                 <tr>
                                     <td>{{ $key+1 }}</td>
                                     <td>{{ $item->name }}</td>
-                                    <td class="d-flex">
-                                        <a class="btn btn-primary mr-2" href="{{route('sizes.show', $item)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
-                                        <a class="btn btn-warning mr-2" href="{{route('sizes.edit', $item)}}" title="Sửa"><i class="fa fa-edit"></i></a>
+                                    <td>
+                                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#restoreModal{{ $item->id }}" title="Khôi phục">
+                                            <i class="fa fa-repeat"></i>
+                                        </button>
                                         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $item->id }}" title="Xóa">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
+
+                                <!-- Modal Khôi phục -->
+                                <div class="modal fade" id="restoreModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="restoreModalLabel{{ $item->id }}" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header d-flex">
+                                                <h5 class="modal-title font-weight-bold" id="restoreModalLabel{{ $item->id }}">XÁC NHẬN KHÔI PHỤC</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Bạn có chắc chắn muốn khôi phục size "{{ $item->name }}" không?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
+                                                <form action="{{ route('sizes.restore', $item->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-success">Xác nhận khôi phục</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- Modal Xóa -->
                                 <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ $item->id }}" aria-hidden="true">
@@ -82,11 +104,11 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                Bạn có chắc chắn muốn xóa size "{{ $item->name }}" không?
+                                                Bạn có muốn xóa vĩnh viễn size "{{ $item->name }}" không?
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
-                                                <form action="{{ route('sizes.destroy', $item) }}" method="POST">
+                                                <form action="{{ route('sizes.forceDelete', $item->id) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
@@ -106,6 +128,7 @@
         </div>
     </div><!-- .animated -->
 </div><!-- .content -->
+
 @endsection
 
 @section('script')

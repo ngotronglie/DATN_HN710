@@ -19,4 +19,9 @@ Route::get('/', function () {
     return view('admin.layout.yeld');
 });
 
-Route::resource('size' , SizeController::class);
+// Quản lý các size đã bị xóa mềm
+Route::get('sizes/trashed', [SizeController::class, 'trashed'])->name('sizes.trashed');
+Route::put('sizes/restore/{id}', [SizeController::class, 'restore'])->name('sizes.restore');
+Route::delete('sizes/forceDelete/{id}', [SizeController::class, 'forceDelete'])->name('sizes.forceDelete');
+
+Route::resource('sizes' , SizeController::class);

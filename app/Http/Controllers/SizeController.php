@@ -8,13 +8,15 @@ use App\Http\Requests\UpdateSizeRequest;
 
 class SizeController extends Controller
 {
+    const PATH_VIEW = 'admin.layout.sizes.';
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $sizes = Size::orderBy('id' , 'desc')->get();
-        return view('admin.layout.sizes.index', compact('sizes'));
+        $sizes = Size::orderBy('id', 'desc')->get();
+        $trashedCount = Size::onlyTrashed()->count();
+        return view(self::PATH_VIEW . __FUNCTION__, compact('sizes', 'trashedCount'));
     }
 
     /**
@@ -22,7 +24,7 @@ class SizeController extends Controller
      */
     public function create()
     {
-        return view('admin.layout.sizes.create');
+        return view(self::PATH_VIEW . __FUNCTION__);
     }
 
     /**
@@ -30,10 +32,9 @@ class SizeController extends Controller
      */
     public function store(StoreSizeRequest $request)
     {
-        $listSize = $request->validated();
-        // dd($listSize);
-        $size = Size::create($listSize);
-        return redirect()->route('size.index')->with('success', 'Thêm size thành công!');
+        $data = $request->all();
+        Size::create($data);
+        return redirect()->route('sizes.index')->with('success', 'Thêm thành công');
     }
 
     /**
@@ -41,7 +42,7 @@ class SizeController extends Controller
      */
     public function show(Size $size)
     {
-        //
+        return view(self::PATH_VIEW . __FUNCTION__, compact('size'));
     }
 
     /**
@@ -49,7 +50,7 @@ class SizeController extends Controller
      */
     public function edit(Size $size)
     {
-        //
+        return view(self::PATH_VIEW . __FUNCTION__, compact('size'));
     }
 
     /**
@@ -57,7 +58,9 @@ class SizeController extends Controller
      */
     public function update(UpdateSizeRequest $request, Size $size)
     {
-        //
+        $data = $request->all();
+        $size->update($data);
+        return redirect()->route('sizes.index')->with('success', 'Sửa thành công');
     }
 
     /**
@@ -65,6 +68,36 @@ class SizeController extends Controller
      */
     public function destroy(Size $size)
     {
-        //
+        $size->delete();
+        return back()->with('success', 'Xóa thành công');
+    }
+
+    /**
+     * Hiển thị danh sách danh mục đã bị xóa mềm.
+     */
+    public function trashed()
+    {
+        $trashedSizes = Size::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
+        return view(self::PATH_VIEW . 'trashed', compact('trashedSizes'));
+    }
+
+    /**
+     * Khôi phục danh mục đã bị xóa mềm.
+     */
+    public function restore($id)
+    {
+        $size = Size::withTrashed()->findOrFail($id);
+        $size->restore();
+        return redirect()->route('sizes.trashed')->with('success', 'Khôi phục thành công');
+    }
+
+    /**
+     * Xóa vĩnh viễn danh mục đã bị xóa mềm.
+     */
+    public function forceDelete($id)
+    {
+        $size = Size::withTrashed()->findOrFail($id);
+        $size->forceDelete();
+        return redirect()->route('sizes.trashed')->with('success', 'Size đã bị xóa vĩnh viễn');
     }
 }

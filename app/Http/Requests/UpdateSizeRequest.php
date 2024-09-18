@@ -11,7 +11,7 @@ class UpdateSizeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,21 @@ class UpdateSizeRequest extends FormRequest
      */
     public function rules(): array
     {
+        // Lấy ID từ route
+        $id = $this->route('size')->id;
+
         return [
-            //
+            'name' => 'required|string|max:255|unique:sizes,name,'.$id,
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Tên size là bắt buộc',
+            'name.string' => 'Tên size phải là một chuỗi văn bản',
+            'name.max' => 'Tên size không được dài quá 255 ký tự',
+            'name.unique' => 'Tên size này đã tồn tại trong hệ thống',
         ];
     }
 }
