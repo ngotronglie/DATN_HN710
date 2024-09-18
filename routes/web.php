@@ -18,4 +18,9 @@ Route::get('/', function () {
     return view('admin.layout.yeld');
 });
 
-Route::resource('color', ColorController::class);
+// Quản lý các size đã bị xóa mềm
+Route::get('colors/trashed', [ColorController::class, 'trashed'])->name('colors.trashed');
+Route::put('colors/restore/{id}', [ColorController::class, 'restore'])->name('colors.restore');
+Route::delete('colors/forceDelete/{id}', [ColorController::class, 'forceDelete'])->name('colors.forceDelete');
+
+Route::resource('colors', ColorController::class);

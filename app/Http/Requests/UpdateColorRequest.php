@@ -21,20 +21,26 @@ class UpdateColorRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => ['required', 'string', 'max:255'],
-            'hex_code' => ['required'],
+        // Lấy ID từ route
+        $id = $this->route('color')->id;
 
+        return [
+            'name' => 'required|string|max:255|unique:colors,name,'.$id,
+            'hex_code' => 'required|regex:/^#[0-9A-Fa-f]{6}$/|unique:colors,hex_code,'.$id,
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
-            'name.required' => 'Tên màu không được để trống',
-            'name.string' => 'Tên màu phải là kiểu chuỗi',
-            'name.max' => 'Tên màu không quá 255 ký tự',
-            'hex_code.required' => 'Mã màu HEX không được để trống',
+            'name.required' => 'Tên màu là bắt buộc',
+            'name.string' => 'Tên màu phải là một chuỗi văn bản',
+            'name.max' => 'Tên màu không được dài quá 255 ký tự',
+            'name.unique' => 'Tên màu này đã tồn tại trong hệ thống',
+
+            'hex_code.required' => 'Mã màu là bắt buộc',
+            'hex_code.regex' => 'Mã màu phải phù hợp với định dạng mã màu hex (ví dụ: #FF5733)',
+            'hex_code.unique' => 'Mã màu này đã tồn tại trong hệ thống',
         ];
     }
 }

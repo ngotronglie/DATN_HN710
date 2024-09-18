@@ -11,7 +11,7 @@ class CreateColorsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('hex_code');
-            $table->softDeletes()->default(false); // Cột soft_delete
+            $table->softDeletes();
             $table->timestamps();
         });
     }

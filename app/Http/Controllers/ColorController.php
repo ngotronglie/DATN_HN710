@@ -8,13 +8,16 @@ use App\Http\Requests\UpdateColorRequest;
 
 class ColorController extends Controller
 {
+    const PATH_VIEW = 'admin.layout.colors.';
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $colors = Color::orderBy('id', 'desc')->get();
-        return view('admin.layout.colors.index', compact('colors'));
+        $trashedCount = Color::onlyTrashed()->count();
+        return view(self::PATH_VIEW . __FUNCTION__, compact('colors', 'trashedCount'));
     }
 
     /**
@@ -22,7 +25,7 @@ class ColorController extends Controller
      */
     public function create()
     {
-        return view('admin.layout.colors.create');
+        return view(self::PATH_VIEW . __FUNCTION__);
     }
 
     /**
@@ -30,16 +33,9 @@ class ColorController extends Controller
      */
     public function store(StoreColorRequest $request)
     {
-        // Lấy dữ liệu đã được xác thực từ request
-        $validatedData = $request->validated();
-
-        // dd($validatedData);
-
-        // Tạo một đối tượng Color mới và lưu vào database
-        $color = Color::create($validatedData);
-
-        // Chuyển hướng người dùng về trang index với thông báo thành công
-        return redirect()->route('color.index')->with('success', 'Màu đã được tạo thành công.');
+        $data = $request->all();
+        Color::create($data);
+        return redirect()->route('colors.index')->with('success', 'Thêm thành công');
     }
 
 
@@ -48,7 +44,7 @@ class ColorController extends Controller
      */
     public function show(Color $color)
     {
-        //
+        return view(self::PATH_VIEW . __FUNCTION__, compact('color'));
     }
 
     /**
@@ -56,7 +52,7 @@ class ColorController extends Controller
      */
     public function edit(Color $color)
     {
-        return view('admin.layout.colors.edit', compact('color'));
+        return view(self::PATH_VIEW . __FUNCTION__, compact('color'));
 
     }
 
@@ -65,14 +61,9 @@ class ColorController extends Controller
      */
     public function update(UpdateColorRequest $request, Color $color)
     {
-        // Lấy dữ liệu đã được xác thực từ request
-        $validatedData = $request->validated();
-
-        // Cập nhật thông tin của đối tượng Color trong database
-        $color->update($validatedData);
-
-        // Chuyển hướng về trang index với thông báo thành công
-        return redirect()->route('color.index')->with('success', 'Màu đã được cập nhật thành công.');
+        $data = $request->all();
+        $color->update($data);
+        return redirect()->route('colors.index')->with('success', 'Sửa thành công');
     }
 
 
@@ -82,6 +73,35 @@ class ColorController extends Controller
     public function destroy(Color $color)
     {
         $color->delete();
-        return redirect()->route('color.index')->with('success', ' Color deleted successfully.');
+        return redirect()->route('colors.index')->with('success', ' Xóa thành công');
+    }
+
+    /**
+     * Hiển thị danh sách danh mục đã bị xóa mềm.
+     */
+    public function trashed()
+    {
+        $trashedColors = Color::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
+        return view(self::PATH_VIEW . 'trashed', compact('trashedColors'));
+    }
+
+    /**
+     * Khôi phục danh mục đã bị xóa mềm.
+     */
+    public function restore($id)
+    {
+        $color = Color::withTrashed()->findOrFail($id);
+        $color->restore();
+        return redirect()->route('colors.trashed')->with('success', 'Khôi phục thành công');
+    }
+
+    /**
+     * Xóa vĩnh viễn danh mục đã bị xóa mềm.
+     */
+    public function forceDelete($id)
+    {
+        $color = Color::withTrashed()->findOrFail($id);
+        $color->forceDelete();
+        return redirect()->route('colors.trashed')->with('success', 'Màu đã bị xóa vĩnh viễn');
     }
 }

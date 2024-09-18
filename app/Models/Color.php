@@ -10,5 +10,4 @@ class Color extends Model
 {
     use HasFactory, SoftDeletes;
     protected $fillable = ['name', 'hex_code'];
-    protected $dates = ['deleted_at'];
 }
