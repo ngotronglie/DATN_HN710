@@ -4,8 +4,7 @@ use App\Http\Controllers\Admin\ForgotPasswordController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\VerifyEmailPassword;
+
 /*
 |-------------------------------------------------------------------------- 
 | Web Routes 
@@ -16,10 +15,6 @@ use App\Mail\VerifyEmailPassword;
 | be assigned to the "web" middleware group. Make something great! 
 | 
 */
-// Route::get('/test-email', function () {
-//     Mail::to('banphph36928@fpt.edu.vn')->send(new VerifyEmailPassword('Test User', 'test-token'));
-
-// });
 
 Route::get('admin/login', [LoginController::class, 'loginForm'])->name('admin.loginForm');
 Route::post('admin/checkLogin',[LoginController::class,'login'])->name('admin.checkLogin');

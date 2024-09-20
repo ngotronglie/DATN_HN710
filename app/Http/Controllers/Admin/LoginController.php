@@ -36,13 +36,13 @@ class LoginController extends Controller
             } else {
                 Auth::logout(); 
                 return back()->withErrors([
-                    'err' => 'Bạn không có quyền truy cập vào trang admin.',
+                    'err' => 'Bạn không có quyền truy cập vào trang admin',
                 ])->onlyInput('err');
             }
         }
     
         return back()->withErrors([
-            'err' => 'Thông tin đăng nhập không tồn tại.',
+            'err' => 'Thông tin đăng nhập không tồn tại',
         ])->onlyInput('err');
     }
 }

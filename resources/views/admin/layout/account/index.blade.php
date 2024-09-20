@@ -1,14 +1,13 @@
 @extends('admin.dashboard')
 
 @section('style')
-<link href="{{ asset('node_modules/toastr/build/toastr.min.css') }}" rel="stylesheet" />
 <link rel="stylesheet" href="{{ asset('theme/admin/assets/css/lib/datatable/dataTables.bootstrap.min.css') }}">
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
 @endsection
 
 @section('content')
 
-<div class="breadcrumbs">
+<div class="breadcrumbs mb-5">
     <div class="breadcrumbs-inner">
         <div class="row m-0">
             <div class="col-sm-4">
@@ -33,7 +32,7 @@
     </div>
 </div>
 
-<div class="content">
+<div class="content mb-5">
     <div class="animated fadeIn">
         <div class="row">
 
@@ -57,15 +56,26 @@
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th style="white-space: nowrap;">STT</th>
-                                    <th style="white-space: nowrap;">Tên</th>
-                                    <th style="white-space: nowrap;">Email</th>                               
-                                    <th style="white-space: nowrap;">Ảnh</th>
-                                    <th style="white-space: nowrap;">Chức vụ</th>
-                                    <th style="white-space: nowrap;">Trạng thái</th>
-                                    <th style="white-space: nowrap;">Hành động</th>
+                                    <th>STT</th>
+                                    <th>Tên</th>
+                                    <th>Email</th>                               
+                                    <th>Ảnh</th>
+                                    <th>Chức vụ</th>
+                                    <th>Trạng thái</th>
+                                    <th>Hành động</th>
                                 </tr>
                             </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên</th>
+                                    <th>Email</th>                               
+                                    <th>Ảnh</th>
+                                    <th>Chức vụ</th>
+                                    <th>Trạng thái</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </tfoot>
                             <tbody>
                                 @foreach ($data as $key => $item)
                                 <tr>
@@ -76,9 +86,7 @@
                                     <img width="100px" src="{{ Storage::url($item->avatar) }}" alt="">
                                 </td>
                                 <td style="white-space: nowrap;">
-                                    @if ($item->role == 0)
-                                        Người dùng
-                                    @elseif($item->role == 1)
+                                    @if($item->role == 1)
                                         Nhân viên
                                     @elseif($item->role == 2)
                                         Admin
@@ -86,18 +94,11 @@
                                         Không xác định
                                     @endif
                                 </td>
-                               
                                 <td>{!! $item->is_active ? '<span class="badge bg-success text-white">Hoạt động</span>' : '<span class="badge bg-danger text-white">Không hoạt động</span>' !!}</td>
                                 <td class="d-flex">
-        
                                     <a class="btn btn-primary mr-2" href="{{route('admin.accounts.show', $item)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
-                                    @if($item->role!=2)
+                                    @if($item->role != 2)
                                     <a class="btn btn-warning mr-2" href="{{route('admin.accounts.edit', $item)}}" title="Sửa"><i class="fa fa-edit"></i></a>
-                                    {{-- <form action="{{route('categories.destroy', $item)}}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn muốn xóa?')" title="Xóa"><i class="fa fa-trash"></i></button>
-                                    </form> --}}
                                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $item->id }}" title="Xóa">
                                         <i class="fa fa-trash"></i>
                                     </button>
@@ -154,7 +155,6 @@
 <script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.print.min.js') }}"></script>
 <script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.colVis.min.js') }}"></script>
 <script src="{{ asset('theme/admin/assets/js/init/datatables-init.js') }}"></script>
-<script src="{{ asset('node_modules/toastr/build/toastr.min.js') }}"></script>
 
 <script type="text/javascript">
     $(document).ready(function() {

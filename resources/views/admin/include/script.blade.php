@@ -23,6 +23,9 @@
  <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/moment.min.js"></script>
  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.js"></script>
  <script src="{{ asset('theme/admin/assets/js/init/fullcalendar-init.js') }}"></script>
+
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
  @yield('script')
  <!--Local Stuff-->
  <script>

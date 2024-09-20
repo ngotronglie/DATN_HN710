@@ -22,10 +22,15 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
-       
         return [
-           //
+            'role' => 'required',
         ];
     }
-   
+
+    public function messages(): array
+    {
+        return [
+            'role.required' => 'Chức vụ là bắt buộc',
+        ];
+    }
 }

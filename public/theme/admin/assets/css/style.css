@@ -731,10 +731,10 @@ aside.left-panel {
 .open .sub-menu i {
   left: 15px !important; }
 
-.sub-menu .subtitle {
+/* .sub-menu .subtitle {
   display: none; }
   .sub-menu .subtitle > .menu-icon {
-    display: none; }
+    display: none; } */
 
 .open aside.left-panel {
   max-width: 83px;

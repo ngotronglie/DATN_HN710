@@ -24,8 +24,6 @@ class UserFactory extends Factory
             'phone' => $this->faker->phoneNumber,
             'avatar' => '',
             'password' => Hash::make('password'), 
-            'role' => $this->faker->randomElement([0,1,2]),
-            'is_active' => $this->faker->randomElement([0,1]),
             'date_of_birth' => $this->faker->date,
         ];
     }
