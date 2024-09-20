@@ -722,7 +722,7 @@ aside.left-panel {
 
 .open .navbar .navbar-brand.hidden {
   display: block; }
-.open .sub-menu .subtitle {
+/* .open .sub-menu .subtitle { */
   display: block;
   font-size: 15px;
   line-height: 35px;

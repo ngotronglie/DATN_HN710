@@ -14,7 +14,8 @@ class VoucherController extends Controller
 
     public function index()
     {
-        $vouchers = Voucher::all();
+        $vouchers = Voucher::orderBy('id','desc')->get();
+        $trashedVouchers = Voucher::onlyTrashed()->count();
         $currentDate = Carbon::now()->startOfDay(); // Đảm bảo rằng bạn so sánh ngày mà không có giờ
 
         foreach ($vouchers as $voucher) {
@@ -31,7 +32,7 @@ class VoucherController extends Controller
         }
 
         
-        return view(self::PATH_VIEW . 'index', compact('vouchers'));
+        return view(self::PATH_VIEW . 'index', compact('vouchers','trashedVouchers'));
     }
 
     public function create()

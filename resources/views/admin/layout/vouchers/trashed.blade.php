@@ -37,7 +37,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <strong class="card-title">Danh sách Voucher đã xóa</strong>
                         <a href="{{ route('vouchers.index') }}" class="btn btn-primary float-right">Quay lại</a>
                     </div>
@@ -52,7 +52,6 @@
                                     <th>Ngày bắt đầu</th>
                                     <th>Ngày kết thúc</th>
                                     <th>Giá nhỏ nhất</th>
-                                    <!-- <th>Trạng thái</th> -->
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
@@ -66,32 +65,78 @@
                                     <td>{{ \Carbon\Carbon::parse($item->start_date)->format('d/m/Y') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->end_date)->format('d/m/Y') }}</td>
                                     <td>{{ number_format($item->min_money, 0, ',', '.') }} VNĐ</td>
-                                    <!-- <td>
-                                        @if ($item->status == 0)
-                                        <span class="badge bg-success text-white">Hoạt động</span>
-                                        @elseif ($item->status == 1)
-                                        <span class="badge bg-danger text-white">Không hoạt động</span>
-                                        @endif
-                                    </td> -->
                                     <td class="d-flex">
-                                        <form action="{{ route('vouchers.restore', $item) }}" method="POST"
-                                            style="display: inline;">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="submit" class="btn btn-success mr-2" title="Khôi phục"><i
-                                                    class="fa fa-undo"></i></button>
-                                        </form>
-                                        <form action="{{ route('vouchers.forceDelete', $item->id) }}" method="POST"
-                                            onsubmit="return confirm('Xóa vĩnh viễn sẽ mất hết dữ liệu! Bạn có chắc chắn không?')"
-                                            style="display: inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger" title="Xóa vĩnh viễn">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </form>
+                                        <button type="button" class="btn btn-success mr-2" data-toggle="modal"
+                                            data-target="#restoreModal{{ $item->id }}" title="Khôi phục">
+                                            <i class="fa fa-undo"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger" data-toggle="modal"
+                                            data-target="#deleteModal{{ $item->id }}" title="Xóa vĩnh viễn">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
+
+                                <!-- Modal Khôi phục -->
+                                <div class="modal fade" id="restoreModal{{ $item->id }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="restoreModalLabel{{ $item->id }}" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header d-flex">
+                                                <h5 class="modal-title font-weight-bold"
+                                                    id="restoreModalLabel{{ $item->id }}">XÁC NHẬN KHÔI PHỤC</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Bạn có chắc chắn muốn khôi phục Voucher với mã "{{ $item->code }}"
+                                                không?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary"
+                                                    data-dismiss="modal">Hủy</button>
+                                                <form action="{{ route('vouchers.restore', $item->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-success">Xác nhận khôi
+                                                        phục</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Modal Xóa -->
+                                <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="deleteModalLabel{{ $item->id }}" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title font-weight-bold"
+                                                    id="deleteModalLabel{{ $item->id }}">XÁC NHẬN XÓA</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Bạn có muốn xóa vĩnh viễn Voucher với mã "{{ $item->code }}" không?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary"
+                                                    data-dismiss="modal">Hủy</button>
+                                                <form action="{{ route('vouchers.forceDelete', $item->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 @endforeach
                             </tbody>
                         </table>

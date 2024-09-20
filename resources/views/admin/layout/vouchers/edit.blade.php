@@ -6,6 +6,7 @@
 <!-- <link rel="stylesheet" href="{{asset('/public/admin/assets/css/main.css')}}"> -->
 @endsection
 
+
 @section('content')
 
 <div class="breadcrumbs">
@@ -38,8 +39,11 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <strong>Chỉnh sửa Voucher</strong>
+                        <a href="{{ route('vouchers.index') }}" class="btn btn-primary">
+                            <i class="fa fa-arrow-left mr-1"></i> Quay lại
+                        </a>
                     </div>
                     <div class="card-body">
                         <form action="{{ route('vouchers.update', $voucher->id) }}" method="POST">
@@ -100,9 +104,9 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group text-right">
-                                <button type="submit" class="btn btn-warning">Cập nhật</button>
-                                <a href="{{ route('vouchers.index') }}" class="btn btn-secondary">Hủy</a>
+                            <div class="form-group text-left">
+                                <button type="submit" class="btn btn-success btn-icon-split">Cập nhật</button>
+                                <!-- <a href="{{ route('vouchers.index') }}" class="fa fa-edit">Hủy</a> -->
                             </div>
 
                         </form>

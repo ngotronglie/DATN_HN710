@@ -24,8 +24,8 @@
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Dashboard</a></li>
-                            <li><a href="#">Quản lí Vouchers</a></li>
-                            <li class="active">Danh sách Vouchers</li>
+                            <li><a href="#">Quản lí Blogs</a></li>
+                            <li class="active">Danh sách Blogs</li>
                         </ol>
                     </div>
                 </div>
@@ -41,18 +41,18 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <!-- Tiêu đề card -->
-                        <strong class="card-title">Danh sách Vouchers</strong>
+                        <strong class="card-title">Danh sách Blogs</strong>
 
                         <!-- Nhóm các nút hành động bên phải -->
                         <div>
                             <!-- Nút Thêm mới -->
-                            <a href="{{ route('vouchers.create') }}" class="btn btn-primary mr-2">
+                            <a href="{{ route('blogs.create') }}" class="btn btn-primary mr-2">
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
 
-                            <!-- Nút Thùng rác với số lượng vouchers bị xóa -->
-                            <a href="{{ route('vouchers.trashed') }}" class="btn btn-danger">
-                                <i class="fa fa-trash"></i> Thùng rác ({{ $trashedVouchers }})
+                            <!-- Nút Thùng rác với số lượng blogs bị xóa -->
+                            <a href="{{ route('blogs.trashed') }}" class="btn btn-danger">
+                                <i class="fa fa-trash"></i> Thùng rác
                             </a>
                         </div>
                     </div>
@@ -62,37 +62,33 @@
                             <thead>
                                 <tr>
                                     <th>STT</th>
-                                    <th>Code</th>
-                                    <th>Giảm giá</th>
-                                    <th>Số lượng</th>
-                                    <th>Ngày bắt đầu</th>
-                                    <th>Ngày kết thúc</th>
-                                    <th>Giá nhỏ nhất</th>
+                                    <th>Tiêu đề</th>
+
+                                    <th>Ngày đăng</th>
+                                    <th>Ngày cập nhật</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($vouchers as $item)
+                                @foreach ($blogs as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $item->code }}</td>
-                                    <td>{{ $item->discount }}%</td>
-                                    <td>{{ $item->quantity }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->start_date)->format('d/m/Y') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->end_date)->format('d/m/Y') }}</td>
-                                    <td>{{ number_format($item->min_money, 0, ',', '.') }} VNĐ</td>
+                                    <td>{{ $item->title }}</td>
+
+                                    <td>{{ \Carbon\Carbon::parse($item->published_at)->format('d/m/Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->updated_at)->format('d/m/Y') }}</td>
                                     <td>
                                         @if ($item->status == 0)
-                                        <span class="badge bg-success text-white">Hoạt động</span>
+                                        <span class="badge bg-success text-white">Đã xuất bản</span>
                                         @elseif ($item->status == 1)
-                                        <span class="badge bg-danger text-white">Không hoạt động</span>
+                                        <span class="badge bg-danger text-white">Nháp</span>
                                         @endif
                                     </td>
                                     <td class="d-flex">
-                                        <a class="btn btn-primary mr-2" href="{{ route('vouchers.show', $item) }}"
+                                        <a class="btn btn-primary mr-2" href="{{ route('blogs.show', $item) }}"
                                             title="Xem chi tiết"><i class="fa fa-eye"></i></a>
-                                        <a class="btn btn-warning mr-2" href="{{ route('vouchers.edit', $item) }}"
+                                        <a class="btn btn-warning mr-2" href="{{ route('blogs.edit', $item) }}"
                                             title="Sửa"><i class="fa fa-edit"></i></a>
 
                                         <!-- Trigger modal -->
@@ -116,12 +112,12 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        Bạn có chắc chắn muốn xóa voucher "{{ $item->code }}" không?
+                                                        Bạn có chắc chắn muốn xóa blog "{{ $item->title }}" không?
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-primary"
                                                             data-dismiss="modal">Hủy</button>
-                                                        <form action="{{ route('vouchers.destroy', $item) }}"
+                                                        <form action="{{ route('blogs.destroy', $item) }}"
                                                             method="POST">
                                                             @csrf
                                                             @method('DELETE')
@@ -157,7 +153,7 @@
                 </button>
             </div>
             <div class="modal-body modal-body-custom">
-                Bạn có chắc chắn muốn xóa voucher này không?
+                Bạn có chắc chắn muốn xóa blog này không?
             </div>
             <div class="modal-footer modal-footer-custom">
                 <button type="button" class="btn btn-secondary-custom" data-dismiss="modal">Hủy</button>
@@ -185,7 +181,7 @@
 $(document).ready(function() {
     $('#bootstrap-data-table').DataTable();
 
-    // Trigger delete modal with voucher id
+    // Trigger delete modal with blog id
     let deleteFormId;
     $('.btn-delete').on('click', function() {
         deleteFormId = $(this).data('id');

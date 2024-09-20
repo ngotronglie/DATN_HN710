@@ -37,8 +37,11 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
-                    <div class="card-header">
-                        <strong>Thêm Voucher</strong>
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <strong>Thêm mới</strong>
+                        <a href="{{ route('vouchers.index') }}" class="btn btn-primary">
+                            <i class="fa fa-arrow-left mr-1"></i> Quay lại
+                        </a>
                     </div>
                     <div class="card-body">
                         <form action="{{ route('vouchers.store') }}" method="POST">
@@ -97,8 +100,8 @@
 
                             <!-- Phần trạng thái đã được loại bỏ. Nếu cần thiết, có thể thêm lại sau -->
 
-                            <button type="submit" class="btn btn-primary">Thêm Voucher</button>
-                            <a href="{{ route('vouchers.index') }}" class="btn btn-secondary">Quay lại</a>
+                            <button type="submit" class="btn btn-success">Thêm Voucher</button>
+
                         </form>
                     </div>
                 </div>

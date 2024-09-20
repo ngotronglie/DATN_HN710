@@ -37,10 +37,11 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <strong>Chi tiết Voucher</strong>
-                        <a href="{{ route('vouchers.index') }}" class="btn btn-secondary float-right">Quay lại danh
-                            sách</a>
+                        <a href="{{ route('vouchers.index') }}" class="btn btn-primary  ">
+                            <i class="fa fa-arrow-left mr-1"></i> Quay lại
+                        </a>
                     </div>
                     <div class="card-body">
                         <table class="table table-bordered">
@@ -51,7 +52,7 @@
                                 </tr>
                                 <tr>
                                     <th>Giảm giá</th>
-                                    <td>{{ $voucher->discount }}</td>
+                                    <td>{{ $voucher->discount }}%</td>
                                 </tr>
                                 <tr>
                                     <th>Số lượng</th>
@@ -59,23 +60,23 @@
                                 </tr>
                                 <tr>
                                     <th>Ngày bắt đầu</th>
-                                    <td>{{ $voucher->start_date }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($voucher->start_date)->format('d/m/Y') }}</td>
                                 </tr>
                                 <tr>
                                     <th>Ngày kết thúc</th>
-                                    <td>{{ $voucher->end_date }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($voucher->end_date)->format('d/m/Y') }}</td>
                                 </tr>
                                 <tr>
                                     <th>Giá trị nhỏ nhất</th>
-                                    <td>{{ number_format($voucher->min_money, 0) }} VNĐ</td>
-                                </tr>
-                                <tr>
-                                    <th>Thời gian sửa</th>
-                                    <td>{{ $voucher->updated_at}} </td>
+                                    <td>{{ number_format($voucher->min_money, 0, ',', '.') }} VNĐ</td>
                                 </tr>
                                 <tr>
                                     <th>Thời gian tạo</th>
-                                    <td>{{ $voucher->created_at}} </td>
+                                    <td>{{ \Carbon\Carbon::parse($voucher->created_at)->format('d/m/Y H:i') }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Thời gian sửa</th>
+                                    <td>{{ \Carbon\Carbon::parse($voucher->updated_at)->format('d/m/Y H:i') }}</td>
                                 </tr>
                                 <tr>
                                     <th>Trạng thái</th>
@@ -99,7 +100,6 @@
                             <button type="submit" class="btn btn-danger"
                                 onclick="return confirm('Bạn có chắc chắn muốn xóa không?')">Xóa</button>
                         </form>
-
                     </div>
                 </div>
             </div>
