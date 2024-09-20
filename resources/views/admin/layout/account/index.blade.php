@@ -2,7 +2,7 @@
 
 @section('style')
 <link href="{{ asset('node_modules/toastr/build/toastr.min.css') }}" rel="stylesheet" />
-<link rel="stylesheet" href="{{ asset('admin/assets/css/lib/datatable/dataTables.bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ asset('theme/admin/assets/css/lib/datatable/dataTables.bootstrap.min.css') }}">
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
 @endsection
 
@@ -42,10 +42,13 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <strong class="card-title">Danh sách tài khoản</strong>
                         <div>
-                            <a class="btn btn-primary mr-2" href="{{ route('accounts.create') }}">
+                            <a class="btn btn-primary mr-2" href="{{ route('admin.accounts.create') }}">
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
-                            <a class="btn btn-danger" href="{{ route('accounts.trashed') }}">
+                            <a class="btn btn-success" href="{{ route('admin.accounts.listUser') }}">
+                                <i class="fa fa-user"></i> Người dùng ({{ $users }})
+                            </a>
+                            <a class="btn btn-danger" href="{{ route('admin.accounts.trashed') }}">
                                 <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
                             </a>
                         </div>
@@ -56,9 +59,7 @@
                                 <tr>
                                     <th style="white-space: nowrap;">STT</th>
                                     <th style="white-space: nowrap;">Tên</th>
-                                    <th style="white-space: nowrap;">Email</th>
-                                    <th style="white-space: nowrap;">Địa chỉ</th>
-                                    <th style="white-space: nowrap;">Điện thoại</th>
+                                    <th style="white-space: nowrap;">Email</th>                               
                                     <th style="white-space: nowrap;">Ảnh</th>
                                     <th style="white-space: nowrap;">Chức vụ</th>
                                     <th style="white-space: nowrap;">Trạng thái</th>
@@ -66,17 +67,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($users as $key => $item)
+                                @foreach ($data as $key => $item)
                                 <tr>
                                 <td>{{ $key+1 }}</td>
                                 <td>{{ $item->name }}</td>
                                 <td>{{ $item->email }}</td>
-                                <td
-                                    style="display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">
-                                    {{ $item->address }}
-                                </td>
-                                <td>{{ $item->phone }}</td>
-                                <td><img width="100px" src="{{ Storage::url($item->avatar) }}" alt="">
+                                <td>
+                                    <img width="100px" src="{{ Storage::url($item->avatar) }}" alt="">
                                 </td>
                                 <td style="white-space: nowrap;">
                                     @if ($item->role == 0)
@@ -92,8 +89,10 @@
                                
                                 <td>{!! $item->is_active ? '<span class="badge bg-success text-white">Hoạt động</span>' : '<span class="badge bg-danger text-white">Không hoạt động</span>' !!}</td>
                                 <td class="d-flex">
-                                    <a class="btn btn-primary mr-2" href="{{route('accounts.show', $item)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
-                                    <a class="btn btn-warning mr-2" href="{{route('accounts.edit', $item)}}" title="Sửa"><i class="fa fa-edit"></i></a>
+        
+                                    <a class="btn btn-primary mr-2" href="{{route('admin.accounts.show', $item)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
+                                    @if($item->role!=2)
+                                    <a class="btn btn-warning mr-2" href="{{route('admin.accounts.edit', $item)}}" title="Sửa"><i class="fa fa-edit"></i></a>
                                     {{-- <form action="{{route('categories.destroy', $item)}}" method="POST">
                                         @csrf
                                         @method('DELETE')
@@ -102,6 +101,7 @@
                                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $item->id }}" title="Xóa">
                                         <i class="fa fa-trash"></i>
                                     </button>
+                                    @endif
                                 </td>
                                 </tr>
 
@@ -116,11 +116,11 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                Bạn có chắc chắn muốn xóa danh mục "{{ $item->name }}" không?
+                                                Bạn có chắc chắn muốn xóa tài khoản "{{ $item->name }}" không?
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
-                                                <form action="{{ route('accounts.destroy', $item) }}" method="POST">
+                                                <form action="{{ route('admin.accounts.destroy', $item) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
@@ -144,16 +144,16 @@
 @endsection
 
 @section('script')
-<script src="{{ asset('admin/assets/js/lib/data-table/datatables.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/dataTables.bootstrap.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/dataTables.buttons.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/buttons.bootstrap.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/jszip.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/vfs_fonts.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/buttons.html5.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/buttons.print.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/buttons.colVis.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/init/datatables-init.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/datatables.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/dataTables.bootstrap.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.bootstrap.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/jszip.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/vfs_fonts.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.print.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.colVis.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/init/datatables-init.js') }}"></script>
 <script src="{{ asset('node_modules/toastr/build/toastr.min.js') }}"></script>
 
 <script type="text/javascript">

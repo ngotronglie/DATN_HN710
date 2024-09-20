@@ -3,8 +3,8 @@
         <nav class="navbar navbar-expand-sm navbar-default">
             <div id="main-menu" class="main-menu collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active">
-                        <a href="index.html"><i class="menu-icon fa fa-laptop"></i>Dashboard </a>
+                    <li class="{{ Request::routeIs('admin.dashboard') ? 'active' : '' }}">
+                        <a href="{{ route('admin.dashboard') }}"><i class="menu-icon fa fa-laptop"></i>Dashboard </a>
                     </li>
                     <li class="menu-title">UI elements</li><!-- /.menu-title -->
                     <li class="menu-item-has-children dropdown">
@@ -24,12 +24,12 @@
                             <li><i class="fa fa-file-word-o"></i><a href="ui-typgraphy.html">Typography</a></li>
                         </ul>
                     </li>
-                    <li class="menu-item-has-children dropdown">
+                    <li class="menu-item-has-children {{ Request::is('admin/accounts*') ? 'active' : '' }} dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false"> <i class="menu-icon fa fa-table"></i>Tài khoản</a>
                         <ul class="sub-menu children dropdown-menu">
-                            <li><a href="{{route('accounts.index')}}">Danh sách</a></li>
-                            <li><a href="{{route('accounts.create')}}">Thêm mới</a></li>
+                            <li><a href="{{route('admin.accounts.index')}}">Danh sách</a></li>
+                            <li><a href="{{route('admin.accounts.create')}}">Thêm mới</a></li>
                         </ul>
                     </li>
                     <li class="menu-item-has-children dropdown">

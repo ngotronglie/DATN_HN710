@@ -21,11 +21,15 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::orderBy('id', 'desc')->get();
+        $data = User::whereIn('role', [1, 2])->orderBy('role', 'desc')->orderBy('id','desc')->get();
         $trashedCount = User::onlyTrashed()->count();
-        return view(self::PATH_VIEW . __FUNCTION__, compact('users','trashedCount'));
+        $users=User::where('role',0)->count();
+        return view(self::PATH_VIEW . __FUNCTION__, compact('data','trashedCount','users'));
     }
-
+  public function listUser(){
+    $users=User::where('role',0)->orderBy('id', 'desc')->get();
+    return view('admin.layout.account.user', compact('users'));
+  }
     /**
      * Show the form for creating a new resource.
      */
@@ -39,7 +43,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        
+       
         $data = $request->except('avatar');
         $data['is_active'] ??= 0;
         $data['password'] = Hash::make($request->input('password'));
@@ -49,8 +53,9 @@ class UserController extends Controller
         } else {
             $data['avatar'] = '';
         }      
+       
             User::create($data);
-            return redirect()->route('accounts.index')->with('success', 'Thêm mới thành công');
+            return redirect()->route('admin.accounts.index')->with('success', 'Thêm mới thành công');
     
         
     }
@@ -86,30 +91,21 @@ class UserController extends Controller
      * Update the specified resource in storage.
      */
     
-    public function update(UpdateUserRequest $request, User $account) {
-    {
-        
-        $data=$request->except('avatar');
+    public function update(UpdateUserRequest $request, User $account) {{
+       
+        $data=$request->all();
             $data['is_active']??=0;
-            if($request->hasFile('avatar')){
-                $data['avatar']=Storage::put('users',$request->file('avatar'));
-                if($account->avatar){
-                    Storage::delete($account->avatar);  
-                }
-            }else{
-                $data['avatar']=$account->avatar;
-            }
+
             $account->update($data);
-            return redirect()->route('accounts.index')->with('success', 'Sửa thành công');
+            return redirect()->route('admin.accounts.index')->with('success', 'Sửa thành công');
     }
     }
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $account) 
-{
+    public function destroy(User $account) {
     $account->delete();
-    return redirect()->route('accounts.index')->with('success', 'Xóa mềm thành công');
+    return redirect()->route('admin.accounts.index')->with('success', 'Xóa mềm thành công');
 }
 
     public function forceDelete($id)
@@ -120,27 +116,25 @@ class UserController extends Controller
             Storage::delete($user->avatar);
         }
         $user->forceDelete();
-        return redirect()->route('accounts.index')->with('success', 'Tài khoản đã được xóa vĩnh viễn.');
+        return redirect()->route('admin.accounts.index')->with('success', 'Tài khoản đã được xóa vĩnh viễn.');
     }
 
-    return redirect()->route('accounts.index')->with('error', 'Tài khoản không tồn tại.');
+    return redirect()->route('admin.accounts.index')->with('error', 'Tài khoản không tồn tại.');
 }
 
-    public function trashed()
-    {
+    public function trashed() {
         
         $trashedUsers = User::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
         
         return view('admin.layout.account.trashed', compact('trashedUsers'));
     }
-    public function restore($id)
-{
+    public function restore($id){
     $user = User::withTrashed()->find($id);
 
     $user->restore();
-    return redirect()->route('accounts.trashed')->with('success', 'Khôi phục thành công');
+    return redirect()->route('admin.accounts.trashed')->with('success', 'Khôi phục thành công');
 }
 
-    
+   
 
 }

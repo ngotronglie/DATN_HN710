@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('is_active')->default(1);
             $table->date('date_of_birth')->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('email_verification_expires_at')->nullable();
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
