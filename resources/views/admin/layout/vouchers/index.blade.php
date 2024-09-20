@@ -9,7 +9,7 @@
 
 @section('content')
 
-<div class="breadcrumbs">
+<div class="breadcrumbs mb-5">
     <div class="breadcrumbs-inner">
         <div class="row m-0">
             <div class="col-sm-4">
@@ -34,7 +34,7 @@
     </div>
 </div>
 
-<div class="content">
+<div class="content mb-5">
     <div class="animated fadeIn">
         <div class="row">
             <div class="col-md-12">
@@ -72,6 +72,19 @@
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Code</th>
+                                    <th>Giảm giá</th>
+                                    <th>Số lượng</th>
+                                    <th>Ngày bắt đầu</th>
+                                    <th>Ngày kết thúc</th>
+                                    <th>Giá nhỏ nhất</th>
+                                    <th>Trạng thái</th>
+                                    <th>Chức năng</th>
+                                </tr>
+                            </tfoot>
                             <tbody>
                                 @foreach ($vouchers as $item)
                                 <tr>
@@ -83,9 +96,9 @@
                                     <td>{{ \Carbon\Carbon::parse($item->end_date)->format('d/m/Y') }}</td>
                                     <td>{{ number_format($item->min_money, 0, ',', '.') }} VNĐ</td>
                                     <td>
-                                        @if ($item->status == 0)
+                                        @if ($item->is_active == 1)
                                         <span class="badge bg-success text-white">Hoạt động</span>
-                                        @elseif ($item->status == 1)
+                                        @elseif ($item->is_active == 0)
                                         <span class="badge bg-danger text-white">Không hoạt động</span>
                                         @endif
                                     </td>
@@ -94,46 +107,36 @@
                                             title="Xem chi tiết"><i class="fa fa-eye"></i></a>
                                         <a class="btn btn-warning mr-2" href="{{ route('vouchers.edit', $item) }}"
                                             title="Sửa"><i class="fa fa-edit"></i></a>
-
-                                        <!-- Trigger modal -->
-                                        <button type="button" class="btn btn-danger mr-2" data-toggle="modal"
-                                            data-target="#deleteModal{{ $item->id }}">
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $item->id }}" title="Xóa">
                                             <i class="fa fa-trash"></i>
                                         </button>
-
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1"
-                                            role="dialog" aria-labelledby="deleteModalLabel{{ $item->id }}"
-                                            aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title font-weight-bold"
-                                                            id="deleteModalLabel{{ $item->id }}">XÁC NHẬN XÓA</h5>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Bạn có chắc chắn muốn xóa voucher "{{ $item->code }}" không?
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-primary"
-                                                            data-dismiss="modal">Hủy</button>
-                                                        <form action="{{ route('vouchers.destroy', $item) }}"
-                                                            method="POST">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger">Xác nhận
-                                                                xóa</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </td>
                                 </tr>
+
+                                <!-- Modal Xóa -->
+                                <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ $item->id }}" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header d-flex">
+                                                <h5 class="modal-title font-weight-bold" id="deleteModalLabel{{ $item->id }}">XÁC NHẬN XÓA</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Bạn có chắc chắn muốn xóa voucher "{{ $item->code }}" không?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
+                                                <form action="{{ route('vouchers.destroy', $item) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 @endforeach
                             </tbody>
 
@@ -144,28 +147,6 @@
         </div>
     </div><!-- .animated -->
 </div><!-- .content -->
-
-<!-- Beautiful Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content modal-content-custom">
-            <div class="modal-header modal-header-custom">
-                <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body modal-body-custom">
-                Bạn có chắc chắn muốn xóa voucher này không?
-            </div>
-            <div class="modal-footer modal-footer-custom">
-                <button type="button" class="btn btn-secondary-custom" data-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-danger-custom" id="confirm-delete">Xóa</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 @endsection
 
@@ -182,19 +163,8 @@
 <script src="{{ asset('admin/assets/js/init/datatables-init.js') }}"></script>
 
 <script type="text/javascript">
-$(document).ready(function() {
-    $('#bootstrap-data-table').DataTable();
-
-    // Trigger delete modal with voucher id
-    let deleteFormId;
-    $('.btn-delete').on('click', function() {
-        deleteFormId = $(this).data('id');
+    $(document).ready(function() {
+        $('#bootstrap-data-table-export').DataTable();
     });
-
-    // Handle modal confirmation
-    $('#confirm-delete').on('click', function() {
-        $('#delete-form-' + deleteFormId).submit();
-    });
-});
 </script>
 @endsection

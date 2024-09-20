@@ -16,14 +16,11 @@ class Voucher extends Model
         'code', 'discount', 'start_date', 'end_date', 'quantity', 'min_money', 'is_active',
     ];
 
-    
-
-    
-    // protected $casts = [
-    //     'is_active' => 'boolean',
-    //     'start_date' => 'datetime',
-    //     'end_date' => 'datetime',
-    // ];
+    protected $casts = [
+        'is_active' => 'boolean',
+        // 'start_date' => 'datetime',
+        // 'end_date' => 'datetime',
+    ];
 
     // /**
     //  * Lấy ngày bắt đầu theo định dạng d/m/Y.
@@ -44,6 +41,4 @@ class Voucher extends Model
     // {
     //     return $this->end_date->format('d/m/Y'); // Ngày/tháng/năm
     // }
-
-
 }

@@ -13,14 +13,12 @@ return new class extends Migration
     {
         Schema::create('vouchers', function (Blueprint $table) {
             $table->id();
-
-            $table->string('code');
+            $table->string('code')->unique();
             $table->string('discount');
             $table->date('start_date');
             $table->date('end_date');
             $table->integer('quantity');
             $table->decimal('min_money', 10, 2);
-            $table->decimal('max_money', 10, 2);
             $table->boolean('is_active')->default(true);
             $table->softDeletes();
             $table->timestamps(); 

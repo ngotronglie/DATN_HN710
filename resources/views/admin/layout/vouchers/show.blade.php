@@ -7,7 +7,7 @@
 
 @section('content')
 
-<div class="breadcrumbs">
+<div class="breadcrumbs mb-5">
     <div class="breadcrumbs-inner">
         <div class="row m-0">
             <div class="col-sm-4">
@@ -32,7 +32,7 @@
     </div>
 </div>
 
-<div class="content">
+<div class="content mb-5">
     <div class="animated fadeIn">
         <div class="row">
             <div class="col-lg-12">
@@ -81,10 +81,10 @@
                                 <tr>
                                     <th>Trạng thái</th>
                                     <td>
-                                        @if($voucher->status == 0)
-                                        <span class="badge badge-success">Hoạt động</span>
-                                        @else
-                                        <span class="badge badge-danger">Không hoạt động</span>
+                                        @if ($voucher->is_active == 1)
+                                        <span class="badge bg-success text-white">Hoạt động</span>
+                                        @elseif ($voucher->is_active == 0)
+                                        <span class="badge bg-danger text-white">Không hoạt động</span>
                                         @endif
                                     </td>
                                 </tr>
@@ -92,14 +92,9 @@
                         </table>
                     </div>
                     <div class="card-footer">
-                        <a href="{{ route('vouchers.edit', $voucher->id) }}" class="btn btn-warning">Sửa</a>
-                        <form action="{{ route('vouchers.destroy', $voucher->id) }}" method="POST"
-                            style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger"
-                                onclick="return confirm('Bạn có chắc chắn muốn xóa không?')">Xóa</button>
-                        </form>
+                        <a href="{{ route('vouchers.edit', $voucher) }}" class="btn btn-warning btn-icon-split">
+                                <i class="fa fa-edit"></i> Sửa
+                        </a>
                     </div>
                 </div>
             </div>
