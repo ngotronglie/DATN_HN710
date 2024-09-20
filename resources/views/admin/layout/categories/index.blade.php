@@ -59,6 +59,14 @@
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên danh mục</th>
+                                    <th>Trạng thái</th>
+                                    <th>Chức năng</th>
+                                </tr>
+                            </tfoot>
                             <tbody>
                                 @foreach ($categories as $key => $item)
                                 <tr>

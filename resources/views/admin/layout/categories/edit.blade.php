@@ -44,7 +44,7 @@
                             <div class="form-group">
                                 <label for="name" class=" form-control-label">Tên danh mục</label><input type="text" id="name" name="name" placeholder="Nhập tên danh mục" class="form-control" value="{{ old('name', $category->name) }}" required>
                                 @error('name')
-                                <div class="text-danger">{{ $message }}</div>
+                                <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="form-group">
