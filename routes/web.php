@@ -28,7 +28,7 @@ Route::get('password/reset/{token}', [ForgotPasswordController::class, 'showRese
 Route::post('password/reset', [ForgotPasswordController::class, 'reset'])->name('admin.password.update');
 
 
-Route::prefix('admin')->as('admin.')->group(function() {
+Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function() {
     Route::get('/', function () {
         return view('admin.layout.yeld');
     })->name('dashboard');
