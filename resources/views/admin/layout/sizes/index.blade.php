@@ -57,6 +57,13 @@
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên size</th>
+                                    <th>Chức năng</th>
+                                </tr>
+                            </tfoot>
                             <tbody>
                                 @foreach ($sizes as $key => $item)
                                 <tr>

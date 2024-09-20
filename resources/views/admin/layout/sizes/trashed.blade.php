@@ -53,6 +53,13 @@
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>STT</th></th>
+                                    <th>Tên size</th>
+                                    <th>Chức năng</th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 @foreach ($trashedSizes as $key => $item)
                                 <tr>
