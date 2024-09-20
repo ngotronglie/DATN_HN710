@@ -44,13 +44,13 @@
                                 <div class="form-group">
                                     <label for="name" class=" form-control-label">Tên màu</label><input type="text" id="name" name="name" placeholder="Nhập tên màu" class="form-control" value="{{ old('name', $color->name) }}" requied>
                                     @error('name')
-                                    <div class="text-danger">{{ $message }}</div>
+                                    <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
                                 <div class="form-group">
                                     <label for="hex_code">Mã màu</label> <input type="color" id="hex_code" name="hex_code"  value="{{ old('hex_code', $color->hex_code) }}" requied>
                                     @error('hex_code')
-                                    <div class="text-danger">{{ $message }}</div>
+                                    <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
     
