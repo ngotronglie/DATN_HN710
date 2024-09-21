@@ -42,13 +42,23 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <strong class="card-title">Danh sách danh mục</strong>
-                        <div>
+                        <div >
                             <a class="btn btn-primary mr-2" href="{{ route('category_blogs.create') }}">
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
                             <a class="btn btn-danger" href="{{ route('category_blogs.trashed') }}">
                                 <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
                             </a>
+                            <div class="dropdown">
+                                <button style="height: 100%" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Tùy chọn
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#">Tùy chọn 1</a>
+                                    <a class="dropdown-item" href="#">Tùy chọn 2</a>
+                                    <a class="dropdown-item" href="#">Tùy chọn 3</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body">
