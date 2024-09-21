@@ -48,9 +48,10 @@
         if ($('.activeAll').length) {
             var token = $('meta[name="csrf-token"]').attr('content');
 
-            $(document).on('click', '.activeAll', function() {
+            $(document).on('click', '.activeAll', function(e) {
             let _this = $(this)
             let id = [];
+
             $('.checkBoxItem').each(function(){
                 let checkbox = $(this)
                 if (checkbox.prop('checked')) {
@@ -61,19 +62,19 @@
 
             let option = {
                 'id':id,
-                'dk': _this.attr('data-dk'),
+                'is_active': _this.attr('data-is_active'),
                 '_token': token
             }
 
             $.ajax({
                     type: 'POST',
-                    url: 'ajax/changeActiveAll', // URL của máy chủ xử lý yêu cầu
+                    url: 'ajax/changeActiveAllCaregoryBlogs', // URL của máy chủ xử lý yêu cầu
                     data: option, // Dữ liệu gửi đến máy chủ
                     dataType: 'json', // Loại dữ liệu nhận lại từ máy chủ
                     success: function(res) {
 
                         // Sau đó chuyển hướng
-                        window.location.href = '/user'; // Thay đổi URL nếu cần thiết
+                       window.location.href = 'category_blogs'; // Thay đổi URL nếu cần thiết
 
                         // Hiển thị phản hồi từ máy chủ
                         //$('#result').html('Server Response: ' + response.message);
@@ -83,6 +84,8 @@
                         console.log('Error: ' + error);
                     }
                 });
+                //them cai nay
+            e.preventDefault();
 
         });
         }

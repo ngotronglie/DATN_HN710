@@ -33,4 +33,7 @@ Route::resource('blogs', BlogController::class);
 
 //ajax category blog
 Route::post('ajax/changeActiveCategoryBlog', [ChangeActiveController::class, 'changeActiveCetegoryBlog']);
+//ajax thay doi tat ca cac truong is_active da chon category blog
+Route::post('ajax/changeActiveAllCaregoryBlogs', [ChangeActiveController::class, 'changeActiveAllCtgrBls']);
+
 
