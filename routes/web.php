@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Ajax\ChangeActiveController;
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CategoryBlogController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,3 +20,17 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('admin.layout.yeld');
 });
+
+
+// Quản lý các danh mục đã bị xóa mềm
+Route::get('category_blogs/trashed', [CategoryBlogController::class, 'trashed'])->name('category_blogs.trashed');
+Route::put('category_blogs/restore/{id}', [CategoryBlogController::class, 'restore'])->name('category_blogs.restore');
+Route::delete('category_blogs/forceDelete/{id}', [CategoryBlogController::class, 'forceDelete'])->name('category_blogs.forceDelete');
+
+Route::resource('category_blogs', CategoryBlogController::class);
+Route::resource('blogs', BlogController::class);
+
+
+//ajax category blog
+Route::post('ajax/changeActiveCategoryBlog', [ChangeActiveController::class, 'changeActiveCetegoryBlog']);
+

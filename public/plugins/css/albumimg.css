@@ -1,0 +1,143 @@
+.ibox {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.ibox-title {
+    background-color: #fff;
+    padding: 15px;
+    border-bottom: 1px solid #e9ecef;
+    border-radius: 8px 8px 0 0;
+}
+
+.ibox-title h5 {
+    font-weight: bold;
+    color: #343a40;
+}
+
+/* .upload-albumimage a.upload-img {
+    background-color: #007bff;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+} */
+
+.upload-albumimage a.upload-img:hover {
+    background-color: #0056b3;
+}
+
+.inbox-content {
+    padding: 15px;
+}
+
+.click-to-upload {
+    background-color: #fff;
+    border: 2px dashed #ced4da;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    transition: border 0.3s ease; /* Hiệu ứng khi hover */
+}
+
+.click-to-upload:hover {
+    border-color: #007bff;
+}
+
+.click-to-upload .icon img {
+    width: 60px;
+    margin-bottom: 10px;
+}
+
+.click-to-upload .small-text {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.upload-list {
+    margin-top: 15px;
+}
+
+.upload-list ul {
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px; /* Khoảng cách giữa các phần tử, tăng lên cho thoáng hơn */
+    justify-content: space-between; /* Căn đều các mục */
+}
+
+.upload-list ul li {
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 10px;
+    width: calc(25% - 15px); /* Điều chỉnh kích thước để phù hợp với khoảng cách mới */
+    box-sizing: border-box; /* Đảm bảo kích thước không bị ảnh hưởng bởi padding và border */
+    text-align: center;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Thêm hiệu ứng hover */
+}
+
+.upload-list ul li:hover {
+    transform: translateY(-5px); /* Nhấn mạnh hiệu ứng khi hover */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Thêm bóng khi hover */
+}
+
+.upload-list ul li .thum {
+    display: block;
+    height: 120px; /* Tăng chiều cao cố định để tạo cân bằng cho ảnh */
+}
+
+.upload-list ul li .thum .image {
+    display: block;
+    height: 100%;
+    overflow: hidden;
+}
+
+.upload-list ul li .thum .image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Đảm bảo ảnh không bị méo */
+    border-radius: 5px;
+    transition: transform 0.3s ease; /* Hiệu ứng zoom nhẹ khi hover */
+}
+
+.upload-list ul li:hover .thum .image img {
+    transform: scale(1.05); /* Zoom ảnh khi hover */
+}
+
+.upload-list ul li .delete-image {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Thêm hiệu ứng hover */
+}
+
+.upload-list ul li .delete-image i {
+    font-size: 14px;
+}
+
+.upload-list ul li .delete-image:hover {
+    background-color: #bd2130;
+}
+
+.hidden{
+    display: none;
+}
+
+
