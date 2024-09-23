@@ -5,6 +5,10 @@ use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SizeController;
 use App\Http\Controllers\Admin\VoucherController;
+
+use App\Http\Controllers\Ajax\ChangeActiveController;
+use App\Http\Controllers\Admin\CategoryController;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ColorController;
 
@@ -65,4 +69,17 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     Route::put('vouchers/restore/{id}', [VoucherController::class, 'restore'])->name('vouchers.restore');
 
     Route::resource('vouchers', VoucherController::class);
+
+    // Quản lý các danh mục đã bị xóa mềm
+    Route::get('categories/trashed', [CategoryController::class, 'trashed'])->name('categories.trashed');
+    Route::put('categories/restore/{id}', [CategoryController::class, 'restore'])->name('categories.restore');
+    Route::delete('categories/forceDelete/{id}', [CategoryController::class, 'forceDelete'])->name('categories.forceDelete');
+
+    Route::resource('categories', CategoryController::class);
+
+    //ajax category blog
+    Route::post('categories/ajax/changeActiveCategory', [ChangeActiveController::class, 'changeActiveCategory']);
+
+    //ajax thay doi tat ca cac truong is_active da chon category blog
+    Route::post('categories/ajax/changeAllActiveCategory', [ChangeActiveController::class, 'changeActiveAllCategory']);
 });

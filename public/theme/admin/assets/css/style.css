@@ -722,11 +722,7 @@ aside.left-panel {
 
 .open .navbar .navbar-brand.hidden {
   display: block; }
-<<<<<<< HEAD:public/theme/admin/assets/css/style.css
 /* .open .sub-menu .subtitle {
-=======
-/* .open .sub-menu .subtitle { */
->>>>>>> origin/Huy_dev:public/admin/assets/css/style.css
   display: block;
   font-size: 15px;
   line-height: 35px;
@@ -738,7 +734,7 @@ aside.left-panel {
 /* .sub-menu .subtitle {
   display: none; }
   .sub-menu .subtitle > .menu-icon {
-    display: none; } */
+  display: none; } */
 
 .open aside.left-panel {
   max-width: 83px;

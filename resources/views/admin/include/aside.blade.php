@@ -7,6 +7,17 @@
                         <a href="{{ route('admin.dashboard') }}"><i class="menu-icon fa fa-laptop"></i>Dashboard </a>
                     </li>
                     <li class="menu-title">UI elements</li><!-- /.menu-title -->
+                    {{-- category --}}
+                    <li class="menu-item-has-children {{ Request::is('categories*') ? 'active' : '' }} dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="menu-icon fa fa-folder"></i>Quản lý danh mục
+                        </a>
+                        <ul class="sub-menu children dropdown-menu">
+                            <li><a href="{{ route('categories.index') }}">Danh sách</a></li>
+                            <li><a href="{{ route('categories.create') }}">Thêm</a></li>
+                        </ul>
+                    </li>
+                    {{-- end category --}}
                     <li class="menu-item-has-children dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false"> <i class="menu-icon fa fa-cogs"></i>Components</a>
