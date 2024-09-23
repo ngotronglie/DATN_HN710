@@ -46,10 +46,6 @@
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            <div class="form-group">
-                                <input type="checkbox" id="is_active" name="is_active" value="1" checked>
-                                <label for="is_active">Hoạt động</label>
-                            </div>
 
                             <!-- Phần trạng thái đã được loại bỏ. Nếu cần thiết, có thể thêm lại sau -->
                             <button type="submit" class="btn btn-success mb-1">Thêm mới</button>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Ajax\ChangeActiveController;
 use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,3 +25,10 @@ Route::put('categories/restore/{id}', [CategoryController::class, 'restore'])->n
 Route::delete('categories/forceDelete/{id}', [CategoryController::class, 'forceDelete'])->name('categories.forceDelete');
 
 Route::resource('categories', CategoryController::class);
+
+//ajax category blog
+Route::post('categories/ajax/changeActiveCategory', [ChangeActiveController::class, 'changeActiveCategory']);
+
+//ajax thay doi tat ca cac truong is_active da chon category blog
+Route::post('categories/ajax/changeAllActiveCategory', [ChangeActiveController::class, 'changeActiveAllCategory']);
+
