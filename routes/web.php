@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SizeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\ColorController;
 
 /*
 |-------------------------------------------------------------------------- 
@@ -49,4 +50,11 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     Route::delete('sizes/forceDelete/{id}', [SizeController::class, 'forceDelete'])->name('sizes.forceDelete');
 
     Route::resource('sizes', SizeController::class);
+
+    // Quản lý các size đã bị xóa mềm
+    Route::get('colors/trashed', [ColorController::class, 'trashed'])->name('colors.trashed');
+    Route::put('colors/restore/{id}', [ColorController::class, 'restore'])->name('colors.restore');
+    Route::delete('colors/forceDelete/{id}', [ColorController::class, 'forceDelete'])->name('colors.forceDelete');
+
+    Route::resource('colors', ColorController::class);
 });
