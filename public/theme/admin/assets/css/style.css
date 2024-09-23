@@ -722,19 +722,19 @@ aside.left-panel {
 
 .open .navbar .navbar-brand.hidden {
   display: block; }
-.open .sub-menu .subtitle {
+/* .open .sub-menu .subtitle {
   display: block;
   font-size: 15px;
   line-height: 35px;
   color: #607d8b;
-  border-bottom: 1px solid rgba(96, 125, 139, 0.15); }
+  border-bottom: 1px solid rgba(96, 125, 139, 0.15); } */
 .open .sub-menu i {
   left: 15px !important; }
 
-.sub-menu .subtitle {
+/* .sub-menu .subtitle {
   display: none; }
   .sub-menu .subtitle > .menu-icon {
-    display: none; }
+    display: none; } */
 
 .open aside.left-panel {
   max-width: 83px;
