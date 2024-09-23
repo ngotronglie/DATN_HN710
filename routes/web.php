@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ForgotPasswordController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SizeController;
+use App\Http\Controllers\Admin\VoucherController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ColorController;
 
@@ -57,4 +58,11 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     Route::delete('colors/forceDelete/{id}', [ColorController::class, 'forceDelete'])->name('colors.forceDelete');
 
     Route::resource('colors', ColorController::class);
+
+    // Vouchers
+    Route::get('/vouchers/trashed', [VoucherController::class, 'trashed'])->name('vouchers.trashed');
+    Route::delete('vouchers/forceDelete/{id}', [VoucherController::class, 'forceDelete'])->name('vouchers.forceDelete');
+    Route::put('vouchers/restore/{id}', [VoucherController::class, 'restore'])->name('vouchers.restore');
+
+    Route::resource('vouchers', VoucherController::class);
 });
