@@ -1,10 +1,9 @@
 @extends('admin.dashboard')
 
 @section('style')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.css">
 <link rel="stylesheet" href="{{ asset('admin/assets/css/lib/datatable/dataTables.bootstrap.min.css') }}">
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
-{{-- swcr --}}
-<link rel="stylesheet" href="{{asset('plugins/css/plugins/switchery/switchery.css')}}">
 @endsection
 
 @section('content')
@@ -49,14 +48,20 @@
                             <a class="btn btn-danger" href="{{ route('category_blogs.trashed') }}">
                                 <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
                             </a>
-                            <div class="dropdown ml-2">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Tùy chọn
+                            <div class="dropdown float-right ml-2">
+                                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-cogs"></i> Tùy chọn
                                 </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item activeAll" data-field="active" data-is_active="0" href="#">Bật tất cả</a>
-                                    <a class="dropdown-item activeAll" data-field="active" data-is_active="1" href="#">Tắt tất cả</a>
-                                    <a class="dropdown-item" href="#">Xóa tất cả</a>
+                                <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item activeAll" data-is_active="0" href="#">
+                                        <i class="fa fa-toggle-on text-success"></i> Bật các mục đã chọn
+                                    </a>
+                                    <a class="dropdown-item activeAll" data-is_active="1" href="#">
+                                        <i class="fa fa-toggle-off text-danger"></i> Tắt các mục đã chọn
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fa fa-trash text-danger"></i> Xóa các mục đã chọn
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -76,9 +81,7 @@
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <th>
-                                        <input id="checkallus" type="checkbox">
-                                    </th>
+                                    <th></th>
                                     <th>STT</th>
                                     <th>Tên danh mục bài viết</th>
                                     <th>Trạng thái</th>
@@ -93,7 +96,7 @@
                                     </td>
                                 <td>{{ $key+1 }}</td>
                                 <td>{{ $item->name }}</td>
-                                <td style="width: 8%" class="text-center">
+                                <td style="width: 12%" class="text-center">
                                     <input type="checkbox" class="js-switch active" data-model="{{ $item->is_active }}"
                                         {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"
                                         data-modelId="{{ $item->id }}" />
@@ -146,6 +149,8 @@
 @endsection
 
 @section('script')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.js"></script>
+
 <script src="{{ asset('admin/assets/js/lib/data-table/datatables.min.js') }}"></script>
 <script src="{{ asset('admin/assets/js/lib/data-table/dataTables.bootstrap.min.js') }}"></script>
 <script src="{{ asset('admin/assets/js/lib/data-table/dataTables.buttons.min.js') }}"></script>
@@ -156,15 +161,11 @@
 <script src="{{ asset('admin/assets/js/lib/data-table/buttons.print.min.js') }}"></script>
 <script src="{{ asset('admin/assets/js/lib/data-table/buttons.colVis.min.js') }}"></script>
 <script src="{{ asset('admin/assets/js/init/datatables-init.js') }}"></script>
-{{-- swcr --}}
-<script src="{{asset('plugins/js/plugins/switchery/switchery.js')}}"></script>
-<script src="{{asset('plugins/js/swk.js')}}"></script>
+
 <script src="{{asset('plugins/js/checkall.js')}}"></script>
-<script src="{{asset('plugins/js/changeAcCtgrbl.js')}}"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#bootstrap-data-table-export').DataTable();
-    });
-</script>
+
+<script src="{{asset('plugins/js/changeActive/CategoryBlog/changeAllActiveCategoryBlog.js')}}"></script>
+
+<script src="{{asset('plugins/js/changeActive/CategoryBlog/changeActiveCategoryBlog.js')}}"></script>
 @endsection
 

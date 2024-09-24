@@ -13,9 +13,9 @@
         @include('admin.include.footer')
         <!-- /#right-panel -->
     </div>
-    @include('admin.include.script')
 
-@yield('script')
+    @include('admin.include.script')
+    @yield('script')
 </body>
 
 </html>

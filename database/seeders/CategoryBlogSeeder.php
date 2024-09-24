@@ -12,6 +12,6 @@ class CategoryBlogSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        \App\Models\CategoryBlog::factory(10)->create();
     }
 }

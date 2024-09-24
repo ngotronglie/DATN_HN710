@@ -30,10 +30,8 @@ Route::delete('category_blogs/forceDelete/{id}', [CategoryBlogController::class,
 Route::resource('category_blogs', CategoryBlogController::class);
 Route::resource('blogs', BlogController::class);
 
-
 //ajax category blog
-Route::post('ajax/changeActiveCategoryBlog', [ChangeActiveController::class, 'changeActiveCetegoryBlog']);
-//ajax thay doi tat ca cac truong is_active da chon category blog
-Route::post('ajax/changeActiveAllCaregoryBlogs', [ChangeActiveController::class, 'changeActiveAllCtgrBls']);
+Route::post('category_blogs/ajax/changeActiveCategoryBlog', [ChangeActiveController::class, 'changeActiveCategoryBlog']);
+Route::post('category_blogs/ajax/changeActiveAllCaregoryBlog', [ChangeActiveController::class, 'changeActiveAllCategoryBlog']);
 
 
