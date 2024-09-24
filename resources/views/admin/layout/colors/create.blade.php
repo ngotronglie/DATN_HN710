@@ -16,7 +16,7 @@
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Dashboard</a></li>
-                            <li><a href="{{ route('colors.index') }}">Danh sách màu</a></li>
+                            <li><a href="{{ route('admin.colors.index') }}">Danh sách màu</a></li>
                             <li class="active">Thêm màu</li>
                         </ol>
                     </div>
@@ -33,12 +33,12 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <strong>Thêm màu</strong>
-                        <a href="{{ route('colors.index') }}" class="btn btn-primary">
+                        <a href="{{ route('admin.colors.index') }}" class="btn btn-primary">
                             <i class="fa fa-arrow-left mr-1"></i> Quay lại
                         </a>
                     </div>
                     <div class="card-body card-block">
-                        <form action="{{ route('colors.store') }}" method="post">
+                        <form action="{{ route('admin.colors.store') }}" method="post">
                             @csrf
                             <div class="form-group">
                                 <label for="name" class=" form-control-label">Tên màu</label><input type="text" id="name" name="name" placeholder="Nhập tên màu" class="form-control" value="{{ old('name') }}" requied>

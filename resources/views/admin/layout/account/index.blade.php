@@ -1,6 +1,7 @@
 @extends('admin.dashboard')
 
 @section('style')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.css">
 <link rel="stylesheet" href="{{ asset('theme/admin/assets/css/lib/datatable/dataTables.bootstrap.min.css') }}">
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
 @endsection
@@ -41,25 +42,43 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <strong class="card-title">Danh sách tài khoản</strong>
                         <div>
-                            <a class="btn btn-primary mr-2" href="{{ route('admin.accounts.create') }}">
+                            <a class="btn btn-primary mr-1" href="{{ route('admin.accounts.create') }}">
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
-                            <a class="btn btn-success" href="{{ route('admin.accounts.listUser') }}">
+                            <a class="btn btn-success mr-1" href="{{ route('admin.accounts.listUser') }}">
                                 <i class="fa fa-user"></i> Người dùng ({{ $users }})
                             </a>
                             <a class="btn btn-danger" href="{{ route('admin.accounts.trashed') }}">
                                 <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
                             </a>
+                            <div class="dropdown float-right ml-2">
+                                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-cogs"></i> Tùy chọn
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item activeAll" data-is_active="0" href="#">
+                                        <i class="fa fa-toggle-on text-success"></i> Bật các mục đã chọn
+                                    </a>
+                                    <a class="dropdown-item activeAll" data-is_active="1" href="#">
+                                        <i class="fa fa-toggle-off text-danger"></i> Tắt các mục đã chọn
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fa fa-trash text-danger"></i> Xóa các mục đã chọn
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body">
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
+                                    <th>
+                                        <input id="checkAllTable" type="checkbox">
+                                    </th>
                                     <th>STT</th>
                                     <th>Tên</th>
                                     <th>Email</th>                               
-                                    <th>Ảnh</th>
                                     <th>Chức vụ</th>
                                     <th>Trạng thái</th>
                                     <th>Hành động</th>
@@ -67,10 +86,10 @@
                             </thead>
                             <tfoot>
                                 <tr>
+                                    <th></th>
                                     <th>STT</th>
                                     <th>Tên</th>
-                                    <th>Email</th>                               
-                                    <th>Ảnh</th>
+                                    <th>Email</th>
                                     <th>Chức vụ</th>
                                     <th>Trạng thái</th>
                                     <th>Hành động</th>
@@ -79,13 +98,13 @@
                             <tbody>
                                 @foreach ($data as $key => $item)
                                 <tr>
+                                <td>
+                                    <input type="checkbox" class="checkBoxItem" data-id="{{ $item->id }}">
+                                </td>
                                 <td>{{ $key+1 }}</td>
                                 <td>{{ $item->name }}</td>
                                 <td>{{ $item->email }}</td>
                                 <td>
-                                    <img width="100px" src="{{ Storage::url($item->avatar) }}" alt="">
-                                </td>
-                                <td style="white-space: nowrap;">
                                     @if($item->role == 1)
                                         Nhân viên
                                     @elseif($item->role == 2)
@@ -94,7 +113,11 @@
                                         Không xác định
                                     @endif
                                 </td>
-                                <td>{!! $item->is_active ? '<span class="badge bg-success text-white">Hoạt động</span>' : '<span class="badge bg-danger text-white">Không hoạt động</span>' !!}</td>
+                                <td style="width: 12%" class="text-center">
+                                    <input type="checkbox" class="js-switch active" data-model="{{ $item->is_active }}"
+                                        {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"
+                                        data-modelId="{{ $item->id }}" />
+                                </td>
                                 <td class="d-flex">
                                     <a class="btn btn-primary mr-2" href="{{route('admin.accounts.show', $item)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
                                     @if($item->role != 2)
@@ -145,6 +168,8 @@
 @endsection
 
 @section('script')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.js"></script>
+
 <script src="{{ asset('theme/admin/assets/js/lib/data-table/datatables.min.js') }}"></script>
 <script src="{{ asset('theme/admin/assets/js/lib/data-table/dataTables.bootstrap.min.js') }}"></script>
 <script src="{{ asset('theme/admin/assets/js/lib/data-table/dataTables.buttons.min.js') }}"></script>
@@ -156,9 +181,9 @@
 <script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.colVis.min.js') }}"></script>
 <script src="{{ asset('theme/admin/assets/js/init/datatables-init.js') }}"></script>
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#bootstrap-data-table-export').DataTable();
-    });
-</script>
+<script src="{{asset('plugins/js/checkall.js')}}"></script>
+
+<script src="{{asset('plugins/js/changeActive/Account/changeActiveAccount.js')}}"></script>
+
+<script src="{{asset('plugins/js/changeActive/Account/changeAllActiveAccount.js')}}"></script>
 @endsection

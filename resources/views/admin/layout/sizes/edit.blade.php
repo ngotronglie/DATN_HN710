@@ -16,7 +16,7 @@
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Dashboard</a></li>
-                            <li><a href="{{ route('sizes.index') }}">Danh sách size</a></li>
+                            <li><a href="{{ route('admin.sizes.index') }}">Danh sách size</a></li>
                             <li class="active">Sửa size</li>
                         </ol>
                     </div>
@@ -33,12 +33,12 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <strong>Sửa size</strong>
-                        <a href="{{ route('sizes.index') }}" class="btn btn-primary">
+                        <a href="{{ route('admin.sizes.index') }}" class="btn btn-primary">
                             <i class="fa fa-arrow-left mr-1"></i> Quay lại
                         </a>
                     </div>
                     <div class="card-body card-block">
-                        <form action="{{ route('sizes.update', $size) }}" method="post">
+                        <form action="{{ route('admin.sizes.update', $size) }}" method="post">
                             @csrf
                             @method('PUT')
                             <div class="form-group">

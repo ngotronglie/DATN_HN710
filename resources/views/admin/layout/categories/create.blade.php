@@ -16,7 +16,7 @@
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Dashboard</a></li>
-                            <li><a href="{{ route('categories.index') }}">Danh sách danh mục</a></li>
+                            <li><a href="{{ route('admin.categories.index') }}">Danh sách danh mục</a></li>
                             <li class="active">Thêm danh mục</li>
                         </ol>
                     </div>
@@ -33,12 +33,12 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <strong>Thêm danh mục</strong>
-                        <a href="{{ route('categories.index') }}" class="btn btn-primary">
+                        <a href="{{ route('admin.categories.index') }}" class="btn btn-primary">
                             <i class="fa fa-arrow-left mr-1"></i> Quay lại
                         </a>
                     </div>
                     <div class="card-body card-block">
-                        <form action="{{ route('categories.store') }}" method="post">
+                        <form action="{{ route('admin.categories.store') }}" method="post">
                             @csrf
                             <div class="form-group">
                                 <label for="name" class=" form-control-label">Tên danh mục</label><input type="text" id="name" name="name" placeholder="Nhập tên danh mục" class="form-control" value="{{ old('name') }}" required>

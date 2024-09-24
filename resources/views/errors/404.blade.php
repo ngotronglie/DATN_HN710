@@ -77,7 +77,7 @@
         <h1>404 - Không tìm thấy trang</h1>
         <p>Trang bạn yêu cầu không tồn tại hoặc đã bị xóa. Vui lòng kiểm tra lại đường dẫn.</p>
         <a href="{{ url()->previous() }}" class="btn">Quay lại</a>
-        <a href="/" class="btn btn-secondary">Trang chủ</a>
+        <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Trang chủ</a>
     </div>
 </body>
 </html>

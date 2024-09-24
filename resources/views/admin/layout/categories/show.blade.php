@@ -16,7 +16,7 @@
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Dashboard</a></li>
-                            <li><a href="{{ route('categories.index') }}">Danh sách danh mục</a></li>
+                            <li><a href="{{ route('admin.categories.index') }}">Danh sách danh mục</a></li>
                             <li class="active">Chi tiết danh mục</li>
                         </ol>
                     </div>
@@ -33,7 +33,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <strong>Chi tiết danh mục</strong>
-                        <a href="{{ route('categories.index') }}" class="btn btn-primary">
+                        <a href="{{ route('admin.categories.index') }}" class="btn btn-primary">
                             <i class="fa fa-arrow-left mr-1"></i> Quay lại
                         </a>
                     </div>
@@ -66,7 +66,7 @@
                         </table>
                     </div>
                     <div class="card-footer">
-                        <a href="{{ route('categories.edit', $category) }}" class="btn btn-warning btn-icon-split">
+                        <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-warning btn-icon-split">
                                 <i class="fa fa-edit"></i> Sửa
                         </a>
                     </div>

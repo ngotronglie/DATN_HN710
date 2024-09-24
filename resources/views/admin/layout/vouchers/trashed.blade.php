@@ -1,7 +1,7 @@
 @extends('admin.dashboard')
 
 @section('style')
-<link rel="stylesheet" href="{{ asset('admin/assets/css/lib/datatable/dataTables.bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ asset('theme/admin/assets/css/lib/datatable/dataTables.bootstrap.min.css') }}">
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
 @endsection
 
@@ -22,7 +22,7 @@
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Dashboard</a></li>
-                            <li><a href="#">Quản lí Vouchers</a></li>
+                            <li><a href="{{ route('admin.vouchers.index') }}">Quản lí Vouchers</a></li>
                             <li class="active">Danh sách Voucher đã xóa</li>
                         </ol>
                     </div>
@@ -39,7 +39,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <strong class="card-title">Danh sách Voucher đã xóa</strong>
-                        <a href="{{ route('vouchers.index') }}" class="btn btn-primary float-right">Quay lại</a>
+                        <a href="{{ route('admin.vouchers.index') }}" class="btn btn-primary float-right">Quay lại</a>
                     </div>
                     <div class="card-body">
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
@@ -102,7 +102,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
-                                                <form action="{{ route('vouchers.restore', $item->id) }}" method="POST">
+                                                <form action="{{ route('admin.vouchers.restore', $item->id) }}" method="POST">
                                                     @csrf
                                                     @method('PUT')
                                                     <button type="submit" class="btn btn-success">Xác nhận khôi phục</button>
@@ -127,7 +127,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
-                                                <form action="{{ route('vouchers.forceDelete', $item->id) }}" method="POST">
+                                                <form action="{{ route('admin.vouchers.forceDelete', $item->id) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
@@ -149,20 +149,14 @@
 @endsection
 
 @section('script')
-<script src="{{ asset('admin/assets/js/lib/data-table/datatables.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/dataTables.bootstrap.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/dataTables.buttons.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/buttons.bootstrap.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/jszip.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/vfs_fonts.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/buttons.html5.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/buttons.print.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/buttons.colVis.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/init/datatables-init.js') }}"></script>
-
-<script type="text/javascript">
-$(document).ready(function() {
-    $('#bootstrap-data-table').DataTable();
-});
-</script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/datatables.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/dataTables.bootstrap.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.bootstrap.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/jszip.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/vfs_fonts.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.print.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.colVis.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/init/datatables-init.js') }}"></script>
 @endsection

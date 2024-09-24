@@ -2,7 +2,7 @@
 
 @section('style')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.css">
-<link rel="stylesheet" href="{{ asset('admin/assets/css/lib/datatable/dataTables.bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ asset('theme/admin/assets/css/lib/datatable/dataTables.bootstrap.min.css') }}">
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
 
 @endsection
@@ -43,10 +43,10 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <strong class="card-title">Danh sách danh mục</strong>
                         <div class="d-flex">
-                            <a class="btn btn-primary mr-2" href="{{ route('categories.create') }}">
+                            <a class="btn btn-primary mr-2" href="{{ route('admin.categories.create') }}">
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
-                            <a class="btn btn-danger" href="{{ route('categories.trashed') }}">
+                            <a class="btn btn-danger" href="{{ route('admin.categories.trashed') }}">
                                 <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
                             </a>
                             <div class="dropdown float-right ml-2">
@@ -97,14 +97,14 @@
                                     </td>
                                     <td>{{ $key+1 }}</td>
                                     <td>{{ $item->name }}</td>
-                                    <td style="width: 8%" class="text-center">
+                                    <td style="width: 12%" class="text-center">
                                         <input type="checkbox" class="js-switch active" data-model="{{ $item->is_active }}"
                                             {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"
                                             data-modelId="{{ $item->id }}" />
                                     </td>
                                     <td class="d-flex">
-                                        <a class="btn btn-primary mr-2" href="{{route('categories.show', $item)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
-                                        <a class="btn btn-warning mr-2" href="{{route('categories.edit', $item)}}" title="Sửa"><i class="fa fa-edit"></i></a>
+                                        <a class="btn btn-primary mr-2" href="{{route('admin.categories.show', $item)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
+                                        <a class="btn btn-warning mr-2" href="{{route('admin.categories.edit', $item)}}" title="Sửa"><i class="fa fa-edit"></i></a>
                                         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $item->id }}" title="Xóa">
                                             <i class="fa fa-trash"></i>
                                         </button>
@@ -126,7 +126,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
-                                                <form action="{{ route('categories.destroy', $item) }}" method="POST">
+                                                <form action="{{ route('admin.categories.destroy', $item) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
@@ -152,16 +152,16 @@
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.js"></script>
 
-<script src="{{ asset('admin/assets/js/lib/data-table/datatables.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/dataTables.bootstrap.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/dataTables.buttons.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/buttons.bootstrap.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/jszip.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/vfs_fonts.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/buttons.html5.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/buttons.print.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/buttons.colVis.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/init/datatables-init.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/datatables.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/dataTables.bootstrap.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.bootstrap.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/jszip.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/vfs_fonts.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.print.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.colVis.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/init/datatables-init.js') }}"></script>
 
 <script src="{{asset('plugins/js/checkall.js')}}"></script>
 

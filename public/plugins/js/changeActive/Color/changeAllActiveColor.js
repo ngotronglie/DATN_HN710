@@ -3,7 +3,6 @@
     var HT = {};
     var token = $('meta[name="csrf-token"]').attr('content');
 
-    // Thay đổi trạng thái danh mục đã chọn
     HT.changeall = () => {
         if ($('.activeAll').length) {
 
@@ -20,42 +19,34 @@
                 });
 
                 if (id.length == 0) {
-                    // Thông báo cho người dùng rằng họ chưa chọn mục nào
                     alert('Vui lòng chọn ít nhất một mục');
                     return;
                 }
 
                 let option = {
                     'id': id,
-                    'is_active': _this.attr('data-is_active'), // Trạng thái muốn thay đổi
+                    'is_active': _this.attr('data-is_active'),
                     '_token': token
                 };
 
                 $.ajax({
                     type: 'POST',
-                    url: 'categories/ajax/changeAllActiveCategory', // URL xử lý yêu cầu
+                    url: 'colors/ajax/changeAllActiveColor',
                     data: option,
                     dataType: 'json',
                     success: function (res) {
                         if (res.status) {
                             id.forEach(function (itemId) {
                                 let switchInput = $('input[data-modelId="' + itemId + '"]');
-                                let switcheryElement = switchInput[0].switchery;  // Lấy đối tượng Switchery hiện tại
+                                let switcheryElement = switchInput[0].switchery;
 
-                                // Cập nhật trạng thái mới cho checkbox
                                 if (res.newStatus == 1) {
-                                    switchInput.prop('checked', true);  // Kích hoạt checkbox
+                                    switchInput.prop('checked', true);
                                 } else {
-                                    switchInput.prop('checked', false); // Hủy kích hoạt checkbox
+                                    switchInput.prop('checked', false);
                                 }
 
-                                // Cập nhật giao diện của Switchery
-                                switcheryElement.setPosition();  // Cập nhật vị trí của nút gạt
-                                // switcheryElement.handleOnchange();  // Gọi hàm để cập nhật giao diện và xử lý sự kiện
-
-                                // Sau khi cập nhật xong, bỏ chọn tất cả checkbox ở cột đầu tiên
-                                // $('.checkBoxItem').prop('checked', false);  // Đặt trạng thái của tất cả checkbox về unchecked
-                                // $('#checkAllTable').prop('checked', false); // Bỏ chọn checkbox "check all" nếu có
+                                switcheryElement.setPosition();
                             });
                         } else {
                             alert('Cập nhật thất bại: ' + res.message);

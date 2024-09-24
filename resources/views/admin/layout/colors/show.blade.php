@@ -16,7 +16,7 @@
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Dashboard</a></li>
-                            <li><a href="{{ route('colors.index') }}">Danh sách màu</a></li>
+                            <li><a href="{{ route('admin.colors.index') }}">Danh sách màu</a></li>
                             <li class="active">Chi tiết màu</li>
                         </ol>
                     </div>
@@ -33,7 +33,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <strong>Chi tiết màu</strong>
-                        <a href="{{ route('colors.index') }}" class="btn btn-primary">
+                        <a href="{{ route('admin.colors.index') }}" class="btn btn-primary">
                             <i class="fa fa-arrow-left mr-1"></i> Quay lại
                         </a>
                     </div>
@@ -65,7 +65,7 @@
                         </table>
                     </div>
                     <div class="card-footer">
-                        <a href="{{ route('colors.edit', $color) }}" class="btn btn-warning btn-icon-split">
+                        <a href="{{ route('admin.colors.edit', $color) }}" class="btn btn-warning btn-icon-split">
                                 <i class="fa fa-edit"></i> Sửa
                         </a>
                     </div>

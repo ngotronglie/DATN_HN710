@@ -1,10 +1,9 @@
 @extends('admin.dashboard')
 
 @section('style')
-<link rel="stylesheet" href="{{ asset('admin/assets/css/lib/datatable/dataTables.bootstrap.min.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.css">
+<link rel="stylesheet" href="{{ asset('theme/admin/assets/css/lib/datatable/dataTables.bootstrap.min.css') }}">
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
-<!-- Custom styles for the modal -->
-
 @endsection
 
 @section('content')
@@ -40,47 +39,52 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <!-- Tiêu đề card -->
                         <strong class="card-title">Danh sách Vouchers</strong>
-
-                        <!-- Nhóm các nút hành động bên phải -->
                         <div>
-                            <!-- Nút Thêm mới -->
-                            <a href="{{ route('vouchers.create') }}" class="btn btn-primary mr-2">
+                            <a href="{{ route('admin.vouchers.create') }}" class="btn btn-primary mr-1">
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
-
-                            <!-- Nút Thùng rác với số lượng vouchers bị xóa -->
-                            <a href="{{ route('vouchers.trashed') }}" class="btn btn-danger">
+                            <a href="{{ route('admin.vouchers.trashed') }}" class="btn btn-danger">
                                 <i class="fa fa-trash"></i> Thùng rác ({{ $trashedVouchers }})
                             </a>
+                            <div class="dropdown float-right ml-2">
+                                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-cogs"></i> Tùy chọn
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item activeAll" data-is_active="0" href="#">
+                                        <i class="fa fa-toggle-on text-success"></i> Bật các mục đã chọn
+                                    </a>
+                                    <a class="dropdown-item activeAll" data-is_active="1" href="#">
+                                        <i class="fa fa-toggle-off text-danger"></i> Tắt các mục đã chọn
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fa fa-trash text-danger"></i> Xóa các mục đã chọn
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
                     <div class="card-body">
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
+                                    <th>
+                                        <input id="checkAllTable" type="checkbox">
+                                    </th>
                                     <th>STT</th>
                                     <th>Code</th>
                                     <th>Giảm giá</th>
-                                    <th>Số lượng</th>
-                                    <th>Ngày bắt đầu</th>
-                                    <th>Ngày kết thúc</th>
-                                    <th>Giá nhỏ nhất</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
+                                    <th></th>
                                     <th>STT</th>
                                     <th>Code</th>
                                     <th>Giảm giá</th>
-                                    <th>Số lượng</th>
-                                    <th>Ngày bắt đầu</th>
-                                    <th>Ngày kết thúc</th>
-                                    <th>Giá nhỏ nhất</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
@@ -88,24 +92,21 @@
                             <tbody>
                                 @foreach ($vouchers as $item)
                                 <tr>
+                                    <td>
+                                        <input type="checkbox" class="checkBoxItem" data-id="{{ $item->id }}">
+                                    </td>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->code }}</td>
                                     <td>{{ $item->discount }}%</td>
-                                    <td>{{ $item->quantity }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->start_date)->format('d/m/Y') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->end_date)->format('d/m/Y') }}</td>
-                                    <td>{{ number_format($item->min_money, 0, ',', '.') }} VNĐ</td>
-                                    <td>
-                                        @if ($item->is_active == 1)
-                                        <span class="badge bg-success text-white">Hoạt động</span>
-                                        @elseif ($item->is_active == 0)
-                                        <span class="badge bg-danger text-white">Không hoạt động</span>
-                                        @endif
+                                    <td style="width: 12%" class="text-center">
+                                        <input type="checkbox" class="js-switch active " data-model="{{ $item->is_active }}"
+                                            {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"
+                                            data-modelId="{{ $item->id }}" disabled/>
                                     </td>
                                     <td class="d-flex">
-                                        <a class="btn btn-primary mr-2" href="{{ route('vouchers.show', $item) }}"
+                                        <a class="btn btn-primary mr-2" href="{{ route('admin.vouchers.show', $item) }}"
                                             title="Xem chi tiết"><i class="fa fa-eye"></i></a>
-                                        <a class="btn btn-warning mr-2" href="{{ route('vouchers.edit', $item) }}"
+                                        <a class="btn btn-warning mr-2" href="{{ route('admin.vouchers.edit', $item) }}"
                                             title="Sửa"><i class="fa fa-edit"></i></a>
                                         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $item->id }}" title="Xóa">
                                             <i class="fa fa-trash"></i>
@@ -128,7 +129,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
-                                                <form action="{{ route('vouchers.destroy', $item) }}" method="POST">
+                                                <form action="{{ route('admin.vouchers.destroy', $item) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
@@ -151,20 +152,18 @@
 @endsection
 
 @section('script')
-<script src="{{ asset('admin/assets/js/lib/data-table/datatables.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/dataTables.bootstrap.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/dataTables.buttons.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/buttons.bootstrap.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/jszip.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/vfs_fonts.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/buttons.html5.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/buttons.print.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/buttons.colVis.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/init/datatables-init.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.js"></script>
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#bootstrap-data-table-export').DataTable();
-    });
-</script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/datatables.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/dataTables.bootstrap.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.bootstrap.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/jszip.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/vfs_fonts.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.print.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.colVis.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/init/datatables-init.js') }}"></script>
+
+<script src="{{asset('plugins/js/checkall.js')}}"></script>
 @endsection

@@ -17,7 +17,7 @@
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Dashboard</a></li>
-                            <li><a href="#">Quản lí Vouchers</a></li>
+                            <li><a href="{{ route('admin.vouchers.index') }}">Quản lí Vouchers</a></li>
                             <li class="active">Thêm Voucher</li>
                         </ol>
                     </div>
@@ -34,12 +34,12 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <strong>Thêm mới</strong>
-                        <a href="{{ route('vouchers.index') }}" class="btn btn-primary">
+                        <a href="{{ route('admin.vouchers.index') }}" class="btn btn-primary">
                             <i class="fa fa-arrow-left mr-1"></i> Quay lại
                         </a>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('vouchers.store') }}" method="POST">
+                        <form action="{{ route('admin.vouchers.store') }}" method="POST">
                             @csrf
                             <div class="form-group">
                                 <label for="code" class="form-control-label">Mã Voucher</label>

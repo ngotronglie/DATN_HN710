@@ -5,12 +5,12 @@ use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SizeController;
 use App\Http\Controllers\Admin\VoucherController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ColorController;
 
 use App\Http\Controllers\Ajax\ChangeActiveController;
-use App\Http\Controllers\Admin\CategoryController;
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\ColorController;
 
 /*
 |-------------------------------------------------------------------------- 
@@ -34,8 +34,8 @@ Route::get('verify-email/{token}', [ForgotPasswordController::class, 'verifyEmai
 Route::get('password/reset/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('admin.password.reset');
 Route::post('password/reset', [ForgotPasswordController::class, 'reset'])->name('admin.password.update');
 
-
-Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
+// ->middleware('isAdmin')
+Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('/', function () {
         return view('admin.layout.yeld');
     })->name('dashboard');
@@ -77,9 +77,18 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
 
     Route::resource('categories', CategoryController::class);
 
-    //ajax category blog
+    //ajax category
     Route::post('categories/ajax/changeActiveCategory', [ChangeActiveController::class, 'changeActiveCategory']);
-
-    //ajax thay doi tat ca cac truong is_active da chon category blog
     Route::post('categories/ajax/changeAllActiveCategory', [ChangeActiveController::class, 'changeActiveAllCategory']);
+    //ajax size
+    Route::post('sizes/ajax/changeActiveSize', [ChangeActiveController::class, 'changeActiveSize']);
+    Route::post('sizes/ajax/changeAllActiveSize', [ChangeActiveController::class, 'changeActiveAllSize']);
+    //ajax color
+    Route::post('colors/ajax/changeActiveColor', [ChangeActiveController::class, 'changeActiveColor']);
+    Route::post('colors/ajax/changeAllActiveColor', [ChangeActiveController::class, 'changeActiveAllColor']);
+    //ajax account
+    Route::post('accounts/ajax/changeActiveAccount', [ChangeActiveController::class, 'changeActiveAccount']);
+    Route::post('accounts/ajax/changeAllActiveAccount', [ChangeActiveController::class, 'changeActiveAllAccount']);
+    Route::post('accounts/accounts/ajax/changeActiveAccount', [ChangeActiveController::class, 'changeActiveAccount']);
+    Route::post('accounts/accounts/ajax/changeAllActiveAccount', [ChangeActiveController::class, 'changeActiveAllAccount']);
 });

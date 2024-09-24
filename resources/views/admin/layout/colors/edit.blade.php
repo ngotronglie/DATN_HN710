@@ -16,7 +16,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb text-right">
                                 <li><a href="#">Dashboard</a></li>
-                                <li><a href="{{ route('colors.index') }}">Danh sách màu</a></li>
+                                <li><a href="{{ route('admin.colors.index') }}">Danh sách màu</a></li>
                                 <li class="active">Sửa màu</li>
                             </ol>
                         </div>
@@ -33,12 +33,12 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <strong>Sửa màu</strong>
-                            <a href="{{ route('colors.index') }}" class="btn btn-primary">
+                            <a href="{{ route('admin.colors.index') }}" class="btn btn-primary">
                                 <i class="fa fa-arrow-left mr-1"></i> Quay lại
                             </a>
                         </div>
                         <div class="card-body card-block">
-                            <form action="{{ route('colors.update', $color) }}" method="post">
+                            <form action="{{ route('admin.colors.update', $color) }}" method="post">
                                 @csrf
                                 @method('PUT')
                                 <div class="form-group">
