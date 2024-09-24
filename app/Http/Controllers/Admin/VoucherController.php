@@ -47,7 +47,7 @@ class VoucherController extends Controller
         $data = $request->all();
         Voucher::create($data);
 
-        return redirect()->route('vouchers.index')->with('success', 'Thêm Voucher thành công');
+        return redirect()->route('admin.vouchers.index')->with('success', 'Thêm Voucher thành công');
     }
 
     public function show(Voucher $voucher)
@@ -65,13 +65,13 @@ class VoucherController extends Controller
         $data = $request->all();
         $voucher->update($data);
 
-        return redirect()->route('vouchers.index')->with('success', 'Sửa Voucher thành công');
+        return redirect()->route('admin.vouchers.index')->with('success', 'Sửa Voucher thành công');
     }
 
     public function destroy(Voucher $voucher)
     {
         $voucher->delete();
-        return redirect()->route('vouchers.index')->with('success', 'Xóa Voucher thành công');
+        return redirect()->route('admin.vouchers.index')->with('success', 'Xóa Voucher thành công');
     }
 
     public function trashed()
@@ -84,13 +84,13 @@ class VoucherController extends Controller
     {
         $voucher = Voucher::onlyTrashed()->findOrFail($id);
         $voucher->restore();
-        return redirect()->route('vouchers.trashed')->with('success', 'Voucher đã được khôi phục');
+        return redirect()->route('admin.vouchers.trashed')->with('success', 'Voucher đã được khôi phục');
     }
 
     public function forceDelete($id)
     {
         $vouchers = Voucher::withTrashed()->findOrFail($id);
         $vouchers->forceDelete();
-        return redirect()->route('vouchers.trashed')->with('success', 'Vouchers đã bị xóa vĩnh viễn');
+        return redirect()->route('admin.vouchers.trashed')->with('success', 'Vouchers đã bị xóa vĩnh viễn');
     }
 }

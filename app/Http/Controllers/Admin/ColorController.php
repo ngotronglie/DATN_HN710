@@ -36,7 +36,7 @@ class ColorController extends Controller
     {
         $data = $request->all();
         Color::create($data);
-        return redirect()->route('colors.index')->with('success', 'Thêm thành công');
+        return redirect()->route('admin.colors.index')->with('success', 'Thêm thành công');
     }
 
 
@@ -64,7 +64,7 @@ class ColorController extends Controller
     {
         $data = $request->all();
         $color->update($data);
-        return redirect()->route('colors.index')->with('success', 'Sửa thành công');
+        return redirect()->route('admin.colors.index')->with('success', 'Sửa thành công');
     }
 
 
@@ -74,7 +74,7 @@ class ColorController extends Controller
     public function destroy(Color $color)
     {
         $color->delete();
-        return redirect()->route('colors.index')->with('success', ' Xóa thành công');
+        return redirect()->route('admin.colors.index')->with('success', ' Xóa thành công');
     }
 
     /**
@@ -93,7 +93,7 @@ class ColorController extends Controller
     {
         $color = Color::withTrashed()->findOrFail($id);
         $color->restore();
-        return redirect()->route('colors.trashed')->with('success', 'Khôi phục thành công');
+        return redirect()->route('admin.colors.trashed')->with('success', 'Khôi phục thành công');
     }
 
     /**
@@ -103,6 +103,6 @@ class ColorController extends Controller
     {
         $color = Color::withTrashed()->findOrFail($id);
         $color->forceDelete();
-        return redirect()->route('colors.trashed')->with('success', 'Màu đã bị xóa vĩnh viễn');
+        return redirect()->route('admin.colors.trashed')->with('success', 'Màu đã bị xóa vĩnh viễn');
     }
 }

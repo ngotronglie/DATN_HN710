@@ -35,7 +35,7 @@ class SizeController extends Controller
     {
         $data = $request->all();
         Size::create($data);
-        return redirect()->route('sizes.index')->with('success', 'Thêm thành công');
+        return redirect()->route('admin.sizes.index')->with('success', 'Thêm thành công');
     }
 
     /**
@@ -61,7 +61,7 @@ class SizeController extends Controller
     {
         $data = $request->all();
         $size->update($data);
-        return redirect()->route('sizes.index')->with('success', 'Sửa thành công');
+        return redirect()->route('admin.sizes.index')->with('success', 'Sửa thành công');
     }
 
     /**
@@ -89,7 +89,7 @@ class SizeController extends Controller
     {
         $size = Size::withTrashed()->findOrFail($id);
         $size->restore();
-        return redirect()->route('sizes.trashed')->with('success', 'Khôi phục thành công');
+        return redirect()->route('admin.sizes.trashed')->with('success', 'Khôi phục thành công');
     }
 
     /**
@@ -99,6 +99,6 @@ class SizeController extends Controller
     {
         $size = Size::withTrashed()->findOrFail($id);
         $size->forceDelete();
-        return redirect()->route('sizes.trashed')->with('success', 'Size đã bị xóa vĩnh viễn');
+        return redirect()->route('admin.sizes.trashed')->with('success', 'Size đã bị xóa vĩnh viễn');
     }
 }

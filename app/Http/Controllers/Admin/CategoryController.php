@@ -35,7 +35,7 @@ class CategoryController extends Controller
     {
         $data = $request->all();
         Category::create($data);
-        return redirect()->route('categories.index')->with('success', 'Thêm mới thành công');
+        return redirect()->route('admin.categories.index')->with('success', 'Thêm mới thành công');
     }
 
     /**
@@ -61,7 +61,7 @@ class CategoryController extends Controller
     {
         $data = $request->all();
         $category->update($data);
-        return redirect()->route('categories.index')->with('success', 'Sửa thành công');
+        return redirect()->route('admin.categories.index')->with('success', 'Sửa thành công');
     }
 
     /**
@@ -89,7 +89,7 @@ class CategoryController extends Controller
     {
         $category = Category::withTrashed()->findOrFail($id);
         $category->restore();
-        return redirect()->route('categories.trashed')->with('success', 'Khôi phục thành công');
+        return redirect()->route('admin.categories.trashed')->with('success', 'Khôi phục thành công');
     }
 
     /**
@@ -99,6 +99,6 @@ class CategoryController extends Controller
     {
         $category = Category::withTrashed()->findOrFail($id);
         $category->forceDelete();
-        return redirect()->route('categories.trashed')->with('success', 'Danh mục đã bị xóa vĩnh viễn');
+        return redirect()->route('admin.categories.trashed')->with('success', 'Danh mục đã bị xóa vĩnh viễn');
     }
 }
