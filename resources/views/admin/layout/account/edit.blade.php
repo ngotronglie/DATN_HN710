@@ -54,11 +54,7 @@
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            <div class="form-group">
-                                <input type="checkbox" id="is_active" name="is_active" value="1"
-                                    @checked($account->is_active)>
-                                <label for="is_active">Hoạt động</label>
-                            </div>
+                            
                             <button type="submit" class="btn btn-success mb-1">Cập nhật</button>
                         </form>
                     </div>

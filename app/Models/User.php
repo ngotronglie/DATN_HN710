@@ -64,4 +64,9 @@ class User extends Authenticatable
         return $this->role == self::ADMIN_ROLE || $this->role == self::STAFF_ROLE;
     }
 
+    public function banners()
+    {
+        return $this->hasMany(Banner::class);
+    }
+
 }

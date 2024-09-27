@@ -46,6 +46,8 @@
                                     switchInput.prop('checked', false);
                                 }
 
+                                switchInput.attr('data-model', res.newStatus);
+
                                 switcheryElement.setPosition();
                             });
                         } else {

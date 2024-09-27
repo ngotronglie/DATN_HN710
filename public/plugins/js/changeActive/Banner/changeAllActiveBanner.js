@@ -3,6 +3,7 @@
     var HT = {};
     var token = $('meta[name="csrf-token"]').attr('content');
 
+    // Thay đổi trạng thái danh mục đã chọn
     HT.changeall = () => {
         if ($('.activeAll').length) {
 
@@ -31,7 +32,7 @@
 
                 $.ajax({
                     type: 'POST',
-                    url: 'accounts/accounts/ajax/changeAllActiveAccount',
+                    url: 'banners/ajax/changeAllActiveBanner',
                     data: option,
                     dataType: 'json',
                     success: function (res) {

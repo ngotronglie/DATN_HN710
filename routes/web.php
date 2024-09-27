@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ForgotPasswordController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\UserController;
@@ -88,6 +89,13 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::resource('category_blogs', CategoryBlogController::class);
     Route::resource('blogs', BlogController::class);
 
+    // Quản lý các banner đã bị xóa mềm
+    Route::get('banners/trashed', [BannerController::class, 'trashed'])->name('banners.trashed');
+    Route::put('banners/restore/{id}', [BannerController::class, 'restore'])->name('banners.restore');
+    Route::delete('banners/forceDelete/{id}', [BannerController::class, 'forceDelete'])->name('banners.forceDelete');
+
+    Route::resource('banners', BannerController::class);
+
     //ajax category
     Route::post('categories/ajax/changeActiveCategory', [ChangeActiveController::class, 'changeActiveCategory']);
     Route::post('categories/ajax/changeAllActiveCategory', [ChangeActiveController::class, 'changeActiveAllCategory']);
@@ -105,4 +113,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
     //ajax category blog
     Route::post('category_blogs/ajax/changeActiveCategoryBlog', [ChangeActiveController::class, 'changeActiveCategoryBlog']);
     Route::post('category_blogs/ajax/changeAllActiveCategoryBlog', [ChangeActiveController::class, 'changeActiveAllCategoryBlog']);
+    //ajax banner
+    Route::post('banners/ajax/changeActiveBanner', [ChangeActiveController::class, 'changeActiveBanner']);
+    Route::post('banners/ajax/changeAllActiveBanner', [ChangeActiveController::class, 'changeActiveAllBanner']);
 });

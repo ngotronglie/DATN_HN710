@@ -49,13 +49,12 @@
                                     switchInput.prop('checked', false); // Hủy kích hoạt checkbox
                                 }
 
+                                //Cập nhật lại data-model
+                                switchInput.attr('data-model', res.newStatus);
+
                                 // Cập nhật giao diện của Switchery
                                 switcheryElement.setPosition();  // Cập nhật vị trí của nút gạt
                                 // switcheryElement.handleOnchange();  // Gọi hàm để cập nhật giao diện và xử lý sự kiện
-
-                                // Sau khi cập nhật xong, bỏ chọn tất cả checkbox ở cột đầu tiên
-                                // $('.checkBoxItem').prop('checked', false);  // Đặt trạng thái của tất cả checkbox về unchecked
-                                // $('#checkAllTable').prop('checked', false); // Bỏ chọn checkbox "check all" nếu có
                             });
                         } else {
                             alert('Cập nhật thất bại: ' + res.message);
