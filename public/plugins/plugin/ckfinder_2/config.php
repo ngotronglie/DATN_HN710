@@ -84,7 +84,7 @@ Examples:
 	$baseUrl = '/userfiles/';
 
 ATTENTION: The trailing slash is required.
-*/$baseUrl = '/public/storage/';  // Đường dẫn public URL để truy cập ảnh
+*/$baseUrl = '/storage/';  // Đường dẫn public URL để truy cập ảnh
 
 // Thư mục lưu trữ ảnh trên server
 $baseDir = str_replace('\\', '/', (dirname(dirname(dirname(dirname(dirname(__FILE__))))).'/public/storage/'));

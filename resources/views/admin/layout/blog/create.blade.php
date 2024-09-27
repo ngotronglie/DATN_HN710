@@ -1,4 +1,4 @@
-create blog @extends('admin.dashboard')
+@extends('admin.dashboard')
 
 @section('style')
 <link rel="stylesheet" href="{{ asset('plugins/plugin/jquery-ui.css') }}">
@@ -29,7 +29,22 @@ create blog @extends('admin.dashboard')
             </div>
         </div>
     </div>
-    <form action="{{ route('admin.blogs.store') }}" method="post">
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+@if (session('message'))
+    <div class="alert alert-danger">
+        {{ session('message') }}
+    </div>
+@endif
+    <form action="{{ route('admin.blogs.store') }}" enctype="multipart/form-data" method="post">
         @csrf
     <div class="content mb-5">
         <div class="animated fadeIn">
@@ -52,9 +67,9 @@ create blog @extends('admin.dashboard')
                             <div class="form-group">
                                 <label for="name" class=" form-control-label">Tên bài viết</label><input
                                     type="text" id="name" name="title"
-                                    placeholder="Nhập tên danh mục" class="form-control"
-                                    value="{{ old('name') }}" required>
-                                @error('name')
+                                    placeholder="Nhập tên bài viết" class="form-control"
+                                    value="{{ old('name') }}" >
+                                @error('title')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
@@ -65,7 +80,7 @@ create blog @extends('admin.dashboard')
                                     <a href="#" class="mutiimg" data-target="content">Thêm nhiều ảnh</a>
                                 </div>
                                 <textarea name="content" class="ckedit form-control" id="content"></textarea>
-                                @error('name')
+                                @error('content')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
@@ -87,25 +102,26 @@ create blog @extends('admin.dashboard')
                                     <option value="{{$bl->id}}">{{$bl->name}}</option>
                                     @endforeach
                                 </select>
-                                @error('name')
+                                @error('category_blog_id')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label for="name" class=" form-control-label">Danh mục bài viết</label>
+                                <label for="name" class=" form-control-label">Ảnh đại diện bài viết</label>
                                 <div class="ibox-content">
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <div class="form-row">
+                                                <input type="file">
                                                 <img src="https://tse4.mm.bing.net/th?id=OIP.EkljFHN5km7kZIZpr96-JwAAAA&pid=Api&P=0&h=220"
                                                     style="width: 100%;text-align: center"
                                                     class="image-target img-thumbnail"alt="null">
-                                                <input type="text" name="img_avt" class="form-control" value="">
+                                                <input type="hidden" name="img_avt" class="form-control" value="">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                @error('name')
+                                @error('img_avt')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
@@ -121,10 +137,9 @@ create blog @extends('admin.dashboard')
 
 
 @endsection
-
 @section('script')
 <script src="{{asset('plugins/plugin/jquery-ui.js')}}"></script>
 <script src="{{asset('plugins/plugin/ckfinder_2/ckfinder.js')}}"></script>
-<script src="{{asset('plugins/js/finder.js')}}"></script>
 <script src="{{asset('plugins/plugin/ckeditor/ckeditor.js')}}"></script>
+<script src="{{asset('plugins/js/ckfinerblog.js')}}"></script>
 @endsection

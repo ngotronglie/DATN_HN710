@@ -37,8 +37,8 @@ Route::get('verify-email/{token}', [ForgotPasswordController::class, 'verifyEmai
 Route::get('password/reset/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('admin.password.reset');
 Route::post('password/reset', [ForgotPasswordController::class, 'reset'])->name('admin.password.update');
 
-// ->middleware('isAdmin')
-Route::prefix('admin')->as('admin.')->group(function () {
+//
+Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     Route::get('/', function () {
         return view('admin.layout.yeld');
     })->name('dashboard');
@@ -88,9 +88,9 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::resource('category_blogs', CategoryBlogController::class);
 
     //Quản lý bài viết xóa mềm
-    Route::get('blogs/trashed', [ColorController::class, 'trashed'])->name('blogs.trashed');
-    Route::put('blogs/restore/{id}', [ColorController::class, 'restore'])->name('blogs.restore');
-    Route::delete('blogs/forceDelete/{id}', [ColorController::class, 'forceDelete'])->name('blogs.forceDelete');
+    Route::get('blogs/trashed', [BlogController::class, 'trashed'])->name('blogs.trashed');
+    Route::put('blogs/restore/{id}', [BlogController::class, 'restore'])->name('blogs.restore');
+    Route::delete('blogs/forceDelete/{id}', [BlogController::class, 'forceDelete'])->name('blogs.forceDelete');
     Route::resource('blogs', BlogController::class);
 
     //ajax category

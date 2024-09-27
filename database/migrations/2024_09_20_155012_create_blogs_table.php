@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('blogs', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('title')->unique();
             $table->string('img_avt');
             $table->text('content');
             $table->boolean('is_active')->default(true);

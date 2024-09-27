@@ -120,7 +120,7 @@
                                     <td>{{ $key+1 }}</td>
                                     <td>
                                         <div class="post-info">
-                                            <img src="{{asset($item->img_avt)}}"
+                                            <img src="{{$item->img_avt}}"
                                                 alt="Thumbnail" class="img-thumbnail">
                                             <div>
                                                 <span class="post-title">{{$item->title}}</span>

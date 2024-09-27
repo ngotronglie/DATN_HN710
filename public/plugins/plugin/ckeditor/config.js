@@ -10,4 +10,7 @@ CKEDITOR.editorConfig = function( config ) {
     config.filebrowserUploadUrl =  BASE_URL + 'plugins/plugin/ckfinder_2/core/connector/php/connector.php?command=QuickUpload&type=Files',
     config.filebrowserImageUploadUrl = BASE_URL + 'plugins/plugin/ckfinder_2/core/connector/php/connector.php?command=QuickUpload&type=Images',
     config.filebrowserFlashUploadUrl = BASE_URL + 'plugins/plugin/ckfinder_2/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+	// Define changes to default configuration here. For example:
+	// config.language = 'fr';
+	// config.uiColor = '#AADC6E';
 };
