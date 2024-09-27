@@ -16,14 +16,14 @@ use App\Http\Controllers\Ajax\ChangeActiveController;
 use Illuminate\Support\Facades\Route;
 
 /*
-|-------------------------------------------------------------------------- 
-| Web Routes 
-|-------------------------------------------------------------------------- 
-| 
-| Here is where you can register web routes for your application. These 
-| routes are loaded by the RouteServiceProvider and all of them will 
-| be assigned to the "web" middleware group. Make something great! 
-| 
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
 */
 
 Route::get('admin/login', [LoginController::class, 'loginForm'])->name('admin.loginForm');
@@ -86,6 +86,11 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::delete('category_blogs/forceDelete/{id}', [CategoryBlogController::class, 'forceDelete'])->name('category_blogs.forceDelete');
 
     Route::resource('category_blogs', CategoryBlogController::class);
+
+    //Quản lý bài viết xóa mềm
+    Route::get('blogs/trashed', [ColorController::class, 'trashed'])->name('blogs.trashed');
+    Route::put('blogs/restore/{id}', [ColorController::class, 'restore'])->name('blogs.restore');
+    Route::delete('blogs/forceDelete/{id}', [ColorController::class, 'forceDelete'])->name('blogs.forceDelete');
     Route::resource('blogs', BlogController::class);
 
     //ajax category
@@ -105,4 +110,8 @@ Route::prefix('admin')->as('admin.')->group(function () {
     //ajax category blog
     Route::post('category_blogs/ajax/changeActiveCategoryBlog', [ChangeActiveController::class, 'changeActiveCategoryBlog']);
     Route::post('category_blogs/ajax/changeAllActiveCategoryBlog', [ChangeActiveController::class, 'changeActiveAllCategoryBlog']);
+
+    //ajax blog
+    Route::post('blogs/ajax/changeActiveBlog', [ChangeActiveController::class, 'changeActiveBlog']);
+    Route::post('blogs/ajax/changeAllActiveBlog', [ChangeActiveController::class, 'changeActiveAllBlog']);
 });

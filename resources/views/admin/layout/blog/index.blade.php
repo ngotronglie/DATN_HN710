@@ -1,10 +1,28 @@
 @extends('admin.dashboard')
 
 @section('style')
-<link rel="stylesheet" href="{{ asset('admin/assets/css/lib/datatable/dataTables.bootstrap.min.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.css">
+<link rel="stylesheet" href="{{ asset('theme/admin/assets/css/lib/datatable/dataTables.bootstrap.min.css') }}">
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
-{{-- swcr --}}
-<link rel="stylesheet" href="{{asset('plugins/css/plugins/switchery/switchery.css')}}">
+<style>
+    .img-thumbnail {
+        width: 80px;
+        height: 80px;
+        margin-right: 10px;
+        border-radius: 8px;
+        object-fit: cover
+    }
+
+
+    .post-info {
+        display: flex;
+        align-items: center;
+    }
+
+    .post-title {
+        font-weight: bold;
+    }
+</style>
 @endsection
 
 @section('content')
@@ -42,13 +60,29 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <strong class="card-title">Danh sách danh mục</strong>
-                        <div>
-                            <a class="btn btn-primary mr-2" href="{{ route('category_blogs.create') }}">
+                        <div class="d-flex">
+                            <a class="btn btn-primary mr-2" href="{{ route('admin.blogs.create') }}">
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
-                            <a class="btn btn-danger" href="{{ route('category_blogs.trashed') }}">
+                            <a class="btn btn-danger" href="{{ route('admin.blogs.trashed') }}">
                                 <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
                             </a>
+                            <div class="dropdown float-right ml-2">
+                                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-cogs"></i> Tùy chọn
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item activeAll" data-is_active="0" href="#">
+                                        <i class="fa fa-toggle-on text-success"></i> Bật các mục đã chọn
+                                    </a>
+                                    <a class="dropdown-item activeAll" data-is_active="1" href="#">
+                                        <i class="fa fa-toggle-off text-danger"></i> Tắt các mục đã chọn
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fa fa-trash text-danger"></i> Xóa các mục đã chọn
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body">
@@ -56,21 +90,23 @@
                             <thead>
                                 <tr>
                                     <th>
-                                        <input id="checkallus" type="checkbox">
+                                        <input id="checkAllTable" type="checkbox">
                                     </th>
                                     <th>STT</th>
-                                    <th>Tên danh mục bài viết</th>
+                                    <th>Bài viết</th>
+                                    <th>Tác giả</th>
+                                    <th>Danh mục</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <th>
-                                        <input id="checkallus" type="checkbox">
-                                    </th>
+                                    <th></th>
                                     <th>STT</th>
-                                    <th>Tên danh mục bài viết</th>
+                                    <th>Bài viết</th>
+                                    <th>Tác giả</th>
+                                    <th>Danh mục</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
@@ -81,20 +117,31 @@
                                     <td>
                                         <input type="checkbox" class="checkBoxItem" data-id="{{ $item->id }}">
                                     </td>
-                                <td>{{ $key+1 }}</td>
-                                <td>{{ $item->name }}</td>
-                                <td style="width: 8%" class="text-center">
-                                    <input type="checkbox" class="js-switch active" data-model="{{ $item->is_active }}"
-                                        {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"
-                                        data-modelId="{{ $item->id }}" />
-                                </td>
-                                <td class="d-flex">
-                                    <a class="btn btn-primary mr-2" href="{{route('category_blogs.show', $item)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
-                                    <a class="btn btn-warning mr-2" href="{{route('category_blogs.edit', $item)}}" title="Sửa"><i class="fa fa-edit"></i></a>
-                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $item->id }}" title="Xóa">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </td>
+                                    <td>{{ $key+1 }}</td>
+                                    <td>
+                                        <div class="post-info">
+                                            <img src="{{asset($item->img_avt)}}"
+                                                alt="Thumbnail" class="img-thumbnail">
+                                            <div>
+                                                <span class="post-title">{{$item->title}}</span>
+                                                <div class="post-meta">{{$item->created_at}}</div>
+                                                </div>
+                                            </div>
+                                    </td>
+                                    <td>{{$item->user->name}}</td>
+                                    <td>{{$item->category->name}}</td>
+                                    <td style="width: 12%" class="text-center">
+                                        <input type="checkbox" class="js-switch active" data-model="{{ $item->is_active }}"
+                                            {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"
+                                            data-modelId="{{ $item->id }}" />
+                                    </td>
+                                    <td class="d-flex">
+                                        <a class="btn btn-primary mr-2" href="{{route('admin.blogs.show', $item)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
+                                        <a class="btn btn-warning mr-2" href="{{route('admin.blogs.edit', $item)}}" title="Sửa"><i class="fa fa-edit"></i></a>
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $item->id }}" title="Xóa">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </td>
                                 </tr>
 
                                 <!-- Modal Xóa -->
@@ -112,7 +159,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
-                                                <form action="{{ route('category_blogs.destroy', $item) }}" method="POST">
+                                                <form action="{{ route('admin.blogs.destroy', $item) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
@@ -136,25 +183,22 @@
 @endsection
 
 @section('script')
-<script src="{{ asset('admin/assets/js/lib/data-table/datatables.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/dataTables.bootstrap.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/dataTables.buttons.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/buttons.bootstrap.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/jszip.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/vfs_fonts.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/buttons.html5.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/buttons.print.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/lib/data-table/buttons.colVis.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/init/datatables-init.js') }}"></script>
-{{-- swcr --}}
-<script src="{{asset('plugins/js/plugins/switchery/switchery.js')}}"></script>
-<script src="{{asset('plugins/js/swk.js')}}"></script>
-<script src="{{asset('plugins/js/checkall.js')}}"></script>
-<script src="{{asset('plugins/js/changeAcCtgrbl.js')}}"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#bootstrap-data-table-export').DataTable();
-    });
-</script>
-@endsection
+<script src="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.js"></script>
 
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/datatables.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/dataTables.bootstrap.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.bootstrap.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/jszip.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/vfs_fonts.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.print.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.colVis.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/js/init/datatables-init.js') }}"></script>
+
+<script src="{{asset('plugins/js/checkall.js')}}"></script>
+
+<script src="{{asset('plugins/js/changeActive/Blog/changeAllActiveBlog.js')}}"></script>
+
+<script src="{{asset('plugins/js/changeActive/Blog/changeActiveBlog.js')}}"></script>
+@endsection

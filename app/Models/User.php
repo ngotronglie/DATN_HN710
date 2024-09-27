@@ -20,7 +20,7 @@ class User extends Authenticatable
      */
     const ADMIN_ROLE = 2;
     const STAFF_ROLE = 1;
-  
+
     protected $fillable = [
         'name',
         'email',
@@ -58,10 +58,15 @@ class User extends Authenticatable
         'password' => 'hashed',
         'is_active' => 'boolean'
     ];
-    
+
     public function isAdminOrStaff()
     {
         return $this->role == self::ADMIN_ROLE || $this->role == self::STAFF_ROLE;
+    }
+
+    public function blogs()
+    {
+        return $this->hasMany(Blog::class);
     }
 
 }

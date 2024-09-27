@@ -23,4 +23,15 @@ class Blog extends Model
     protected $casts =[
         'is_active'=> 'boolean'
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(CategoryBlog::class, 'category_blog_id');
+    }
+
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

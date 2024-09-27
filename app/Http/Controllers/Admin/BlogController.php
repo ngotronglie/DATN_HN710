@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Http\Requests\StoreBlogRequest;
 use App\Http\Requests\UpdateBlogRequest;
+use App\Models\CategoryBlog;
 
 class BlogController extends Controller
 {
@@ -25,7 +26,8 @@ class BlogController extends Controller
      */
     public function create()
     {
-        //
+        $ctgrbl = CategoryBlog::all();
+        return view(self::PATH_VIEW.__FUNCTION__, compact('ctgrbl'));
     }
 
     /**
@@ -33,7 +35,9 @@ class BlogController extends Controller
      */
     public function store(StoreBlogRequest $request)
     {
-        //
+        $data = $request->all();
+        $data['user_id'] = 1;
+        Blog::create($data);
     }
 
     /**

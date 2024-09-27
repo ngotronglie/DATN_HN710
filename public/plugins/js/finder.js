@@ -32,9 +32,9 @@
 
     //truy cap ckedit
     HT.setupCkedit = () =>{
-        if ($('.ckedit')) {
-            ($('.ckedit')).each(function(){
-                let edit = $(this)
+        if (jQuery('.ckedit')) {
+            (jQuery('.ckedit')).each(function(){
+                let edit = jQuery(this)
                 let id = edit.attr('id')
                 HT.Ckedit(id)
             })
@@ -68,17 +68,11 @@
 
 //set up avt co hien anh sau khi chon test
     HT.upavt = () =>{
-        // $('.image-target').on('click', function(){
-        //      let input = $(this);
-        //      let type = 'Images';
-        //      HT.upimgavt(input, type);
+        jQuery('.image-target').click(function(){
 
-        // })
-        $('.image-target').click(function(){
-
-               let input = $(this);
+            let input = jQuery(this);
             let type = 'Images';
-             HT.upimgavt(input, type);
+            HT.upimgavt(input, type);
         })
     }
 
@@ -93,7 +87,7 @@
         finder.resourceType = type;
         finder.selectActionFunction = function(fileUrl, data) {
             // Loại bỏ /public khỏi đường dẫn
-            var cleanedUrl = fileUrl.replace('/public/', '');
+            var cleanedUrl = fileUrl.replace('/public', '');
 
             //object.find('img').attr('src', cleanedUrl);
             object.attr('src', cleanedUrl);
@@ -105,8 +99,8 @@
 
     //upload nhieu anh
     HT.imgs = () => {
-        $('.mutiimg').click(function(e){
-            let object = $(this);
+        jQuery('.mutiimg').click(function(e){
+            let object = jQuery(this);
             let target = object.attr('data-target');
             HT.upimgs(object, 'Images', target);
             e.preventDefault();
@@ -125,8 +119,9 @@
             var html ='';
             for (let i = 0; i < allfile.length; i++) {
                 var src = allfile[i].url;
+                var cleanedUrl = src.replace('/public', '');
                 html+= '<div><figure>'
-                html+='<img src="'+src+'" alt="'+src+'" style="width:100%">'
+                html+='<img src="'+cleanedUrl+'" alt="'+cleanedUrl+'" style="width:100%">'
                 html+='<figcaption>Nhập mô tả hình ảnh</figcaption>'
                 html+='</figure></div>'
             }
@@ -140,12 +135,12 @@
     //di chuyen vi tri anh
     HT.changeLocationimg = () => {
         //goi ham truy cap theo # de keo tha cac phan tu
-        $('#sortable').sortable();
-        $('#sortable').disableSelection();
+        jQuery('#sortable').sortable();
+        jQuery('#sortable').disableSelection();
     }
 
     HT.upalbum = () => {
-        $('.upload-img').on('click', function(e){
+        jQuery('.upload-img').on('click', function(e){
             HT.uploadalbum();
             e.preventDefault();
         })
@@ -173,23 +168,23 @@
                         html +='</li>'
             }
 
-            $('.click-to-upload').addClass('hidden');
-            $('#sortable').append(html);
-            $('.upload-list').removeClass('hidden');
+            jQuery('.click-to-upload').addClass('hidden');
+            jQuery('#sortable').append(html);
+            jQuery('.upload-list').removeClass('hidden');
         };
          finder.popup();
     }
 
     HT.deleteinAlbum = () => {
         // Xử lý sự kiện click để xóa hình ảnh
-        $(document).on('click', '.delete-image', function() {
-            let _this = $(this);
+        jQuery(document).on('click', '.delete-image', function() {
+            let _this = jQuery(this);
             _this.parents('.ui-ista').remove();
 
             // Kiểm tra lại số lượng phần tử sau khi xóa
-            if ($('.ui-ista').length === 0) {
-                $('.click-to-upload').removeClass('hidden');
-                $('.upload-list').addClass('hidden');
+            if (jQuery('.ui-ista').length === 0) {
+                jQuery('.click-to-upload').removeClass('hidden');
+                jQuery('.upload-list').addClass('hidden');
             }
         });
     }
