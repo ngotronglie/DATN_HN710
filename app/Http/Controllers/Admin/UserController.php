@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -118,5 +119,9 @@ class UserController extends Controller
         $user = User::withTrashed()->find($id);
         $user->restore();
         return redirect()->route('admin.accounts.trashed')->with('success', 'Khôi phục thành công');
+    }
+    public function myAccount(){
+        $user = Auth::user();
+        return view('admin.layout.account.my_account',compact('user'));
     }
 }

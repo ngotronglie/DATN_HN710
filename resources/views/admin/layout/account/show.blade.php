@@ -65,8 +65,7 @@
                                 <tr>
                                 </tr>
                                 <th>Ngày sinh</th>
-                                <td>{{ $account->date_of_birth }}</td>
-                                <tr>
+                                <td>{{ \Carbon\Carbon::parse($account->date_of_birth)->format('d/m/Y') }}</td>                                <tr>
                                 </tr>
                                 <th>Chức vụ</th>
                                 <td>
@@ -84,11 +83,11 @@
                                 </td>
                                 <tr>
                                     <th>Thời gian tạo</th>
-                                    <td>{{ $account->created_at }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($account->created_at)->format('d/m/Y H:i:s') }}</td>
                                 </tr>
                                 <tr>
                                     <th>Thời gian sửa</th>
-                                    <td>{{ $account->updated_at }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($account->update_at)->format('d/m/Y H:i:s') }}</td>
                                 </tr>
                                 <tr>
                                     <th>Trạng thái</th>

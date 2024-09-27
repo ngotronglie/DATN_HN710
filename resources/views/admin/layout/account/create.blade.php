@@ -87,8 +87,15 @@
                             </div>
                             <div class="form-group">
                                 <label for="password" class=" form-control-label">Mật khẩu</label>
+                                <div class="input-group">
                                 <input type="password" id="password" name="password"
                                     placeholder="Nhập mật khẩu" class="form-control" requied>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" onclick="togglePassword()">
+                                            <i class="fa fa-eye" id="eyeIcon"></i>
+                                        </span>
+                                    </div>
+                                </div>
                                 @error('password')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -128,6 +135,22 @@
             };
 
             reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+<script>
+    function togglePassword() {
+        var passwordField = document.getElementById("password");
+        var eyeIcon = document.getElementById("eyeIcon");
+
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            eyeIcon.classList.remove("fa-eye");
+            eyeIcon.classList.add("fa-eye-slash");
+        } else {
+            passwordField.type = "password";
+            eyeIcon.classList.remove("fa-eye-slash");
+            eyeIcon.classList.add("fa-eye");
         }
     }
 </script>
