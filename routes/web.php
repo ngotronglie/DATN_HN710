@@ -1,30 +1,65 @@
 <?php
 
-use App\Http\Controllers\Admin\ForgotPasswordController;
-use App\Http\Controllers\Admin\LoginController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\SizeController;
-use App\Http\Controllers\Admin\VoucherController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\CategoryBlogController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ColorController;
+use App\Http\Controllers\Admin\ForgotPasswordController;
+use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\SizeController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\VoucherController;
 
 use App\Http\Controllers\Ajax\ChangeActiveController;
 
 
+use App\Http\Controllers\ClientController;
 use Illuminate\Support\Facades\Route;
 
+
 /*
-|-------------------------------------------------------------------------- 
-| Web Routes 
-|-------------------------------------------------------------------------- 
-| 
-| Here is where you can register web routes for your application. These 
-| routes are loaded by the RouteServiceProvider and all of them will 
-| be assigned to the "web" middleware group. Make something great! 
-| 
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
 */
+
+// ----------------------------CLIENT ROUTES--------------------------------
+
+Route::get('/', [ClientController::class, 'index']);
+
+Route::get('/contact', function () {
+    return view('client.pages.contact');
+});
+Route::get('/blog', function () {
+    return view('client.pages.blog');
+});
+Route::get('/blog-detail', function () {
+    return view('client.pages.blog-detail');
+});
+Route::get('/shop', [ClientController::class, 'shop']);
+Route::get('shop/{id}', [ClientController::class, 'shop_danh_muc'])->name('shop_danh_muc');
+Route::get('/wishlist', function () {
+    return view('client.pages.wishlist');
+});
+Route::get('/cart', function () {
+    return view('client.pages.cart');
+});
+Route::get('/checkout', function () {
+    return view('client.pages.checkout');
+});
+
+Route::get('/about', function () {
+    return view('client.pages.about');
+});
+
+
+// ----------------------------END CLIENT ROUTES--------------------------------
+
 
 Route::get('admin/login', [LoginController::class, 'loginForm'])->name('admin.loginForm');
 Route::post('admin/checkLogin', [LoginController::class, 'login'])->name('admin.checkLogin');
