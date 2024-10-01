@@ -78,60 +78,615 @@
                     <!-- Shop Wrapper Start -->
                     <div class="row shop_wrapper grid_3">
 
-
-                        @foreach ($SanPham as $key => $item)
-                            <!-- Single Product Start -->
-                            <div class="col-lg-4 col-md-4 col-sm-6 product" data-aos="fade-up" data-aos-delay="400">
-                                <div class="product-inner">
-                                    <div class="thumb">
-                                        <a href="single-product.html" class="hinh_anh">
-                                            <img src="
-                                            @if (strpos($item->hinh_anh, 'http') === 0) {{ $item->hinh_anh }} 
-                                            @else 
-                                                {{ Storage::url($item->hinh_anh) }} @endif"
-                                                alt="Slider hinh_anh" />
-
-                                        </a>
-                                        <div class="actions">
-                                            <a href="wishlist.html" title="Wishlist" class="action wishlist"><i
-                                                    class="pe-7s-like"></i></a>
-                                            <a href="#" title="Quickview" class="action quickview"
-                                                data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><i
-                                                    class="pe-7s-search"></i></a>
-                                            <a href="compare.html" title="Compare" class="action compare"><i
-                                                    class="pe-7s-shuffle"></i></a>
-                                        </div>
+                        <!-- Single Product Start -->
+                        <div class="col-lg-4 col-md-4 col-sm-6 product" data-aos="fade-up" data-aos-delay="200">
+                            <div class="product-inner">
+                                <div class="thumb">
+                                    <a href="single-product.html" class="image">
+                                        <img class="first-image" src="assets/images/products/medium-size/2.jpg"
+                                            alt="Product" />
+                                        <img class="second-image" src="assets/images/products/medium-size/3.jpg"
+                                            alt="Product" />
+                                    </a>
+                                    <div class="actions">
+                                        <a href="wishlist.html" title="Wishlist" class="action wishlist"><i
+                                                class="pe-7s-like"></i></a>
+                                        <a href="#" title="Quickview" class="action quickview" data-bs-toggle="modal"
+                                            data-bs-target="#exampleModalCenter"><i class="pe-7s-search"></i></a>
+                                        <a href="compare.html" title="Compare" class="action compare"><i
+                                                class="pe-7s-shuffle"></i></a>
                                     </div>
-                                    <div class="content">
-                                        <h4 class="sub-title"><a href="single-product.html">Studio Design</a></h4>
-                                        <h5 class="title"><a href="single-product.html">{{ $item->ten_san_pham }}</a></h5>
-                                        <span class="ratings">
-                                            <span class="rating-wrap">
-                                                <span class="star" style="width: 100%"></span>
-                                            </span>
-                                            <span class="rating-num">(4)</span>
+                                </div>
+                                <div class="content">
+                                    <h4 class="sub-title"><a href="single-product.html">Studio Design</a></h4>
+                                    <h5 class="title"><a href="single-product.html">Basic Jogging Shorts</a></h5>
+                                    <span class="ratings">
+                                        <span class="rating-wrap">
+                                            <span class="star" style="width: 100%"></span>
                                         </span>
-                                        <P>{{ $item->mo_ta_ngan }}</P>
-                                        <span class="price">
-                                            <span class="old">{{ $item->gia_san_pham }}</span>
-                                            <span class="new">{{ $item->gia_khuyen_mai }}</span>
-                                        </span>
-                                        <div class="shop-list-btn">
-                                            <a title="Wishlist" href="#"
-                                                class="btn btn-sm btn-outline-dark btn-hover-primary wishlist"><i
-                                                    class="fa fa-heart"></i></a>
-                                            <button class="btn btn-sm btn-outline-dark btn-hover-primary"
-                                                title="Add To Cart">Add To Cart</button>
-                                            <a title="Compare" href="#"
-                                                class="btn btn-sm btn-outline-dark btn-hover-primary compare"><i
-                                                    class="fa fa-random"></i></a>
-                                        </div>
+                                        <span class="rating-num">(4)</span>
+                                    </span>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce posuere metus vitae
+                                        arcu imperdiet, id aliquet ante scelerisque. Sed sit amet sem vitae urna fringilla
+                                        tempus.</p>
+                                    <span class="price">
+                                        <span class="new">$40.50</span>
+                                        <span class="old">$42.85</span>
+                                    </span>
+                                    <div class="shop-list-btn">
+                                        <a title="Wishlist" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary wishlist"><i
+                                                class="fa fa-heart"></i></a>
+                                        <button class="btn btn-sm btn-outline-dark btn-hover-primary"
+                                            title="Add To Cart">Add To Cart</button>
+                                        <a title="Compare" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary compare"><i
+                                                class="fa fa-random"></i></a>
                                     </div>
                                 </div>
                             </div>
-                            <!-- Single Product End -->
-                        @endforeach
+                        </div>
+                        <!-- Single Product End -->
 
+                        <!-- Single Product Start -->
+                        <div class="col-lg-4 col-md-4 col-sm-6 product" data-aos="fade-up" data-aos-delay="300">
+                            <div class="product-inner">
+                                <div class="thumb">
+                                    <a href="single-product.html" class="image">
+                                        <img class="first-image" src="assets/images/products/medium-size/4.jpg"
+                                            alt="Product" />
+                                        <img class="second-image" src="assets/images/products/medium-size/10.jpg"
+                                            alt="Product" />
+                                    </a>
+                                    <div class="actions">
+                                        <a href="wishlist.html" title="Wishlist" class="action wishlist"><i
+                                                class="pe-7s-like"></i></a>
+                                        <a href="#" title="Quickview" class="action quickview"
+                                            data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><i
+                                                class="pe-7s-search"></i></a>
+                                        <a href="compare.html" title="Compare" class="action compare"><i
+                                                class="pe-7s-shuffle"></i></a>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <h4 class="sub-title"><a href="single-product.html">Studio Design</a></h4>
+                                    <h5 class="title"><a href="single-product.html">Simple Woven Fabrics</a></h5>
+                                    <span class="ratings">
+                                        <span class="rating-wrap">
+                                            <span class="star" style="width: 100%"></span>
+                                        </span>
+                                        <span class="rating-num">(4)</span>
+                                    </span>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce posuere metus vitae
+                                        arcu imperdiet, id aliquet ante scelerisque. Sed sit amet sem vitae urna fringilla
+                                        tempus.</p>
+                                    <span class="price">
+                                        <span class="new">$38.50</span>
+                                        <span class="old">$42.85</span>
+                                    </span>
+                                    <div class="shop-list-btn">
+                                        <a title="Wishlist" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary wishlist"><i
+                                                class="fa fa-heart"></i></a>
+                                        <button class="btn btn-sm btn-outline-dark btn-hover-primary"
+                                            title="Add To Cart">Add To Cart</button>
+                                        <a title="Compare" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary compare"><i
+                                                class="fa fa-random"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Single Product End -->
+
+                        <!-- Single Product Start -->
+                        <div class="col-lg-4 col-md-4 col-sm-6 product" data-aos="fade-up" data-aos-delay="400">
+                            <div class="product-inner">
+                                <div class="thumb">
+                                    <a href="single-product.html" class="image">
+                                        <img class="first-image" src="assets/images/products/medium-size/5.jpg"
+                                            alt="Product" />
+                                        <img class="second-image" src="assets/images/products/medium-size/6.jpg"
+                                            alt="Product" />
+                                    </a>
+                                    <div class="actions">
+                                        <a href="wishlist.html" title="Wishlist" class="action wishlist"><i
+                                                class="pe-7s-like"></i></a>
+                                        <a href="#" title="Quickview" class="action quickview"
+                                            data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><i
+                                                class="pe-7s-search"></i></a>
+                                        <a href="compare.html" title="Compare" class="action compare"><i
+                                                class="pe-7s-shuffle"></i></a>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <h4 class="sub-title"><a href="single-product.html">Studio Design</a></h4>
+                                    <h5 class="title"><a href="single-product.html">Make Thing Happen T-Shirt</a></h5>
+                                    <span class="ratings">
+                                        <span class="rating-wrap">
+                                            <span class="star" style="width: 100%"></span>
+                                        </span>
+                                        <span class="rating-num">(4)</span>
+                                    </span>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce posuere metus vitae
+                                        arcu imperdiet, id aliquet ante scelerisque. Sed sit amet sem vitae urna fringilla
+                                        tempus.</p>
+                                    <span class="price">
+                                        <span class="new">$38.50</span>
+                                        <span class="old">$42.85</span>
+                                    </span>
+                                    <div class="shop-list-btn">
+                                        <a title="Wishlist" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary wishlist"><i
+                                                class="fa fa-heart"></i></a>
+                                        <button class="btn btn-sm btn-outline-dark btn-hover-primary"
+                                            title="Add To Cart">Add To Cart</button>
+                                        <a title="Compare" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary compare"><i
+                                                class="fa fa-random"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Single Product End -->
+
+                        <!-- Single Product Start -->
+                        <div class="col-lg-4 col-md-4 col-sm-6 product" data-aos="fade-up" data-aos-delay="200">
+                            <div class="product-inner">
+                                <div class="thumb">
+                                    <a href="single-product.html" class="image">
+                                        <img class="first-image" src="assets/images/products/medium-size/7.jpg"
+                                            alt="Product" />
+                                        <img class="second-image" src="assets/images/products/medium-size/9.jpg"
+                                            alt="Product" />
+                                    </a>
+                                    <div class="actions">
+                                        <a href="wishlist.html" title="Wishlist" class="action wishlist"><i
+                                                class="pe-7s-like"></i></a>
+                                        <a href="#" title="Quickview" class="action quickview"
+                                            data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><i
+                                                class="pe-7s-search"></i></a>
+                                        <a href="compare.html" title="Compare" class="action compare"><i
+                                                class="pe-7s-shuffle"></i></a>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <h4 class="sub-title"><a href="single-product.html">Studio Design</a></h4>
+                                    <h5 class="title"><a href="single-product.html">Basic Lather Sneaker</a></h5>
+                                    <span class="ratings">
+                                        <span class="rating-wrap">
+                                            <span class="star" style="width: 100%"></span>
+                                        </span>
+                                        <span class="rating-num">(4)</span>
+                                    </span>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce posuere metus vitae
+                                        arcu imperdiet, id aliquet ante scelerisque. Sed sit amet sem vitae urna fringilla
+                                        tempus.</p>
+                                    <span class="price">
+                                        <span class="new">$38.50</span>
+                                        <span class="old">$42.85</span>
+                                    </span>
+                                    <div class="shop-list-btn">
+                                        <a title="Wishlist" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary wishlist"><i
+                                                class="fa fa-heart"></i></a>
+                                        <button class="btn btn-sm btn-outline-dark btn-hover-primary"
+                                            title="Add To Cart">Add To Cart</button>
+                                        <a title="Compare" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary compare"><i
+                                                class="fa fa-random"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Single Product End -->
+
+                        <!-- Single Product Start -->
+                        <div class="col-lg-4 col-md-4 col-sm-6 product" data-aos="fade-up" data-aos-delay="300">
+                            <div class="product-inner">
+                                <div class="thumb">
+                                    <a href="single-product.html" class="image">
+                                        <img class="first-image" src="assets/images/products/medium-size/10.jpg"
+                                            alt="Product" />
+                                        <img class="second-image" src="assets/images/products/medium-size/4.jpg"
+                                            alt="Product" />
+                                    </a>
+                                    <div class="actions">
+                                        <a href="wishlist.html" title="Wishlist" class="action wishlist"><i
+                                                class="pe-7s-like"></i></a>
+                                        <a href="#" title="Quickview" class="action quickview"
+                                            data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><i
+                                                class="pe-7s-search"></i></a>
+                                        <a href="compare.html" title="Compare" class="action compare"><i
+                                                class="pe-7s-shuffle"></i></a>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <h4 class="sub-title"><a href="single-product.html">Studio Design</a></h4>
+                                    <h5 class="title"><a href="single-product.html">Simple Woven Fashion</a></h5>
+                                    <span class="ratings">
+                                        <span class="rating-wrap">
+                                            <span class="star" style="width: 100%"></span>
+                                        </span>
+                                        <span class="rating-num">(4)</span>
+                                    </span>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce posuere metus vitae
+                                        arcu imperdiet, id aliquet ante scelerisque. Sed sit amet sem vitae urna fringilla
+                                        tempus.</p>
+                                    <span class="price">
+                                        <span class="new">$38.50</span>
+                                        <span class="old">$42.85</span>
+                                    </span>
+                                    <div class="shop-list-btn">
+                                        <a title="Wishlist" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary wishlist"><i
+                                                class="fa fa-heart"></i></a>
+                                        <button class="btn btn-sm btn-outline-dark btn-hover-primary"
+                                            title="Add To Cart">Add To Cart</button>
+                                        <a title="Compare" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary compare"><i
+                                                class="fa fa-random"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Single Product End -->
+
+                        <!-- Single Product Start -->
+                        <div class="col-lg-4 col-md-4 col-sm-6 product" data-aos="fade-up" data-aos-delay="400">
+                            <div class="product-inner">
+                                <div class="thumb">
+                                    <a href="single-product.html" class="image">
+                                        <img class="first-image" src="assets/images/products/medium-size/11.jpg"
+                                            alt="Product" />
+                                        <img class="second-image" src="assets/images/products/medium-size/10.jpg"
+                                            alt="Product" />
+                                    </a>
+                                    <div class="actions">
+                                        <a href="wishlist.html" title="Wishlist" class="action wishlist"><i
+                                                class="pe-7s-like"></i></a>
+                                        <a href="#" title="Quickview" class="action quickview"
+                                            data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><i
+                                                class="pe-7s-search"></i></a>
+                                        <a href="compare.html" title="Compare" class="action compare"><i
+                                                class="pe-7s-shuffle"></i></a>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <h4 class="sub-title"><a href="single-product.html">Studio Design</a></h4>
+                                    <h5 class="title"><a href="single-product.html">Handmade Shoulder Bag</a></h5>
+                                    <span class="ratings">
+                                        <span class="rating-wrap">
+                                            <span class="star" style="width: 100%"></span>
+                                        </span>
+                                        <span class="rating-num">(4)</span>
+                                    </span>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce posuere metus vitae
+                                        arcu imperdiet, id aliquet ante scelerisque. Sed sit amet sem vitae urna fringilla
+                                        tempus.</p>
+                                    <span class="price">
+                                        <span class="new">$38.50</span>
+                                        <span class="old">$42.85</span>
+                                    </span>
+                                    <div class="shop-list-btn">
+                                        <a title="Wishlist" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary wishlist"><i
+                                                class="fa fa-heart"></i></a>
+                                        <button class="btn btn-sm btn-outline-dark btn-hover-primary"
+                                            title="Add To Cart">Add To Cart</button>
+                                        <a title="Compare" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary compare"><i
+                                                class="fa fa-random"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Single Product End -->
+
+                        <!-- Single Product Start -->
+                        <div class="col-lg-4 col-md-4 col-sm-6 product" data-aos="fade-up" data-aos-delay="200">
+                            <div class="product-inner">
+                                <div class="thumb">
+                                    <a href="single-product.html" class="image">
+                                        <img class="first-image" src="assets/images/products/medium-size/3.jpg"
+                                            alt="Product" />
+                                        <img class="second-image" src="assets/images/products/medium-size/5.jpg"
+                                            alt="Product" />
+                                    </a>
+                                    <div class="actions">
+                                        <a href="wishlist.html" title="Wishlist" class="action wishlist"><i
+                                                class="pe-7s-like"></i></a>
+                                        <a href="#" title="Quickview" class="action quickview"
+                                            data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><i
+                                                class="pe-7s-search"></i></a>
+                                        <a href="compare.html" title="Compare" class="action compare"><i
+                                                class="pe-7s-shuffle"></i></a>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <h4 class="sub-title"><a href="single-product.html">Studio Design</a></h4>
+                                    <h5 class="title"><a href="single-product.html">Enjoy The Rest T-Shirt</a></h5>
+                                    <span class="ratings">
+                                        <span class="rating-wrap">
+                                            <span class="star" style="width: 100%"></span>
+                                        </span>
+                                        <span class="rating-num">(4)</span>
+                                    </span>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce posuere metus vitae
+                                        arcu imperdiet, id aliquet ante scelerisque. Sed sit amet sem vitae urna fringilla
+                                        tempus.</p>
+                                    <span class="price">
+                                        <span class="new">$38.50</span>
+                                        <span class="old">$42.85</span>
+                                    </span>
+                                    <div class="shop-list-btn">
+                                        <a title="Wishlist" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary wishlist"><i
+                                                class="fa fa-heart"></i></a>
+                                        <button class="btn btn-sm btn-outline-dark btn-hover-primary"
+                                            title="Add To Cart">Add To Cart</button>
+                                        <a title="Compare" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary compare"><i
+                                                class="fa fa-random"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Single Product End -->
+
+                        <!-- Single Product Start -->
+                        <div class="col-lg-4 col-md-4 col-sm-6 product" data-aos="fade-up" data-aos-delay="300">
+                            <div class="product-inner">
+                                <div class="thumb">
+                                    <a href="single-product.html" class="image">
+                                        <img class="first-image" src="assets/images/products/medium-size/9.jpg"
+                                            alt="Product" />
+                                        <img class="second-image" src="assets/images/products/medium-size/7.jpg"
+                                            alt="Product" />
+                                    </a>
+                                    <div class="actions">
+                                        <a href="wishlist.html" title="Wishlist" class="action wishlist"><i
+                                                class="pe-7s-like"></i></a>
+                                        <a href="#" title="Quickview" class="action quickview"
+                                            data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><i
+                                                class="pe-7s-search"></i></a>
+                                        <a href="compare.html" title="Compare" class="action compare"><i
+                                                class="pe-7s-shuffle"></i></a>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <h4 class="sub-title"><a href="single-product.html">Studio Design</a></h4>
+                                    <h5 class="title"><a href="single-product.html">Basic Lather Sneaker</a></h5>
+                                    <span class="ratings">
+                                        <span class="rating-wrap">
+                                            <span class="star" style="width: 100%"></span>
+                                        </span>
+                                        <span class="rating-num">(4)</span>
+                                    </span>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce posuere metus vitae
+                                        arcu imperdiet, id aliquet ante scelerisque. Sed sit amet sem vitae urna fringilla
+                                        tempus.</p>
+                                    <span class="price">
+                                        <span class="new">$38.50</span>
+                                        <span class="old">$42.85</span>
+                                    </span>
+                                    <div class="shop-list-btn">
+                                        <a title="Wishlist" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary wishlist"><i
+                                                class="fa fa-heart"></i></a>
+                                        <button class="btn btn-sm btn-outline-dark btn-hover-primary"
+                                            title="Add To Cart">Add To Cart</button>
+                                        <a title="Compare" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary compare"><i
+                                                class="fa fa-random"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Single Product End -->
+
+                        <!-- Single Product Start -->
+                        <div class="col-lg-4 col-md-4 col-sm-6 product" data-aos="fade-up" data-aos-delay="400">
+                            <div class="product-inner">
+                                <div class="thumb">
+                                    <a href="single-product.html" class="image">
+                                        <img class="first-image" src="assets/images/products/medium-size/10.jpg"
+                                            alt="Product" />
+                                        <img class="second-image" src="assets/images/products/medium-size/4.jpg"
+                                            alt="Product" />
+                                    </a>
+                                    <div class="actions">
+                                        <a href="wishlist.html" title="Wishlist" class="action wishlist"><i
+                                                class="pe-7s-like"></i></a>
+                                        <a href="#" title="Quickview" class="action quickview"
+                                            data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><i
+                                                class="pe-7s-search"></i></a>
+                                        <a href="compare.html" title="Compare" class="action compare"><i
+                                                class="pe-7s-shuffle"></i></a>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <h4 class="sub-title"><a href="single-product.html">Studio Design</a></h4>
+                                    <h5 class="title"><a href="single-product.html">Simple Woven Fashion</a></h5>
+                                    <span class="ratings">
+                                        <span class="rating-wrap">
+                                            <span class="star" style="width: 100%"></span>
+                                        </span>
+                                        <span class="rating-num">(4)</span>
+                                    </span>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce posuere metus vitae
+                                        arcu imperdiet, id aliquet ante scelerisque. Sed sit amet sem vitae urna fringilla
+                                        tempus.</p>
+                                    <span class="price">
+                                        <span class="new">$38.50</span>
+                                        <span class="old">$42.85</span>
+                                    </span>
+                                    <div class="shop-list-btn">
+                                        <a title="Wishlist" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary wishlist"><i
+                                                class="fa fa-heart"></i></a>
+                                        <button class="btn btn-sm btn-outline-dark btn-hover-primary"
+                                            title="Add To Cart">Add To Cart</button>
+                                        <a title="Compare" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary compare"><i
+                                                class="fa fa-random"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Single Product End -->
+                        <!-- Single Product Start -->
+                        <div class="col-lg-4 col-md-4 col-sm-6 product" data-aos="fade-up" data-aos-delay="200">
+                            <div class="product-inner">
+                                <div class="thumb">
+                                    <a href="single-product.html" class="image">
+                                        <img class="first-image" src="assets/images/products/medium-size/1.jpg"
+                                            alt="Product" />
+                                        <img class="second-image" src="assets/images/products/medium-size/5.jpg"
+                                            alt="Product" />
+                                    </a>
+                                    <div class="actions">
+                                        <a href="wishlist.html" title="Wishlist" class="action wishlist"><i
+                                                class="pe-7s-like"></i></a>
+                                        <a href="#" title="Quickview" class="action quickview"
+                                            data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><i
+                                                class="pe-7s-search"></i></a>
+                                        <a href="compare.html" title="Compare" class="action compare"><i
+                                                class="pe-7s-shuffle"></i></a>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <h4 class="sub-title"><a href="single-product.html">Studio Design</a></h4>
+                                    <h5 class="title"><a href="single-product.html">Brother Hoddies in Grey</a></h5>
+                                    <span class="ratings">
+                                        <span class="rating-wrap">
+                                            <span class="star" style="width: 100%"></span>
+                                        </span>
+                                        <span class="rating-num">(4)</span>
+                                    </span>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce posuere metus vitae
+                                        arcu imperdiet, id aliquet ante scelerisque. Sed sit amet sem vitae urna fringilla
+                                        tempus.</p>
+                                    <span class="price">
+                                        <span class="new">$38.50</span>
+                                        <span class="old">$42.85</span>
+                                    </span>
+                                    <div class="shop-list-btn">
+                                        <a title="Wishlist" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary wishlist"><i
+                                                class="fa fa-heart"></i></a>
+                                        <button class="btn btn-sm btn-outline-dark btn-hover-primary"
+                                            title="Add To Cart">Add To Cart</button>
+                                        <a title="Compare" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary compare"><i
+                                                class="fa fa-random"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Single Product End -->
+
+                        <!-- Single Product Start -->
+                        <div class="col-lg-4 col-md-4 col-sm-6 product" data-aos="fade-up" data-aos-delay="300">
+                            <div class="product-inner">
+                                <div class="thumb">
+                                    <a href="single-product.html" class="image">
+                                        <img class="first-image" src="assets/images/products/medium-size/7.jpg"
+                                            alt="Product" />
+                                        <img class="second-image" src="assets/images/products/medium-size/9.jpg"
+                                            alt="Product" />
+                                    </a>
+                                    <div class="actions">
+                                        <a href="wishlist.html" title="Wishlist" class="action wishlist"><i
+                                                class="pe-7s-like"></i></a>
+                                        <a href="#" title="Quickview" class="action quickview"
+                                            data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><i
+                                                class="pe-7s-search"></i></a>
+                                        <a href="compare.html" title="Compare" class="action compare"><i
+                                                class="pe-7s-shuffle"></i></a>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <h4 class="sub-title"><a href="single-product.html">Studio Design</a></h4>
+                                    <h5 class="title"><a href="single-product.html">Basic Lather Sneaker</a></h5>
+                                    <span class="ratings">
+                                        <span class="rating-wrap">
+                                            <span class="star" style="width: 100%"></span>
+                                        </span>
+                                        <span class="rating-num">(4)</span>
+                                    </span>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce posuere metus vitae
+                                        arcu imperdiet, id aliquet ante scelerisque. Sed sit amet sem vitae urna fringilla
+                                        tempus.</p>
+                                    <span class="price">
+                                        <span class="new">$38.50</span>
+                                        <span class="old">$42.85</span>
+                                    </span>
+                                    <div class="shop-list-btn">
+                                        <a title="Wishlist" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary wishlist"><i
+                                                class="fa fa-heart"></i></a>
+                                        <button class="btn btn-sm btn-outline-dark btn-hover-primary"
+                                            title="Add To Cart">Add To Cart</button>
+                                        <a title="Compare" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary compare"><i
+                                                class="fa fa-random"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Single Product End -->
+
+                        <!-- Single Product Start -->
+                        <div class="col-lg-4 col-md-4 col-sm-6 product" data-aos="fade-up" data-aos-delay="400">
+                            <div class="product-inner">
+                                <div class="thumb">
+                                    <a href="single-product.html" class="image">
+                                        <img class="first-image" src="assets/images/products/medium-size/4.jpg"
+                                            alt="Product" />
+                                        <img class="second-image" src="assets/images/products/medium-size/10.jpg"
+                                            alt="Product" />
+                                    </a>
+                                    <div class="actions">
+                                        <a href="wishlist.html" title="Wishlist" class="action wishlist"><i
+                                                class="pe-7s-like"></i></a>
+                                        <a href="#" title="Quickview" class="action quickview"
+                                            data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><i
+                                                class="pe-7s-search"></i></a>
+                                        <a href="compare.html" title="Compare" class="action compare"><i
+                                                class="pe-7s-shuffle"></i></a>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <h4 class="sub-title"><a href="single-product.html">Studio Design</a></h4>
+                                    <h5 class="title"><a href="single-product.html">Simple Woven Fabrics</a></h5>
+                                    <span class="ratings">
+                                        <span class="rating-wrap">
+                                            <span class="star" style="width: 100%"></span>
+                                        </span>
+                                        <span class="rating-num">(4)</span>
+                                    </span>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce posuere metus vitae
+                                        arcu imperdiet, id aliquet ante scelerisque. Sed sit amet sem vitae urna fringilla
+                                        tempus.</p>
+                                    <span class="price">
+                                        <span class="new">$38.50</span>
+                                        <span class="old">$42.85</span>
+                                    </span>
+                                    <div class="shop-list-btn">
+                                        <a title="Wishlist" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary wishlist"><i
+                                                class="fa fa-heart"></i></a>
+                                        <button class="btn btn-sm btn-outline-dark btn-hover-primary"
+                                            title="Add To Cart">Add To Cart</button>
+                                        <a title="Compare" href="#"
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary compare"><i
+                                                class="fa fa-random"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Single Product End -->
 
                     </div>
                     <!-- Shop Wrapper End -->
@@ -209,11 +764,10 @@
 
                                 <div class="sidebar-body">
                                     <ul class="sidebar-list">
-                                        @foreach ($DanhMuc as $key => $item)
-                                            <li><a
-                                                    href="{{ route('shop_danh_muc', $item->id) }}">{{ $item->ten_danh_muc }}</a>
-                                            </li>
-                                        @endforeach
+                                        <li><a href="#">All Product</a></li>
+                                        <li><a href="#">Best Seller (5)</a></li>
+                                        <li><a href="#">Featured (4)</a></li>
+                                        <li><a href="#">New Products (6)</a></li>
                                     </ul>
                                 </div>
                             </div>
