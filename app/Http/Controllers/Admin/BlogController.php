@@ -15,12 +15,10 @@ use Illuminate\Support\Facades\Storage;
 class BlogController extends Controller
 {
     const PATH_VIEW = 'admin.layout.blog.';
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-        $data = Blog::with('user', 'category') // Nạp trước user và category
+        $data = Blog::with('user', 'category')
             ->whereHas('category', function ($query) {
                 $query->whereNull('deleted_at');
             })
@@ -35,19 +33,12 @@ class BlogController extends Controller
         return view(self::PATH_VIEW . __FUNCTION__, compact('trashedCount', 'data'));
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $ctgrbl = CategoryBlog::all();
         return view(self::PATH_VIEW . __FUNCTION__, compact('ctgrbl'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreBlogRequest $request)
     {
         $data = $request->all();
@@ -63,9 +54,6 @@ class BlogController extends Controller
 
 
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Blog $blog)
     {
         $trashedCategories = CategoryBlog::onlyTrashed()->pluck('id')->toArray();
@@ -84,9 +72,12 @@ class BlogController extends Controller
             }
 
         }
-        $ctgrbl = CategoryBlog::all();
+        $categoryName = $blog->category->name;
+        $userName = $blog->user->name;
 
-        return view(self::PATH_VIEW . __FUNCTION__, compact('blog', 'ctgrbl'));
+
+
+        return view(self::PATH_VIEW . __FUNCTION__, compact('blog', 'categoryName', 'userName'));
     }
 
 
@@ -96,10 +87,18 @@ class BlogController extends Controller
     public function edit(Blog $blog)
     {
         $trashedCategories = CategoryBlog::onlyTrashed()->pluck('id')->toArray();
+        $trashedUsers = User::onlyTrashed()->pluck('id')->toArray();
 
         foreach ($trashedCategories as $idBlTrash) {
             if ($idBlTrash == $blog->category_blog_id) {
                 return abort(404, 'Category for this blog has been soft deleted');
+            }
+
+        }
+
+        foreach ($trashedUsers as $idUsTrash) {
+            if ($idUsTrash == $blog->user_id) {
+                return abort(404, 'Author for this user has been soft deleted');
             }
 
         }
