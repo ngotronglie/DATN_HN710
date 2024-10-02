@@ -29,21 +29,6 @@
             </div>
         </div>
     </div>
-    @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
-@if (session('message'))
-    <div class="alert alert-danger">
-        {{ session('message') }}
-    </div>
-@endif
     <form action="{{ route('admin.blogs.store') }}" enctype="multipart/form-data" method="post">
         @csrf
     <div class="content mb-5">
@@ -112,11 +97,10 @@
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <div class="form-row">
-                                                <input type="file">
+                                                <input type="file" name="img_avt" class="form-control" value="{{old('img_avt')}}">
                                                 <img src="https://tse4.mm.bing.net/th?id=OIP.EkljFHN5km7kZIZpr96-JwAAAA&pid=Api&P=0&h=220"
                                                     style="width: 100%;text-align: center"
                                                     class="image-target img-thumbnail"alt="null">
-                                                <input type="hidden" name="img_avt" class="form-control" value="">
                                             </div>
                                         </div>
                                     </div>

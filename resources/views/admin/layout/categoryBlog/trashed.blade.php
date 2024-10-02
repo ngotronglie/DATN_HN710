@@ -86,7 +86,7 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                Bạn có chắc chắn muốn khôi phục danh mục "{{ $item->name }}" không?
+                                                Bạn có chắc chắn muốn khôi phục danh mục bài viết "{{ $item->name }}" không?
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>

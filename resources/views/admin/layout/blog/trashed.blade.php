@@ -85,7 +85,7 @@
                                     <td>{{ $key+1 }}</td>
                                     <td>
                                         <div class="post-info">
-                                            <img src="{{asset($item->img_avt)}}"
+                                            <img src="{{Storage::url($item->img_avt)}}"
                                                 alt="Thumbnail" class="img-thumbnail">
                                             <div>
                                                 <span class="post-title">{{$item->title}}</span>
@@ -114,7 +114,7 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                Bạn có chắc chắn muốn khôi phục danh mục "{{ $item->name }}" không?
+                                                Bạn có chắc chắn muốn khôi phục bài viết "{{ $item->title }}" không?
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>

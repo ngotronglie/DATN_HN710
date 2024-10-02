@@ -45,7 +45,7 @@
                             <a class="btn btn-primary mr-2" href="{{ route('admin.category_blogs.create') }}">
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
-                            <a class="btn btn-danger" href="{{ route('admin.category_blogs.trashed') }}">
+                            <a class="btn btn-danger countTrash" href="{{ route('admin.category_blogs.trashed') }}">
                                 <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
                             </a>
                             <div class="dropdown float-right ml-2">
@@ -59,7 +59,7 @@
                                     <a class="dropdown-item activeAll" data-is_active="1" href="#">
                                         <i class="fa fa-toggle-off text-danger"></i> Tắt các mục đã chọn
                                     </a>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item deleteAll" href="#">
                                         <i class="fa fa-trash text-danger"></i> Xóa các mục đã chọn
                                     </a>
                                 </div>
@@ -167,5 +167,7 @@
 <script src="{{asset('plugins/js/changeActive/CategoryBlog/changeAllActiveCategoryBlog.js')}}"></script>
 
 <script src="{{asset('plugins/js/changeActive/CategoryBlog/changeActiveCategoryBlog.js')}}"></script>
-@endsection
 
+<script src="{{asset('plugins/js/ChangeActive/CategoryBlog/deleteAllCategoryBlog.js')}}"></script>
+
+@endsection

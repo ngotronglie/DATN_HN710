@@ -19,35 +19,41 @@ class UpdateBlogRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+
     public function rules()
-    {
-        return [
-            'title' => 'required|string|max:255|unique:blogs,title',
-            'content' => 'required|string',
-            'category_blog_id' => 'required|integer|exists:category_blogs,id',
-            'img_avt' => 'required|string|max:255',
-        ];
-    }
+{
+    // Lấy ID của blog hiện tại từ route parameters
+    $blogId = $this->route('blog')->id;
+
+    return [
+        'title' => 'required|string|max:255|unique:blogs,title,' . $blogId, // Chỉnh sửa ở đây
+        'content' => 'required|string',
+        'category_blog_id' => 'required|integer|exists:category_blogs,id',
+        'img_avt' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Thay đổi bắt buộc thành nullable
+    ];
+}
+
 
 
     public function messages()
-{
-    return [
-        'title.required' => 'Tiêu đề là bắt buộc.',
-        'title.string' => 'Tiêu đề phải là chuỗi.',
-        'title.max' => 'Tiêu đề không được quá 255 ký tự.',
-        'title.unique' => 'Tiêu đề đã tồn tại.',
+    {
+        return [
+            'title.required' => 'Tiêu đề là bắt buộc.',
+            'title.string' => 'Tiêu đề phải là chuỗi.',
+            'title.max' => 'Tiêu đề không được quá 255 ký tự.',
+            'title.unique' => 'Tiêu đề đã tồn tại.',
 
-        'content.required' => 'Nội dung là bắt buộc.',
-        'content.string' => 'Nội dung phải là chuỗi.',
+            'content.required' => 'Nội dung là bắt buộc.',
+            'content.string' => 'Nội dung phải là chuỗi.',
 
-        'category_blog_id.required' => 'ID danh mục bài viết là bắt buộc.',
-        'category_blog_id.integer' => 'ID danh mục phải là số nguyên.',
-        'category_blog_id.exists' => 'ID danh mục không tồn tại.',
+            'category_blog_id.required' => 'ID danh mục bài viết là bắt buộc.',
+            'category_blog_id.integer' => 'ID danh mục phải là số nguyên.',
+            'category_blog_id.exists' => 'ID danh mục không tồn tại.',
 
-        'img_avt.required' => 'Ảnh đại diện là bắt buộc.',
-        'img_avt.string' => 'Ảnh đại diện phải là chuỗi.',
-        'img_avt.max' => 'Đường dẫn ảnh không được quá 255 ký tự.',
-    ];
-}
+            'img_avt.required' => 'Bạn chưa chọn ảnh đại diện.',
+            'img_avt.image' => 'Tệp tải lên phải là một ảnh.',
+            'img_avt.mimes' => 'Ảnh đại diện chỉ chấp nhận định dạng: jpeg, png, jpg, gif.',
+            'img_avt.max' => 'Kích thước ảnh đại diện không được vượt quá 2MB.',
+        ];
+    }
 }

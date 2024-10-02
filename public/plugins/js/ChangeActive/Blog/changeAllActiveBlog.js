@@ -31,7 +31,7 @@
 
                 $.ajax({
                     type: 'POST',
-                    url: 'blogs/ajax/changeAllActiveBlog',
+                    url: '/admin/blogs/ajax/changeAllActiveBlog',
                     data: option,
                     dataType: 'json',
                     success: function (res) {

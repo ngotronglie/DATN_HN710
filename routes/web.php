@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\CategoryBlogController;
 use App\Http\Controllers\Ajax\ChangeActiveController;
 
 
+use App\Http\Controllers\Ajax\DeleteController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -110,8 +111,18 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     //ajax category blog
     Route::post('category_blogs/ajax/changeActiveCategoryBlog', [ChangeActiveController::class, 'changeActiveCategoryBlog']);
     Route::post('category_blogs/ajax/changeAllActiveCategoryBlog', [ChangeActiveController::class, 'changeActiveAllCategoryBlog']);
+    //ajax xoa cac muc da chon categoryblog
+    Route::delete('categoryBlogs/ajax/deleteAllCategoryBlog', [DeleteController::class, 'deleteAllCategoryBlog']);
+    //update count thung rac
+    Route::get('categoryBlogs/ajax/trashedCount', [CategoryBlogController::class, 'trashedCount']);
+
 
     //ajax blog
     Route::post('blogs/ajax/changeActiveBlog', [ChangeActiveController::class, 'changeActiveBlog']);
     Route::post('blogs/ajax/changeAllActiveBlog', [ChangeActiveController::class, 'changeActiveAllBlog']);
+     //ajax xoa cac muc da chon blog
+     Route::delete('blogs/ajax/deleteAllBlog', [DeleteController::class, 'deleteAllBlog']);
+     //update count thung rac
+     Route::get('blogs/ajax/trashedCount', [BlogController::class, 'trashedCount']);
+
 });

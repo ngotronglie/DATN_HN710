@@ -1,40 +1,12 @@
-(function() {
+(function($) {
     "use strict";
     var HT = {};
 
-    //truy cap ckfinner
-    HT.ckfinner = () => {
-        var uploadImages = document.querySelectorAll('.upload-image');
-        uploadImages.forEach(function(uploadImage) {
-            uploadImage.addEventListener('click', function() {
-                var input = this;
-                var type = input.getAttribute('data-type');
-                HT.setupCkfinner2(input, type);
-            });
-        });
-    };
-
-    //hien thi ck finner
-    HT.setupCkfinner2 = (object, type) => {
-        if (typeof(type) === 'undefined') {
-            type = 'Images';
-        }
-
-        var finder = new CKFinder(); // Đảm bảo CKFinder đã được đưa vào
-        finder.resourceType = type;
-        finder.selectActionFunction = function(fileUrl, data) {
-            // Loại bỏ /public khỏi đường dẫn
-            var cleanedUrl = fileUrl.replace('/public/', '');
-            object.value = cleanedUrl; // Đặt giá trị cho input
-        };
-         finder.popup();
-    };
-
     //truy cap ckedit
     HT.setupCkedit = () =>{
-        if (jQuery('.ckedit')) {
-            (jQuery('.ckedit')).each(function(){
-                let edit = jQuery(this)
+        if ($('.ckedit')) {
+            ($('.ckedit')).each(function(){
+                let edit = $(this)
                 let id = edit.attr('id')
                 HT.Ckedit(id)
             })
@@ -66,42 +38,24 @@
     });
     }
 
-//set up avt co hien anh sau khi chon test
-    HT.upavt = () =>{
-        jQuery('.image-target').click(function(){
+    HT.upavt = () => {
+        $('input[name="img_avt"]').on('change', function() {
+            let file = this.files[0];
+            if (file) {
+                let reader = new FileReader();
 
-            let input = jQuery(this);
-            let type = 'Images';
-            HT.upimgavt(input, type);
-        })
-    }
-
-
-    //aset up avt co hien anh sau khi chon test
-    HT.upimgavt = (object, type) => {
-        if (typeof(type) === 'undefined') {
-            type = 'Images';
-        }
-
-        var finder = new CKFinder(); // Đảm bảo CKFinder đã được đưa vào
-        finder.resourceType = type;
-        finder.selectActionFunction = function(fileUrl, data) {
-            // Loại bỏ /public khỏi đường dẫn
-            var cleanedUrl = fileUrl.replace('/public', '');
-
-            // Cập nhật đường dẫn hình ảnh
-            object.attr('src', cleanedUrl);
-            object.siblings('input').val(cleanedUrl);
-        };
-        finder.popup();
+                reader.onload = function(e) {
+                    $('.image-target').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
     };
-
-
 
     //upload nhieu anh
     HT.imgs = () => {
-        jQuery('.mutiimg').click(function(e){
-            let object = jQuery(this);
+        $('.mutiimg').click(function(e){
+            let object = $(this);
             let target = object.attr('data-target');
             HT.upimgs(object, 'Images', target);
             e.preventDefault();
@@ -113,7 +67,6 @@
         if (typeof(type) === 'undefined') {
             type = 'Images';
         }
-
         var finder = new CKFinder(); // Đảm bảo CKFinder đã được đưa vào
         finder.resourceType = type;
         finder.selectActionFunction = function(fileUrl, data, allfile) {
@@ -126,24 +79,13 @@
                 html+='<figcaption>Nhập mô tả hình ảnh</figcaption>'
                 html+='</figure></div>'
             }
-
             CKEDITOR.instances[target].insertHtml(html);
         };
          finder.popup();
     }
-
-
-
-
-
-
     document.addEventListener('DOMContentLoaded', function() {
-        HT.ckfinner();
         HT.setupCkedit();
         HT.upavt();
         HT.imgs();
-        HT.changeLocationimg();
-        HT.upalbum();
-        HT.deleteinAlbum();
     });
-})();
+})(jQuery);

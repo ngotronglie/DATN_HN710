@@ -96,11 +96,9 @@
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="form-row">
-                                                    <img src="{{old('img_avt', $blog->img_avt ?? 'https://tse4.mm.bing.net/th?id=OIP.EkljFHN5km7kZIZpr96-JwAAAA&pid=Api&P=0&h=220')}}"
+                                                    <img src="{{Storage::url($blog->img_avt)}}"
                                                         style="width: 100%;text-align: center"
                                                         class="image-target img-thumbnail"alt="null">
-                                                    <input type="hidden" name="img_avt" class="form-control"
-                                                        value="{{old('img_avt', $blog->img_avt ?? '')}}">
                                                 </div>
                                             </div>
                                         </div>
