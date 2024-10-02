@@ -4,25 +4,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.css">
     <link rel="stylesheet" href="{{ asset('theme/admin/assets/css/lib/datatable/dataTables.bootstrap.min.css') }}">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
-    <style>
-        .img-thumbnail {
-            width: 80px;
-            height: 80px;
-            margin-right: 10px;
-            border-radius: 8px;
-            object-fit: cover
-        }
-
-
-        .post-info {
-            display: flex;
-            align-items: center;
-        }
-
-        .post-title {
-            font-weight: bold;
-        }
-    </style>
 @endsection
 
 @section('content')
@@ -119,12 +100,12 @@
                                                 <input type="checkbox" class="checkBoxItem" data-id="{{ $item->id }}">
                                             </td>
                                             <td>{{ $key + 1 }}</td>
-                                            <td>
-                                                <div class="post-info">
-                                                    <img src="{{Storage::url($item->img_avt) }}" alt="Thumbnail" class="img-thumbnail">
-                                                    <div>
-                                                        <span class="post-title">{{ $item->title }}</span>
-                                                        <div class="post-meta">{{ $item->created_at }}</div>
+                                            <td style="white-space: nowrap">
+                                                <div class="d-flex align-items-end">
+                                                    <img src="{{Storage::url($item->img_avt) }}" alt="Thumbnail" class="img-thumbnail mr-2" style="height: 80px; width: 80px; object-fit: cover;">
+                                                    <div class="text-truncate" style="max-width: 200px;">
+                                                        <span>{{ $item->title }}</span>
+                                                        <div>{{ $item->created_at }}</div>
                                                     </div>
                                                 </div>
                                             </td>

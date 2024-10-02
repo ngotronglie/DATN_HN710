@@ -8,7 +8,7 @@ use App\Http\Requests\StoreBlogRequest;
 use App\Http\Requests\UpdateBlogRequest;
 use App\Models\CategoryBlog;
 use App\Models\User;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -61,23 +61,19 @@ class BlogController extends Controller
 
         foreach ($trashedCategories as $idBlTrash) {
             if ($idBlTrash == $blog->category_blog_id) {
-                return abort(404, 'Category for this blog has been soft deleted');
+                return abort(404);
             }
 
         }
 
         foreach ($trashedUsers as $idBlTrash) {
             if ($idBlTrash == $blog->user_id) {
-                return abort(404, 'Category for this blog has been soft deleted');
+                return abort(404);
             }
 
         }
-        $categoryName = $blog->category->name;
-        $userName = $blog->user->name;
 
-
-
-        return view(self::PATH_VIEW . __FUNCTION__, compact('blog', 'categoryName', 'userName'));
+        return view(self::PATH_VIEW . __FUNCTION__, compact('blog'));
     }
 
 
@@ -91,14 +87,14 @@ class BlogController extends Controller
 
         foreach ($trashedCategories as $idBlTrash) {
             if ($idBlTrash == $blog->category_blog_id) {
-                return abort(404, 'Category for this blog has been soft deleted');
+                return abort(404);
             }
 
         }
 
         foreach ($trashedUsers as $idUsTrash) {
             if ($idUsTrash == $blog->user_id) {
-                return abort(404, 'Author for this user has been soft deleted');
+                return abort(404);
             }
 
         }
@@ -128,8 +124,6 @@ class BlogController extends Controller
 
         return redirect()->route('admin.blogs.index')->with('success', 'Cập nhật thành công');
     }
-
-
 
 
     /**
