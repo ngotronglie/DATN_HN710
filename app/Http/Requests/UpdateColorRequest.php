@@ -34,7 +34,6 @@ class UpdateColorRequest extends FormRequest
     {
         return [
             'name.required' => 'Tên màu là bắt buộc',
-            'name.string' => 'Tên màu phải là một chuỗi văn bản',
             'name.max' => 'Tên màu không được dài quá 255 ký tự',
             'name.unique' => 'Tên màu này đã tồn tại trong hệ thống',
 

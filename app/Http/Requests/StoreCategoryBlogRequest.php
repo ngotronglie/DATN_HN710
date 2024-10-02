@@ -30,7 +30,6 @@ class StoreCategoryBlogRequest extends FormRequest
     {
         return [
             'name.required' => 'Tên danh mục bài viết là bắt buộc',
-            'name.string' => 'Tên danh mục bài viết phải là một chuỗi văn bản',
             'name.min' => 'Tên danh mục bài viết không được ít hơn 3 ký tự',
             'name.max' => 'Tên danh mục bài viết không được dài quá 255 ký tự',
             'name.unique' => 'Tên danh mục bài viết này đã tồn tại trong hệ thống',

@@ -1,17 +1,18 @@
 <?php
 
-use App\Http\Controllers\Admin\BlogController;
-use App\Http\Controllers\Admin\CategoryBlogController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\ColorController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ForgotPasswordController;
 use App\Http\Controllers\Admin\LoginController;
-use App\Http\Controllers\Admin\SizeController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\SizeController;
 use App\Http\Controllers\Admin\VoucherController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ColorController;
+use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\CategoryBlogController;
+use App\Http\Controllers\Admin\ProductController;
 
 use App\Http\Controllers\Ajax\ChangeActiveController;
-
 use App\Http\Controllers\ClientController;
 
 use App\Http\Controllers\Ajax\DeleteController;
@@ -117,6 +118,13 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
 
     Route::resource('categories', CategoryController::class);
 
+    // Quản lý các sản phẩm đã bị xóa mềm
+    Route::get('products/trashed', [ProductController::class, 'trashed'])->name('products.trashed');
+    Route::put('products/restore/{id}', [ProductController::class, 'restore'])->name('products.restore');
+    Route::delete('products/forceDelete/{id}', [ProductController::class, 'forceDelete'])->name('products.forceDelete');
+
+    Route::resource('products', ProductController::class);
+
     // Quản lý các danh mục đã bị xóa mềm
     Route::get('category_blogs/trashed', [CategoryBlogController::class, 'trashed'])->name('category_blogs.trashed');
     Route::put('category_blogs/restore/{id}', [CategoryBlogController::class, 'restore'])->name('category_blogs.restore');
@@ -128,35 +136,48 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     Route::get('blogs/trashed', [BlogController::class, 'trashed'])->name('blogs.trashed');
     Route::put('blogs/restore/{id}', [BlogController::class, 'restore'])->name('blogs.restore');
     Route::delete('blogs/forceDelete/{id}', [BlogController::class, 'forceDelete'])->name('blogs.forceDelete');
+    
     Route::resource('blogs', BlogController::class);
+    
+    // Quản lý các banner đã bị xóa mềm
+    Route::get('banners/trashed', [BannerController::class, 'trashed'])->name('banners.trashed');
+    Route::put('banners/restore/{id}', [BannerController::class, 'restore'])->name('banners.restore');
+    Route::delete('banners/forceDelete/{id}', [BannerController::class, 'forceDelete'])->name('banners.forceDelete');
 
-    //ajax category
-    Route::post('categories/ajax/changeActiveCategory', [ChangeActiveController::class, 'changeActiveCategory']);
-    Route::post('categories/ajax/changeAllActiveCategory', [ChangeActiveController::class, 'changeActiveAllCategory']);
-    //ajax size
-    Route::post('sizes/ajax/changeActiveSize', [ChangeActiveController::class, 'changeActiveSize']);
-    Route::post('sizes/ajax/changeAllActiveSize', [ChangeActiveController::class, 'changeActiveAllSize']);
-    //ajax color
-    Route::post('colors/ajax/changeActiveColor', [ChangeActiveController::class, 'changeActiveColor']);
-    Route::post('colors/ajax/changeAllActiveColor', [ChangeActiveController::class, 'changeActiveAllColor']);
-    //ajax account
-    Route::post('accounts/ajax/changeActiveAccount', [ChangeActiveController::class, 'changeActiveAccount']);
-    Route::post('accounts/ajax/changeAllActiveAccount', [ChangeActiveController::class, 'changeActiveAllAccount']);
-    Route::post('accounts/accounts/ajax/changeActiveAccount', [ChangeActiveController::class, 'changeActiveAccount']);
-    Route::post('accounts/accounts/ajax/changeAllActiveAccount', [ChangeActiveController::class, 'changeActiveAllAccount']);
-    //ajax category blog
-    Route::post('category_blogs/ajax/changeActiveCategoryBlog', [ChangeActiveController::class, 'changeActiveCategoryBlog']);
-    Route::post('category_blogs/ajax/changeAllActiveCategoryBlog', [ChangeActiveController::class, 'changeActiveAllCategoryBlog']);
-    //ajax xoa cac muc da chon categoryblog
-    Route::delete('categoryBlogs/ajax/deleteAllCategoryBlog', [DeleteController::class, 'deleteAllCategoryBlog']);
-    //update count thung rac
-    Route::get('categoryBlogs/ajax/trashedCount', [CategoryBlogController::class, 'trashedCount']);
-
-    //ajax blog
-    Route::post('blogs/ajax/changeActiveBlog', [ChangeActiveController::class, 'changeActiveBlog']);
-    Route::post('blogs/ajax/changeAllActiveBlog', [ChangeActiveController::class, 'changeActiveAllBlog']);
-    //ajax xoa cac muc da chon blog
-    Route::delete('blogs/ajax/deleteAllBlog', [DeleteController::class, 'deleteAllBlog']);
-    //update count thung rac
-    Route::get('blogs/ajax/trashedCount', [BlogController::class, 'trashedCount']);
+    Route::resource('banners', BannerController::class);
 });
+
+//ajax category
+Route::post('categories/ajax/changeActiveCategory', [ChangeActiveController::class, 'changeActiveCategory']);
+Route::post('categories/ajax/changeAllActiveCategory', [ChangeActiveController::class, 'changeActiveAllCategory']);
+//ajax product
+Route::post('products/ajax/changeActiveProduct', [ChangeActiveController::class, 'changeActiveProduct']);
+Route::post('products/ajax/changeAllActiveProduct', [ChangeActiveController::class, 'changeActiveAllProduct']);
+//ajax size
+Route::post('sizes/ajax/changeActiveSize', [ChangeActiveController::class, 'changeActiveSize']);
+Route::post('sizes/ajax/changeAllActiveSize', [ChangeActiveController::class, 'changeActiveAllSize']);
+//ajax color
+Route::post('colors/ajax/changeActiveColor', [ChangeActiveController::class, 'changeActiveColor']);
+Route::post('colors/ajax/changeAllActiveColor', [ChangeActiveController::class, 'changeActiveAllColor']);
+//ajax account
+Route::post('accounts/ajax/changeActiveAccount', [ChangeActiveController::class, 'changeActiveAccount']);
+Route::post('accounts/ajax/changeAllActiveAccount', [ChangeActiveController::class, 'changeActiveAllAccount']);
+Route::post('accounts/accounts/ajax/changeActiveAccount', [ChangeActiveController::class, 'changeActiveAccount']);
+Route::post('accounts/accounts/ajax/changeAllActiveAccount', [ChangeActiveController::class, 'changeActiveAllAccount']);
+//ajax category blog
+Route::post('category_blogs/ajax/changeActiveCategoryBlog', [ChangeActiveController::class, 'changeActiveCategoryBlog']);
+Route::post('category_blogs/ajax/changeAllActiveCategoryBlog', [ChangeActiveController::class, 'changeActiveAllCategoryBlog']);
+//ajax xoa cac muc da chon categoryblog
+Route::delete('categoryBlogs/ajax/deleteAllCategoryBlog', [DeleteController::class, 'deleteAllCategoryBlog']);
+//update count thung rac
+Route::get('categoryBlogs/ajax/trashedCount', [CategoryBlogController::class, 'trashedCount']);
+//ajax banner
+Route::post('banners/ajax/changeActiveBanner', [ChangeActiveController::class, 'changeActiveBanner']);
+Route::post('banners/ajax/changeAllActiveBanner', [ChangeActiveController::class, 'changeActiveAllBanner']);
+//ajax blog
+Route::post('blogs/ajax/changeActiveBlog', [ChangeActiveController::class, 'changeActiveBlog']);
+Route::post('blogs/ajax/changeAllActiveBlog', [ChangeActiveController::class, 'changeActiveAllBlog']);
+//ajax xoa cac muc da chon blog
+Route::delete('blogs/ajax/deleteAllBlog', [DeleteController::class, 'deleteAllBlog']);
+//update count thung rac
+Route::get('blogs/ajax/trashedCount', [BlogController::class, 'trashedCount']);

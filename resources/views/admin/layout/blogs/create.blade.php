@@ -120,7 +120,7 @@
 @section('script')
 <script src="{{asset('plugins/plugin/ckfinder_2/ckfinder.js')}}"></script>
 <script src="{{asset('plugins/plugin/ckeditor/ckeditor.js')}}"></script>
-<script src="{{asset('plugins/js/ckfinerblog.js')}}"></script>
+<script src="{{asset('plugins/js/finder.js')}}"></script>
 
 <script>
     // Ảnh đại diện

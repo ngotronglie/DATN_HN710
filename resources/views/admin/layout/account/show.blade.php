@@ -57,11 +57,13 @@
                                 <tr>
                                 </tr>
                                 <th>Ảnh</th>
-                                @if($account->avatar)
-                                <td><img width="100px" src="{{Storage::url($account->avatar)}}" alt=""></td>
-                                @else
-                                <td><span>Chưa cập nhật</span></td>
-                                @endif
+                                <td>
+                                    @if($account->avatar)
+                                    <img src="{{ Storage::url($account->avatar) }}" alt="Avatar" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;">
+                                    @else
+                                    <span>Chưa cập nhật</span>
+                                    @endif
+                                </td>
                                 <tr>
                                 </tr>
                                 <th>Ngày sinh</th>

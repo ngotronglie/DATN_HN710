@@ -44,7 +44,6 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $data = $request->except('avatar');
-        $data['is_active'] ??= 0;
         $data['password'] = Hash::make($request->input('password'));
 
         if ($request->hasFile('avatar')) {
@@ -82,7 +81,6 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $account)
     {
         $data = $request->all();
-        $data['is_active'] ??= 0;
         $account->update($data);
         return redirect()->route('admin.accounts.index')->with('success', 'Sửa thành công');
     }

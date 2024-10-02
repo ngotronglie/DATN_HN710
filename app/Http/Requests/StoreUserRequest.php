@@ -35,7 +35,6 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'name.required' => 'Tên là bắt buộc',
-            'name.string' => 'Tên phải là một chuỗi ký tự',
             'name.max' => 'Tên không được vượt quá 255 ký tự',
 
             'email.required' => 'Email là bắt buộc',
@@ -43,7 +42,6 @@ class StoreUserRequest extends FormRequest
             'email.unique' => 'Email này đã được sử dụng',
 
             'address.required' => 'Địa chỉ là bắt buộc',
-            'address.string' => 'Địa chỉ phải là một chuỗi',
             'address.max' => 'Địa chỉ không được vượt quá 255 ký tự',
 
             'phone.required' => 'Số điện thoại là bắt buộc',
@@ -55,7 +53,6 @@ class StoreUserRequest extends FormRequest
             'avatar.max' => 'Kích thước avatar không được vượt quá 2MB',
 
             'password.required' => 'Mật khẩu là bắt buộc',
-            'password.string' => 'Mật khẩu phải là một chuỗi ký tự',
             'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
             'password.regex' => 'Mật khẩu phải bao gồm ít nhất 1 chữ cái in hoa, 1 chữ cái thường và 1 chữ số',
 

@@ -18,6 +18,17 @@
                         </ul>
                     </li>
                     {{-- end category --}}
+                    {{-- product --}}
+                    <li class="menu-item-has-children {{ Request::is('admin/products*') ? 'active' : '' }} dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="menu-icon fa fa-cube"></i>Quản lý sản phẩm
+                        </a>
+                        <ul class="sub-menu children dropdown-menu">
+                            <li><a href="{{ route('admin.products.index') }}">Danh sách</a></li>
+                            <li><a href="{{ route('admin.products.create') }}">Thêm mới</a></li>
+                        </ul>
+                    </li>
+                    {{-- end product --}}
                     {{-- color --}}
                     <li class="menu-item-has-children {{ Request::is('admin/colors*') ? 'active' : '' }} dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -70,6 +81,16 @@
                         </ul>
                     </li>
                     {{-- end category blog --}}
+                    {{-- banner --}}
+                    <li class="menu-item-has-children {{ Request::is('admin/banners*') ? 'active' : '' }} dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false"> <i class="menu-icon fa fa-photo"></i>Quản lý banner</a>
+                        <ul class="sub-menu children dropdown-menu">
+                            <li></i><a href="{{route('admin.banners.index')}}">Danh sách</a></li>
+                            <li></i><a href="{{route('admin.banners.create')}}">Thêm mới</a></li>
+                        </ul>
+                    </li>
+                    {{-- end banner --}}
 
                     <li class="menu-title">Icons</li><!-- /.menu-title -->
 

@@ -1,4 +1,5 @@
 @extends('admin.dashboard')
+
 @section('content')
 <div class="breadcrumbs mb-5">
     <div class="breadcrumbs-inner">
@@ -77,13 +78,13 @@
                             <div class="form-group">
                                 <label for="avatar" class="form-control-label">Ảnh</label>
                                 <input type="file" id="avatar" name="avatar"
-                                    class="form-control" requied onchange="showImage(this)">
+                                    class="form-control" requied accept="image/*">
+                                    <div style="margin-top: 10px;">
+                                        <img id="preview-avatar" src="#" alt="Ảnh xem trước" style="display: none; max-width: 200px; height: auto; border-radius: 50%; border: 2px solid #ccc;">
+                                    </div>
                                 @error('avatar')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
-                                <div>
-                                    <img src="" id="show_imgggg" class="mt-2">
-                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="password" class=" form-control-label">Mật khẩu</label>
@@ -102,10 +103,6 @@
                                 @enderror
                             </div>
                             <input type="hidden" value="1" name="role">
-                            <div class="form-group">
-                                <input type="checkbox" id="is_active" name="is_active" value="1" checked>
-                                <label for="is_active">Hoạt động</label>
-                            </div>
 
                             <button type="submit" class="btn btn-success mb-1">Thêm mới</button>
                         </form>
@@ -115,20 +112,21 @@
         </div>
     </div>
 </div>
-@endsection'
+@endsection
 
 @section('script')
 <script>
-    function showImage(input) {
+    jQuery(document).ready(function() {
+    jQuery('#avatar').on('change', function(e) {
+        var input = this;
         if (input.files && input.files[0]) {
             var reader = new FileReader();
-
             reader.onload = function(e) {
-                $('#show_imgggg').attr('src', e.target.result).width(150);
-            };
-
-            reader.readAsDataURL(input.files[0]);
+                jQuery('#preview-avatar').attr('src', e.target.result).show();
+            }
+            reader.readAsDataURL(input.files[0]); // Đọc file ảnh
         }
-    }
+    });
+});
 </script>
 @endsection

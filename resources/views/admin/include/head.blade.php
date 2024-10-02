@@ -72,8 +72,7 @@
             height: 160px;
         }
     </style>
-
-<script>
-    var BASE_URL = '{{ config('app.url') }}';
-</script>
+    <script>
+        var BASE_URL = '{{ config('app.url') }}';
+    </script>
 </head>
