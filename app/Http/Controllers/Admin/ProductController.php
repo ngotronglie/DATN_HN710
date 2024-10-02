@@ -34,9 +34,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = Category::where('is_active', 1)->get();
-        $colors = Color::where('is_active', 1)->get();
-        $sizes = Size::where('is_active', 1)->get();
+        $categories = Category::all();
+        $colors = Color::all();
+        $sizes = Size::all();
 
         return view(self::PATH_VIEW . __FUNCTION__, compact('categories', 'colors', 'sizes'));
     }
@@ -123,9 +123,9 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $product->load(['variants', 'galleries']);
-        $categories = Category::where('is_active', 1)->get();
-        $colors = Color::where('is_active', 1)->get();
-        $sizes = Size::where('is_active', 1)->get();
+        $categories = Category::all();
+        $colors = Color::all();
+        $sizes = Size::all();
         return view(self::PATH_VIEW . __FUNCTION__, compact('product', 'categories', 'sizes', 'colors'));
     }
 

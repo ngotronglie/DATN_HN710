@@ -106,7 +106,7 @@
                                     <td>{{ $key+1 }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>
-                                        <img src="{{ asset('storage/' . $item->img_thumb) }}" alt="{{ $item->name }}" style="width: 100px; height: auto;">
+                                        <img src="{{ Storage::url($item->img_thumb) }}" alt="{{ $item->name }}" style="width: 100px; height: auto;">
                                     </td>
                                     <td>{{ $item->category->name }}</td>
                                     <td>Tổng: {{ $item->total_quantity }}</td>
