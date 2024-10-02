@@ -12,8 +12,10 @@ use App\Http\Controllers\Admin\VoucherController;
 
 use App\Http\Controllers\Ajax\ChangeActiveController;
 
-
 use App\Http\Controllers\ClientController;
+
+use App\Http\Controllers\Ajax\DeleteController;
+
 use Illuminate\Support\Facades\Route;
 
 
@@ -72,8 +74,8 @@ Route::get('verify-email/{token}', [ForgotPasswordController::class, 'verifyEmai
 Route::get('password/reset/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('admin.password.reset');
 Route::post('password/reset', [ForgotPasswordController::class, 'reset'])->name('admin.password.update');
 
-// ->middleware('isAdmin')
-Route::prefix('admin')->as('admin.')->group(function () {
+//
+Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     Route::get('/', function () {
         return view('admin.layout.yeld');
     })->name('dashboard');
@@ -121,6 +123,11 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::delete('category_blogs/forceDelete/{id}', [CategoryBlogController::class, 'forceDelete'])->name('category_blogs.forceDelete');
 
     Route::resource('category_blogs', CategoryBlogController::class);
+
+    //Quản lý bài viết xóa mềm
+    Route::get('blogs/trashed', [BlogController::class, 'trashed'])->name('blogs.trashed');
+    Route::put('blogs/restore/{id}', [BlogController::class, 'restore'])->name('blogs.restore');
+    Route::delete('blogs/forceDelete/{id}', [BlogController::class, 'forceDelete'])->name('blogs.forceDelete');
     Route::resource('blogs', BlogController::class);
 
     //ajax category
@@ -140,4 +147,16 @@ Route::prefix('admin')->as('admin.')->group(function () {
     //ajax category blog
     Route::post('category_blogs/ajax/changeActiveCategoryBlog', [ChangeActiveController::class, 'changeActiveCategoryBlog']);
     Route::post('category_blogs/ajax/changeAllActiveCategoryBlog', [ChangeActiveController::class, 'changeActiveAllCategoryBlog']);
+    //ajax xoa cac muc da chon categoryblog
+    Route::delete('categoryBlogs/ajax/deleteAllCategoryBlog', [DeleteController::class, 'deleteAllCategoryBlog']);
+    //update count thung rac
+    Route::get('categoryBlogs/ajax/trashedCount', [CategoryBlogController::class, 'trashedCount']);
+
+    //ajax blog
+    Route::post('blogs/ajax/changeActiveBlog', [ChangeActiveController::class, 'changeActiveBlog']);
+    Route::post('blogs/ajax/changeAllActiveBlog', [ChangeActiveController::class, 'changeActiveAllBlog']);
+    //ajax xoa cac muc da chon blog
+    Route::delete('blogs/ajax/deleteAllBlog', [DeleteController::class, 'deleteAllBlog']);
+    //update count thung rac
+    Route::get('blogs/ajax/trashedCount', [BlogController::class, 'trashedCount']);
 });

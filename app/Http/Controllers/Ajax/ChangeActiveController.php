@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Ajax;
 
 use App\Http\Controllers\Controller;
+use App\Models\Blog;
 use App\Models\Category;
 use App\Models\Color;
 use App\Models\Size;
@@ -251,6 +252,57 @@ class ChangeActiveController extends Controller
         $newActive = $active == 0 ? 1 : 0;
 
         $updated = CategoryBlog::whereIn('id', $id)->update(['is_active' => $newActive]);
+
+        if ($updated) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Cập nhật trạng thái danh mục bài viết thành công',
+                'newStatus' => $newActive,
+                'updatedCount' => $updated
+            ], 200);
+        }
+
+        return response()->json(['status' => false, 'message' => 'Không có danh mục bài viết nào được cập nhật'], 404);
+    }
+
+    // blog
+    public function changeActiveBlog(Request $request)
+    {
+        $id = $request->id;
+        $isActive = $request->is_active;
+
+        $blog = Blog::find($id);
+        if (!$blog) {
+            return response()->json(['status' => false, 'message' => 'Bài viết không tìm thấy'], 404);
+        }
+
+        // Cập nhật trạng thái is_active
+        $newActive = $isActive == 1 ? 0 : 1;
+        $updated = $blog->update(['is_active' => $newActive]);
+
+        if ($updated) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Cập nhật trạng thái bài viết thành công',
+                'newStatus' => $newActive,
+                'blog' => $blog
+            ], 200);
+        } else {
+            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại'], 500);
+        }
+    }
+
+    public function changeActiveAllBlog(Request $request)
+    {
+        $id = $request->id;
+        $active = $request->is_active;
+        if (empty($id) || !is_array($id)) {
+            return response()->json(['status' => false, 'message' => 'ID không hợp lệ'], 400);
+        }
+
+        $newActive = $active == 0 ? 1 : 0;
+
+        $updated = Blog::whereIn('id', $id)->update(['is_active' => $newActive]);
 
         if ($updated) {
             return response()->json([

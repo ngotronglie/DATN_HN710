@@ -80,6 +80,13 @@ class CategoryBlogController extends Controller
         return view(self::PATH_VIEW . 'trashed', compact('trashedCategoryBlogs'));
     }
 
+     //ajax trashedCount
+     public function trashedCount()
+     {
+         $trashedCount = CategoryBlog::onlyTrashed()->count();
+         return response()->json(['trashedCount' => $trashedCount]);
+     }
+
     /**
      * Khôi phục danh mục đã bị xóa mềm.
      */

@@ -18,4 +18,9 @@ class CategoryBlog extends Model
     protected $casts =[
         'is_active'=> 'boolean'
     ];
+
+    public function blogs()
+    {
+        return $this->hasMany(Blog::class);
+    }
 }

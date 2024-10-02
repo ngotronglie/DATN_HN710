@@ -3,6 +3,25 @@
 @section('style')
 <link rel="stylesheet" href="{{ asset('theme/admin/assets/css/lib/datatable/dataTables.bootstrap.min.css') }}">
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+<style>
+    .img-thumbnail {
+        width: 80px;
+        height: 80px;
+        margin-right: 10px;
+        border-radius: 8px;
+        object-fit: cover
+    }
+
+
+    .post-info {
+        display: flex;
+        align-items: center;
+    }
+
+    .post-title {
+        font-weight: bold;
+    }
+</style>
 @endsection
 
 @section('content')
@@ -22,7 +41,7 @@
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Dashboard</a></li>
-                            <li><a href="{{ route('admin.category_blogs.index') }}">Danh sách danh mục</a></li>
+                            <li><a href="{{ route('admin.blogs.index') }}">Danh sách bài viết</a></li>
                             <li class="active">Thùng rác</li>
                         </ol>
                     </div>
@@ -40,7 +59,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <strong class="card-title">Danh sách thùng rác</strong>
-                        <a href="{{ route('admin.category_blogs.index') }}" class="btn btn-primary">
+                        <a href="{{ route('admin.blogs.index') }}" class="btn btn-primary">
                             <i class="fa fa-arrow-left mr-1"></i> Quay lại
                         </a>
                     </div>
@@ -49,22 +68,31 @@
                             <thead>
                                 <tr>
                                     <th>STT</th></th>
-                                    <th>Tên danh mục</th>
+                                    <th>Bài viết</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
                                     <th>STT</th></th>
-                                    <th>Tên danh mục</th>
+                                    <th>Bài viết</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($trashedCategoryBlogs as $key => $item)
+                                @foreach ($trashedBlogs as $key => $item)
                                 <tr>
                                     <td>{{ $key+1 }}</td>
-                                    <td>{{ $item->name }}</td>
+                                    <td>
+                                        <div class="post-info">
+                                            <img src="{{Storage::url($item->img_avt)}}"
+                                                alt="Thumbnail" class="img-thumbnail">
+                                            <div>
+                                                <span class="post-title">{{$item->title}}</span>
+                                                <div class="post-meta">{{$item->created_at}}</div>
+                                                </div>
+                                            </div>
+                                    </td>
                                     <td>
                                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#restoreModal{{ $item->id }}" title="Khôi phục">
                                             <i class="fa fa-repeat"></i>
@@ -86,11 +114,11 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                Bạn có chắc chắn muốn khôi phục danh mục bài viết "{{ $item->name }}" không?
+                                                Bạn có chắc chắn muốn khôi phục bài viết "{{ $item->title }}" không?
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
-                                                <form action="{{ route('admin.category_blogs.restore', $item->id) }}" method="POST">
+                                                <form action="{{ route('admin.blogs.restore', $item->id) }}" method="POST">
                                                     @csrf
                                                     @method('PUT')
                                                     <button type="submit" class="btn btn-success">Xác nhận khôi phục</button>
@@ -115,7 +143,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
-                                                <form action="{{ route('admin.category_blogs.forceDelete', $item->id) }}" method="POST">
+                                                <form action="{{ route('admin.blogs.forceDelete', $item->id) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Xác nhận xóa</button>

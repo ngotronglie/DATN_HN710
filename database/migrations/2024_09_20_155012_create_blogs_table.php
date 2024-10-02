@@ -15,11 +15,11 @@ return new class extends Migration
     {
         Schema::create('blogs', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('title')->unique();
             $table->string('img_avt');
             $table->text('content');
             $table->boolean('is_active')->default(true);
-            $table->bigInteger('view');
+            $table->bigInteger('view')->default(0);
             $table->foreignIdFor(CategoryBlog::class)->constrained()->onDelete('cascade');
             $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
             $table->softDeletes();
