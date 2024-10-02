@@ -28,7 +28,7 @@ class StoreUserRequest extends FormRequest
             'phone' => 'required|regex:/^0[0-9]{9}$/',
             'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'password' => ['required', 'string', 'min:8', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/'],
-            'date_of_birth' => 'required|date|before:today',
+            'date_of_birth' => 'required|date|before:today|before_or_equal:' . now()->subYears(18)->format('Y-m-d'),
         ];
     }
     public function messages(): array
@@ -58,7 +58,9 @@ class StoreUserRequest extends FormRequest
 
             'date_of_birth.required' => 'Ngày sinh là bắt buộc',
             'date_of_birth.date' => 'Ngày sinh không đúng định dạng ngày',
-            'date_of_birth.before' => 'Ngày sinh phải trước ngày hôm nay',
+            'date_of_birth.before' => 'Ngày sinh phải trước ngày hiện tại',
+            'date_of_birth.before_or_equal' => 'Bạn phải đủ ít nhất 18 tuổi',
+
         ];
     }
 }

@@ -82,6 +82,7 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     })->name('dashboard');
 
     // Các route tùy chỉnh
+    Route::get('/accounts/my_account',[UserController::class,'myAccount'])->name('accounts.myAccount');
     Route::delete('/accounts/{id}/forceDelete', [UserController::class, 'forceDelete'])->name('accounts.forceDelete');
     Route::get('accounts/trashed', [UserController::class, 'trashed'])->name('accounts.trashed');
     Route::post('accounts/{user}/restore', [UserController::class, 'restore'])->name('accounts.restore');
