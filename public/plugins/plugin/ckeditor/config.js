@@ -4,12 +4,12 @@
  */
 
 CKEDITOR.editorConfig = function( config ) {
-	config.filebrowserBrowseUrl = BASE_URL + 'backend/plugin/plugins/ckfinder_2/ckfinder.html',
-    config.filebrowserImageBrowseUrl = BASE_URL + 'backend/plugin/plugins/ckfinder_2/ckfinder.html?type=Images',
-    config.filebrowserFlashBrowseUrl = BASE_URL + 'backend/plugin/plugins/ckfinder_2/ckfinder.html?type=Flash'
-    config.filebrowserUploadUrl =  BASE_URL + 'backend/plugin/plugins/ckfinder_2/core/connector/php/connector.php?command=QuickUpload&type=Files',
-    config.filebrowserImageUploadUrl = BASE_URL + 'backend/plugin/plugins/ckfinder_2/core/connector/php/connector.php?command=QuickUpload&type=Images',
-    config.filebrowserFlashUploadUrl = BASE_URL + 'backend/plugin/plugins/ckfinder_2/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+	config.filebrowserBrowseUrl = BASE_URL + 'plugins/plugin/ckfinder_2/ckfinder.html',
+    config.filebrowserImageBrowseUrl = BASE_URL + 'plugins/plugin/ckfinder_2/ckfinder.html?type=Images',
+    config.filebrowserFlashBrowseUrl = BASE_URL + 'plugins/plugin/ckfinder_2/ckfinder.html?type=Flash'
+    config.filebrowserUploadUrl =  BASE_URL + 'plugins/plugin/ckfinder_2/core/connector/php/connector.php?command=QuickUpload&type=Files',
+    config.filebrowserImageUploadUrl = BASE_URL + 'plugins/plugin/ckfinder_2/core/connector/php/connector.php?command=QuickUpload&type=Images',
+    config.filebrowserFlashUploadUrl = BASE_URL + 'plugins/plugin/ckfinder_2/core/connector/php/connector.php?command=QuickUpload&type=Flash'
 	// Define changes to default configuration here. For example:
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';

@@ -23,7 +23,7 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'role' => 'required',
+            'role' => 'required|in:0,1',
         ];
     }
 
@@ -31,6 +31,7 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'role.required' => 'Chức vụ là bắt buộc',
+            'role.in' => 'Giá trị chức vụ không hợp lệ',
         ];
     }
 }

@@ -30,7 +30,6 @@ class StoreCategoryRequest extends FormRequest
     {
         return [
             'name.required' => 'Tên danh mục là bắt buộc',
-            'name.string' => 'Tên danh mục phải là một chuỗi văn bản',
             'name.min' => 'Tên danh mục không được ít hơn 3 ký tự',
             'name.max' => 'Tên danh mục không được dài quá 255 ký tự',
             'name.unique' => 'Tên danh mục này đã tồn tại trong hệ thống',

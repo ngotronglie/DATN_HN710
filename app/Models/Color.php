@@ -14,4 +14,9 @@ class Color extends Model
     protected $casts = [
         'is_active' => 'boolean'
     ];
+
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
 }

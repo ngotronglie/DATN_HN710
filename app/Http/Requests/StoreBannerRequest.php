@@ -33,7 +33,6 @@ class StoreBannerRequest extends FormRequest
     {
         return [
             'title.required' => 'Tiêu đề banner là bắt buộc',
-            'title.string' => 'Tiêu đề banner phải là một chuỗi văn bản',
             'title.min' => 'Tiêu đề banner không được ít hơn 3 ký tự',
             'title.max' => 'Tiêu đề banner không được dài quá 255 ký tự',
             'title.unique' => 'Tiêu đề banner này đã tồn tại trong hệ thống',
@@ -48,7 +47,6 @@ class StoreBannerRequest extends FormRequest
             'link.max' => 'Liên kết không được dài quá 255 ký tự',
 
             'description.required' => 'Mô tả là bắt buộc',
-            'description.string' => 'Mô tả phải là một chuỗi văn bản',
             'description.max' => 'Mô tả không được dài quá 500 ký tự',
         ];
     }

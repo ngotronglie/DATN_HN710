@@ -9,6 +9,7 @@ use App\Models\Color;
 use App\Models\Size;
 use App\Models\User;
 use App\Models\CategoryBlog;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ChangeActiveController extends Controller
@@ -63,6 +64,56 @@ class ChangeActiveController extends Controller
         }
 
         return response()->json(['status' => false, 'message' => 'Không có danh mục nào được cập nhật'], 404);
+    }
+
+    // Category
+    public function changeActiveProduct(Request $request)
+    {
+        $id = $request->id;
+        $isActive = $request->is_active;
+
+        $product = Product::find($id);
+        if (!$product) {
+            return response()->json(['status' => false, 'message' => 'Sản phẩm không tìm thấy'], 404);
+        }
+
+        $newActive = $isActive == 1 ? 0 : 1;
+        $updated = $product->update(['is_active' => $newActive]);
+
+        if ($updated) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Cập nhật trạng thái sản phẩm thành công',
+                'newStatus' => $newActive,
+                'category' => $product
+            ], 200);
+        } else {
+            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại'], 500);
+        }
+    }
+
+    public function changeActiveAllProduct(Request $request)
+    {
+        $id = $request->id;
+        $active = $request->is_active;
+        if (empty($id) || !is_array($id)) {
+            return response()->json(['status' => false, 'message' => 'ID không hợp lệ'], 400);
+        }
+
+        $newActive = $active == 0 ? 1 : 0;
+
+        $updated = Product::whereIn('id', $id)->update(['is_active' => $newActive]);
+
+        if ($updated) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Cập nhật trạng thái sản phẩm thành công',
+                'newStatus' => $newActive,
+                'updatedCount' => $updated
+            ], 200);
+        }
+
+        return response()->json(['status' => false, 'message' => 'Không có sản phẩm nào được cập nhật'], 404);
     }
 
     // Size

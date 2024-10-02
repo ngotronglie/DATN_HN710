@@ -24,8 +24,8 @@
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Dashboard</a></li>
-                            <li><a href="#">Quản lí banner</a></li>
-                            <li class="active">Danh sách banner</li>
+                            <li><a href="#">Quản lí danh mục</a></li>
+                            <li class="active">Danh sách danh mục</li>
                         </ol>
                     </div>
                 </div>
@@ -35,20 +35,18 @@
 </div>
 
 <div class="content mb-5">
-    <div id="alert-container" class="alert d-none" role="alert"></div>
-
     <div class="animated fadeIn">
         <div class="row">
 
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong class="card-title">Danh sách banner</strong>
+                        <strong class="card-title">Danh sách danh mục</strong>
                         <div class="d-flex">
-                            <a class="btn btn-primary mr-2" href="{{ route('admin.banners.create') }}">
+                            <a class="btn btn-primary mr-2" href="{{ route('admin.products.create') }}">
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
-                            <a class="btn btn-danger" href="{{ route('admin.banners.trashed') }}">
+                            <a class="btn btn-danger" href="{{ route('admin.products.trashed') }}">
                                 <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
                             </a>
                             <div class="dropdown float-right ml-2">
@@ -77,8 +75,11 @@
                                         <input id="checkAllTable" type="checkbox">
                                     </th>
                                     <th>STT</th>
-                                    <th>Tiêu đề</th>
-                                    <th>Hình ảnh</th>
+                                    <th>Tên sản phẩm</th>
+                                    <th>Ảnh</th>
+                                    <th>Danh mục</th>
+                                    <th>Số lượng</th>
+                                    <th>Lượt xem</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
@@ -87,31 +88,37 @@
                                 <tr>
                                     <th></th>
                                     <th>STT</th>
-                                    <th>Tiêu đề</th>
-                                    <th>Hình ảnh</th>
+                                    <th>Tên sản phẩm</th>
+                                    <th>Ảnh</th>
+                                    <th>Danh mục</th>
+                                    <th>Số lượng</th>
+                                    <th>Lượt xem</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </tfoot>
                             <tbody>
-                                @foreach ($banners as $key => $item)
+                                @foreach ($products as $key => $item)
                                 <tr>
                                     <td>
                                         <input type="checkbox" class="checkBoxItem" data-id="{{ $item->id }}">
                                     </td>
                                     <td>{{ $key+1 }}</td>
-                                    <td>{{ $item->title }}</td>
-                                    <td style="width: 120px;">
-                                        <img src="{{ Storage::url($item->image) }}" class="img-fluid" style="max-height: 100px; width: 100%; object-fit: cover; border: 1px solid #ddd;" alt="Banner Image">
-                                    </td>                                    
+                                    <td>{{ $item->name }}</td>
+                                    <td>
+                                        <img src="{{ asset('storage/' . $item->img_thumb) }}" alt="{{ $item->name }}" style="width: 100px; height: auto;">
+                                    </td>
+                                    <td>{{ $item->category->name }}</td>
+                                    <td>Tổng: {{ $item->total_quantity }}</td>
+                                    <td>{{ $item->view }}</td>
                                     <td style="width: 12%" class="text-center">
                                         <input type="checkbox" class="js-switch active" data-model="{{ $item->is_active }}"
                                             {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"
-                                            data-modelId="{{ $item->id }}" data-title="{{ $item->title }}" />
+                                            data-modelId="{{ $item->id }}" />
                                     </td>
                                     <td class="d-flex">
-                                        <a class="btn btn-primary mr-2" href="{{route('admin.banners.show', $item)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
-                                        <a class="btn btn-warning mr-2" href="{{route('admin.banners.edit', $item)}}" title="Sửa"><i class="fa fa-edit"></i></a>
+                                        <a class="btn btn-primary mr-2" href="{{route('admin.products.show', $item)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
+                                        <a class="btn btn-warning mr-2" href="{{route('admin.products.edit', $item)}}" title="Sửa"><i class="fa fa-edit"></i></a>
                                         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $item->id }}" title="Xóa">
                                             <i class="fa fa-trash"></i>
                                         </button>
@@ -129,11 +136,11 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                Bạn có chắc chắn muốn xóa banner "{{ $item->title }}" không?
+                                                Bạn có chắc chắn muốn xóa danh mục "{{ $item->name }}" không?
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
-                                                <form action="{{ route('admin.banners.destroy', $item) }}" method="POST">
+                                                <form action="{{ route('admin.products.destroy', $item) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
@@ -172,7 +179,7 @@
 
 <script src="{{asset('plugins/js/checkall.js')}}"></script>
 
-<script src="{{asset('plugins/js/changeActive/Banner/changeAllActiveBanner.js')}}"></script>
+<script src="{{asset('plugins/js/changeActive/Product/changeAllActiveProduct.js')}}"></script>
 
-<script src="{{asset('plugins/js/changeActive/Banner/changeActiveBanner.js')}}"></script>
+<script src="{{asset('plugins/js/changeActive/Product/changeActiveProduct.js')}}"></script>
 @endsection

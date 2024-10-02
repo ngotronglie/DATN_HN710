@@ -38,7 +38,6 @@ class UpdateVoucherRequest extends FormRequest
     {
         return [
             'code.required' => 'Mã voucher là bắt buộc',
-            'code.string' => 'Mã voucher phải là 1 chuỗi',
             'code.max' => 'Mã voucher tối đa 255 kí tự',
             'code.unique' => 'Mã voucher đã tồn tại, vui lòng chọn mã khác',
 

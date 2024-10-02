@@ -2,7 +2,6 @@
     "use strict";
     var HT = {};
     var token = $('meta[name="csrf-token"]').attr('content');
-    var alertTimeout;
 
     // Thay đổi trạng thái danh mục đã chọn
     HT.changeall = () => {
@@ -33,7 +32,7 @@
 
                 $.ajax({
                     type: 'POST',
-                    url: 'banners/ajax/changeAllActiveBanner',
+                    url: 'categories/ajax/changeAllActiveCategory',
                     data: option,
                     dataType: 'json',
                     success: function (res) {
@@ -52,8 +51,6 @@
 
                                 switcheryElement.setPosition();
                             });
-                            alert('Cập nhật thành công!');
-                            showAlert('Cập nhật trạng thái '+res.updatedCount+' banner thành công!', 'success');
                         } else {
                             alert('Cập nhật thất bại: ' + res.message);
                         }
@@ -71,22 +68,6 @@
 
             });
         }
-    }
-
-    function showAlert(message, type) {
-        let alertContainer = $('#alert-container');
-
-        if (alertTimeout) {
-            clearTimeout(alertTimeout);
-        }
-
-        alertContainer.removeClass('d-none alert-success alert-danger');
-        alertContainer.addClass('alert-' + type);
-        alertContainer.html(message);
-
-        alertTimeout = setTimeout(function () {
-            alertContainer.addClass('d-none');
-        }, 5000);
     }
 
     $(document).ready(function () {
