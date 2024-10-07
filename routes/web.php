@@ -1,20 +1,21 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Admin\BlogController;
-use App\Http\Controllers\Admin\CategoryBlogController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\ColorController;
-use App\Http\Controllers\Admin\ForgotPasswordController;
-use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\SizeController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ColorController;
+use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\VoucherController;
 
+use App\Http\Controllers\Admin\CategoryController;
+
+
 use App\Http\Controllers\Ajax\ChangeActiveController;
-
-
-use App\Http\Controllers\ClientController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\CategoryBlogController;
+use App\Http\Controllers\Admin\ForgotPasswordController;
 
 
 /*
@@ -35,6 +36,8 @@ Route::get('/', [ClientController::class, 'index']);
 Route::get('/contact', function () {
     return view('client.pages.contact');
 });
+
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 Route::get('/blog', function () {
     return view('client.pages.blog');
 });
