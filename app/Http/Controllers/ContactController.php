@@ -29,7 +29,15 @@ class ContactController extends Controller
      */
     public function store(StoreContactRequest $request)
     {
-        
+        // Sử dụng validated() để lấy dữ liệu đã xác thực
+        $validatedData = $request->validated();
+        // dd($validatedData);
+
+        // Lưu thông tin liên hệ vào cơ sở dữ liệu
+        Contact::create($validatedData);
+
+        // Thông báo thành công và chuyển hướng
+        return redirect()->back()->with('success', 'Tin nhắn của bạn gửi thành công!! Chúng tôi sẽ đọc và phản hồi bạn sớm nhất.');
     }
 
     /**

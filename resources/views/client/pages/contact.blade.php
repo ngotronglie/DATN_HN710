@@ -41,31 +41,47 @@
                             </div>
                         @endif
 
+                        <!-- Hiển thị lỗi nếu có -->
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+                        <!-- Form Liên Hệ -->
                         <form action="{{ route('contact.store') }}" method="POST">
                             @csrf
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="input-item mb-4">
-                                        <input type="text" placeholder="Your Name *" name="name" required>
+                                        <input type="text" name="name" placeholder="Your Name *"
+                                            value="{{ old('name') }}" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-item mb-4">
-                                        <input type="email" placeholder="Email *" name="email" required>
+                                        <input type="email" name="email" placeholder="Email *"
+                                            value="{{ old('email') }}" required>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="input-item mb-4">
-                                        <input type="text" placeholder="Subject *" name="title" required>
+                                        <input type="text" name="title" placeholder="Subject *"
+                                            value="{{ old('title') }}" required>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="input-item mb-8">
-                                        <textarea name="message" placeholder="Message" required></textarea>
+                                        <textarea name="messager" placeholder="Messager" required>{{ old('messager') }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-dark btn-hover-primary rounded-0">Send A Message</button>
+                                    <button type="submit" class="btn btn-dark btn-hover-primary rounded-0">Send A
+                                        Message</button>
                                 </div>
                             </div>
                         </form>
@@ -74,14 +90,13 @@
                 </div>
 
                 <div class="col-12 col-lg-4 mb-10">
-                    <!-- Contact Info -->
+                    <!-- Contact Info Section -->
                     <div class="section-title">
                         <h2 class="title pb-3">Contact Info</h2>
                         <span></span>
                         <div class="title-border-bottom"></div>
                     </div>
                     <div class="contact-info-wrapper mb-n6">
-                        <!-- Postal Address -->
                         <div class="single-contact-info mb-6">
                             <div class="single-contact-icon">
                                 <i class="fa fa-map-marker"></i>
@@ -91,7 +106,6 @@
                                 <p>PO Box 123456, Street/Road <br>Country-State</p>
                             </div>
                         </div>
-                        <!-- Contact Us Anytime -->
                         <div class="single-contact-info mb-6">
                             <div class="single-contact-icon">
                                 <i class="fa fa-mobile"></i>
@@ -101,14 +115,14 @@
                                 <p>Mobile: 0376278382 <br>Fax: 123 456 789</p>
                             </div>
                         </div>
-                        <!-- Support Overall -->
                         <div class="single-contact-info mb-6">
                             <div class="single-contact-icon">
                                 <i class="fa fa-envelope-o"></i>
                             </div>
                             <div class="single-contact-title-content">
                                 <h4 class="title">Support Overall</h4>
-                                <p><a href="mailto:Support24/7@example.com">Support24/7@example.com</a> <br><a href="mailto:info@example.com">info@example.com</a> </p>
+                                <p><a href="mailto:Support24/7@example.com">Support24/7@example.com</a> <br><a
+                                        href="mailto:info@example.com">info@example.com</a></p>
                             </div>
                         </div>
                     </div>
