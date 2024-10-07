@@ -43,17 +43,38 @@
                         <div class="header-actions">
 
                             @if (Auth::check())
-                                <h6 class="h6">Hello, {{ Auth::user()->name }} </h6>
-                                <a href="{{ route('logout') }}"
-                                    class="header-action-btn header-action-btn-logout d-none d-md-block"
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit(); return confirm('Logout, Are you sure?')">
-                                    <i class="fas fa-sign-out-alt"></i>
-                                </a>
+                         
+                                <div class="main-menu position-relative">
+                                    <ul>
+                                      
+                                        <li class="has-children position-static">
+                                            <a href="/shop">  @if(Auth::check() && Auth::user()->avatar)
+                                                                                              <i class="bi bi-person-circle" style="font-size: 1.75rem;"></i>
 
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                    style="display: none;">
-                                    @csrf
-                                </form>
+                                                <img class=" rounded-circle" width="30px" src="{{ Storage::url(Auth::user()->avatar) }}" alt="User Avatar">
+                                            @else
+                                              
+                                            <a href="/login" class="header-action-btn d-none d-md-block">
+                                                <i class="pe-7s-user"></i>
+                                            </a>
+                                                                                        @endif
+                                        </a>
+                                            <ul class="sub-menu">
+                                                <li><a href="/cart">Cart</a></li>
+                                                <li><a href="/checkout">Checkout</a></li>
+                                                <li>
+                                                   
+                                                    <form id="logout-form" action="{{ route('user.logout') }}" method="POST">
+                                                        @csrf
+                                                        <button type="submit" style="background: none; border: none; color: inherit; font: inherit; cursor: pointer; padding: 0; ">Thoát</button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                            
+                                        </li>
+                                       
+                                    </ul>
+                                </div>
                             @else
                                 <a href="/login" class="header-action-btn d-none d-md-block">
                                     <i class="pe-7s-user"></i>

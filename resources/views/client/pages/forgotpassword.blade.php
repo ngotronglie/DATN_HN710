@@ -8,12 +8,12 @@
     <div class="breadcrumb-area bg-light">
         <div class="container-fluid">
             <div class="breadcrumb-content text-center">
-                <h1 class="title">Login</h1>
+                <h1 class="title">Quên mật khẩu</h1>
                 <ul>
                     <li>
                         <a href="/">Home </a>
                     </li>
-                    <li class="active">Login</li>
+                    <li class="active">Quên mật khẩu</li>
                 </ul>
             </div>
         </div>
@@ -39,52 +39,31 @@
                             
                                                     <!-- Login Title & Content Start -->
                                                     <div class="section-content text-center mb-5">
-                                                        <h2 class="title mb-2">Đăng nhập</h2>
-                                                        <p class="desc-content">Vui lòng đăng nhập bằng thông tin tài khoản bên dưới</p>
+                                                        <h2 class="title mb-2">Quên mật khẩu</h2>
+                                                        <p class="desc-content">Vui lòng nhập thông tin bên dưới</p>
                                                     </div>
                                                     <!-- Login Title & Content End -->
                             
                                                     <!-- Form Action Start -->
-                                                    <form action="{{route('login')}}" method="post">
-                                                            @csrf
+                                                    <form action="#" method="post">
+                            
                                                         <!-- Input Email Start -->
-                                                        <div class=" mb-5">
-                                                            <input type="email" class="form-control" placeholder="Email" name="email" value="{{ old('email') }}">
-                                                            @error('email')
-                                                            <small class="text-danger">
-                                                                {{$message}}
-                                                            </small>
-                                                            @enderror
+                                                        <div class="single-input-item mb-3">
+                                                            <input type="email" placeholder="Email">
                                                         </div>
                                                         <!-- Input Email End -->
                             
                                                         <!-- Input Password Start -->
-                                                        <div class=" mb-5">
-                                                            <input type="password" class="form-control" placeholder="Mật khẩu" name="password" value="{{ old('password') }}">
-                                                            @error('password')
-                                                            <small class="text-danger">
-                                                                {{$message}}
-                                                            </small>
-                                                            @enderror
-                                                        </div>
-                                                        <!-- Input Password End -->
-                                                        @error('error')
-                                                        <p class="text-danger">
-                                                            {{$message}}
-                                                        </p>
-                                                        @enderror
-                                                        <!-- Checkbox/Forget Password Start -->
+                                                      
+                                                        <!-- Input Password End --><!-- Checkbox/Forget Password Start -->
                                                         <div class="single-input-item mb-3">
                                                             <div class="login-reg-form-meta d-flex align-items-center justify-content-between">
                                                                 <div class="remember-meta mb-3">
-                                                                    <div class="custom-control custom-checkbox">
-                                                                        <input type="checkbox" class="custom-control-input" id="rememberMe">
-                                                                        <label class="custom-control-label" for="rememberMe">Nhớ tôi</label>
-                                                                    </div>
+                                                                    
                                                                 </div>
                                                                 <div class="d-flex justify-content-between mb-3">
                                                                     <a href="{{route('register')}}" class="forget-pwd">Bạn chưa có tài khoản?</a>
-                                                                    <a href="{{route('forgotpassword')}}" class="forget-pwd">Quên mật khẩu?</a>
+                                                                    <a href="{{route('login')}}" class="forget-pwd">Đăng nhập</a>
                                                                     
                                                                 </div>
                                                                 
@@ -94,7 +73,7 @@
                             
                                                         <!-- Login Button Start -->
                                                         <div class="single-input-item mb-3">
-                                                            <button class="btn btn btn-dark btn-hover-primary rounded-0">Login</button>
+                                                            <button class="btn btn btn-dark btn-hover-primary rounded-0">Gửi</button>
                                                         </div>
                                                         <!-- Login Button End -->
                             
@@ -103,6 +82,7 @@
                                                             <a href="{{route('register')}}">Create Account</a>
                                                         </div> --}}
                                                         <!-- Lost Password & Creat New Account End -->
+                            
                                                     </form>
                                                     <!-- Form Action End -->
                             
@@ -114,12 +94,10 @@
                             
                                     </div>
                                 </div>
-                            </div>
-                            
+                            </div></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-@endsection
+    @endsection

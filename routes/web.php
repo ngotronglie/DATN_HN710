@@ -16,7 +16,7 @@ use App\Http\Controllers\Ajax\ChangeActiveController;
 use App\Http\Controllers\ClientController;
 
 use App\Http\Controllers\Ajax\DeleteController;
-
+use App\Http\Controllers\User\AccountController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Route;
 
 // ----------------------------CLIENT ROUTES--------------------------------
 
-Route::get('/', [ClientController::class, 'index']);
+Route::get('/', [ClientController::class, 'index'])->name('home');
 
 Route::get('/contact', function () {
     return view('client.pages.contact');
@@ -60,6 +60,17 @@ Route::get('/about', function () {
     return view('client.pages.about');
 });
 
+Route::get('/login', [AccountController::class, 'loginForm']);
+Route::post('/login', [AccountController::class, 'login'])->name('login');
+ Route::post('user/logout', [AccountController::class, 'logout'])->name('user.logout');
+ Route::get('/verify/{token}', [AccountController::class, 'verify'])->name('verify');
+ Route::get('/register', [AccountController::class, 'registerForm']);
+ Route::post('/register', [AccountController::class, 'register'])->name('register');
+
+
+Route::get('/forgotpassword', function () {
+    return view('client.pages.forgotpassword');
+})->name('forgotpassword');
 
 // ----------------------------END CLIENT ROUTES--------------------------------
 
@@ -76,7 +87,7 @@ Route::get('password/reset/{token}', [ForgotPasswordController::class, 'showRese
 Route::post('password/reset', [ForgotPasswordController::class, 'reset'])->name('admin.password.update');
 
 //
-Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
+Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('/', function () {
         return view('admin.layout.yeld');
     })->name('dashboard');
