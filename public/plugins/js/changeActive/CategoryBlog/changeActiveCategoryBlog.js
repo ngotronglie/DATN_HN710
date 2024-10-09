@@ -17,7 +17,7 @@
 
                 $.ajax({
                     type: 'POST',
-                    url: '/admin/category_blogs/ajax/changeActiveCategoryBlog',
+                    url: '/category_blogs/ajax/changeActiveCategoryBlog',
                     data: option,
                     dataType: 'json',
                     success: function (res) {

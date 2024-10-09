@@ -30,7 +30,7 @@
                                     </ul>
                                 </li>
                                 <li class="has-children">
-                                    <a href="/blog"><span>Blog</span></a>
+                                    <a href="{{route('blogs.index')}}"><span>Blog</span></a>
                                 </li>
                                 <li><a href="/contact"> <span>Contact</span></a></li>
                             </ul>

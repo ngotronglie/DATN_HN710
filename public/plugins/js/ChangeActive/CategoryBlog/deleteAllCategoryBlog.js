@@ -26,7 +26,7 @@
 
                 $.ajax({
                     type: 'DELETE',
-                    url: '/admin/categoryBlogs/ajax/deleteAllCategoryBlog',
+                    url: '/categoryBlogs/ajax/deleteAllCategoryBlog',
                     data: option,
                     dataType: 'json',
                     success: function (res) {
@@ -39,7 +39,7 @@
 
                             $.ajax({
                                 type: 'GET',
-                                url: '/admin/categoryBlogs/ajax/trashedCount',
+                                url: '/categoryBlogs/ajax/trashedCount',
                                 dataType: 'json',
                                 success: function (res) {
                                     if (res.trashedCount !== undefined) {

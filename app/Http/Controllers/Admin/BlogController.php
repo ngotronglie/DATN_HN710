@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Storage;
 
 class BlogController extends Controller
 {
-    const PATH_VIEW = 'admin.layout.blog.';
+    const PATH_VIEW = 'admin.layout.blogs.';
 
     public function index()
     {

@@ -9,7 +9,7 @@ use App\Http\Requests\UpdateCategoryBlogRequest;
 
 class CategoryBlogController extends Controller
 {
-    const PATH_VIEW = 'admin.layout.categoryBlog.';
+    const PATH_VIEW = 'admin.layout.categoryBlogs.';
     /**
      * Display a listing of the resource.
      */
