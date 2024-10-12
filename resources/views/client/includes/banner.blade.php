@@ -3,54 +3,43 @@
         <div class="swiper-container">
             <div class="swiper-wrapper">
 
-                <!-- Hero Slider Item Start -->
-                <div class="hero-slide-item swiper-slide">
-                    <!-- Hero Slider Bg Image Start -->
-                    <div class="hero-slide-bg">
-                        <img src="assets/images/slider/slide-1.jpg" alt="Slider Image" />
-                    </div>
-                    <!-- Hero Slider Bg image End -->
-
-                    <!-- Hero Slider Content Start -->
-                    <div class="container">
-                        <div class="hero-slide-content">
-                            <h2 class="title">
-                                Women New <br />
-                                Collection
-                            </h2>
-                            <p>Up to 70% off selected Product</p>
-                            <a href="shop-grid.html" class="btn btn-lg btn-primary btn-hover-dark">Shop Now</a>
+                @foreach ($banners as $key => $item)
+                    <!-- Hero Slider Item Start -->
+                    <div class="hero-slide-item swiper-slide">
+                        <!-- Hero Slider Bg Image Start -->
+                        <div class="hero-slide-bg">
+                            <img src="{{ Storage::url($item->image) }}" alt="Slider Image" />
                         </div>
-                    </div>
-                    <!-- Hero Slider Content End -->
-                </div>
-                <!-- Hero Slider Item End -->
+                        <!-- Hero Slider Bg image End -->
 
-                <!-- Hero Slider Item Start -->
-                <div class="hero-slide-item swiper-slide">
+                        <!-- Hero Slider Content Start -->
+                        <div class="container">
+                            <div class="hero-slide-content">
+                                @php
+                                    // Tách title thành các từ
+                                    $titleParts = explode(' ', $item->title);
+                                    $totalWords = count($titleParts);
 
-                    <!-- Hero Slider Bg Image Start -->
-                    <div class="hero-slide-bg">
-                        <img src="https://tse2.mm.bing.net/th?id=OIP.1Mj1jdy1Rgk5u7lxojCg8QHaFj&pid=Api&P=0&h=180"
-                            alt="Slider Image" />
-                    </div>
-                    <!-- Hero Slider Bg Image End -->
+                                    // Số từ của dòng trên sẽ là tổng số từ chia 2, rồi làm tròn lên
+                                    $wordsInFirstLine = ceil($totalWords / 2);
 
-                    <!-- Hero Slider Content Start -->
-                    <div class="container">
-                        <div class="hero-slide-content">
-                            <h2 class="title">
-                                Trend Fashion<br />
-                                Collection
-                            </h2>
-                            <p>Up to 40% off selected Product</p>
-                            <a href="shop-grid.html" class="btn btn-lg btn-primary btn-hover-dark">Shop Now</a>
+                                    // Lấy các từ cho dòng trên và dòng dưới
+                                    $firstLine = implode(' ', array_slice($titleParts, 0, $wordsInFirstLine));
+                                    $secondLine = implode(' ', array_slice($titleParts, $wordsInFirstLine));
+                                @endphp
+
+                                <h2 class="title">
+                                    {{ $firstLine }} <br />
+                                    {{ $secondLine }}
+                                </h2>
+                                <p>{{ $item->description }}</p>
+                                <a href="{{ $item->link }}" class="btn btn-lg btn-primary btn-hover-dark">Shop Now</a>
+                            </div>
                         </div>
+                        <!-- Hero Slider Content End -->
                     </div>
-                    <!-- Hero Slider Content End -->
-
-                </div>
-                <!-- Hero Slider Item End -->
+                    <!-- Hero Slider Item End -->
+                @endforeach
 
             </div>
 
