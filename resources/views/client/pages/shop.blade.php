@@ -193,7 +193,7 @@
                             <div class="col-lg-4 col-md-4 col-sm-6 product" data-aos="fade-up" data-aos-delay="200">
                                 <div class="product-inner">
                                     <div class="thumb">
-                                        <a href="single-product.html" class="image">
+                                        <a href="{{route('shops.show', $item)}}" class="image">
                                             <img class="first-image" src="{{ Storage::url($item->img_thumb) }}"
                                                 alt="Product" />
                                             <img class="second-image" src="{{ Storage::url($item->img_thumb) }}"
@@ -205,7 +205,7 @@
                                         </div>
                                     </div>
                                     <div class="content">
-                                        <h5 class="title"><a href="single-product.html">{{ $item->name }}</a></h5>
+                                        <h5 class="title"><a href="{{route('shops.show', $item)}}">{{ $item->name }}</a></h5>
 
                                         {{--  MAU --}}
                                         <div class="color-options">

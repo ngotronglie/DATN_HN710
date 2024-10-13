@@ -50,7 +50,7 @@ Route::get('/blog-detail', function () {
 Route::resource('shops', ShopController::class);
 Route::get('shop/ajax/getSizePrice', [ShopController::class, 'getSizePrice']);
 
-Route::get('shop/{id}', [ClientController::class, 'shop_danh_muc'])->name('shop_danh_muc');
+//Route::get('shop/{id}', [ClientController::class, 'shop_danh_muc'])->name('shop_danh_muc');
 Route::get('/wishlist', function () {
     return view('client.pages.wishlist');
 });
