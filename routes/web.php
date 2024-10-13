@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\CategoryBlogController;
 use App\Http\Controllers\Admin\ProductController;
 
 use App\Http\Controllers\Ajax\ChangeActiveController;
+use App\Http\Controllers\Client\ShopController;
 use App\Http\Controllers\ClientController;
 
 use App\Http\Controllers\Ajax\DeleteController;
@@ -44,7 +45,11 @@ Route::get('/blog', function () {
 Route::get('/blog-detail', function () {
     return view('client.pages.blog-detail');
 });
-Route::get('/shop', [ClientController::class, 'shop']);
+
+//shop
+Route::resource('shops', ShopController::class);
+Route::get('shop/ajax/getSizePrice', [ShopController::class, 'getSizePrice']);
+
 Route::get('shop/{id}', [ClientController::class, 'shop_danh_muc'])->name('shop_danh_muc');
 Route::get('/wishlist', function () {
     return view('client.pages.wishlist');
@@ -137,9 +142,9 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     Route::get('blogs/trashed', [BlogController::class, 'trashed'])->name('blogs.trashed');
     Route::put('blogs/restore/{id}', [BlogController::class, 'restore'])->name('blogs.restore');
     Route::delete('blogs/forceDelete/{id}', [BlogController::class, 'forceDelete'])->name('blogs.forceDelete');
-    
+
     Route::resource('blogs', BlogController::class);
-    
+
     // Quản lý các banner đã bị xóa mềm
     Route::get('banners/trashed', [BannerController::class, 'trashed'])->name('banners.trashed');
     Route::put('banners/restore/{id}', [BannerController::class, 'restore'])->name('banners.restore');

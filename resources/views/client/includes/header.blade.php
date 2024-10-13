@@ -22,7 +22,7 @@
                                     <a href="/about">About</a>
                                 </li>
                                 <li class="has-children position-static">
-                                    <a href="/shop"><span>Shop</span> <i class="fa fa-angle-down"></i></a>
+                                    <a href="{{route('shops.index')}}"><span>Shop</span> <i class="fa fa-angle-down"></i></a>
                                     <ul class="sub-menu">
                                         <li><a href="/cart">Cart</a></li>
                                         <li><a href="/checkout">Checkout</a></li>

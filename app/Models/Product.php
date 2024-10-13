@@ -29,18 +29,13 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function galleries()
-    {
-        return $this->hasMany(ProductGallery::class);
-    }
-
     public function variants()
     {
         return $this->hasMany(ProductVariant::class);
     }
 
-    public function getTotalQuantityAttribute()
+    public function galleries()
     {
-        return $this->variants()->sum('quantity');
+        return $this->hasMany(ProductGallery::class);
     }
 }

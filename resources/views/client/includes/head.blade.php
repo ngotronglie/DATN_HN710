@@ -36,5 +36,6 @@
 
     <link rel="stylesheet" href="{{ asset('theme/client/css/plugins/lightgallery.min.css ') }}" />
 
+    @yield('style')
 
 </head>

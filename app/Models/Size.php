@@ -9,14 +9,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Size extends Model
 {
     use HasFactory, SoftDeletes;
-    
+
     protected $fillable = ['name', 'is_active'];
 
     protected $casts = [
         'is_active' => 'boolean'
     ];
 
-    public function variants()
+    public function productVariants()
     {
         return $this->hasMany(ProductVariant::class);
     }
