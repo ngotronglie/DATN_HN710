@@ -10,11 +10,7 @@ class Size extends Model
 {
     use HasFactory, SoftDeletes;
     
-    protected $fillable = ['name', 'is_active'];
-
-    protected $casts = [
-        'is_active' => 'boolean'
-    ];
+    protected $fillable = ['name'];
 
     public function variants()
     {

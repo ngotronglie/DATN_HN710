@@ -9,17 +9,21 @@ use App\Http\Requests\UpdateBlogRequest;
 use App\Models\CategoryBlog;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 
 class BlogController extends Controller
 {
-    const PATH_VIEW = 'admin.layout.blog.';
+    const PATH_VIEW = 'admin.layout.blogs.';
 
     public function index()
     {
-        $data = Blog::with('user', 'category')
-            ->whereHas('category', function ($query) {
+        if (Gate::denies('viewAny', Blog::class)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
+        $data = Blog::with('user', 'categoryBlog')
+            ->whereHas('categoryBlog', function ($query) {
                 $query->whereNull('deleted_at');
             })
             ->whereHas('user', function ($query) {
@@ -35,12 +39,18 @@ class BlogController extends Controller
 
     public function create()
     {
-        $ctgrbl = CategoryBlog::all();
+        if (Gate::denies('create', Blog::class)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
+        $ctgrbl = CategoryBlog::where('is_active', 1)->get();
         return view(self::PATH_VIEW . __FUNCTION__, compact('ctgrbl'));
     }
 
     public function store(StoreBlogRequest $request)
     {
+        if (Gate::denies('create', Blog::class)) {
+            return redirect()->route('admin.blogs.index')->with('warning', 'Bạn không có quyền!');
+        }
         $data = $request->all();
         $data['user_id'] = Auth::id();
         if ($request->hasFile('img_avt')) {
@@ -56,21 +66,16 @@ class BlogController extends Controller
 
     public function show(Blog $blog)
     {
-        $trashedCategories = CategoryBlog::onlyTrashed()->pluck('id')->toArray();
-        $trashedUsers = User::onlyTrashed()->pluck('id')->toArray();
-
-        foreach ($trashedCategories as $idBlTrash) {
-            if ($idBlTrash == $blog->category_blog_id) {
-                return abort(404);
-            }
-
+        if (Gate::denies('view', $blog)) {
+            return back()->with('warning', 'Bạn không có quyền!');
         }
 
-        foreach ($trashedUsers as $idBlTrash) {
-            if ($idBlTrash == $blog->user_id) {
-                return abort(404);
-            }
+        if (!$blog->categoryBlog || $blog->categoryBlog->trashed()) {
+            abort(404);
+        }
 
+        if (!$blog->user || $blog->user->trashed()) {
+            abort(404);
         }
 
         return view(self::PATH_VIEW . __FUNCTION__, compact('blog'));
@@ -82,23 +87,21 @@ class BlogController extends Controller
      */
     public function edit(Blog $blog)
     {
-        $trashedCategories = CategoryBlog::onlyTrashed()->pluck('id')->toArray();
-        $trashedUsers = User::onlyTrashed()->pluck('id')->toArray();
-
-        foreach ($trashedCategories as $idBlTrash) {
-            if ($idBlTrash == $blog->category_blog_id) {
-                return abort(404);
-            }
-
+        if (Gate::denies('update', $blog)) {
+            return back()->with('warning', 'Bạn không có quyền!');
         }
 
-        foreach ($trashedUsers as $idUsTrash) {
-            if ($idUsTrash == $blog->user_id) {
-                return abort(404);
-            }
-
+        if (!$blog->categoryBlog || $blog->categoryBlog->trashed()) {
+            abort(404);
         }
-        $ctgrbl = CategoryBlog::all();
+
+        if (!$blog->user || $blog->user->trashed()) {
+            abort(404);
+        }
+        
+        $ctgrbl = CategoryBlog::where('is_active', 1)
+        ->orWhere('id', $blog->category_blog_id)
+        ->get();
         return view(self::PATH_VIEW . __FUNCTION__, compact('blog', 'ctgrbl'));
     }
 
@@ -108,6 +111,9 @@ class BlogController extends Controller
 
     public function update(UpdateBlogRequest $request, Blog $blog)
     {
+        if (Gate::denies('update', $blog)) {
+            return redirect()->route('admin.blogs.index')->with('warning', 'Bạn không có quyền!');
+        }
         $data = $request->except('img_avt');
 
         if ($request->hasFile('img_avt')) {
@@ -131,6 +137,9 @@ class BlogController extends Controller
      */
     public function destroy(Blog $blog)
     {
+        if (Gate::denies('delete', $blog)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $blog->delete();
         return redirect()->route('admin.blogs.index')->with('success', 'Xóa thành công');
     }
@@ -138,6 +147,9 @@ class BlogController extends Controller
 
     public function trashed()
     {
+        if (Gate::denies('viewTrashed', Blog::class)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $trashedBlogs = Blog::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
         return view(self::PATH_VIEW . 'trashed', compact('trashedBlogs'));
     }
@@ -155,8 +167,11 @@ class BlogController extends Controller
      */
     public function restore($id)
     {
-        $categoryBlog = Blog::withTrashed()->findOrFail($id);
-        $categoryBlog->restore();
+        $blog = Blog::withTrashed()->findOrFail($id);
+        if (Gate::denies('restore', $blog)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
+        $blog->restore();
         return redirect()->route('admin.blogs.trashed')->with('success', 'Khôi phục thành công');
     }
 
@@ -165,8 +180,11 @@ class BlogController extends Controller
      */
     public function forceDelete($id)
     {
-        $categoryBlog = Blog::withTrashed()->findOrFail($id);
-        $categoryBlog->forceDelete();
+        $blog = Blog::withTrashed()->findOrFail($id);
+        if (Gate::denies('forceDelete', $blog)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
+        $blog->forceDelete();
         return redirect()->route('admin.blogs.trashed')->with('success', 'Bài viết đã xóa vĩnh viễn');
     }
 }

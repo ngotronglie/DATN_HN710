@@ -34,6 +34,8 @@
 </div>
 
 <div class="content mb-5">
+    <div id="alert-container" class="alert d-none" role="alert"></div>
+
     <div class="animated fadeIn">
         <div class="row">
 
@@ -116,7 +118,7 @@
                                 <td style="width: 12%" class="text-center">
                                     <input type="checkbox" class="js-switch active" data-model="{{ $item->is_active }}"
                                         {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"
-                                        data-modelId="{{ $item->id }}" />
+                                        data-modelId="{{ $item->id }}" data-title="{{ $item->name }}" />
                                 </td>
                                 <td class="d-flex">
                                     <a class="btn btn-primary mr-2" href="{{route('admin.accounts.show', $item)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>

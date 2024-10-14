@@ -24,7 +24,7 @@ class Blog extends Model
         'is_active'=> 'boolean'
     ];
 
-    public function category()
+    public function categoryBlog()
     {
         return $this->belongsTo(CategoryBlog::class, 'category_blog_id');
     }

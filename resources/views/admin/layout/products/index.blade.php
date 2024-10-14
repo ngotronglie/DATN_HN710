@@ -35,6 +35,8 @@
 </div>
 
 <div class="content mb-5">
+    <div id="alert-container" class="alert d-none" role="alert"></div>
+
     <div class="animated fadeIn">
         <div class="row">
 
@@ -104,17 +106,27 @@
                                         <input type="checkbox" class="checkBoxItem" data-id="{{ $item->id }}">
                                     </td>
                                     <td>{{ $key+1 }}</td>
-                                    <td>{{ $item->name }}</td>
+                                    <td>
+                                        {{ $item->name }}
+                                        @if($item->variants->isEmpty())
+                                        <p style="color: red;">(Không có biến thể)</p>
+                                        @endif
+                                    </td>
                                     <td>
                                         <img src="{{ Storage::url($item->img_thumb) }}" alt="{{ $item->name }}" style="width: 100px; height: auto;">
                                     </td>
-                                    <td>{{ $item->category->name }}</td>
+                                    <td>
+                                        {{ $item->category->name }}
+                                        @if (!$item->category->is_active)
+                                        <div style="color: red;">(Bị khóa)</div>
+                                        @endif
+                                    </td>
                                     <td>Tổng: {{ $item->total_quantity }}</td>
                                     <td>{{ $item->view }}</td>
                                     <td style="width: 12%" class="text-center">
                                         <input type="checkbox" class="js-switch active" data-model="{{ $item->is_active }}"
                                             {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"
-                                            data-modelId="{{ $item->id }}" />
+                                            data-modelId="{{ $item->id }}" data-title="{{ $item->name }}" />
                                     </td>
                                     <td class="d-flex">
                                         <a class="btn btn-primary mr-2" href="{{route('admin.products.show', $item)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>

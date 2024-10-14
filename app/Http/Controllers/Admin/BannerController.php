@@ -7,6 +7,7 @@ use App\Models\Banner;
 use App\Http\Requests\StoreBannerRequest;
 use App\Http\Requests\UpdateBannerRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class BannerController extends Controller
@@ -18,7 +19,12 @@ class BannerController extends Controller
      */
     public function index()
     {
-        $banners = Banner::orderBy('id', 'desc')->get();
+        if (Gate::denies('viewAny', Banner::class)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
+        $banners = Banner::whereHas('creator', function ($query) {
+            $query->whereNull('deleted_at'); // Chỉ lấy tài khoản chưa bị xóa mềm
+        })->orderBy('id', 'desc')->get();
         $trashedCount = Banner::onlyTrashed()->count();
         return view(self::PATH_VIEW . __FUNCTION__, compact('banners', 'trashedCount'));
     }
@@ -28,6 +34,9 @@ class BannerController extends Controller
      */
     public function create()
     {
+        if (Gate::denies('create', Banner::class)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         return view(self::PATH_VIEW . __FUNCTION__);
     }
 
@@ -36,6 +45,9 @@ class BannerController extends Controller
      */
     public function store(StoreBannerRequest $request)
     {
+        if (Gate::denies('create', Banner::class)) {
+            return redirect()->route('admin.banners.index')->with('warning', 'Bạn không có quyền!');
+        }
         $data = $request->except('image');
         $data['user_id'] = Auth::id();
         if ($request->hasFile('image')) {
@@ -53,7 +65,13 @@ class BannerController extends Controller
      */
     public function show(Banner $banner)
     {
-        $banner->load('user');
+        if (Gate::denies('view', $banner)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
+        if (!$banner->creator || $banner->creator->trashed()) {
+            abort(404);
+        }
+        $banner->load(['creator', 'updater']);
         return view(self::PATH_VIEW . __FUNCTION__, compact('banner'));
     }
 
@@ -62,6 +80,12 @@ class BannerController extends Controller
      */
     public function edit(Banner $banner)
     {
+        if (Gate::denies('update', $banner)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
+        if (!$banner->creator || $banner->creator->trashed()) {
+            abort(404);
+        }
         return view(self::PATH_VIEW . __FUNCTION__, compact('banner'));
     }
 
@@ -70,8 +94,12 @@ class BannerController extends Controller
      */
     public function update(UpdateBannerRequest $request, Banner $banner)
     {
+        if (Gate::denies('update', $banner)) {
+            return redirect()->route('admin.banners.index')->with('warning', 'Bạn không có quyền!');
+        }
+
         $data = $request->except('image');
-        $data['user_id'] = Auth::id();
+        $data['updated_by'] = Auth::id();
         if ($request->hasFile('image')) {
             $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
             if (!empty($banner->image) && Storage::exists($banner->image)) {
@@ -80,14 +108,6 @@ class BannerController extends Controller
         } else {
             $data['image'] = $banner->image;
         }
-
-        // // Gán dữ liệu mới vào model
-        // $banner->fill($data);
-
-        // // Kiểm tra nếu không có sự thay đổi
-        // if ($banner->isClean()) {
-        //     return redirect()->back()->with('info', 'Không có thay đổi nào được thực hiện');
-        // }
 
         $banner->update($data);
 
@@ -99,6 +119,9 @@ class BannerController extends Controller
      */
     public function destroy(Banner $banner)
     {
+        if (Gate::denies('delete', $banner)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $banner->delete();
         return back()->with('success', 'Xóa thành công');
     }
@@ -108,6 +131,9 @@ class BannerController extends Controller
      */
     public function trashed()
     {
+        if (Gate::denies('viewTrashed', Banner::class)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $trashedBanners = Banner::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
         return view(self::PATH_VIEW . 'trashed', compact('trashedBanners'));
     }
@@ -118,6 +144,9 @@ class BannerController extends Controller
     public function restore($id)
     {
         $banner = Banner::withTrashed()->findOrFail($id);
+        if (Gate::denies('restore', $banner)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $banner->restore();
         return redirect()->route('admin.banners.trashed')->with('success', 'Khôi phục thành công');
     }
@@ -128,6 +157,9 @@ class BannerController extends Controller
     public function forceDelete($id)
     {
         $banner = Banner::withTrashed()->findOrFail($id);
+        if (Gate::denies('forceDelete', $banner)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         if ($banner->image) {
             Storage::delete($banner->image);
         }

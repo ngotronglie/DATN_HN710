@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Category;
+use App\Models\Color;
+use App\Models\Size;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateProductRequest extends FormRequest
@@ -38,6 +41,32 @@ class UpdateProductRequest extends FormRequest
             // Thư viện ảnh
             'product_galleries.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            // Kiểm tra nếu danh mục có `is_active = 1`
+            $category = Category::where('id', $this->category_id)
+                ->where('is_active', 1)
+                ->first();
+
+            if (!$category) {
+                $validator->errors()->add('category_id', 'Danh mục không hợp lệ hoặc đã bị vô hiệu hóa');
+            }
+
+            foreach ($this->variants as $index => $variant) {
+                $size = Size::withTrashed()->where('id', $variant['size_id'])->first();
+                if ($size && $size->trashed()) {
+                    $validator->errors()->add("variants.{$index}.size_id", 'Kích thước đã bị xóa mềm và không thể sử dụng');
+                }
+            
+                $color = Color::withTrashed()->where('id', $variant['color_id'])->first();
+                if ($color && $color->trashed()) {
+                    $validator->errors()->add("variants.{$index}.color_id", 'Màu sắc đã bị xóa mềm và không thể sử dụng');
+                }
+            }
+        });
     }
 
     public function messages(): array

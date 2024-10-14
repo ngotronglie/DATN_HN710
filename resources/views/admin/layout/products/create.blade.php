@@ -147,7 +147,7 @@
                                         <select name="variants[{{ $index }}][size_id]" id="variants[{{ $index }}][size_id]" class="form-control">
                                             <option value="">--Chọn kích thước--</option>
                                             @foreach($sizes as $size)
-                                            <option value="{{ $size->id }}" {{ $size->id == $variant['size_id'] ? 'selected' : '' }}>
+                                            <option value="{{ $size->id }}" {{ ($size->id == ($variant['size_id'] ?? '')) ? 'selected' : '' }}>
                                                 {{ $size->name }}
                                             </option>
                                             @endforeach
@@ -161,7 +161,7 @@
                                         <select name="variants[{{ $index }}][color_id]" id="variants[{{ $index }}][color_id]" class="form-control">
                                             <option value="">--Chọn màu sắc--</option>
                                             @foreach($colors as $color)
-                                            <option value="{{ $color->id }}" {{ $color->id == $variant['color_id'] ? 'selected' : '' }}>
+                                            <option value="{{ $color->id }}" {{ ($color->id == ($variant['color_id'] ?? '')) ? 'selected' : '' }}>
                                                 {{ $color->name }}
                                             </option>
                                             @endforeach
@@ -172,21 +172,21 @@
                                     </div>
                                     <div class="form-group col-md">
                                         <label for="variants[{{ $index }}][price]" class="form-control-label">Giá</label>
-                                        <input type="number" name="variants[{{ $index }}][price]" id="variants[{{ $index }}][price]" class="form-control" value="{{ $variant['price'] }}" placeholder="Nhập giá sản phẩm">
+                                        <input type="number" name="variants[{{ $index }}][price]" id="variants[{{ $index }}][price]" class="form-control" value="{{ $variant['price'] ?? '' }}" placeholder="Nhập giá sản phẩm">
                                         @error("variants.{$index}.price")
                                         <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
                                     <div class="form-group col-md">
                                         <label for="variants[{{ $index }}][price_sale]" class="form-control-label">Giá khuyến mãi</label>
-                                        <input type="number" name="variants[{{ $index }}][price_sale]" id="variants[{{ $index }}][price_sale]" class="form-control" value="{{ $variant['price_sale'] }}" placeholder="Nhập giá khuyến mãi">
+                                        <input type="number" name="variants[{{ $index }}][price_sale]" id="variants[{{ $index }}][price_sale]" class="form-control" value="{{ $variant['price_sale'] ?? '' }}" placeholder="Nhập giá khuyến mãi">
                                         @error("variants.{$index}.price_sale")
                                         <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
                                     <div class="form-group col-md">
                                         <label for="variants[{{ $index }}][quantity]" class="form-control-label">Số lượng</label>
-                                        <input type="number" name="variants[{{ $index }}][quantity]" id="variants[{{ $index }}][quantity]" class="form-control" value="{{ $variant['quantity'] }}" placeholder="Nhập số lượng">
+                                        <input type="number" name="variants[{{ $index }}][quantity]" id="variants[{{ $index }}][quantity]" class="form-control" value="{{ $variant['quantity'] ?? '' }}" placeholder="Nhập số lượng">
                                         @error("variants.{$index}.quantity")
                                         <small class="text-danger">{{ $message }}</small>
                                         @enderror
@@ -267,38 +267,47 @@
                 newIndex = Math.max.apply(Math, existingIndexes) + 1;
             }
 
-            var newVariantRow = jQuery('.form-row:first').clone(); // Sao chép hàng đầu tiên
+            // Tạo HTML cho biến thể mới
+            var newVariantRow = `
+    <div class="form-row align-items-start mb-3" id="variant-${newIndex}" data-index="${newIndex}">
+        <div class="form-group col-md">
+            <label for="variants[${newIndex}][size_id]" class="form-control-label">Kích thước</label>
+            <select name="variants[${newIndex}][size_id]" id="variants[${newIndex}][size_id]" class="form-control">
+                <option value="">--Chọn kích thước--</option>
+                @foreach($sizes as $size)
+                <option value="{{ $size->id }}">{{ $size->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="form-group col-md">
+            <label for="variants[${newIndex}][color_id]" class="form-control-label">Màu sắc</label>
+            <select name="variants[${newIndex}][color_id]" id="variants[${newIndex}][color_id]" class="form-control">
+                <option value="">--Chọn màu sắc--</option>
+                @foreach($colors as $color)
+                <option value="{{ $color->id }}">{{ $color->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="form-group col-md">
+            <label for="variants[${newIndex}][price]" class="form-control-label">Giá</label>
+            <input type="number" name="variants[${newIndex}][price]" id="variants[${newIndex}][price]" class="form-control" placeholder="Nhập giá sản phẩm">
+        </div>
+        <div class="form-group col-md">
+            <label for="variants[${newIndex}][price_sale]" class="form-control-label">Giá khuyến mãi</label>
+            <input type="number" name="variants[${newIndex}][price_sale]" id="variants[${newIndex}][price_sale]" class="form-control" placeholder="Nhập giá khuyến mãi">
+        </div>
+        <div class="form-group col-md">
+            <label for="variants[${newIndex}][quantity]" class="form-control-label">Số lượng</label>
+            <input type="number" name="variants[${newIndex}][quantity]" id="variants[${newIndex}][quantity]" class="form-control" placeholder="Nhập số lượng">
+        </div>
+        <div class="form-group col-md-auto">
+            <label>&nbsp;</label>
+            <button type="button" class="btn btn-danger remove-variant-btn w-100">Xóa</button>
+        </div>
+    </div>`;
 
-            // Xóa giá trị của các input và select
-            newVariantRow.find('input, select').val('');
-
-            // Xóa thông báo lỗi nếu có
-            newVariantRow.find('small.text-danger').remove();
-
-            // Cập nhật data-index và id cho variant row
-            newVariantRow.attr('data-index', newIndex);
-            newVariantRow.attr('id', 'variant-' + newIndex); // Cập nhật id cho div variant
-
-            // Cập nhật các input, select với chỉ số mới từ data-index
-            newVariantRow.find('label[for]').each(function() {
-                var oldFor = jQuery(this).attr('for');
-                var newFor = oldFor.replace(/\[\d+\]/, '[' + newIndex + ']');
-                jQuery(this).attr('for', newFor);
-            });
-
-            newVariantRow.find('input, select').each(function() {
-                var oldName = jQuery(this).attr('name');
-                var newName = oldName.replace(/\[\d+\]/, '[' + newIndex + ']');
-                var oldId = jQuery(this).attr('id');
-                var newId = oldId.replace(/\[\d+\]/, '[' + newIndex + ']');
-
-                jQuery(this).attr({
-                    'name': newName,
-                    'id': newId
-                });
-            });
-
-            jQuery('#variant-container').append(newVariantRow); // Thêm hàng mới vào container
+            // Thêm hàng mới vào container
+            jQuery('#variant-container').append(newVariantRow);
         });
 
         // Xóa biến thể
@@ -309,7 +318,6 @@
                 alert('Bạn cần ít nhất một biến thể');
             }
         });
-
 
         // Abum ảnh
         jQuery('#product_galleries').on('change', function() {

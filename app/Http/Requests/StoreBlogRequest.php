@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\CategoryBlog;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreBlogRequest extends FormRequest
@@ -29,6 +30,19 @@ class StoreBlogRequest extends FormRequest
         ];
     }
 
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            // Kiểm tra nếu danh mục có `is_active = 1`
+            $category = CategoryBlog::where('id', $this->category_blog_id)
+                ->where('is_active', 1)
+                ->first();
+
+            if (!$category) {
+                $validator->errors()->add('category_blog_id', 'Danh mục bài viết không hợp lệ hoặc đã bị vô hiệu hóa');
+            }
+        });
+    }
 
     public function messages()
     {

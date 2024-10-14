@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\CategoryBlog;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateBlogRequest extends FormRequest
@@ -21,19 +22,31 @@ class UpdateBlogRequest extends FormRequest
      */
 
     public function rules()
-{
-    // Lấy ID của blog hiện tại từ route parameters
-    $blogId = $this->route('blog')->id;
+    {
+        // Lấy ID của blog hiện tại từ route parameters
+        $blogId = $this->route('blog')->id;
 
-    return [
-        'title' => 'required|string|max:255|unique:blogs,title,' . $blogId,
-        'content' => 'required|string',
-        'category_blog_id' => 'required|integer|exists:category_blogs,id',
-        'img_avt' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ];
-}
+        return [
+            'title' => 'required|string|max:255|unique:blogs,title,' . $blogId,
+            'content' => 'required|string',
+            'category_blog_id' => 'required|integer|exists:category_blogs,id',
+            'img_avt' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ];
+    }
 
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            // Kiểm tra nếu danh mục có `is_active = 1`
+            $category = CategoryBlog::where('id', $this->category_blog_id)
+                ->where('is_active', 1)
+                ->first();
 
+            if (!$category) {
+                $validator->errors()->add('category_blog_id', 'Danh mục bài viết không hợp lệ hoặc đã bị vô hiệu hóa');
+            }
+        });
+    }
 
     public function messages()
     {

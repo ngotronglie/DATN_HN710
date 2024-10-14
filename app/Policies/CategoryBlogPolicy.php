@@ -13,7 +13,12 @@ class CategoryBlogPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return in_array($user->role, [1, 2]);
+    }
+
+    public function viewTrashed(User $user): bool
+    {
+        return $user->role == 2;
     }
 
     /**
@@ -21,7 +26,7 @@ class CategoryBlogPolicy
      */
     public function view(User $user, CategoryBlog $categoryBlog): bool
     {
-        //
+        return in_array($user->role, [1, 2]);
     }
 
     /**
@@ -29,7 +34,7 @@ class CategoryBlogPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return $user->role == 2;
     }
 
     /**
@@ -37,7 +42,7 @@ class CategoryBlogPolicy
      */
     public function update(User $user, CategoryBlog $categoryBlog): bool
     {
-        //
+        return $user->role == 2;
     }
 
     /**
@@ -45,7 +50,7 @@ class CategoryBlogPolicy
      */
     public function delete(User $user, CategoryBlog $categoryBlog): bool
     {
-        //
+        return $user->role == 2;
     }
 
     /**
@@ -53,7 +58,7 @@ class CategoryBlogPolicy
      */
     public function restore(User $user, CategoryBlog $categoryBlog): bool
     {
-        //
+        return $user->role == 2;
     }
 
     /**
@@ -61,6 +66,6 @@ class CategoryBlogPolicy
      */
     public function forceDelete(User $user, CategoryBlog $categoryBlog): bool
     {
-        //
+        return $user->role == 2;
     }
 }

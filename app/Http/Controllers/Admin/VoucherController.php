@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreVoucherRequest;
 use App\Http\Requests\UpdateVoucherRequest;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Gate;
 
 class VoucherController extends Controller
 {
@@ -14,6 +15,9 @@ class VoucherController extends Controller
 
     public function index()
     {
+        if (Gate::denies('viewAny', Voucher::class)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $vouchers = Voucher::orderBy('id', 'desc')->get();
         $trashedVouchers = Voucher::onlyTrashed()->count();
         $currentDate = Carbon::now()->startOfDay(); // Đảm bảo rằng bạn so sánh ngày mà không có giờ
@@ -39,11 +43,17 @@ class VoucherController extends Controller
 
     public function create()
     {
+        if (Gate::denies('create', Voucher::class)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         return view(self::PATH_VIEW . 'create');
     }
 
     public function store(StoreVoucherRequest $request)
     {
+        if (Gate::denies('create', Voucher::class)) {
+            return redirect()->route('admin.vouchers.index')->with('warning', 'Bạn không có quyền!');
+        }
         $data = $request->all();
         Voucher::create($data);
 
@@ -52,16 +62,25 @@ class VoucherController extends Controller
 
     public function show(Voucher $voucher)
     {
+        if (Gate::denies('view', $voucher)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         return view(self::PATH_VIEW . 'show', compact('voucher'));
     }
 
     public function edit(Voucher $voucher)
     {
+        if (Gate::denies('update', $voucher)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         return view(self::PATH_VIEW . 'edit', compact('voucher'));
     }
 
     public function update(UpdateVoucherRequest $request, Voucher $voucher)
     {
+        if (Gate::denies('update', $voucher)) {
+            return redirect()->route('admin.vouchers.index')->with('warning', 'Bạn không có quyền!');
+        }
         $data = $request->all();
         $voucher->update($data);
 
@@ -70,12 +89,18 @@ class VoucherController extends Controller
 
     public function destroy(Voucher $voucher)
     {
+        if (Gate::denies('delete', $voucher)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $voucher->delete();
         return redirect()->route('admin.vouchers.index')->with('success', 'Xóa Voucher thành công');
     }
 
     public function trashed()
     {
+        if (Gate::denies('viewTrashed', Voucher::class)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $vouchers = Voucher::onlyTrashed()->get();
         return view(self::PATH_VIEW . 'trashed', compact('vouchers'));
     }
@@ -83,6 +108,9 @@ class VoucherController extends Controller
     public function restore($id)
     {
         $voucher = Voucher::onlyTrashed()->findOrFail($id);
+        if (Gate::denies('restore', $voucher)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $voucher->restore();
         return redirect()->route('admin.vouchers.trashed')->with('success', 'Voucher đã được khôi phục');
     }
@@ -90,6 +118,9 @@ class VoucherController extends Controller
     public function forceDelete($id)
     {
         $vouchers = Voucher::withTrashed()->findOrFail($id);
+        if (Gate::denies('forceDelete', $vouchers)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $vouchers->forceDelete();
         return redirect()->route('admin.vouchers.trashed')->with('success', 'Vouchers đã bị xóa vĩnh viễn');
     }

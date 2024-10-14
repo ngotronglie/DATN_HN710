@@ -2,6 +2,7 @@
     "use strict";
     var HT = {};
     var token = $('meta[name="csrf-token"]').attr('content');
+    var alertTimeout;
 
     // Thay đổi trạng thái danh mục đã chọn
     HT.changeall = () => {
@@ -56,6 +57,7 @@
                                 switcheryElement.setPosition();  // Cập nhật vị trí của nút gạt
                                 // switcheryElement.handleOnchange();  // Gọi hàm để cập nhật giao diện và xử lý sự kiện
                             });
+                            showAlert('Cập nhật trạng thái '+res.updatedCount+' danh mục thành công!', 'success');
                         } else {
                             alert('Cập nhật thất bại: ' + res.message);
                         }
@@ -73,6 +75,22 @@
 
             });
         }
+    }
+
+    function showAlert(message, type) {
+        let alertContainer = $('#alert-container');
+
+        if (alertTimeout) {
+            clearTimeout(alertTimeout);
+        }
+
+        alertContainer.removeClass('d-none alert-success alert-danger');
+        alertContainer.addClass('alert-' + type);
+        alertContainer.html(message);
+
+        alertTimeout = setTimeout(function () {
+            alertContainer.addClass('d-none');
+        }, 5000);
     }
 
     $(document).ready(function () {

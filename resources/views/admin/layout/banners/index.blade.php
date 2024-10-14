@@ -79,6 +79,8 @@
                                     <th>STT</th>
                                     <th>Tiêu đề</th>
                                     <th>Hình ảnh</th>
+                                    <th>Người tạo</th>
+                                    <th>Người sửa</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
@@ -89,6 +91,8 @@
                                     <th>STT</th>
                                     <th>Tiêu đề</th>
                                     <th>Hình ảnh</th>
+                                    <th>Người tạo</th>
+                                    <th>Ngời sửa</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
@@ -103,7 +107,19 @@
                                     <td>{{ $item->title }}</td>
                                     <td style="width: 120px;">
                                         <img src="{{ Storage::url($item->image) }}" class="img-fluid" style="max-height: 100px; width: 100%; object-fit: cover; border: 1px solid #ddd;" alt="Banner Image">
-                                    </td>                                    
+                                    </td>
+                                    <td>
+                                        {{ $item->creator->name }}
+                                        @if (!$item->creator->is_active)
+                                        <div style="color: red;">(Bị khóa)</div>
+                                        @endif
+                                    </td>  
+                                    <td>
+                                        {{ $item->updater->name ?? 'Chưa có sửa đổi' }}
+                                        @if ($item->updater && !$item->updater->is_active)
+                                        <div style="color: red;">(Bị khóa)</div>
+                                        @endif
+                                    </td>                                  
                                     <td style="width: 12%" class="text-center">
                                         <input type="checkbox" class="js-switch active" data-model="{{ $item->is_active }}"
                                             {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"

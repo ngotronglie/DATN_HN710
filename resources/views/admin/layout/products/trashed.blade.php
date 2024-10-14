@@ -49,14 +49,20 @@
                             <thead>
                                 <tr>
                                     <th>STT</th></th>
-                                    <th>Tên danh mục</th>
+                                    <th>Tên sản phẩm</th>
+                                    <th>Danh mục</th>
+                                    <th>Số lượng</th>
+                                    <th>Lượt xem</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
                                     <th>STT</th></th>
-                                    <th>Tên danh mục</th>
+                                    <th>Tên sản phẩm</th>
+                                    <th>Danh mục</th>
+                                    <th>Số lượng</th>
+                                    <th>Lượt xem</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
@@ -65,6 +71,11 @@
                                 <tr>
                                     <td>{{ $key+1 }}</td>
                                     <td>{{ $item->name }}</td>
+                                    <td>
+                                        {{ $item->category->name }}
+                                    </td>
+                                    <td>Tổng: {{ $item->total_quantity }}</td>
+                                    <td>{{ $item->view }}</td>
                                     <td>
                                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#restoreModal{{ $item->id }}" title="Khôi phục">
                                             <i class="fa fa-repeat"></i>

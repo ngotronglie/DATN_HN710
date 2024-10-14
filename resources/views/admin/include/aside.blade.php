@@ -72,12 +72,14 @@
                     </li>
                     {{-- end voucher --}}
                     {{-- category blog --}}
-                    <li class="menu-item-has-children {{ Request::is('admin/category_blogs*') ? 'active' : '' }} dropdown">
+                    <li class="menu-item-has-children {{ Request::is('admin/category_blogs*') || Request::is('admin/blogs*') ? 'active' : '' }} dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false"> <i class="menu-icon fa fa-book"></i>Quản lý DM bài viết</a>
+                            aria-expanded="false"> <i class="menu-icon fa fa-book"></i>Quản lý bài viết</a>
                         <ul class="sub-menu children dropdown-menu">
-                            <li></i><a href="{{route('admin.category_blogs.index')}}">Danh sách</a></li>
+                            <li></i><a href="{{route('admin.category_blogs.index')}}">Danh mục bài viết</a></li>
                             <li></i><a href="{{route('admin.category_blogs.create')}}">Thêm mới</a></li>
+                            <li></i><a href="{{route('admin.blogs.index')}}">Danh sách bài viết</a></li>
+                            <li></i><a href="{{route('admin.blogs.create')}}">Thêm mới</a></li>
                         </ul>
                     </li>
                     {{-- end category blog --}}

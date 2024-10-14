@@ -13,7 +13,12 @@ class ProductPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return in_array($user->role, [1, 2]);
+    }
+
+    public function viewTrashed(User $user): bool
+    {
+        return $user->role == 2;
     }
 
     /**
@@ -21,7 +26,7 @@ class ProductPolicy
      */
     public function view(User $user, Product $product): bool
     {
-        //
+        return in_array($user->role, [1, 2]);
     }
 
     /**
@@ -29,7 +34,7 @@ class ProductPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return in_array($user->role, [1, 2]);
     }
 
     /**
@@ -37,7 +42,7 @@ class ProductPolicy
      */
     public function update(User $user, Product $product): bool
     {
-        //
+        return in_array($user->role, [1, 2]);
     }
 
     /**
@@ -45,7 +50,7 @@ class ProductPolicy
      */
     public function delete(User $user, Product $product): bool
     {
-        //
+        return $user->role == 2;
     }
 
     /**
@@ -53,7 +58,7 @@ class ProductPolicy
      */
     public function restore(User $user, Product $product): bool
     {
-        //
+        return $user->role == 2;
     }
 
     /**
@@ -61,6 +66,6 @@ class ProductPolicy
      */
     public function forceDelete(User $user, Product $product): bool
     {
-        //
+        return $user->role == 2;
     }
 }

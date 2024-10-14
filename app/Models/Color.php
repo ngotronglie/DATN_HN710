@@ -9,11 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Color extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = ['name', 'hex_code', 'is_active'];
-
-    protected $casts = [
-        'is_active' => 'boolean'
-    ];
+    protected $fillable = ['name', 'hex_code'];
 
     public function variants()
     {

@@ -2,6 +2,7 @@
     "use strict";
     var HT = {};
     var token = $('meta[name="csrf-token"]').attr('content');
+    var alertTimeout;
 
     HT.changeall = () => {
         if ($('.activeAll').length) {
@@ -48,6 +49,7 @@
 
                                 switcheryElement.setPosition();
                             });
+                            showAlert('Cập nhật trạng thái '+res.updatedCount+' bài viết thành công!', 'success');
                         } else {
                             alert('Cập nhật thất bại: ' + res.message);
                         }
@@ -65,6 +67,22 @@
 
             });
         }
+    }
+
+    function showAlert(message, type) {
+        let alertContainer = $('#alert-container');
+
+        if (alertTimeout) {
+            clearTimeout(alertTimeout);
+        }
+
+        alertContainer.removeClass('d-none alert-success alert-danger');
+        alertContainer.addClass('alert-' + type);
+        alertContainer.html(message);
+
+        alertTimeout = setTimeout(function () {
+            alertContainer.addClass('d-none');
+        }, 5000);
     }
 
     $(document).ready(function () {

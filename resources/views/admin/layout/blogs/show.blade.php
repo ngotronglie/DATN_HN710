@@ -46,11 +46,21 @@
                                 </tr>
                                 <tr>
                                     <th>Tác giả:</th>
-                                    <td>{{ $blog->user->name }}</td>
+                                    <td>
+                                        {{ $blog->user->name }}
+                                        @if (!$blog->user->is_active)
+                                            <span style="color: red;">(Bị khóa)</span>
+                                        @endif
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Danh mục:</th>
-                                    <td>{{ $blog->category->name }}</td>
+                                    <td>
+                                        {{ $blog->categoryBlog->name }}
+                                        @if (!$blog->categoryBlog->is_active)
+                                            <span style="color: red;">(Bị khóa)</span>
+                                        @endif
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Ảnh đại diện</th>
@@ -65,11 +75,11 @@
                                 <tr>
                                     <th>Mô tả sản phẩm</th>
                                     <td>
-                                        <div id="shortDescription" class="ml-1">
+                                        <div id="shortDescription" class="ml-2">
                                             {!! substr($blog->content, 0, 200) !!}...
                                             <a href="javascript:void(0);" onclick="showMore()">Xem thêm</a>
                                         </div>
-                                        <div id="fullDescription" style="display:none;" class="ml-1">
+                                        <div id="fullDescription" style="display:none;" class="ml-2">
                                             {!! $blog->content !!}
                                             <a href="javascript:void(0);" onclick="showLess()">Ẩn bớt</a>
                                         </div>

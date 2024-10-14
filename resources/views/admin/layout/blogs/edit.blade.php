@@ -79,9 +79,12 @@
                                 <label for="name" class=" form-control-label">Danh mục bài viết</label>
                                 <select name="category_blog_id" class="form-control">
                                     <option value="">--Vui lòng chọn--</option>
-                                    @foreach ($ctgrbl as $bl)
-                                    <option @selected(old('category_blog_id', $blog->category_blog_id) == $bl->id) value="{{ $bl->id }}">
-                                        {{ $bl->name }}
+                                    @foreach ($ctgrbl as $item)
+                                    <option value="{{ $item->id }}"
+                                        {{ old('category_blog_id', $blog->category_blog_id) == $item->id ? 'selected' : '' }}
+                                        @if(!$item->is_active) disabled @endif>
+                                        {{ $item->name }}
+                                        @if(!$item->is_active) (Danh mục bị khóa) @endif
                                     </option>
                                     @endforeach
                                 </select>

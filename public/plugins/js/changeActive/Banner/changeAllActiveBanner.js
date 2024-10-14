@@ -52,7 +52,6 @@
 
                                 switcheryElement.setPosition();
                             });
-                            alert('Cập nhật thành công!');
                             showAlert('Cập nhật trạng thái '+res.updatedCount+' banner thành công!', 'success');
                         } else {
                             alert('Cập nhật thất bại: ' + res.message);

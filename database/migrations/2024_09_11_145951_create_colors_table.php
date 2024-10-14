@@ -11,7 +11,6 @@ class CreateColorsTable extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('hex_code')->unique();
-            $table->boolean('is_active')->default(true);
             $table->softDeletes();
             $table->timestamps();
         });

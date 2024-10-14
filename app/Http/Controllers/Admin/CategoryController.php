@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use Illuminate\Support\Facades\Gate;
 
 class CategoryController extends Controller
 {
@@ -15,6 +16,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        if (Gate::denies('viewAny', Category::class)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $categories = Category::orderBy('id', 'desc')->get();
         $trashedCount = Category::onlyTrashed()->count();
         return view(self::PATH_VIEW . __FUNCTION__, compact('categories', 'trashedCount'));
@@ -25,6 +29,9 @@ class CategoryController extends Controller
      */
     public function create()
     {
+        if (Gate::denies('create', Category::class)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         return view(self::PATH_VIEW . __FUNCTION__);
     }
 
@@ -33,6 +40,9 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
+        if (Gate::denies('create', Category::class)) {
+            return redirect()->route('admin.categories.index')->with('warning', 'Bạn không có quyền!');
+        }
         $data = $request->all();
         Category::create($data);
         return redirect()->route('admin.categories.index')->with('success', 'Thêm mới thành công');
@@ -43,6 +53,9 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
+        if (Gate::denies('view', $category)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         return view(self::PATH_VIEW . __FUNCTION__, compact('category'));
     }
 
@@ -51,6 +64,9 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
+        if (Gate::denies('update', $category)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         return view(self::PATH_VIEW . __FUNCTION__, compact('category'));
     }
 
@@ -59,6 +75,9 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
+        if (Gate::denies('update', $category)) {
+            return redirect()->route('admin.categories.index')->with('warning', 'Bạn không có quyền!');
+        }
         $data = $request->all();
         $category->update($data);
         return redirect()->route('admin.categories.index')->with('success', 'Sửa thành công');
@@ -69,6 +88,9 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        if (Gate::denies('delete', $category)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $category->delete();
         return back()->with('success', 'Xóa thành công');
     }
@@ -78,6 +100,9 @@ class CategoryController extends Controller
      */
     public function trashed()
     {
+        if (Gate::denies('viewTrashed', Category::class)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $trashedCategories = Category::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
         return view(self::PATH_VIEW . 'trashed', compact('trashedCategories'));
     }
@@ -88,6 +113,9 @@ class CategoryController extends Controller
     public function restore($id)
     {
         $category = Category::withTrashed()->findOrFail($id);
+        if (Gate::denies('restore', $category)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $category->restore();
         return redirect()->route('admin.categories.trashed')->with('success', 'Khôi phục thành công');
     }
@@ -98,6 +126,9 @@ class CategoryController extends Controller
     public function forceDelete($id)
     {
         $category = Category::withTrashed()->findOrFail($id);
+        if (Gate::denies('forceDelete', $category)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $category->forceDelete();
         return redirect()->route('admin.categories.trashed')->with('success', 'Danh mục đã bị xóa vĩnh viễn');
     }

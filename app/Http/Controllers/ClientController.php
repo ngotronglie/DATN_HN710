@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Banner;
+use App\Models\Banner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -14,7 +14,6 @@ class ClientController extends Controller
     }
     public function banner()
     {
-
         return view("");
     }
     public function contact()

@@ -75,8 +75,8 @@ Route::get('verify-email/{token}', [ForgotPasswordController::class, 'verifyEmai
 Route::get('password/reset/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('admin.password.reset');
 Route::post('password/reset', [ForgotPasswordController::class, 'reset'])->name('admin.password.update');
 
-//
-Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
+//->middleware('isAdmin')
+Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('/', function () {
         return view('admin.layout.yeld');
     })->name('dashboard');
@@ -154,12 +154,6 @@ Route::post('categories/ajax/changeAllActiveCategory', [ChangeActiveController::
 //ajax product
 Route::post('products/ajax/changeActiveProduct', [ChangeActiveController::class, 'changeActiveProduct']);
 Route::post('products/ajax/changeAllActiveProduct', [ChangeActiveController::class, 'changeActiveAllProduct']);
-//ajax size
-Route::post('sizes/ajax/changeActiveSize', [ChangeActiveController::class, 'changeActiveSize']);
-Route::post('sizes/ajax/changeAllActiveSize', [ChangeActiveController::class, 'changeActiveAllSize']);
-//ajax color
-Route::post('colors/ajax/changeActiveColor', [ChangeActiveController::class, 'changeActiveColor']);
-Route::post('colors/ajax/changeAllActiveColor', [ChangeActiveController::class, 'changeActiveAllColor']);
 //ajax account
 Route::post('accounts/ajax/changeActiveAccount', [ChangeActiveController::class, 'changeActiveAccount']);
 Route::post('accounts/ajax/changeAllActiveAccount', [ChangeActiveController::class, 'changeActiveAllAccount']);

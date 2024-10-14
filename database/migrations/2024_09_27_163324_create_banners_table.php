@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('link');
             $table->string('description');
             $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
+            $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
             $table->boolean('is_active')->default(true);
             $table->softDeletes();
             $table->timestamps();

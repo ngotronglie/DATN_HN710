@@ -6,15 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Models\CategoryBlog;
 use App\Http\Requests\StoreCategoryBlogRequest;
 use App\Http\Requests\UpdateCategoryBlogRequest;
+use Illuminate\Support\Facades\Gate;
 
 class CategoryBlogController extends Controller
 {
-    const PATH_VIEW = 'admin.layout.categoryBlog.';
+    const PATH_VIEW = 'admin.layout.categoryBlogs.';
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        if (Gate::denies('viewAny', CategoryBlog::class)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $data = CategoryBlog::orderBy('id', 'DESC')->get();
         $trashedCount = CategoryBlog::onlyTrashed()->count();
         return view(self::PATH_VIEW.__FUNCTION__, compact('data', 'trashedCount'));
@@ -25,6 +29,9 @@ class CategoryBlogController extends Controller
      */
     public function create()
     {
+        if (Gate::denies('create', CategoryBlog::class)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         return view(self::PATH_VIEW.__FUNCTION__);
     }
 
@@ -33,6 +40,9 @@ class CategoryBlogController extends Controller
      */
     public function store(StoreCategoryBlogRequest $request)
     {
+        if (Gate::denies('create', CategoryBlog::class)) {
+            return redirect()->route('admin.category_blogs.index')->with('warning', 'Bạn không có quyền!');
+        }
         $data = $request->all();
         CategoryBlog::create($data);
         return redirect()->route('admin.category_blogs.index')->with('success', 'Thêm mới thành công');
@@ -43,6 +53,9 @@ class CategoryBlogController extends Controller
      */
     public function show(CategoryBlog $categoryBlog)
     {
+        if (Gate::denies('view', $categoryBlog)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         return view(self::PATH_VIEW.__FUNCTION__, compact('categoryBlog'));
     }
 
@@ -51,6 +64,9 @@ class CategoryBlogController extends Controller
      */
     public function edit(CategoryBlog $categoryBlog)
     {
+        if (Gate::denies('update', $categoryBlog)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         return view(self::PATH_VIEW.__FUNCTION__, compact('categoryBlog'));
     }
 
@@ -59,6 +75,9 @@ class CategoryBlogController extends Controller
      */
     public function update(UpdateCategoryBlogRequest $request, CategoryBlog $categoryBlog)
     {
+        if (Gate::denies('update', $categoryBlog)) {
+            return redirect()->route('admin.category_blogs.index')->with('warning', 'Bạn không có quyền!');
+        }
         $data = $request->all();
         $categoryBlog->update($data);
         return redirect()->route('admin.category_blogs.index')->with('success', 'Cập nhật thành công');
@@ -69,6 +88,9 @@ class CategoryBlogController extends Controller
      */
     public function destroy(CategoryBlog $categoryBlog)
     {
+        if (Gate::denies('delete', $categoryBlog)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $categoryBlog->delete();
         return redirect()->route('admin.category_blogs.index')->with('success', 'Xóa thành công');
     }
@@ -76,6 +98,9 @@ class CategoryBlogController extends Controller
 
     public function trashed()
     {
+        if (Gate::denies('viewTrashed', CategoryBlog::class)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $trashedCategoryBlogs = CategoryBlog::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
         return view(self::PATH_VIEW . 'trashed', compact('trashedCategoryBlogs'));
     }
@@ -93,6 +118,9 @@ class CategoryBlogController extends Controller
     public function restore($id)
     {
         $categoryBlog = CategoryBlog::withTrashed()->findOrFail($id);
+        if (Gate::denies('restore', $categoryBlog)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $categoryBlog->restore();
         return redirect()->route('admin.category_blogs.trashed')->with('success', 'Khôi phục thành công');
     }
@@ -103,6 +131,9 @@ class CategoryBlogController extends Controller
     public function forceDelete($id)
     {
         $categoryBlog = CategoryBlog::withTrashed()->findOrFail($id);
+        if (Gate::denies('forceDelete', $categoryBlog)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $categoryBlog->forceDelete();
         return redirect()->route('admin.category_blogs.trashed')->with('success', 'Danh mục bài viết đã xóa vĩnh viễn');
     }

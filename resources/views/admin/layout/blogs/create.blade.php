@@ -32,7 +32,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <strong>Thêm danh mục</strong>
-                    <a href="{{ route('admin.categories.index') }}" class="btn btn-primary">
+                    <a href="{{ route('admin.blogs.index') }}" class="btn btn-primary">
                         <i class="fa fa-arrow-left mr-1"></i> Quay lại
                     </a>
                 </div>

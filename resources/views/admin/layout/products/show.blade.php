@@ -61,11 +61,11 @@
                                 <tr>
                                     <th>Mô tả sản phẩm</th>
                                     <td>
-                                        <div id="shortDescription">
+                                        <div id="shortDescription" class="ml-2">
                                             {!! substr($product->description, 0, 200) !!}...
                                             <a href="javascript:void(0);" onclick="showMore()">Xem thêm</a>
                                         </div>
-                                        <div id="fullDescription" style="display:none;">
+                                        <div id="fullDescription" style="display:none;" class="ml-2">
                                             {!! $product->description !!}
                                             <a href="javascript:void(0);" onclick="showLess()">Ẩn bớt</a>
                                         </div>
@@ -73,7 +73,12 @@
                                 </tr>
                                 <tr>
                                     <th>Danh mục</th>
-                                    <td>{{ $product->category->name }}</td>
+                                    <td>
+                                        {{ $product->category->name }}
+                                        @if (!$product->category->is_active)
+                                            <span style="color: red;">(Bị khóa)</span>
+                                        @endif
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Lượt xem</th>
@@ -124,6 +129,9 @@
                         <strong>Biến thể sản phẩm</strong>
                     </div>
                     <div class="card-body">
+                        @if($product->variants->isEmpty())
+                            <div class="alert alert-warning text-danger text-center">Không có sản phẩm biến thể vì màu và size bị xóa!</div>
+                        @else
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -138,7 +146,12 @@
                                 @foreach($product->variants as $variant)
                                     <tr>
                                         <td>{{ $variant->size->name }}</td>
-                                        <td>{{ $variant->color->name }}</td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <div class="rounded-circle mr-2" style="width: 20px; height: 20px; background-color: {{ $variant->color->hex_code }};"></div>
+                                                <span>{{ $variant->color->hex_code }}</span> <span class="ml-1">({{ $variant->color->name }})</span>
+                                            </div>
+                                        </td>
                                         <td>{{ number_format($variant->price) }} VND</td>
                                         <td>{{ number_format($variant->price_sale) }} VND</td>
                                         <td>{{ $variant->quantity }}</td>
@@ -146,6 +159,7 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        @endif
                     </div>
                     <div class="card-footer">
                         <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-warning btn-icon-split">

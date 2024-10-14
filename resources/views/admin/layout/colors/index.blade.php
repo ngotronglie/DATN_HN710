@@ -1,7 +1,6 @@
 @extends('admin.dashboard')
 
 @section('style')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.css">
 <link rel="stylesheet" href="{{ asset('theme/admin/assets/css/lib/datatable/dataTables.bootstrap.min.css') }}">
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
 @endsection
@@ -52,12 +51,6 @@
                                     <i class="fa fa-cogs"></i> Tùy chọn
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item activeAll" data-is_active="0" href="#">
-                                        <i class="fa fa-toggle-on text-success"></i> Bật các mục đã chọn
-                                    </a>
-                                    <a class="dropdown-item activeAll" data-is_active="1" href="#">
-                                        <i class="fa fa-toggle-off text-danger"></i> Tắt các mục đã chọn
-                                    </a>
                                     <a class="dropdown-item" href="#">
                                         <i class="fa fa-trash text-danger"></i> Xóa các mục đã chọn
                                     </a>
@@ -75,7 +68,6 @@
                                     <th>STT</th>
                                     <th>Tên màu</th>
                                     <th>Mã màu</th>
-                                    <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
@@ -85,7 +77,6 @@
                                     <th>STT</th>
                                     <th>Tên màu</th>
                                     <th>Mã màu</th>
-                                    <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </tfoot>
@@ -102,11 +93,6 @@
                                             <div class="rounded-circle mr-2" style="width: 20px; height: 20px; background-color: {{ $item->hex_code }};"></div>
                                             <span>{{ $item->hex_code }}</span>
                                         </div>
-                                    </td>
-                                    <td style="width: 12%" class="text-center">
-                                        <input type="checkbox" class="js-switch active" data-model="{{ $item->is_active }}"
-                                            {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"
-                                            data-modelId="{{ $item->id }}" />
                                     </td>
                                     <td class="d-flex">
                                         <a class="btn btn-primary mr-2" href="{{route('admin.colors.show', $item)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
@@ -155,8 +141,6 @@
 @endsection
 
 @section('script')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.js"></script>
-
 <script src="{{ asset('theme/admin/assets/js/lib/data-table/datatables.min.js') }}"></script>
 <script src="{{ asset('theme/admin/assets/js/lib/data-table/dataTables.bootstrap.min.js') }}"></script>
 <script src="{{ asset('theme/admin/assets/js/lib/data-table/dataTables.buttons.min.js') }}"></script>
@@ -169,8 +153,4 @@
 <script src="{{ asset('theme/admin/assets/js/init/datatables-init.js') }}"></script>
 
 <script src="{{asset('plugins/js/checkall.js')}}"></script>
-
-<script src="{{asset('plugins/js/changeActive/Color/changeActiveColor.js')}}"></script>
-
-<script src="{{asset('plugins/js/changeActive/Color/changeAllActiveColor.js')}}"></script>
 @endsection

@@ -33,6 +33,8 @@
     </div>
 
     <div class="content mb-5">
+        <div id="alert-container" class="alert d-none" role="alert"></div>
+
         <div class="animated fadeIn">
             <div class="row">
 
@@ -76,7 +78,7 @@
                                         </th>
                                         <th>STT</th>
                                         <th>Bài viết</th>
-                                        <th>Tác giả</th>
+                                        <th>Người tạo</th>
                                         <th>Danh mục</th>
                                         <th>Trạng thái</th>
                                         <th>Chức năng</th>
@@ -87,7 +89,7 @@
                                         <th></th>
                                         <th>STT</th>
                                         <th>Bài viết</th>
-                                        <th>Tác giả</th>
+                                        <th>Người tạo</th>
                                         <th>Danh mục</th>
                                         <th>Trạng thái</th>
                                         <th>Chức năng</th>
@@ -109,13 +111,23 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>{{ $item->user->name }}</td>
-                                            <td>{{$item->category->name}}</td>
+                                            <td>
+                                                {{ $item->user->name }}
+                                                @if (!$item->user->is_active)
+                                                    <div style="color: red;">(Bị khóa)</div>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                {{$item->categoryBlog->name}}
+                                                @if (!$item->categoryBlog->is_active)
+                                                    <div style="color: red;">(Bị khóa)</div>
+                                                @endif
+                                            </td>
                                             <td style="width: 12%" class="text-center">
                                                 <input type="checkbox" class="js-switch active"
                                                     data-model="{{ $item->is_active }}"
                                                     {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"
-                                                    data-modelId="{{ $item->id }}" />
+                                                    data-modelId="{{ $item->id }}" data-title="{{ $item->title }}" />
                                             </td>
                                             <td class="d-flex">
                                                 <a class="btn btn-primary mr-2"

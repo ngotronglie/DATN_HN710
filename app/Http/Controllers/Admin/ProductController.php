@@ -12,6 +12,7 @@ use App\Models\ProductGallery;
 use App\Models\ProductVariant;
 use App\Models\Size;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -24,7 +25,20 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('variants')->orderBy('id', 'desc')->get();
+        if (Gate::denies('viewAny', Product::class)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
+        $products = Product::with(['variants' => function ($query) {
+            $query->whereHas('size', function ($q) {
+                $q->whereNull('deleted_at');
+            })->whereHas('color', function ($q) {
+                $q->whereNull('deleted_at');
+            });
+        }])->whereHas('category', function ($query) {
+            $query->whereNull('deleted_at');
+        })
+            ->orderBy('id', 'desc')
+            ->get();
         $trashedCount = Product::onlyTrashed()->count();
         return view(self::PATH_VIEW . __FUNCTION__, compact('products', 'trashedCount'));
     }
@@ -34,7 +48,10 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
+        if (Gate::denies('create', Product::class)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
+        $categories = Category::where('is_active', 1)->get();
         $colors = Color::all();
         $sizes = Size::all();
 
@@ -46,6 +63,10 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
+        if (Gate::denies('create', Product::class)) {
+            return redirect()->route('admin.products.index')->with('warning', 'Bạn không có quyền!');
+        }
+
         $data = $request->except(['variants', 'img_thumb', 'product_galleries']);
         $data['slug'] = Str::slug($data['name']);
         $uploadedFiles = [];
@@ -93,14 +114,12 @@ class ProductController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            if (isset($data['img_thumb']) && Storage::exists($data['img_thumb'])) {
+            if (isset($data['img_thumb'])) {
                 Storage::delete($data['img_thumb']);
             }
 
             foreach ($uploadedFiles as $file) {
-                if (Storage::exists($file)) {
-                    Storage::delete($file);
-                }
+                Storage::delete($file);
             }
 
             return redirect()->back()->with('error', 'Có lỗi xảy ra. Thêm mới thất bại');
@@ -113,7 +132,24 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        $product->load(['galleries', 'variants.size', 'variants.color']);
+        if (Gate::denies('view', $product)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
+        if (!$product->category || $product->category->trashed()) {
+            abort(404);
+        }
+
+        $product->load([
+            'galleries',
+            'variants' => function ($query) {
+                $query->whereHas('size', function ($q) {
+                    $q->whereNull('deleted_at');
+                })->whereHas('color', function ($q) {
+                    $q->whereNull('deleted_at');
+                });
+            }
+        ]);
+
         return view(self::PATH_VIEW . __FUNCTION__, compact('product'));
     }
 
@@ -122,10 +158,32 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load(['variants', 'galleries']);
-        $categories = Category::all();
+        if (Gate::denies('update', $product)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
+        if (!$product->category || $product->category->trashed()) {
+            abort(404);
+        }
+
+        $product->load([
+            'variants' => function ($query) {
+                $query->whereHas('color', function ($colorQuery) {
+                    $colorQuery->whereNull('deleted_at');
+                })
+                    ->whereHas('size', function ($sizeQuery) {
+                        $sizeQuery->whereNull('deleted_at');
+                    });
+            },
+            'galleries'
+        ]);
+
+        $categories = Category::where('is_active', 1)
+            ->orWhere('id', $product->category_id)
+            ->get();
         $colors = Color::all();
         $sizes = Size::all();
+
+
         return view(self::PATH_VIEW . __FUNCTION__, compact('product', 'categories', 'sizes', 'colors'));
     }
 
@@ -134,6 +192,9 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
+        if (Gate::denies('update', $product)) {
+            return redirect()->route('admin.products.index')->with('warning', 'Bạn không có quyền!');
+        }
         $data = $request->except(['variants', 'img_thumb', 'product_galleries']);
         $data['slug'] = Str::slug($data['name']);
         $uploadedFiles = [];
@@ -201,7 +262,14 @@ class ProductController extends Controller
 
                 // Xóa các biến thể trong csdl mà ko có trong request
                 foreach ($existingVariants as $variant) {
-                    $variant->delete();
+                    // Kiểm tra xem size hoặc color có bị xóa mềm không
+                    $size = Size::withTrashed()->find($variant->size_id);
+                    $color = Color::withTrashed()->find($variant->color_id);
+
+                    // Chỉ xóa biến thể nếu cả size và color đều không bị xóa mềm
+                    if (($size && !$size->trashed()) && ($color && !$color->trashed())) {
+                        $variant->delete();
+                    }
                 }
             }
 
@@ -227,6 +295,9 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        if (Gate::denies('delete', $product)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $product->delete();
         return back()->with('success', 'Xóa thành công');
     }
@@ -236,6 +307,9 @@ class ProductController extends Controller
      */
     public function trashed()
     {
+        if (Gate::denies('viewTrashed', Product::class)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $trashedProducts = Product::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
         return view(self::PATH_VIEW . 'trashed', compact('trashedProducts'));
     }
@@ -246,6 +320,9 @@ class ProductController extends Controller
     public function restore($id)
     {
         $product = Product::withTrashed()->findOrFail($id);
+        if (Gate::denies('restore', $product)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
         $product->restore();
         return redirect()->route('admin.products.trashed')->with('success', 'Khôi phục thành công');
     }
@@ -256,6 +333,10 @@ class ProductController extends Controller
     public function forceDelete($id)
     {
         $product = Product::withTrashed()->findOrFail($id);
+        if (Gate::denies('forceDelete', $product)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
+
         if ($product->img_thumb) {
             Storage::delete($product->img_thumb);
         }

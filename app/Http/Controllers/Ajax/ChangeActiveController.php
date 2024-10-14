@@ -67,7 +67,7 @@ class ChangeActiveController extends Controller
         return response()->json(['status' => false, 'message' => 'Không có danh mục nào được cập nhật'], 404);
     }
 
-    // Category
+    // Product
     public function changeActiveProduct(Request $request)
     {
         $id = $request->id;
@@ -115,106 +115,6 @@ class ChangeActiveController extends Controller
         }
 
         return response()->json(['status' => false, 'message' => 'Không có sản phẩm nào được cập nhật'], 404);
-    }
-
-    // Size
-    public function changeActiveSize(Request $request)
-    {
-        $id = $request->id;
-        $isActive = $request->is_active;
-
-        $size = Size::find($id);
-        if (!$size) {
-            return response()->json(['status' => false, 'message' => 'Size không tìm thấy'], 404);
-        }
-
-        $newActive = $isActive == 1 ? 0 : 1;
-        $updated = $size->update(['is_active' => $newActive]);
-
-        if ($updated) {
-            return response()->json([
-                'status' => true,
-                'message' => 'Cập nhật trạng thái size thành công',
-                'newStatus' => $newActive,
-                'category' => $size
-            ], 200);
-        } else {
-            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại'], 500);
-        }
-    }
-
-    public function changeActiveAllSize(Request $request)
-    {
-        $id = $request->id;
-        $active = $request->is_active;
-        if (empty($id) || !is_array($id)) {
-            return response()->json(['status' => false, 'message' => 'ID không hợp lệ'], 400);
-        }
-
-        $newActive = $active == 0 ? 1 : 0;
-
-        $updated = Size::whereIn('id', $id)->update(['is_active' => $newActive]);
-
-        if ($updated) {
-            return response()->json([
-                'status' => true,
-                'message' => 'Cập nhật trạng thái size thành công',
-                'newStatus' => $newActive,
-                'updatedCount' => $updated
-            ], 200);
-        }
-
-        return response()->json(['status' => false, 'message' => 'Không có size nào được cập nhật'], 404);
-    }
-
-    // Color
-    public function changeActiveColor(Request $request)
-    {
-        $id = $request->id;
-        $isActive = $request->is_active;
-
-        $color = Color::find($id);
-        if (!$color) {
-            return response()->json(['status' => false, 'message' => 'Color không tìm thấy'], 404);
-        }
-
-        $newActive = $isActive == 1 ? 0 : 1;
-        $updated = $color->update(['is_active' => $newActive]);
-
-        if ($updated) {
-            return response()->json([
-                'status' => true,
-                'message' => 'Cập nhật trạng thái color thành công',
-                'newStatus' => $newActive,
-                'category' => $color
-            ], 200);
-        } else {
-            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại'], 500);
-        }
-    }
-
-    public function changeActiveAllColor(Request $request)
-    {
-        $id = $request->id;
-        $active = $request->is_active;
-        if (empty($id) || !is_array($id)) {
-            return response()->json(['status' => false, 'message' => 'ID không hợp lệ'], 400);
-        }
-
-        $newActive = $active == 0 ? 1 : 0;
-
-        $updated = Color::whereIn('id', $id)->update(['is_active' => $newActive]);
-
-        if ($updated) {
-            return response()->json([
-                'status' => true,
-                'message' => 'Cập nhật trạng thái color thành công',
-                'newStatus' => $newActive,
-                'updatedCount' => $updated
-            ], 200);
-        }
-
-        return response()->json(['status' => false, 'message' => 'Không có color nào được cập nhật'], 404);
     }
 
     // Account

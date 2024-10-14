@@ -41,6 +41,13 @@ class Product extends Model
 
     public function getTotalQuantityAttribute()
     {
-        return $this->variants()->sum('quantity');
+        return $this->variants()
+            ->whereHas('color', function ($query) {
+                $query->whereNull('deleted_at'); // Chỉ tính các màu chưa bị xóa mềm
+            })
+            ->whereHas('size', function ($query) {
+                $query->whereNull('deleted_at'); // Chỉ tính các kích thước chưa bị xóa mềm
+            })
+            ->sum('quantity'); // Tính tổng số lượng của các biến thể
     }
 }
