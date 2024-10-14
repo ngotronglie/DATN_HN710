@@ -10,7 +10,7 @@ class LoginController extends Controller
 {    public function logout(){
         Auth::logout();
         \request()->session()->invalidate();
-        return redirect()->route('/');
+        return redirect()->route('admin.loginForm');
     }
     public function loginForm(){
         return view('admin.layout.account.login');

@@ -19,15 +19,15 @@ class UserController extends Controller
 
     public function index()
     {
-        $data = User::whereIn('role', [1, 2])->orderBy('role', 'desc')->orderBy('id', 'desc')->get();
+        $data = User::whereIn('role', ['1','2'])->orderBy('role', 'desc')->orderBy('id', 'desc')->get();
         $trashedCount = User::onlyTrashed()->count();
-        $users = User::where('role', 0)->count();
+        $users = User::where('role', '0')->count();
         return view(self::PATH_VIEW . __FUNCTION__, compact('data', 'trashedCount', 'users'));
     }
 
     public function listUser()
     {
-        $users = User::where('role', 0)->orderBy('id', 'desc')->get();
+        $users = User::where('role', '0')->orderBy('id', 'desc')->get();
         return view('admin.layout.account.user', compact('users'));
     }
 
@@ -46,13 +46,13 @@ class UserController extends Controller
     {
         $data = $request->except('avatar');
         $data['password'] = Hash::make($request->input('password'));
-
+        
         if ($request->hasFile('avatar')) {
             $data['avatar'] = Storage::put('users', $request->file('avatar'));
         } else {
             $data['avatar'] = '';
         }
-
+        $data['email_verified_at'] = now();
         User::create($data);
         return redirect()->route('admin.accounts.index')->with('success', 'Thêm mới thành công');
     }

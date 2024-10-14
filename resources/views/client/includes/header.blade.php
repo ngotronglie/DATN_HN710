@@ -51,7 +51,7 @@
                                             <a href="/shop">  @if(Auth::check() && Auth::user()->avatar)
                                                                                               <i class="bi bi-person-circle" style="font-size: 1.75rem;"></i>
 
-                                                <img class=" rounded-circle" width="30px" src="{{ Storage::url(Auth::user()->avatar) }}" alt="User Avatar">
+                                                <img class="rounded-circle" style="margin-top: -10px" width="30px" src="{{ Storage::url(Auth::user()->avatar) }}" alt="User Avatar">
                                             @else
                                               
                                             <a href="/login" class="header-action-btn d-none d-md-block">
@@ -60,8 +60,9 @@
                                                                                         @endif
                                         </a>
                                             <ul class="sub-menu">
-                                                <li><a href="/cart">Cart</a></li>
-                                                <li><a href="/checkout">Checkout</a></li>
+                                                <li><a href="my_account">Thông tin cá nhân</a></li>
+                                                <li><a href="/checkout">Thông báo</a></li>
+                                                <li><a href="/checkout">Trung tâm trợ giúp</a></li>
                                                 <li>
                                                    
                                                     <form id="logout-form" action="{{ route('user.logout') }}" method="POST">

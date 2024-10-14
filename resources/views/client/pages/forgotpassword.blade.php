@@ -45,33 +45,15 @@
                                                     <!-- Login Title & Content End -->
                             
                                                     <!-- Form Action Start -->
-                                                    <form action="#" method="post">
-                            
+                                                    <form action="{{route('forgot.password')}}" method="post">
+                                                        @csrf
                                                         <!-- Input Email Start -->
                                                         <div class="single-input-item mb-3">
-                                                            <input type="email" placeholder="Email">
+                                                            <input type="email" placeholder="Email" name="email">
                                                         </div>
-                                                        <!-- Input Email End -->
-                            
-                                                        <!-- Input Password Start -->
-                                                      
-                                                        <!-- Input Password End --><!-- Checkbox/Forget Password Start -->
-                                                        <div class="single-input-item mb-3">
-                                                            <div class="login-reg-form-meta d-flex align-items-center justify-content-between">
-                                                                <div class="remember-meta mb-3">
-                                                                    
-                                                                </div>
-                                                                <div class="d-flex justify-content-between mb-3">
-                                                                    <a href="{{route('register')}}" class="forget-pwd">Bạn chưa có tài khoản?</a>
-                                                                    <a href="{{route('login')}}" class="forget-pwd">Đăng nhập</a>
-                                                                    
-                                                                </div>
-                                                                
-                                                            </div>
-                                                        </div>
-                                                        <!-- Checkbox/Forget Password End -->
-                            
-                                                        <!-- Login Button Start -->
+                                                        @error('email')
+                                                        <small class="text-danger">{{ $message }}</small>
+                                                        @enderror
                                                         <div class="single-input-item mb-3">
                                                             <button class="btn btn btn-dark btn-hover-primary rounded-0">Gửi</button>
                                                         </div>

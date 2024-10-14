@@ -13,13 +13,16 @@ class VerifyEmailPassword extends Mailable
     use Queueable, SerializesModels;
     public $userName;
     public $token;
+    public $role;
     /**
      * Create a new message instance.
      */
-    public function __construct($userName, $token)
+    public function __construct($userName, $token, $role)
     {
+       
         $this->userName = $userName;
         $this->token = $token;
+        $this->role = $role;
     }
 
     /**
@@ -41,7 +44,8 @@ class VerifyEmailPassword extends Mailable
             view: 'admin.mail.verifyPassword',
             with: [
                 'token'=> $this->token,
-                'userName' => $this->userName
+                'userName' => $this->userName,
+                'role' => $this->role
             ]
         );
     }

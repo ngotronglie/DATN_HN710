@@ -59,19 +59,29 @@
                                                         <!-- Input Email End -->
                             
                                                         <!-- Input Password Start -->
-                                                        <div class=" mb-5">
-                                                            <input type="password" class="form-control" placeholder="Mật khẩu" name="password" value="{{ old('password') }}">
+                                                        <div class="mb-5" style="position: relative;">
+                                                            <div class="input-group">
+                                                                <input type="password" id="password" name="password" class="form-control" 
+                                                                       placeholder="Password" required style="padding-right: 40px;">
+                                                                <div class="input-group-append" 
+                                                                     style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                                                                    <span class="input-group-text" onclick="togglePassword()" style="background: none; border: none;">
+                                                                        <i class="fa fa-eye" id="eyeIcon"></i>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
                                                             @error('password')
                                                             <small class="text-danger">
                                                                 {{$message}}
                                                             </small>
                                                             @enderror
                                                         </div>
+                                                        
                                                         <!-- Input Password End -->
                                                         @error('error')
-                                                        <p class="text-danger">
+                                                        <small class="text-danger">
                                                             {{$message}}
-                                                        </p>
+                                                        </small>
                                                         @enderror
                                                         <!-- Checkbox/Forget Password Start -->
                                                         <div class="single-input-item mb-3">
@@ -84,7 +94,7 @@
                                                                 </div>
                                                                 <div class="d-flex justify-content-between mb-3">
                                                                     <a href="{{route('register')}}" class="forget-pwd">Bạn chưa có tài khoản?</a>
-                                                                    <a href="{{route('forgotpassword')}}" class="forget-pwd">Quên mật khẩu?</a>
+                                                                    <a href="{{route('forgot')}}" class="forget-pwd">Quên mật khẩu?</a>
                                                                     
                                                                 </div>
                                                                 
@@ -122,4 +132,20 @@
             </div>
         </div>
     </div>
+    <script>
+        function togglePassword() {
+            var passwordField = document.getElementById("password");
+            var eyeIcon = document.getElementById("eyeIcon");
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                eyeIcon.classList.remove("fa-eye");
+                eyeIcon.classList.add("fa-eye-slash");
+            } else {
+                passwordField.type = "password";
+                eyeIcon.classList.remove("fa-eye-slash");
+                eyeIcon.classList.add("fa-eye");
+            }
+        }
+    </script>
 @endsection
