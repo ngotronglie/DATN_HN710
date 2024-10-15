@@ -104,7 +104,7 @@
                                             <td>{{ $key + 1 }}</td>
                                             <td style="white-space: nowrap">
                                                 <div class="d-flex align-items-end">
-                                                    <img src="{{Storage::url($item->img_avt) }}" alt="Thumbnail" class="img-thumbnail mr-2" style="height: 80px; width: 80px; object-fit: cover;">
+                                                    <img src="{{Storage::url($item->img_avt)}}" alt="Thumbnail" class="img-thumbnail mr-2" style="height: 80px; width: 80px; object-fit: cover;">
                                                     <div class="text-truncate" style="max-width: 200px;">
                                                         <span>{{ $item->title }}</span>
                                                         <div>{{ $item->created_at }}</div>

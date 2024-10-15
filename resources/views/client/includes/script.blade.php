@@ -23,3 +23,4 @@
 
 <!--Main JS-->
 <script src="{{ asset('theme/client/assets/js/main.js') }}"></script>
+@yield('script')

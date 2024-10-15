@@ -12,10 +12,12 @@ use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\CategoryBlogController;
 use App\Http\Controllers\Admin\ProductController;
 
-use App\Http\Controllers\Ajax\ChangeActiveController;
-use App\Http\Controllers\ClientController;
-
 use App\Http\Controllers\Ajax\DeleteController;
+use App\Http\Controllers\Ajax\ChangeActiveController;
+
+use App\Http\Controllers\Client\BlogController as ClientBlogController;
+use App\Http\Controllers\Client\HomeController;
+
 use App\Http\Controllers\Client\AccountController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,19 +35,15 @@ use Illuminate\Support\Facades\Route;
 
 // ----------------------------CLIENT ROUTES--------------------------------
 
-Route::get('/', [ClientController::class, 'index'])->name('home');
-
 Route::get('/contact', function () {
     return view('client.pages.contact');
 });
-Route::get('/blog', function () {
-    return view('client.pages.blog');
-});
+
 Route::get('/blog-detail', function () {
     return view('client.pages.blog-detail');
 });
-Route::get('/shop', [ClientController::class, 'shop']);
-Route::get('shop/{id}', [ClientController::class, 'shop_danh_muc'])->name('shop_danh_muc');
+Route::get('/shop', [HomeController::class, 'shop']);
+Route::get('shop/{id}', [HomeController::class, 'shop_danh_muc'])->name('shop_danh_muc');
 Route::get('/wishlist', function () {
     return view('client.pages.wishlist');
 });
@@ -59,7 +57,14 @@ Route::get('/checkout', function () {
 Route::get('/about', function () {
     return view('client.pages.about');
 });
+// Trang chủ
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// Blog
+Route::get('/blogs', [ClientBlogController::class, 'index'])->name('blogs.index');
+Route::get('/blogs/{id}', [ClientBlogController::class, 'show'])->name('blogs.show');
+
+// Tài khoản
 Route::get('/login', [AccountController::class, 'loginForm'])->name('login');
 Route::post('/login', [AccountController::class, 'login'])->name('login');
 Route::post('user/logout', [AccountController::class, 'logout'])->name('user.logout');
