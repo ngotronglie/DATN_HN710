@@ -41,7 +41,7 @@ class VerifyEmailPassword extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'admin.mail.verifyPassword',
+            view: 'mail.verifyPassword',
             with: [
                 'token'=> $this->token,
                 'userName' => $this->userName,

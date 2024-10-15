@@ -19,11 +19,11 @@ class AccountController extends Controller
 {
     public function loginForm() {
         // hiển thị form login
-        return view('client.pages.login');
+        return view('client.pages.account.login');
     }
     public function login(Request $request)
     {
-        $maxAttempts = 3;
+        $maxAttempts = 100;
         $decayMinutes = 15;
         // Kiểm tra nếu người dùng bị khóa tạm thời
         if (RateLimiter::tooManyAttempts($this->throttleKey($request), $maxAttempts)) {
@@ -43,6 +43,13 @@ class AccountController extends Controller
             'email.required' => 'Email không được bỏ trống',
             'password.required' => 'Mật khẩu không được bỏ trống',
         ]);
+        $user = User::withTrashed()->where('email', $credentials['email'])->first();
+
+        if ($user && $user->trashed()) {
+            return back()->withErrors([
+                'error' => 'Tài khoản của bạn đã bị xóa. Vui lòng liên hệ với quản trị viên.',
+            ])->onlyInput('email');
+        }
             if (Auth::attempt($credentials)) {
             if (Auth::user()->email_verified_at === null) {
                 Auth::logout(); 
@@ -51,17 +58,12 @@ class AccountController extends Controller
                 ])->onlyInput('email');
             }
     
-            if (Auth::user()->deleted_at != null) {
-                Auth::logout();
-                return back()->withErrors([
-                    'error' => 'Tài khoản của bạn đã bị xóa, vui lòng liên hệ với quản trị viên.',
-                ]);
-            }
+         
     
             if (Auth::user()->is_active == 0) {
                 Auth::logout(); 
                 return back()->withErrors([
-                    'error' => 'Tài khoản của bạn đã bị khóa, vui lòng liên hệ với quản trị viên.', 
+                    'error' => 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ với quản trị viên.', 
                 ]);
             }
     
@@ -123,7 +125,7 @@ class AccountController extends Controller
     
     public function registerForm() {
 
-        return view('client.pages.register');
+        return view('client.pages.account.register');
     }
 
     public function register(request $request) {
@@ -156,7 +158,7 @@ class AccountController extends Controller
     }
     public function forgotForm()
     {
-        return view('client.pages.forgotpassword');
+        return view('client.pages.account.forgotpassword');
     }
     public function forgot(Request $request)
 {
@@ -209,7 +211,7 @@ class AccountController extends Controller
     public function showResetForm($token)
     {
         $email = base64_decode($token);
-        return view('client.pages.password', [
+        return view('client.pages.account.password', [
             'token' => $token,
             'email' => $email,
            
@@ -244,7 +246,7 @@ class AccountController extends Controller
     if(!$user) {
         return redirect()->route('login');
     }
-    return view('client.pages.my-account', compact('user'));
+    return view('client.pages.account.my_account.my-account', compact('user'));
    }
    public function updateMyAcount(request $request,$id){
           $user=User::findOrFail($id);
@@ -275,28 +277,34 @@ class AccountController extends Controller
             $data['image'] = $user->avatar;
         }
     $user->update($data);
-    return redirect()->route('my_account')->with('message', 'Sửa thành công');
-
+    return redirect()->route('my_account')->with('success', 'Cập nhật thông tin thành công');
    }
    public function updatePassword(Request $request, $id)
    {
        $user = User::findOrFail($id);
+       if (!Hash::check($request->current_password, $user->password)) {
+        return back()->withErrors(['current_password' => 'Mật khẩu hiện tại không đúng']);
+       }
+       if (Hash::check($request->new_password, $user->password)) {
+        return back()->withErrors(['new_password' => 'Mật khẩu mới không được giống với mật khẩu hiện tại']);
+    }
           $request->validate([
-           'current_password' => 'required',
+           'current_password' => 'required|string',
+           'new_password_confirmation'=>'required|string',
            'new_password' => ['required', 'string', 'min:8','regex:/[A-Z]/','regex:/[a-z]/','regex:/[0-9]/','confirmed'],
        ], [
            'current_password.required' => 'Vui lòng nhập mật khẩu hiện tại.',
            'new_password.required' => 'Vui lòng nhập mật khẩu mới.',
            'new_password.regex' => 'Mật khẩu bao gồm chữ in hoa, chữ cái thường và số.',
            'new_password.min' => 'Mật khẩu mới phải ít nhất 8 ký tự.',
+           'new_password_confirmation'=>'Vui lòng không bỏ trống.',
            'new_password.confirmed' => 'Mật khẩu mới không trùng khớp.',
        ]);
-          if (!Hash::check($request->current_password, $user->password)) {
-           return back()->withErrors(['current_password' => 'Mật khẩu hiện tại không đúng']);
-          }
-          $user->password = Hash::make($request->new_password);
+         
+
+         $user->password = Hash::make($request->new_password);
        $user->save();
-       return redirect()->route('login')->with('success', 'Cập nhật mật khẩu thành công');
+       return redirect()->route('login')->with('success', 'Cập nhật mật khẩu thành công. Vui lòng đăng nhập lại');
    }
    
 }

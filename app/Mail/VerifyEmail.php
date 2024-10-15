@@ -39,7 +39,7 @@ class VerifyEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'admin.mail.verifyEmail',
+            view: 'mail.verifyEmail',
             with: [
                 'token'=> $this->token,
                 'userName' => $this->userName
