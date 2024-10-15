@@ -22,7 +22,13 @@ class ClientController extends Controller
     }
     public function index()
     {
-        return view("client.includes.main");
+        $banners = Banner::where('is_active', 1)
+        ->whereHas('creator', function ($query) {
+            $query->whereNull('deleted_at');
+        })
+        ->orderBy('id', 'desc')
+        ->get();
+        return view("client.includes.main", compact('banners'));
     }
 
     public function shop_danh_muc(string $id)

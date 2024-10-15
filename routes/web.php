@@ -82,7 +82,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
     })->name('dashboard');
 
     // Các route tùy chỉnh
-    Route::get('/accounts/my_account',[UserController::class,'myAccount'])->name('accounts.myAccount');
+    Route::get('/accounts/my_account', [UserController::class, 'myAccount'])->name('accounts.myAccount');
     Route::delete('/accounts/{id}/forceDelete', [UserController::class, 'forceDelete'])->name('accounts.forceDelete');
     Route::get('accounts/trashed', [UserController::class, 'trashed'])->name('accounts.trashed');
     Route::post('accounts/{user}/restore', [UserController::class, 'restore'])->name('accounts.restore');
@@ -137,9 +137,9 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('blogs/trashed', [BlogController::class, 'trashed'])->name('blogs.trashed');
     Route::put('blogs/restore/{id}', [BlogController::class, 'restore'])->name('blogs.restore');
     Route::delete('blogs/forceDelete/{id}', [BlogController::class, 'forceDelete'])->name('blogs.forceDelete');
-    
+
     Route::resource('blogs', BlogController::class);
-    
+
     // Quản lý các banner đã bị xóa mềm
     Route::get('banners/trashed', [BannerController::class, 'trashed'])->name('banners.trashed');
     Route::put('banners/restore/{id}', [BannerController::class, 'restore'])->name('banners.restore');
