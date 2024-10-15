@@ -19,14 +19,14 @@
                         <div class="main-menu position-relative">
                             <ul>
                                 <li class="has-children">
-                                    <a href="/about">About</a>
+                                    <a href="/about"><span>About</span></a>
                                 </li>
                                 <li class="has-children position-static">
                                     <a href="/shop"><span>Shop</span> <i class="fa fa-angle-down"></i></a>
                                     <ul class="sub-menu">
-                                        <li><a href="/cart">Cart</a></li>
-                                        <li><a href="/checkout">Checkout</a></li>
-                                        <li><a href="/wishlist">wishlist</a></li>
+                                        @foreach ($categories as $item )
+                                        <li><a href="/cart">{{$item->name}}</a></li>
+                                        @endforeach
                                     </ul>
                                 </li>
                                 <li class="has-children">
@@ -43,21 +43,20 @@
                         <div class="header-actions">
 
                             @if (Auth::check())
-                                <h6 class="h6">Hello, {{ Auth::user()->name }} </h6>
-                                <a href="{{ route('logout') }}"
-                                    class="header-action-btn header-action-btn-logout d-none d-md-block"
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit(); return confirm('Logout, Are you sure?')">
-                                    <i class="fas fa-sign-out-alt"></i>
-                                </a>
+                            <h6 class="h6">Hello, {{ Auth::user()->name }} </h6>
+                            <a href="{{ route('logout') }}"
+                                class="header-action-btn header-action-btn-logout d-none d-md-block"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit(); return confirm('Logout, Are you sure?')">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </a>
 
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                    style="display: none;">
-                                    @csrf
-                                </form>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
                             @else
-                                <a href="/login" class="header-action-btn d-none d-md-block">
-                                    <i class="pe-7s-user"></i>
-                                </a>
+                            <a href="/login" class="header-action-btn d-none d-md-block">
+                                <i class="pe-7s-user"></i>
+                            </a>
                             @endif
 
 
