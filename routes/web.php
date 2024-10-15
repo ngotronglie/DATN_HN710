@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\CategoryBlogController;
+use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ProductController;
 
 use App\Http\Controllers\Ajax\ChangeActiveController;
@@ -76,7 +77,7 @@ Route::get('password/reset/{token}', [ForgotPasswordController::class, 'showRese
 Route::post('password/reset', [ForgotPasswordController::class, 'reset'])->name('admin.password.update');
 
 //
-Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
+Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('/', function () {
         return view('admin.layout.yeld');
     })->name('dashboard');
@@ -145,6 +146,9 @@ Route::prefix('admin')->as('admin.')->middleware('isAdmin')->group(function () {
     Route::put('banners/restore/{id}', [BannerController::class, 'restore'])->name('banners.restore');
     Route::delete('banners/forceDelete/{id}', [BannerController::class, 'forceDelete'])->name('banners.forceDelete');
 
+    // Quản lý bình luận
+    Route::resource('comments',CommentController::class);
+    Route::get('comments/toggleStatus/{id}', [CommentController::class, 'toggleStatus'])->name('comments.toggleStatus');
     Route::resource('banners', BannerController::class);
 });
 

@@ -52,10 +52,12 @@
                                 <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
                             </a>
                             <div class="dropdown float-right ml-2">
-                                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-cogs"></i> Tùy chọn
                                 </button>
-                                <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="dropdownMenuButton">
+                                <div class="dropdown-menu dropdown-menu-right shadow"
+                                    aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item activeAll" data-is_active="0" href="#">
                                         <i class="fa fa-toggle-on text-success"></i> Bật các mục đã chọn
                                     </a>
@@ -78,7 +80,7 @@
                                     </th>
                                     <th>STT</th>
                                     <th>Tên</th>
-                                    <th>Email</th>                               
+                                    <th>Email</th>
                                     <th>Chức vụ</th>
                                     <th>Trạng thái</th>
                                     <th>Hành động</th>
@@ -98,44 +100,51 @@
                             <tbody>
                                 @foreach ($data as $key => $item)
                                 <tr>
-                                <td>
-                                    <input type="checkbox" class="checkBoxItem" data-id="{{ $item->id }}">
-                                </td>
-                                <td>{{ $key+1 }}</td>
-                                <td>{{ $item->name }}</td>
-                                <td>{{ $item->email }}</td>
-                                <td>
-                                    @if($item->role == 1)
+                                    <td>
+                                        <input type="checkbox" class="checkBoxItem" data-id="{{ $item->id }}">
+                                    </td>
+                                    <td>{{ $key+1 }}</td>
+                                    <td>{{ $item->name }}</td>
+                                    <td>{{ $item->email }}</td>
+                                    <td>
+                                        @if($item->role == 1)
                                         Nhân viên
-                                    @elseif($item->role == 2)
+                                        @elseif($item->role == 2)
                                         Admin
-                                    @else
+                                        @else
                                         Không xác định
-                                    @endif
-                                </td>
-                                <td style="width: 12%" class="text-center">
-                                    <input type="checkbox" class="js-switch active" data-model="{{ $item->is_active }}"
-                                        {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"
-                                        data-modelId="{{ $item->id }}" />
-                                </td>
-                                <td class="d-flex">
-                                    <a class="btn btn-primary mr-2" href="{{route('admin.accounts.show', $item)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
-                                    @if($item->role != 2)
-                                    <a class="btn btn-warning mr-2" href="{{route('admin.accounts.edit', $item)}}" title="Sửa"><i class="fa fa-edit"></i></a>
-                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $item->id }}" title="Xóa">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                    @endif
-                                </td>
+                                        @endif
+                                    </td>
+                                    <td style="width: 12%" class="text-center">
+                                        <input type="checkbox" class="js-switch active"
+                                            data-model="{{ $item->is_active }}"
+                                            {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"
+                                            data-modelId="{{ $item->id }}" />
+                                    </td>
+                                    <td class="d-flex">
+                                        <a class="btn btn-primary mr-2" href="{{route('admin.accounts.show', $item)}}"
+                                            title="Xem chi tiết"><i class="fa fa-eye"></i></a>
+                                        @if($item->role != 2)
+                                        <a class="btn btn-warning mr-2" href="{{route('admin.accounts.edit', $item)}}"
+                                            title="Sửa"><i class="fa fa-edit"></i></a>
+                                        <button type="button" class="btn btn-danger" data-toggle="modal"
+                                            data-target="#deleteModal{{ $item->id }}" title="Xóa">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                        @endif
+                                    </td>
                                 </tr>
 
                                 <!-- Modal Xóa -->
-                                <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ $item->id }}" aria-hidden="true">
+                                <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="deleteModalLabel{{ $item->id }}" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header d-flex">
-                                                <h5 class="modal-title font-weight-bold" id="deleteModalLabel{{ $item->id }}">XÁC NHẬN XÓA</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <h5 class="modal-title font-weight-bold"
+                                                    id="deleteModalLabel{{ $item->id }}">XÁC NHẬN XÓA</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
@@ -143,8 +152,10 @@
                                                 Bạn có chắc chắn muốn xóa tài khoản "{{ $item->name }}" không?
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
-                                                <form action="{{ route('admin.accounts.destroy', $item) }}" method="POST">
+                                                <button type="button" class="btn btn-primary"
+                                                    data-dismiss="modal">Hủy</button>
+                                                <form action="{{ route('admin.accounts.destroy', $item) }}"
+                                                    method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
