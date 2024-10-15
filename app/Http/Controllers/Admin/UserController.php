@@ -59,13 +59,13 @@ class UserController extends Controller
         }
         $data = $request->except('avatar');
         $data['password'] = Hash::make($request->input('password'));
-
+        
         if ($request->hasFile('avatar')) {
             $data['avatar'] = Storage::put('users', $request->file('avatar'));
         } else {
             $data['avatar'] = '';
         }
-
+        $data['email_verified_at'] = now();
         User::create($data);
         return redirect()->route('admin.accounts.index')->with('success', 'Thêm mới thành công');
     }

@@ -16,7 +16,7 @@ use App\Http\Controllers\Ajax\ChangeActiveController;
 use App\Http\Controllers\ClientController;
 
 use App\Http\Controllers\Ajax\DeleteController;
-
+use App\Http\Controllers\Client\AccountController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Route;
 
 // ----------------------------CLIENT ROUTES--------------------------------
 
-Route::get('/', [ClientController::class, 'index']);
+Route::get('/', [ClientController::class, 'index'])->name('home');
 
 Route::get('/contact', function () {
     return view('client.pages.contact');
@@ -60,6 +60,23 @@ Route::get('/about', function () {
     return view('client.pages.about');
 });
 
+Route::get('/login', [AccountController::class, 'loginForm'])->name('login');
+Route::post('/login', [AccountController::class, 'login'])->name('login');
+Route::post('user/logout', [AccountController::class, 'logout'])->name('user.logout');
+Route::get('/verify/{token}', [AccountController::class, 'verify'])->name('verify');
+Route::get('/register', [AccountController::class, 'registerForm']);
+Route::post('/register', [AccountController::class, 'register'])->name('register');
+
+Route::get('/forgot', [AccountController::class, 'forgotForm'])->name('forgot');
+Route::post('/forgot', [AccountController::class, 'forgot'])->name('forgot.password');
+Route::get('verify-email/{token}', [AccountController::class, 'verifyEmail'])->name('verify.email');
+Route::get('user/password/reset/{token}', [AccountController::class, 'showResetForm'])->name('user.password.reset');
+Route::post('user/password/reset', [AccountController::class, 'reset'])->name('user.password.update');
+
+Route::get('/my_account', [AccountController::class, 'myAccount'])->name('my_account');
+Route::post('/my_acount/update/{id}',[AccountController::class,'updateMyAcount'])->name('updateMyAcount');
+Route::post('/my_acount/update-password/{id}', [AccountController::class, 'updatePassword'])->name('user.updatePassword');
+
 
 // ----------------------------END CLIENT ROUTES--------------------------------
 
@@ -72,7 +89,7 @@ Route::get('admin/forgot', [ForgotPasswordController::class, 'forgotForm'])->nam
 Route::post('admin/forgot', [ForgotPasswordController::class, 'forgot'])->name('admin.forgot.password');
 Route::get('verify-email/{token}', [ForgotPasswordController::class, 'verifyEmail'])->name('verify.email');
 
-Route::get('password/reset/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('admin.password.reset');
+Route::get('admin/password/reset/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('admin.password.reset');
 Route::post('password/reset', [ForgotPasswordController::class, 'reset'])->name('admin.password.update');
 
 //->middleware('isAdmin')

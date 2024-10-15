@@ -36,9 +36,9 @@ class ForgotPasswordController extends Controller
 
             'email_verification_expires_at' => Carbon::now()->addMinutes(30)
         ]);
-        // Tạo token và gửi email xác thực
+        $role=$user->role;
         $token = base64_encode($user->email);
-        Mail::to($user->email)->send(new VerifyEmailPassword($user->name, $token));
+        Mail::to($user->email)->send(new VerifyEmailPassword($user->name, $token,$role));
 
         return redirect()->route('admin.forgot')->with('success', 'Link xác thực đã được gửi, vui lòng kiểm tra email của bạn');
     }
@@ -62,10 +62,7 @@ class ForgotPasswordController extends Controller
 
     public function showResetForm($token)
     {
-        // Giải mã token để lấy email
         $email = base64_decode($token);
-
-        // Truyền token và email vào view
         return view('admin.layout.account.password', [
             'token' => $token,
             'email' => $email
@@ -85,13 +82,9 @@ class ForgotPasswordController extends Controller
         ]);
 
         $user = User::where('email', $request->email)->first();
-
-        // Kiểm tra người dùng có tồn tại không
         if (!$user) {
             return back()->withErrors(['email' => 'Email không hợp lệ']);
         }
-
-        // Cập nhật mật khẩu cho người dùng
         $user->password = Hash::make($request->password);
         $user->save();
 

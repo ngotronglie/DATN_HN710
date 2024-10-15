@@ -3,26 +3,24 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class VerifyEmailPassword extends Mailable
+class VerifyEmail extends Mailable
 {
     use Queueable, SerializesModels;
     public $userName;
     public $token;
-    public $role;
     /**
      * Create a new message instance.
      */
-    public function __construct($userName, $token, $role)
+    public function __construct($userName, $token)
     {
-       
         $this->userName = $userName;
         $this->token = $token;
-        $this->role = $role;
     }
 
     /**
@@ -41,11 +39,10 @@ class VerifyEmailPassword extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.verifyPassword',
+            view: 'mail.verifyEmail',
             with: [
                 'token'=> $this->token,
-                'userName' => $this->userName,
-                'role' => $this->role
+                'userName' => $this->userName
             ]
         );
     }
