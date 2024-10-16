@@ -12,6 +12,8 @@ use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\CategoryBlogController;
 use App\Http\Controllers\Admin\ProductController;
 
+use App\Http\Controllers\ContactController;
+
 use App\Http\Controllers\Ajax\DeleteController;
 use App\Http\Controllers\Ajax\ChangeActiveController;
 
@@ -36,9 +38,6 @@ use Illuminate\Support\Facades\Route;
 
 // ----------------------------CLIENT ROUTES--------------------------------
 
-Route::get('/contact', function () {
-    return view('client.pages.contact');
-});
 
 Route::get('/wishlist', function () {
     return view('client.pages.wishlist');
@@ -65,6 +64,12 @@ Route::get('shop/ajax/getSizePrice', [ShopController::class, 'getSizePrice']);
 // Blog
 Route::get('/blogs', [ClientBlogController::class, 'index'])->name('blogs.index');
 Route::get('/blogs/{id}', [ClientBlogController::class, 'show'])->name('blogs.show');
+
+// Contact
+Route::get('/contact', function () {
+    return view('client.pages.contact');
+});
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 // Tài khoản
 Route::get('/login', [AccountController::class, 'loginForm'])->name('login');
