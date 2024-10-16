@@ -22,10 +22,10 @@
                                     <a href="/about"><span>About</span></a>
                                 </li>
                                 <li class="has-children position-static">
-                                    <a href="/shop"><span>Shop</span> <i class="fa fa-angle-down"></i></a>
+                                    <a href="{{route('shops.index')}}"><span>Shop</span> <i class="fa fa-angle-down"></i></a>
                                     <ul class="sub-menu">
-                                        @foreach ($categories as $item )
-                                        <li><a href="/cart">{{$item->name}}</a></li>
+                                        @foreach ($clientCategories as $item )
+                                        <li><a href="{{ route('shops.category', $item->id) }}">{{$item->name}}</a></li>
                                         @endforeach
                                     </ul>
                                 </li>

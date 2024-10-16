@@ -15,10 +15,11 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Ajax\DeleteController;
 use App\Http\Controllers\Ajax\ChangeActiveController;
 
-use App\Http\Controllers\Client\BlogController as ClientBlogController;
 use App\Http\Controllers\Client\HomeController;
-
+use App\Http\Controllers\Client\BlogController as ClientBlogController;
+use App\Http\Controllers\Client\ShopController;
 use App\Http\Controllers\Client\AccountController;
+
 use Illuminate\Support\Facades\Route;
 
 
@@ -39,11 +40,6 @@ Route::get('/contact', function () {
     return view('client.pages.contact');
 });
 
-Route::get('/blog-detail', function () {
-    return view('client.pages.blog-detail');
-});
-Route::get('/shop', [HomeController::class, 'shop']);
-Route::get('shop/{id}', [HomeController::class, 'shop_danh_muc'])->name('shop_danh_muc');
 Route::get('/wishlist', function () {
     return view('client.pages.wishlist');
 });
@@ -59,6 +55,12 @@ Route::get('/about', function () {
 });
 // Trang chủ
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Shop
+Route::get('/shops', [ShopController::class, 'index'])->name('shops.index');
+Route::get('/shops/category/{id}', [ShopController::class, 'showByCategory'])->name('shops.category');
+Route::get('/shops/{slug}', [ShopController::class, 'show'])->name('shops.show');
+Route::get('shop/ajax/getSizePrice', [ShopController::class, 'getSizePrice']);
 
 // Blog
 Route::get('/blogs', [ClientBlogController::class, 'index'])->name('blogs.index');

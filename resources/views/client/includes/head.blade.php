@@ -38,5 +38,4 @@
 
     @yield('style')
 
-
 </head>

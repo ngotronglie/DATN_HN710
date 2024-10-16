@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -20,18 +19,8 @@ class HomeController extends Controller
         return view("client.includes.main", compact('banners'));
     }
 
-    public function shop()
-    {
-        return view('client.pages.shop');
-    }
-
     public function contact()
     {
         return view("");
-    }
-    
-    public function shop_danh_muc(string $id)
-    {
-        return view('client.pages.shop');
     }
 }
