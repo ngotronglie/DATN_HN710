@@ -1,13 +1,13 @@
 (function($) {
     "use strict";
     var HT = {};
-    
-    HT.selectColor = (label, color) => {
+
+    HT.selectColor = (label) => {
         $('.color-btn').removeClass('active');
         $(label).addClass('active');
     };
 
-    HT.h = (label, sizeName) => {
+    HT.h = (label) => {
         $('.size-btn').removeClass('active');
         $(label).addClass('active');
     };
