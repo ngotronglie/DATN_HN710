@@ -176,7 +176,7 @@
                             <ul class="color-buttons">
                                 @foreach ($product->variants->unique('color_id') as $index => $variant)
                                     <li>
-                                        <label class="color-btn colorGetSize" data-id="{{ $variant->color->id }}"
+                                        <label class="color-btn colorGetSize {{ $index === 0 ? 'selected' : '' }}" data-id="{{ $variant->color->id }}"
                                             data-productId="{{ $product->id }}" data-max="{{ $product->max_price_sale }}"
                                             data-min="{{ $product->min_price_sale }}"
                                             style="background-color: {{ $variant->color->hex_code }}"
@@ -220,10 +220,14 @@
 
                                 <!-- Product Delivery Policy Start -->
                                 <ul class="product-delivery-policy border-top pt-4 mt-4 border-bottom pb-4">
-                                    <li><i class="fa fa-check-square"></i><span>Chính sách bảo mật - Bảo vệ thông tin khách hàng</span></li>
-                                    <li><i class="fa fa-truck"></i><span>Chính sách giao hàng - Nhanh chóng, tiện lợi</span></li>
-                                    <li><i class="fa fa-refresh"></i><span>Chính sách đổi trả - Đảm bảo quyền lợi khách hàng</span></li>
-                                    <li><i class="fa fa-credit-card"></i><span>Chính sách thanh toán - Linh hoạt, an toàn</span></li>
+                                    <li><i class="fa fa-check-square"></i><span>Chính sách bảo mật - Bảo vệ thông tin khách
+                                            hàng</span></li>
+                                    <li><i class="fa fa-truck"></i><span>Chính sách giao hàng - Nhanh chóng, tiện lợi</span>
+                                    </li>
+                                    <li><i class="fa fa-refresh"></i><span>Chính sách đổi trả - Đảm bảo quyền lợi khách
+                                            hàng</span></li>
+                                    <li><i class="fa fa-credit-card"></i><span>Chính sách thanh toán - Linh hoạt, an
+                                            toàn</span></li>
                                     <li><i class="fa fa-headphones"></i><span>Hỗ trợ khách hàng - Tư vấn 24/7</span></li>
                                 </ul>
 
@@ -246,8 +250,8 @@
                                     href="#connect-1" role="tab" aria-selected="true">Mô tả</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-uppercase" id="profile-tab" data-bs-toggle="tab"
-                                    href="#connect-2" role="tab" aria-selected="false">Đánh giá</a>
+                                <a class="nav-link text-uppercase" id="profile-tab" data-bs-toggle="tab" href="#connect-2"
+                                    role="tab" aria-selected="false">Đánh giá</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-uppercase" id="contact-tab" data-bs-toggle="tab"
@@ -499,29 +503,35 @@
                                     <div class="product product-border-left" data-aos="fade-up" data-aos-delay="300">
                                         <div class="thumb">
                                             <a href="single-product.html" class="image">
-                                                <img class="first-image" src="assets/images/products/medium-size/1.jpg" alt="Product" />
-                                                <img class="second-image" src="assets/images/products/medium-size/5.jpg" alt="Product" />
+                                                <img class="first-image" src="assets/images/products/medium-size/1.jpg"
+                                                    alt="Product" />
+                                                <img class="second-image" src="assets/images/products/medium-size/5.jpg"
+                                                    alt="Product" />
                                             </a>
                                             <div class="actions">
                                                 <a href="#" class="action wishlist"><i class="pe-7s-like"></i></a>
-                                                <a href="#" class="action quickview" data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><i class="pe-7s-search"></i></a>
-                                                <a href="#" class="action compare"><i class="pe-7s-shuffle"></i></a>
+                                                <a href="#" class="action quickview" data-bs-toggle="modal"
+                                                    data-bs-target="#exampleModalCenter"><i class="pe-7s-search"></i></a>
+                                                <a href="#" class="action compare"><i
+                                                        class="pe-7s-shuffle"></i></a>
                                             </div>
                                         </div>
                                         <div class="content">
                                             <h4 class="sub-title"><a href="single-product.html">Studio Design</a></h4>
-                                            <h5 class="title"><a href="single-product.html">Brother Hoddies in Grey</a></h5>
+                                            <h5 class="title"><a href="single-product.html">Brother Hoddies in Grey</a>
+                                            </h5>
                                             <span class="ratings">
-                                                    <span class="rating-wrap">
-                                                        <span class="star" style="width: 100%"></span>
-                                            </span>
-                                            <span class="rating-num">(4)</span>
+                                                <span class="rating-wrap">
+                                                    <span class="star" style="width: 100%"></span>
+                                                </span>
+                                                <span class="rating-num">(4)</span>
                                             </span>
                                             <span class="price">
-                                                    <span class="new">$38.50</span>
-                                            <span class="old">$42.85</span>
+                                                <span class="new">$38.50</span>
+                                                <span class="old">$42.85</span>
                                             </span>
-                                            <button class="btn btn-sm btn-outline-dark btn-hover-primary">Add To Cart</button>
+                                            <button class="btn btn-sm btn-outline-dark btn-hover-primary">Add To
+                                                Cart</button>
                                         </div>
                                     </div>
                                     <!-- Single Product End -->
@@ -536,32 +546,37 @@
                                     <div class="product product-border-left" data-aos="fade-up" data-aos-delay="400">
                                         <div class="thumb">
                                             <a href="single-product.html" class="image">
-                                                <img class="first-image" src="assets/images/products/medium-size/4.jpg" alt="Product" />
-                                                <img class="second-image" src="assets/images/products/medium-size/10.jpg" alt="Product" />
+                                                <img class="first-image" src="assets/images/products/medium-size/4.jpg"
+                                                    alt="Product" />
+                                                <img class="second-image" src="assets/images/products/medium-size/10.jpg"
+                                                    alt="Product" />
                                             </a>
                                             <span class="badges">
-                                                    <span class="sale">New</span>
+                                                <span class="sale">New</span>
                                             </span>
                                             <div class="actions">
                                                 <a href="#" class="action wishlist"><i class="pe-7s-like"></i></a>
-                                                <a href="#" class="action quickview" data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><i class="pe-7s-search"></i></a>
-                                                <a href="#" class="action compare"><i class="pe-7s-shuffle"></i></a>
+                                                <a href="#" class="action quickview" data-bs-toggle="modal"
+                                                    data-bs-target="#exampleModalCenter"><i class="pe-7s-search"></i></a>
+                                                <a href="#" class="action compare"><i
+                                                        class="pe-7s-shuffle"></i></a>
                                             </div>
                                         </div>
                                         <div class="content">
                                             <h4 class="sub-title"><a href="single-product.html">Studio Design</a></h4>
                                             <h5 class="title"><a href="single-product.html">Simple Woven Fabrics</a></h5>
                                             <span class="ratings">
-                                                    <span class="rating-wrap">
-                                                        <span class="star" style="width: 67%"></span>
-                                            </span>
-                                            <span class="rating-num">(2)</span>
+                                                <span class="rating-wrap">
+                                                    <span class="star" style="width: 67%"></span>
+                                                </span>
+                                                <span class="rating-num">(2)</span>
                                             </span>
                                             <span class="price">
-                                                    <span class="new">$45.50</span>
-                                            <span class="old">$48.85</span>
+                                                <span class="new">$45.50</span>
+                                                <span class="old">$48.85</span>
                                             </span>
-                                            <button class="btn btn-sm btn-outline-dark btn-hover-primary">Add To Cart</button>
+                                            <button class="btn btn-sm btn-outline-dark btn-hover-primary">Add To
+                                                Cart</button>
                                         </div>
                                     </div>
                                     <!-- Single Product End -->
@@ -576,8 +591,12 @@
                             <!-- Swiper Pagination End -->
 
                             <!-- Next Previous Button Start -->
-                            <div class="swiper-product-button-next swiper-button-next swiper-button-white d-md-flex d-none"><i class="pe-7s-angle-right"></i></div>
-                            <div class="swiper-product-button-prev swiper-button-prev swiper-button-white d-md-flex d-none"><i class="pe-7s-angle-left"></i></div>
+                            <div
+                                class="swiper-product-button-next swiper-button-next swiper-button-white d-md-flex d-none">
+                                <i class="pe-7s-angle-right"></i></div>
+                            <div
+                                class="swiper-product-button-prev swiper-button-prev swiper-button-white d-md-flex d-none">
+                                <i class="pe-7s-angle-left"></i></div>
                             <!-- Next Previous Button End -->
 
                         </div>

@@ -90,7 +90,7 @@ class ShopController extends Controller
         $viewsKey = 'product_viewed_' . $product->id;
 
         if (!session()->has($viewsKey)) {
-            $product->increment('views');
+            $product->increment('view');
             // Đánh dấu rằng người dùng đã xem sản phẩm này trong phiên làm việc
             session([$viewsKey => true]);
         }

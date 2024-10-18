@@ -3,6 +3,13 @@
     var HT = {};
 
     $(document).ready(function() {
+        const firstColorButton = $('.color-buttons .color-btn.selected');
+        if (firstColorButton.length) {
+            firstColorButton.trigger('click');
+        }
+    });
+
+    $(document).ready(function() {
         $('.show-more').on('click', function() {
             $('#shortDescription').hide();
             $('#fullDescription').show();
@@ -60,11 +67,33 @@
 
                     $('#sizes-prices-' + idProduct).empty();
 
-                    res.variants.forEach(function (variant) {
+                    // res.variants.forEach(function (variant) {
+                    //     $('#sizes-prices-' + idProduct).append(
+                    //         '<li><label class="size-btn" data-quantity="' + variant.quantity + '" data-price="' + variant.price_sale + '" onclick="HT.getSize(this, \'' + variant.size + '\', ' + idProduct + ')">' +
+                    //         variant.size + '</label></li>'
+                    //     );
+                    // });
+
+                    // test
+                    res.variants.forEach(function (variant, index) {
                         $('#sizes-prices-' + idProduct).append(
-                            '<li><label class="size-btn" data-quantity="' + variant.quantity + '" data-price="' + variant.price_sale + '" onclick="HT.getSize(this, \'' + variant.size + '\', ' + idProduct + ')">' +
-                            variant.size + '</label></li>'
+                            '<li>' +
+                                '<label class="size-btn ' + (index === 0 ? 'selected' : '') + '" ' +
+                                'data-quantity="' + variant.quantity + '" ' +
+                                'data-price="' + variant.price_sale + '" ' +
+                                'onclick="HT.getSize(this, \'' + variant.size + '\', ' + idProduct + ')">' +
+                                variant.size +
+                                '</label>' +
+                            '</li>'
                         );
+                    });
+
+                    //test
+                    $(document).ready(function() {
+                        const firstColorButton = $('.size-btn.selected');
+                        if (firstColorButton.length) {
+                            firstColorButton.trigger('click');
+                        }
                     });
 
                     $('.size-btn').off('click').on('click', function () {
