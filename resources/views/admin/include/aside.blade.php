@@ -9,7 +9,8 @@
                     <li class="menu-title">UI elements</li><!-- /.menu-title -->
                     {{-- category --}}
                     <li class="menu-item-has-children {{ Request::is('admin/categories*') ? 'active' : '' }} dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
                             <i class="menu-icon fa fa-list-alt"></i>Quản lý danh mục
                         </a>
                         <ul class="sub-menu children dropdown-menu">
@@ -20,7 +21,8 @@
                     {{-- end category --}}
                     {{-- product --}}
                     <li class="menu-item-has-children {{ Request::is('admin/products*') ? 'active' : '' }} dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
                             <i class="menu-icon fa fa-cube"></i>Quản lý sản phẩm
                         </a>
                         <ul class="sub-menu children dropdown-menu">
@@ -31,7 +33,8 @@
                     {{-- end product --}}
                     {{-- color --}}
                     <li class="menu-item-has-children {{ Request::is('admin/colors*') ? 'active' : '' }} dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
                             <i class="menu-icon fa fa-paint-brush"></i>Quản lý màu
                         </a>
                         <ul class="sub-menu children dropdown-menu">
@@ -42,7 +45,8 @@
                     {{-- end color --}}
                     {{-- size --}}
                     <li class="menu-item-has-children {{ Request::is('admin/sizes*') ? 'active' : '' }} dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
                             <i class="menu-icon fa fa-text-height"></i>Quản lý size
                         </a>
                         <ul class="sub-menu children dropdown-menu">
@@ -56,8 +60,8 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false"> <i class="menu-icon fa fa-user"></i>Quản lý tài khoản</a>
                         <ul class="sub-menu children dropdown-menu">
-                            <li><a href="{{route('admin.accounts.index')}}">Danh sách</a></li>
-                            <li><a href="{{route('admin.accounts.create')}}">Thêm mới</a></li>
+                            <li><a href="{{ route('admin.accounts.index') }}">Danh sách</a></li>
+                            <li><a href="{{ route('admin.accounts.create') }}">Thêm mới</a></li>
                         </ul>
                     </li>
                     {{-- end account --}}
@@ -66,20 +70,21 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false"> <i class="menu-icon fa fa-ticket"></i>Quản lý vouchers</a>
                         <ul class="sub-menu children dropdown-menu">
-                            <li></i><a href="{{route('admin.vouchers.index')}}">Danh sách</a></li>
-                            <li></i><a href="{{route('admin.vouchers.create')}}">Thêm mới</a></li>
+                            <li></i><a href="{{ route('admin.vouchers.index') }}">Danh sách</a></li>
+                            <li></i><a href="{{ route('admin.vouchers.create') }}">Thêm mới</a></li>
                         </ul>
                     </li>
                     {{-- end voucher --}}
                     {{-- category blog --}}
-                    <li class="menu-item-has-children {{ Request::is('admin/category_blogs*') || Request::is('admin/blogs*') ? 'active' : '' }} dropdown">
+                    <li
+                        class="menu-item-has-children {{ Request::is('admin/category_blogs*') || Request::is('admin/blogs*') ? 'active' : '' }} dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false"> <i class="menu-icon fa fa-book"></i>Quản lý bài viết</a>
                         <ul class="sub-menu children dropdown-menu">
-                            <li></i><a href="{{route('admin.category_blogs.index')}}">Danh mục bài viết</a></li>
-                            <li></i><a href="{{route('admin.category_blogs.create')}}">Thêm mới</a></li>
-                            <li></i><a href="{{route('admin.blogs.index')}}">Danh sách bài viết</a></li>
-                            <li></i><a href="{{route('admin.blogs.create')}}">Thêm mới</a></li>
+                            <li></i><a href="{{ route('admin.category_blogs.index') }}">Danh mục bài viết</a></li>
+                            <li></i><a href="{{ route('admin.category_blogs.create') }}">Thêm mới</a></li>
+                            <li></i><a href="{{ route('admin.blogs.index') }}">Danh sách bài viết</a></li>
+                            <li></i><a href="{{ route('admin.blogs.create') }}">Thêm mới</a></li>
                         </ul>
                     </li>
                     {{-- end category blog --}}
@@ -88,12 +93,18 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false"> <i class="menu-icon fa fa-photo"></i>Quản lý banner</a>
                         <ul class="sub-menu children dropdown-menu">
-                            <li></i><a href="{{route('admin.banners.index')}}">Danh sách</a></li>
-                            <li></i><a href="{{route('admin.banners.create')}}">Thêm mới</a></li>
+                            <li></i><a href="{{ route('admin.banners.index') }}">Danh sách</a></li>
+                            <li></i><a href="{{ route('admin.banners.create') }}">Thêm mới</a></li>
                         </ul>
                     </li>
                     {{-- end banner --}}
-
+                    {{-- order --}}
+                    <li class="menu-item-has {{ Request::is('admin/order*') ? 'active' : '' }} ">
+                        <a href="{{route('admin.order.index')}}">
+                            <i class="menu-icon fa fa-shopping-cart"></i>Quản lý đơn hàng</a>
+                      
+                    </li>
+                    {{-- end order --}}
                     <li class="menu-title">Icons</li><!-- /.menu-title -->
 
                     <li class="menu-item-has-children dropdown">

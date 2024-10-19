@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\CategoryBlogController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 
 use App\Http\Controllers\ContactController;
@@ -175,6 +176,16 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::delete('banners/forceDelete/{id}', [BannerController::class, 'forceDelete'])->name('banners.forceDelete');
 
     Route::resource('banners', BannerController::class);
+    //Quản lý đơn hàng
+    Route::get('order', [OrderController::class, 'index'])->name('order.index');
+    Route::get('order/{order_id}/order-detail', [OrderController::class, 'detail'])->name('order.detail');
+    Route::get('order/confirm/{order_id}', [OrderController::class, 'confirmOrder'])->name('order.confirmOrder');
+    Route::get('order/ship/{order_id}', [OrderController::class, 'shipOrder'])->name('order.shipOrder');
+    Route::get('order/confirm-shipping/{order_id}', [OrderController::class, 'confirmShipping'])->name('order.confirmShipping');
+    Route::get('order/cancel/{order_id}', [OrderController::class, 'cancelOrder'])->name('order.cancelOrder');
+    
+
+
 });
 
 //ajax category
