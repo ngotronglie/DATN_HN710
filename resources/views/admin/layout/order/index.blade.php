@@ -84,24 +84,7 @@
                                             @endif
                                             <td>{{ $item->order_date }}</td>
                                             <td>
-                                                @php
-                                                if($item->orderDetails){
-                                                    $totalPrice = 0;
-                                                    foreach ($item->orderDetails as $detail) {
-                                                        if ($detail->productVariant) {
-                                                            // Tính tổng khi có product_variant
-                                                            $totalPrice += $detail->quantity * $detail->productVariant->price_sale;
-                                                        } else {
-                                                            // Tính tổng khi product_variant_id là null
-                                                            $totalPrice += $detail->quantity * $detail->price;
-                                                        }
-                                                    }
-                                                    
-                                                    // Tính chiết khấu từ voucher
-                                                    $totalPrice -= $item->voucher ? ($totalPrice * $item->voucher->discount) / 100 : 0;
-                                                }
-                                                @endphp
-                                                {{ number_format($totalPrice, 0, '.', '.') }} VND
+                                                {{ number_format($item->total_amount, 0, ',', '.') }} VND
                                             </td>
                                             
                                             <td>
