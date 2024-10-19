@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
+use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     const PATH_VIEW = 'admin.layout.products.';
@@ -23,18 +23,26 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+
+    public function index(Request $request)
     {
+        $query = Product::query();
+        // lọc theo tên
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
         if (Gate::denies('viewAny', Product::class)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
-        $products = Product::with(['variants' => function ($query) {
-            $query->whereHas('size', function ($q) {
-                $q->whereNull('deleted_at');
-            })->whereHas('color', function ($q) {
-                $q->whereNull('deleted_at');
-            });
-        }])->whereHas('category', function ($query) {
+        $products = Product::with([
+            'variants' => function ($query) {
+                $query->whereHas('size', function ($q) {
+                    $q->whereNull('deleted_at');
+                })->whereHas('color', function ($q) {
+                    $q->whereNull('deleted_at');
+                });
+            }
+        ])->whereHas('category', function ($query) {
             $query->whereNull('deleted_at');
         })
             ->orderBy('id', 'desc')
