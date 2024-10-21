@@ -159,4 +159,11 @@
 <script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.print.min.js') }}"></script>
 <script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.colVis.min.js') }}"></script>
 <script src="{{ asset('theme/admin/assets/js/init/datatables-init.js') }}"></script>
+
+<script>
+    // Loại bỏ padding-right khi modal đóng
+    jQuery(document).on('hidden.bs.modal', function () {
+        jQuery('body').css('padding-right', '0');
+    });
+</script>
 @endsection

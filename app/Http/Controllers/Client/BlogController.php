@@ -13,7 +13,8 @@ class BlogController extends Controller
         $blogs = Blog::with('user', 'categoryBlog')
             ->where('is_active', 1)
             ->whereHas('categoryBlog', function ($query) {
-                $query->whereNull('deleted_at');
+                $query->where('is_active', 1)
+                ->whereNull('deleted_at');
             })
             ->whereHas('user', function ($query) {
                 $query->whereNull('deleted_at');
@@ -24,7 +25,8 @@ class BlogController extends Controller
 
         $hotblogs = Blog::where('is_active', 1)
             ->whereHas('categoryBlog', function ($query) {
-                $query->whereNull('deleted_at');
+                $query->where('is_active', 1)
+                ->whereNull('deleted_at');
             })
             ->whereHas('user', function ($query) {
                 $query->whereNull('deleted_at');
@@ -47,7 +49,8 @@ class BlogController extends Controller
         $blog = Blog::with(['categoryBlog', 'user'])
             ->where('is_active', 1)
             ->whereHas('categoryBlog', function ($query) {
-                $query->whereNull('deleted_at');
+                $query->where('is_active', 1)
+                ->whereNull('deleted_at');
             })
             ->whereHas('user', function ($query) {
                 $query->whereNull('deleted_at');
@@ -56,7 +59,8 @@ class BlogController extends Controller
 
         $hotblogs = Blog::where('is_active', 1)
             ->whereHas('categoryBlog', function ($query) {
-                $query->whereNull('deleted_at');
+                $query->where('is_active', 1)
+                ->whereNull('deleted_at');
             })
             ->whereHas('user', function ($query) {
                 $query->whereNull('deleted_at');

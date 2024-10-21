@@ -102,7 +102,12 @@
                     <li class="menu-item-has {{ Request::is('admin/order*') ? 'active' : '' }} ">
                         <a href="{{route('admin.order.index')}}">
                             <i class="menu-icon fa fa-shopping-cart"></i>Quản lý đơn hàng</a>
-                      
+                    </li>
+                    {{-- end order --}}
+                    {{-- order --}}
+                    <li class="menu-item-has {{ Request::is('admin/statistics*') ? 'active' : '' }} ">
+                        <a href="{{route('admin.statistics.index')}}">
+                            <i class="menu-icon fa fa-bar-chart-o"></i>Thống kê</a>
                     </li>
                     {{-- end order --}}
                     <li class="menu-title">Icons</li><!-- /.menu-title -->

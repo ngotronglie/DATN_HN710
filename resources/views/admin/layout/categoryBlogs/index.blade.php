@@ -172,4 +172,11 @@
 
 <script src="{{asset('plugins/js/ChangeActive/CategoryBlog/deleteAllCategoryBlog.js')}}"></script>
 
+<script>
+    // Loại bỏ padding-right khi modal đóng
+    jQuery(document).on('hidden.bs.modal', function () {
+        jQuery('body').css('padding-right', '0');
+    });
+</script>
+
 @endsection

@@ -24,8 +24,8 @@
                                 </div>
                                 <div class="stat-content">
                                     <div class="text-left dib">
-                                        <div class="stat-text">$<span class="count">23569</span></div>
-                                        <div class="stat-heading">Revenue</div>
+                                        <div class="stat-text"><span class="count">{{ $totalRevenue }}</span></div>
+                                        <div class="stat-heading">Doanh thu</div>
                                     </div>
                                 </div>
                             </div>
@@ -42,8 +42,8 @@
                                 </div>
                                 <div class="stat-content">
                                     <div class="text-left dib">
-                                        <div class="stat-text"><span class="count">3435</span></div>
-                                        <div class="stat-heading">Sales</div>
+                                        <div class="stat-text"><span class="count">{{ $ordersCount }}</span></div>
+                                        <div class="stat-heading">Đơn hàng</div>
                                     </div>
                                 </div>
                             </div>
@@ -60,8 +60,8 @@
                                 </div>
                                 <div class="stat-content">
                                     <div class="text-left dib">
-                                        <div class="stat-text"><span class="count">349</span></div>
-                                        <div class="stat-heading">Templates</div>
+                                        <div class="stat-text"><span class="count">{{ $productCount }}</span></div>
+                                        <div class="stat-heading">Sản phẩm</div>
                                     </div>
                                 </div>
                             </div>
@@ -78,8 +78,8 @@
                                 </div>
                                 <div class="stat-content">
                                     <div class="text-left dib">
-                                        <div class="stat-text"><span class="count">2986</span></div>
-                                        <div class="stat-heading">Clients</div>
+                                        <div class="stat-text"><span class="count">{{ $usersCount }}</span></div>
+                                        <div class="stat-heading">Khách hàng</div>
                                     </div>
                                 </div>
                             </div>

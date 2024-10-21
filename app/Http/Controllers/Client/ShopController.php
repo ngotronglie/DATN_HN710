@@ -14,7 +14,8 @@ class ShopController extends Controller
     {
         $products = Product::where('is_active', 1)
             ->whereHas('category', function ($query) {
-                $query->whereNull('deleted_at');
+                $query->where('is_active', 1)
+                    ->whereNull('deleted_at');
             })
             ->with([
                 'variants' => function ($query) {
@@ -43,16 +44,16 @@ class ShopController extends Controller
     public function showByCategory($id)
     {
         $category = Category::where('id', $id)->where('is_active', 1)->whereNull('deleted_at')->firstOrFail();
-        
+
         $products = Product::where('category_id', $id)
-        ->where('is_active', 1)
-        ->with(['variants' => function ($query) {
-            $query->whereHas('size', function ($query) {
-                $query->whereNull('deleted_at');
-            })->whereHas('color', function ($query) {
-                $query->whereNull('deleted_at');
-            });
-        }])->paginate(6);
+            ->where('is_active', 1)
+            ->with(['variants' => function ($query) {
+                $query->whereHas('size', function ($query) {
+                    $query->whereNull('deleted_at');
+                })->whereHas('color', function ($query) {
+                    $query->whereNull('deleted_at');
+                });
+            }])->paginate(6);
 
         $products->transform(function ($product) {
             $price_sales = $product->variants->pluck('price_sale');
@@ -61,7 +62,7 @@ class ShopController extends Controller
 
             return $product;
         });
-        
+
         return view('client.pages.shop', compact('products'));
     }
 
@@ -70,7 +71,8 @@ class ShopController extends Controller
         $product = Product::where('slug', $slug)
             ->where('is_active', 1)
             ->whereHas('category', function ($query) {
-                $query->whereNull('deleted_at');
+                $query->where('is_active', 1)
+                ->whereNull('deleted_at');
             })
             ->with(['galleries', 'variants' => function ($query) {
                 $query->whereHas('size', function ($query) {

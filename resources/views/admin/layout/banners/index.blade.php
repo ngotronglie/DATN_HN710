@@ -191,4 +191,11 @@
 <script src="{{asset('plugins/js/changeActive/Banner/changeAllActiveBanner.js')}}"></script>
 
 <script src="{{asset('plugins/js/changeActive/Banner/changeActiveBanner.js')}}"></script>
+
+<script>
+    // Loại bỏ padding-right khi modal đóng
+    jQuery(document).on('hidden.bs.modal', function () {
+        jQuery('body').css('padding-right', '0');
+    });
+</script>
 @endsection

@@ -23,7 +23,6 @@ class OrderController extends Controller
     }
     public function detail($order_id)
     {
-
         $order = Order::with(['orderDetails.productVariant.product','orderDetails.productVariant.size','orderDetails.productVariant.color','user'])->findOrFail($order_id);
         return view('admin.layout.order.detail', compact('order'));
     }

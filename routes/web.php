@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ForgotPasswordController;
 use App\Http\Controllers\Admin\LoginController;
@@ -12,7 +13,7 @@ use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\CategoryBlogController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
-
+use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\ContactController;
 
 use App\Http\Controllers\Ajax\DeleteController;
@@ -107,9 +108,7 @@ Route::post('password/reset', [ForgotPasswordController::class, 'reset'])->name(
 
 //->middleware('isAdmin')
 Route::prefix('admin')->as('admin.')->group(function () {
-    Route::get('/', function () {
-        return view('admin.layout.yeld');
-    })->name('dashboard');
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     // Các route tùy chỉnh
     Route::get('/accounts/my_account', [UserController::class, 'myAccount'])->name('accounts.myAccount');
@@ -176,6 +175,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::delete('banners/forceDelete/{id}', [BannerController::class, 'forceDelete'])->name('banners.forceDelete');
 
     Route::resource('banners', BannerController::class);
+
     //Quản lý đơn hàng
     Route::get('order', [OrderController::class, 'index'])->name('order.index');
     Route::get('order/{order_id}/order-detail', [OrderController::class, 'detail'])->name('order.detail');
@@ -184,8 +184,8 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('order/confirm-shipping/{order_id}', [OrderController::class, 'confirmShipping'])->name('order.confirmShipping');
     Route::get('order/cancel/{order_id}', [OrderController::class, 'cancelOrder'])->name('order.cancelOrder');
     
-
-
+    // Thống kê
+    Route::get('statistics', [StatisticsController::class, 'index'])->name('statistics.index');
 });
 
 //ajax category
