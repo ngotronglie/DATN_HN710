@@ -15,24 +15,40 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-
-    public function index()
+    public function index(Request $request)
     {
-        $order = Order::with(['user','voucher','orderDetails.productVariant.product']) ->orderBy('status', 'asc')->get();
-        return view('admin.layout.order.index',compact('order'));
+        $query = Order::with(['user', 'voucher', 'orderDetails.productVariant.product'])
+            ->orderBy('status', 'asc');
+
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        $order = $query->get();
+        $statusCounts = [
+            'all' => Order::all()->count(),
+            'pending' => Order::where('status', 1)->count(),
+            'processing' => Order::where('status', 2)->count(),
+            'shipping' => Order::where('status', 3)->count(),
+            'completed' => Order::where('status', 4)->count(),
+            'pending_cancel' => Order::where('status', 5)->count(),
+            'canceled' => Order::where('status', 6)->count(),
+        ];
+        return view('admin.layout.order.index', compact('order', 'statusCounts'));
     }
+
     public function detail($order_id)
     {
-        $order = Order::with(['orderDetails.productVariant.product','orderDetails.productVariant.size','orderDetails.productVariant.color','user'])->findOrFail($order_id);
+        $order = Order::with(['orderDetails.productVariant.product', 'orderDetails.productVariant.size', 'orderDetails.productVariant.color', 'user'])->findOrFail($order_id);
         return view('admin.layout.order.detail', compact('order'));
     }
-   
+
     public function confirmOrder($order_id)
     {
         $order = Order::find($order_id);
 
-        if ($order->status == 1) { 
-            $order->status = 2; 
+        if ($order->status == 1) {
+            $order->status = 2;
             $order->save();
             return redirect()->back()->with('success', 'Đơn hàng đã được xác nhận');
         } else {
@@ -45,7 +61,7 @@ class OrderController extends Controller
         $order = Order::find($order_id);
 
         if ($order->status == 2) {
-            $order->status = 3; 
+            $order->status = 3;
             $order->save();
             return redirect()->back()->with('success', 'Đơn hàng đang được giao');
         } else {
@@ -57,8 +73,8 @@ class OrderController extends Controller
     {
         $order = Order::find($order_id);
 
-        if ($order->status == 3) { 
-            $order->status = 4; 
+        if ($order->status == 3) {
+            $order->status = 4;
             $order->save();
             return redirect()->back()->with('success', 'Đơn hàng đã được giao thành công');
         } else {
@@ -70,7 +86,7 @@ class OrderController extends Controller
     {
         $order = Order::find($order_id);
 
-        if ($order->status == 5) { 
+        if ($order->status == 5) {
             $order->status = 6;
             $order->save();
             return redirect()->back()->with('success', 'Đơn hàng đã bị hủy');
@@ -78,7 +94,7 @@ class OrderController extends Controller
             return redirect()->back()->with('error', 'Không thể hủy đơn hàng với trạng thái hiện tại');
         }
     }
-    
+
 
     /**
      * Show the form for creating a new resource.

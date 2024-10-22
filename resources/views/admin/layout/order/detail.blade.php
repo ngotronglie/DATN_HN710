@@ -209,12 +209,36 @@
                                                 @endif
                                             </tr>
                                         @endforeach
-
                                         <tr>
-                                            <td colspan="7">
+                                            <td colspan="6">
+                                                @php
+                                                    $totalPrice = 0;
+                                                    if ($order->orderDetails) {
+                                                        foreach ($order->orderDetails as $detail) {
+                                                            if ($detail->productVariant) {
+                                                                $totalPrice +=
+                                                                    $detail->quantity *
+                                                                    $detail->productVariant->price_sale;
+                                                            } else {
+                                                                $totalPrice += $detail->quantity * $detail->price;
+                                                            }
+                                                        }
+
+                                                      
+                                                    }
+                                                @endphp
+                                                <strong>Tổng tiền:</strong>
+                                            </td>
+                                            <td colspan="2"  class="text-center">
+                                                {{ number_format($totalPrice, 0, ',', '.') }} VND
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td colspan="6">
                                                 <strong>Mã giảm giá:</strong>
                                             </td>
-                                            <td style="background-color: #fefbfb">
+                                            <td colspan="2"  class="text-center">
                                                 @if ($order->voucher)
                                                     {{ $order->voucher->code }} (-{{ $order->voucher->discount }}%)
                                                 @else
@@ -225,7 +249,7 @@
 
                                         </tr>
                                         <tr>
-                                            <td colspan="7">
+                                            <td colspan="6">
                                                 @php
                                                     $totalPrice = 0;
                                                     if ($order->orderDetails) {
@@ -244,9 +268,9 @@
                                                             : 0;
                                                     }
                                                 @endphp
-                                                <strong>Tổng tiền:</strong>
+                                                <strong>Tổng tiền cuối cùng:</strong>
                                             </td>
-                                            <td style="background-color: #e5e5e5">
+                                            <td colspan="2"  class="text-center">
                                                 {{ number_format($totalPrice, 0, ',', '.') }} VND
                                             </td>
 
