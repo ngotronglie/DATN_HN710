@@ -62,6 +62,8 @@ Route::get('/shops', [ShopController::class, 'index'])->name('shops.index');
 Route::get('/shops/category/{id}', [ShopController::class, 'showByCategory'])->name('shops.category');
 Route::get('/shops/{slug}', [ShopController::class, 'show'])->name('shops.show');
 Route::get('shop/ajax/getSizePrice', [ShopController::class, 'getSizePrice']);
+Route::get('shop/ajax/getSizePriceDetail', [ShopController::class, 'getSizePriceDetail']);
+
 
 // Blog
 Route::get('/blogs', [ClientBlogController::class, 'index'])->name('blogs.index');

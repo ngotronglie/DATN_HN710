@@ -74,17 +74,36 @@ class ShopController extends Controller
                 $query->where('is_active', 1)
                 ->whereNull('deleted_at');
             })
-            ->with(['galleries', 'variants' => function ($query) {
-                $query->whereHas('size', function ($query) {
-                    $query->whereNull('deleted_at');
-                })->whereHas('color', function ($query) {
-                    $query->whereNull('deleted_at');
-                });
-            }])
+            ->with([
+                'galleries',
+                'variants' => function ($query) {
+                    $query->whereHas('size', function ($query) {
+                        $query->whereNull('deleted_at');
+                    })->whereHas('color', function ($query) {
+                        $query->whereNull('deleted_at');
+                    });
+                }
+            ])
             ->firstOrFail();
 
+        // $product->increment('view');
+        $viewsKey = 'product_viewed_' . $product->id;
+
+        if (!session()->has($viewsKey)) {
+            $product->increment('view');
+            // Đánh dấu rằng người dùng đã xem sản phẩm này trong phiên làm việc
+            session([$viewsKey => true]);
+        }
+
+
+        $price_sales = $product->variants->pluck('price_sale');
+        $product->max_price_sale = $price_sales->max();
+        $product->min_price_sale = $price_sales->min();
+
         return view('client.pages.product-detail', compact('product'));
+
     }
+
 
     public function getSizePrice(Request $request)
     {
@@ -100,11 +119,40 @@ class ShopController extends Controller
         foreach ($variants as $variant) {
             $response[] = [
                 'size' => $variant->size->name,
-                'price' => $variant->price,
                 'price_sale' => $variant->price_sale
             ];
         }
 
         return response()->json($response);
     }
+
+    public function getSizePriceDetail(Request $request)
+    {
+        $productId = $request->input('idProduct');
+        $colorId = $request->input('idColor');
+
+        $variants = ProductVariant::where('product_id', $productId)
+            ->where('color_id', $colorId)
+            ->with('size')
+            ->get();
+
+        $minPrice = $variants->min('price_sale');
+        $maxPrice = $variants->max('price_sale');
+
+        $response = [];
+        foreach ($variants as $variant) {
+            $response[] = [
+                'size' => $variant->size->name,
+                'price_sale' => $variant->price_sale,
+                'quantity' => $variant->quantity
+            ];
+        }
+
+        return response()->json([
+            'variants' => $response,
+            'min_price' => $minPrice,
+            'max_price' => $maxPrice
+        ]);
+    }
+
 }
