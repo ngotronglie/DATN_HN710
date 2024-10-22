@@ -98,6 +98,15 @@
                         </ul>
                     </li>
                     {{-- end banner --}}
+                    {{-- comment --}}
+                    <li class="menu-item-has-children {{ Request::is('admin/comments*') ? 'active' : '' }} dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false"> <i class="menu-icon fa fa-comment"></i>Quản lý bình luận</a>
+                        <ul class="sub-menu children dropdown-menu">
+                            <li></i><a href="{{ route('admin.comments.index') }}">Danh sách</a></li>
+                        </ul>
+                    </li>
+                    {{-- end comment --}}
                     {{-- order --}}
                     <li class="menu-item-has {{ Request::is('admin/order*') ? 'active' : '' }} ">
                         <a href="{{route('admin.order.index')}}">

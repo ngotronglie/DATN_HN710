@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\CategoryBlogController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\ContactController;
@@ -114,7 +115,6 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
 });
 Route::get('verify-email/{token}', [ForgotPasswordController::class, 'verifyEmail'])->name('verify.email');
 
-
 //middleware(['auth', 'isAdmin'])
 Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
@@ -183,6 +183,11 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::put('banners/restore/{id}', [BannerController::class, 'restore'])->name('banners.restore');
     Route::delete('banners/forceDelete/{id}', [BannerController::class, 'forceDelete'])->name('banners.forceDelete');
 
+    // Quản lý bình luận
+    Route::get('comments', [CommentController::class, 'index'])->name('comments.index');
+    // Route::get('comments/{comment}', [CommentController::class, 'show'])->name('comments.show');
+
+    // Quản lí banner
     Route::resource('banners', BannerController::class);
 
     //Quản lý đơn hàng
@@ -218,6 +223,9 @@ Route::get('categoryBlogs/ajax/trashedCount', [CategoryBlogController::class, 't
 //ajax banner
 Route::post('banners/ajax/changeActiveBanner', [ChangeActiveController::class, 'changeActiveBanner']);
 Route::post('banners/ajax/changeAllActiveBanner', [ChangeActiveController::class, 'changeActiveAllBanner']);
+//ajax comment
+Route::post('comments/ajax/changeActiveComment', [ChangeActiveController::class, 'changeActiveComment']);
+Route::post('comments/ajax/changeAllActiveComment', [ChangeActiveController::class, 'changeActiveAllComment']);
 //ajax blog
 Route::post('blogs/ajax/changeActiveBlog', [ChangeActiveController::class, 'changeActiveBlog']);
 Route::post('blogs/ajax/changeAllActiveBlog', [ChangeActiveController::class, 'changeActiveAllBlog']);
