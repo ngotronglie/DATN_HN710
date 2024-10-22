@@ -42,7 +42,19 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <strong class="card-title">Danh sách đơn hàng</strong>
-                           
+                            <div>
+                                <select id="filterStatus" class="form-control" onchange="filterOrders()">
+                                    <option value="">Tất cả ({{$statusCounts['all'] }})</option>
+                                    <option value="1" {{ request('status') == 1 ? 'selected' : '' }}>Chờ xác nhận ({{ $statusCounts['pending'] }})</option>
+                                    <option value="2" {{ request('status') == 2 ? 'selected' : '' }}>Chờ lấy hàng ({{ $statusCounts['processing'] }})</option>
+                                    <option value="3" {{ request('status') == 3 ? 'selected' : '' }}>Đang giao hàng ({{ $statusCounts['shipping'] }})</option>
+                                    <option value="4" {{ request('status') == 4 ? 'selected' : '' }}>Giao hàng thành công ({{ $statusCounts['completed'] }})</option>
+                                    <option value="5" {{ request('status') == 5 ? 'selected' : '' }}>Chờ hủy ({{ $statusCounts['pending_cancel'] }})</option>
+                                    <option value="6" {{ request('status') == 6 ? 'selected' : '' }}>Đã hủy ({{ $statusCounts['canceled'] }})</option>
+                                </select>
+                                
+                            </div>
+                            
                         </div>
                         <div class="card-body">
                             <table id="bootstrap-data-table" class="table table-striped table-bordered">
@@ -82,7 +94,8 @@
                                             @else
                                                 <td>{{ $item->user_name }}</td>
                                             @endif
-                                            <td>{{ $item->order_date }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($item->order_date)->format('d/m/Y H:i:s') }}</td>
+
                                             <td>
                                                 {{ number_format($item->total_amount, 0, ',', '.') }} VND
                                             </td>
@@ -107,20 +120,30 @@
                                                     <a class="btn btn-primary mr-2" href="{{ route('admin.order.detail', $item) }}" title="Xem chi tiết">
                                                         <i class="fa fa-eye"></i>
                                                     </a>
-                                                    
+                                            
                                                     @if($item->status == 1)
-                                                        <a class="btn btn-success" href="{{ route('admin.order.confirmOrder', $item->id) }}"><i class="fa fa-check"></i></a>
+                                                        <a class="btn btn-success" href="{{ route('admin.order.confirmOrder', $item->id) }}"
+                                                           onclick="return confirm('Bạn có chắc chắn muốn xác nhận đơn hàng này không?');">
+                                                           <i class="fa fa-check"></i>
+                                                        </a>
                                                     @elseif($item->status == 2)
-                                                        <a class="btn btn-info" href="{{ route('admin.order.shipOrder', $item->id) }}"><i class="fa fa-truck"></i></a>
+                                                        <a class="btn btn-info" href="{{ route('admin.order.shipOrder', $item->id) }}"
+                                                           onclick="return confirm('Bạn có chắc chắn muốn giao đơn hàng này không?');">
+                                                           <i class="fa fa-truck"></i>
+                                                        </a>
                                                     @elseif($item->status == 3)
-                                                        <a class="btn btn-success" href="{{ route('admin.order.confirmShipping', $item->id) }}"><i class="fa fa-check-circle-o"></i></a>
-                                                    @elseif($item->status == 4)
-
-                                                    @elseif($item->status == 5) 
-                                                        <a class="btn btn-danger" href="{{ route('admin.order.cancelOrder', $item->id) }}"><i class="fa fa-times-circle"></i></a>
+                                                        <a class="btn btn-success" href="{{ route('admin.order.confirmShipping', $item->id) }}"
+                                                           onclick="return confirm('Bạn có chắc chắn đơn hàng này đã được giao không?');">
+                                                           <i class="fa fa-check-circle-o"></i>
+                                                        </a>
+                                                    @elseif($item->status == 5)
+                                                        <a class="btn btn-danger" href="{{ route('admin.order.cancelOrder', $item->id) }}"
+                                                           onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');">
+                                                           <i class="fa fa-times-circle"></i>
+                                                        </a>
                                                     @endif
                                                 @endif
-                                            </td>
+                                            </td>                                      
                                             
                                         </tr>
                                     @endforeach
@@ -154,6 +177,18 @@
     <script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.colVis.min.js') }}"></script>
     <script src="{{ asset('theme/admin/assets/js/init/datatables-init.js') }}"></script>
 
-   
+   <script>
+    function filterOrders() {
+    const status = document.getElementById('filterStatus').value;
+    const url = new URL(window.location.href);
+    if (status) {
+        url.searchParams.set('status', status);
+    } else {
+        url.searchParams.delete('status');
+    }
+    window.location.href = url.href;
+}
+
+   </script>
     
 @endsection

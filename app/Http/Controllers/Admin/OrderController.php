@@ -15,21 +15,34 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function index(Request $request){
+    $query = Order::with(['user', 'voucher', 'orderDetails.productVariant.product'])
+                    ->orderBy('status', 'asc');
 
-    public function index()
-    {
-        $order = Order::with(['user','voucher','orderDetails.productVariant.product']) ->orderBy('status', 'asc')->get();
-        return view('admin.layout.order.index',compact('order'));
+    if ($request->has('status') && $request->status != '') {
+        $query->where('status', $request->status);
     }
-    public function detail($order_id)
-    {
+
+    $order = $query->get();
+    $statusCounts = [
+        'all'=>Order::all()->count(),
+        'pending' => Order::where('status', 1)->count(),
+        'processing' => Order::where('status', 2)->count(),
+        'shipping' => Order::where('status', 3)->count(),
+        'completed' => Order::where('status', 4)->count(),
+        'pending_cancel' => Order::where('status', 5)->count(),
+        'canceled' => Order::where('status', 6)->count(),
+    ];
+    return view('admin.layout.order.index', compact('order','statusCounts'));
+}
+
+    public function detail($order_id){
 
         $order = Order::with(['orderDetails.productVariant.product','orderDetails.productVariant.size','orderDetails.productVariant.color','user'])->findOrFail($order_id);
         return view('admin.layout.order.detail', compact('order'));
     }
    
-    public function confirmOrder($order_id)
-    {
+    public function confirmOrder($order_id){
         $order = Order::find($order_id);
 
         if ($order->status == 1) { 
@@ -41,8 +54,7 @@ class OrderController extends Controller
         }
     }
 
-    public function shipOrder($order_id)
-    {
+    public function shipOrder($order_id){
         $order = Order::find($order_id);
 
         if ($order->status == 2) {
@@ -54,8 +66,7 @@ class OrderController extends Controller
         }
     }
 
-    public function confirmShipping($order_id)
-    {
+    public function confirmShipping($order_id){
         $order = Order::find($order_id);
 
         if ($order->status == 3) { 
@@ -67,8 +78,7 @@ class OrderController extends Controller
         }
     }
 
-    public function cancelOrder($order_id)
-    {
+    public function cancelOrder($order_id){
         $order = Order::find($order_id);
 
         if ($order->status == 5) { 
