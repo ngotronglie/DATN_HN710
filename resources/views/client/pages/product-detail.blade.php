@@ -86,12 +86,12 @@
         <div class="breadcrumb-area bg-light">
             <div class="container-fluid">
                 <div class="breadcrumb-content text-center">
-                    <h1 class="title">Single Product</h1>
+                    <h1 class="title">Chi tiết sản phẩm</h1>
                     <ul>
                         <li>
-                            <a href="index.html">Home </a>
+                            <a href="index.html">Trang chủ </a>
                         </li>
-                        <li class="active"> Single Product</li>
+                        <li class="active"> Chi tiết sản phẩm</li>
                     </ul>
                 </div>
             </div>
