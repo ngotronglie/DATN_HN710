@@ -275,8 +275,10 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="connect-2" role="tabpanel" aria-labelledby="profile-tab">
-                                <!-- Start Single Content -->
-                                <div class="product_tab_content  border p-3">
+
+
+                                {{-- Bình luận cũ --}}
+                                {{-- <div class="product_tab_content  border p-3">
                                     <!-- Start Single Review -->
                                     <div class="single-review d-flex mb-4">
 
@@ -344,15 +346,11 @@
                                                     @else
                                                         <div class="row comment-input">
                                                             <div class="col-md-6 col-custom comment-form-author mb-3">
-                                                                {{-- <label>Name: <strong>{{ Auth::user()->name }}</strong></label> --}}
-                                                                <input type="hidden" name="name"
-                                                                    value="{{ Auth::user()->name }}">
+                                                                <input type="hidden" name="name" value="{{ Auth::user()->name }}">
                                                             </div>
 
                                                             <div class="col-md-6 col-custom comment-form-email mb-3">
-                                                                {{-- <label>Email: <strong>{{ Auth::user()->email }}</strong></label> --}}
-                                                                <input type="hidden" name="email"
-                                                                    value="{{ Auth::user()->email }}">
+                                                                <input type="hidden" name="email" value="{{ Auth::user()->email }}">
                                                             </div>
                                                         </div>
                                                     @endif
@@ -378,11 +376,75 @@
                                     </div>
                                     <!-- Comments ans Replay End -->
 
+                                </div> --}}
+
+                                {{-- Bình luận mới --}}
+                                <div class="comment-area-wrapper mt-5 aos-init" data-aos="fade-up" data-aos-delay="400">
+                                    <h3 class="title mb-6">5 Comments</h3>
+                                    <div class="single-comment-wrap mb-10">
+                                        <a class="author-thumb" href="#">
+                                            <img
+                                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmhF7UB6jv1t_oyGDzqSb_h0JPspDnfqohVA&sr">
+                                        </a>
+                                        <div class="comments-info">
+                                            <div class="comment-footer d-flex justify-content-between">
+                                                <span class="author"><a href="#"><strong>Duy</strong></a> - July 30, 2023</span>
+                                                <a href="#" class="btn-reply"><i class="fa fa-reply"></i> Reply</a>
+                                            </div>
+                                            <p class="mb-1">Bình luận 1</p>
+                                        </div>
+                                    </div>
+                                    <div class="single-comment-wrap mb-10 comment-reply">
+                                        <a class="author-thumb" href="#">
+                                            <img
+                                                src="https://tse1.mm.bing.net/th?id=OIP.KdRE7KHqL-46M8nrvOX2CgHaHa&pid=Api&P=0&h=220">
+                                        </a>
+                                        <div class="comments-info">
+                                            <div class="comment-footer d-flex justify-content-between">
+                                                <span class="author"><a href="#"><strong>Alex</strong></a> - August 30,
+                                                    2023</span>
+                                            </div>
+                                            <p class="mb-1">Trả lời bình luận 1</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <!-- End Single Content -->
+                                <div class="blog-comment-form-wrapper mt-10 aos-init" data-aos="fade-up" data-aos-delay="400">
+                                    <div class="blog-comment-form-title">
+                                        <h2 class="title">Để lại 1 bình luận</h2>
+                                    </div>
+                                    <div class="comment-box">
+                                        <form action="#">
+                                            <div class="row">
+                                                <div class="col-12 col-custom">
+                                                    <div class="input-item mt-4">
+                                                        <textarea cols="30" rows="5" name="comment" class="rounded-0 w-100 custom-textarea input-area"
+                                                            placeholder="Bình luận"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-custom">
+                                                    <div class="input-item mb-4">
+                                                        <input class="rounded-0 w-100 input-area name" type="hidden"
+                                                            placeholder="Name" fdprocessedid="rg7vs">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-custom">
+                                                    <div class="input-item">
+                                                        <input class="rounded-0 w-100 input-area email" type="hidden"
+                                                            placeholder="Email" fdprocessedid="7z5f7l">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-custom">
+                                                    <button type="submit" class="btn btn-primary btn-hover-dark"
+                                                        fdprocessedid="iu5i8">Bình luận</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+
                             </div>
                             <div class="tab-pane fade" id="connect-3" role="tabpanel" aria-labelledby="contact-tab">
-                                <!-- Chính Sách Giao Hàng Bắt Đầu -->
                                 <div class="shipping-policy mb-n2">
                                     <h4 class="title-3 mb-4">Chính Sách Giao Hàng Của Chúng Tôi</h4>
 
@@ -418,7 +480,6 @@
                                         Hãy cùng chúng tôi khám phá những điều tuyệt vời đang chờ đón bạn!
                                     </p>
                                 </div>
-                                <!-- Chính Sách Giao Hàng Kết Thúc -->
                             </div>
 
                             <div class="tab-pane fade" id="connect-4" role="tabpanel" aria-labelledby="review-tab">
