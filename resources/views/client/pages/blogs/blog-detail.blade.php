@@ -1,7 +1,6 @@
 @extends('client.index')
 @section('style')
     <style>
-        /* Ẩn các danh mục ban đầu */
         .hidden-category {
             display: none;
         }
@@ -17,12 +16,12 @@
         <div class="breadcrumb-area bg-light">
             <div class="container-fluid">
                 <div class="breadcrumb-content text-center">
-                    <h1 class="title">Blog Details</h1>
+                    <h1 class="title">Nội dung bài viết</h1>
                     <ul>
                         <li>
-                            <a href="index.html">Home </a>
+                            <a href="/">Trang chủ </a>
                         </li>
-                        <li class="active"> Blog Details</li>
+                        <li style="font-weight: 600" class="active">Nội dung bài viết</li>
                     </ul>
                 </div>
             </div>
@@ -38,7 +37,7 @@
                             <div class="widget-list mb-10">
                                 <h3 class="widget-title mb-4">Tìm kiếm</h3>
                                 <div class="search-box">
-                                    <input type="text" class="form-control" placeholder="Search Our Store"
+                                    <input type="text" class="form-control" placeholder="Tìm kiếm bài viết"
                                         aria-label="Search Our Store" fdprocessedid="xpyzpc">
                                     <button class="btn btn-dark btn-hover-primary" type="button" fdprocessedid="0a9xx">
                                         <i class="fa fa-search"></i>
@@ -51,8 +50,11 @@
                                 <div class="sidebar-body">
                                     <ul class="sidebar-list" id="categoryList">
                                         @foreach ($categoryBlog as $index => $item)
-                                            <li class="{{ $index >= 5 ? 'hidden-category' : '' }}"><a
-                                                    href="#">{{ $item->name }}</a></li>
+                                            <li class="{{ $index >= 5 ? 'hidden-category' : '' }}">
+                                                <a href="{{ route('blogs.category', $item->id) }}">
+                                                    {{ $item->name }} ({{ $item->blogs_count }})
+                                                </a>
+                                            </li>
                                         @endforeach
                                     </ul>
                                     <p id="toggleCategories" class="mt-3">Xem thêm</p>
@@ -65,7 +67,7 @@
                                     @foreach ($hotblogs as $item)
                                         <div class="single-product-list product-hover mb-6">
                                             <div class="thumb">
-                                                <a href="single-product.html" class="image">
+                                                <a href="{{ route('blogs.show', $item) }}" class="image">
                                                     <img class="first-image" src="{{ Storage::url($item->img_avt) }}"
                                                         alt="Product">
                                                     <img class="second-image" src="{{ Storage::url($item->img_avt) }}"
@@ -74,7 +76,7 @@
                                             </div>
                                             <div class="content">
                                                 <h5 class="title mt-4"><a
-                                                        href="single-product.html">{{ Str::limit(strip_tags($item->content), 36, '...') }}</a>
+                                                        href="{{ route('blogs.show', $item) }}">{{ Str::limit(strip_tags($item->content), 36, '...') }}</a>
                                                 </h5>
                                             </div>
                                         </div>
@@ -89,10 +91,11 @@
                         <div class="content aos-init" data-aos="fade-up" data-aos-delay="300">
                             <h2 class="title mb-3">{{ $blog->title }}</h2>
                             <div class="meta-list mb-3">
-                                <span>By <a href="#" class="meta-item author mr-1">{{ $blog->user->name }},</a></span>
-                                <span
-                                    class="meta-item date">{{ \Carbon\Carbon::parse($blog->created_at)->format('F d, Y') }}</span>
-                                <span class="meta-item comment"><a href="#">03 Comments</a></span>
+                                <span>Tác giả:
+                                    <span style="font-weight: 600;color: black" class="meta-item author mr-1">{{ $blog->user->name }},</span>
+                                </span>
+                                <span class="meta-item date">{{ \Carbon\Carbon::parse($blog->created_at)->format('d/m/Y') }}</span>
+                                <span class="meta-item comment"><a href="#">03 Bình luận</a></span>
                             </div>
                             <div class="desc content aos-init aos-animate" data-aos="fade-right" data-aos-delay="300">
                                 {!! $blog->content !!}
@@ -104,15 +107,14 @@
 
 
                     <div class="comment-area-wrapper mt-5 aos-init" data-aos="fade-up" data-aos-delay="400">
-                        <h3 class="title mb-6">5 Comments</h3>
+                        <h3 class="title mb-6">5 Bình luận</h3>
                         <div class="single-comment-wrap mb-10">
                             <a class="author-thumb" href="#">
                                 <img
                                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmhF7UB6jv1t_oyGDzqSb_h0JPspDnfqohVA&sr">
                             </a>
                             <div class="comments-info">
-                                <p class="mb-1">This book is a treatise on the theory of ethics, very popular during the
-                                    Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet</p>
+                                <p class="mb-1">Bình luận 1.</p>
                                 <div class="comment-footer d-flex justify-content-between">
                                     <span class="author"><a href="#"><strong>Duy</strong></a> - July 30, 2023</span>
                                     <a href="#" class="btn-reply"><i class="fa fa-reply"></i> Reply</a>
@@ -125,8 +127,7 @@
                                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmhF7UB6jv1t_oyGDzqSb_h0JPspDnfqohVA&sr">
                             </a>
                             <div class="comments-info">
-                                <p class="mb-1">Praesent bibendum risus pellentesque faucibus rhoncus. Etiam a mollis
-                                    odio. Integer urna nisl, fermentum eu mollis et, gravida eu elit.</p>
+                                <p class="mb-1">Trả lời bình luận 1.</p>
                                 <div class="comment-footer d-flex justify-content-between">
                                     <span class="author"><a href="#"><strong>Alex</strong></a> - August 30,
                                         2023</span>
@@ -136,7 +137,7 @@
                     </div>
                     <div class="blog-comment-form-wrapper mt-10 aos-init" data-aos="fade-up" data-aos-delay="400">
                         <div class="blog-comment-form-title">
-                            <h2 class="title">Leave a comment</h2>
+                            <h2 class="title">Để lại 1 bình luận</h2>
                         </div>
                         <div class="comment-box">
                             <form action="#">
@@ -144,7 +145,7 @@
                                     <div class="col-12 col-custom">
                                         <div class="input-item mt-4 mb-4">
                                             <textarea cols="30" rows="5" name="comment" class="rounded-0 w-100 custom-textarea input-area"
-                                                placeholder="Message"></textarea>
+                                                placeholder="Bình luận"></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-custom">
@@ -161,7 +162,7 @@
                                     </div>
                                     <div class="col-12 col-custom mt-4">
                                         <button type="submit" class="btn btn-primary btn-hover-dark"
-                                            fdprocessedid="iu5i8">Post comment</button>
+                                            fdprocessedid="iu5i8">Bình luận</button>
                                     </div>
                                 </div>
                             </form>
