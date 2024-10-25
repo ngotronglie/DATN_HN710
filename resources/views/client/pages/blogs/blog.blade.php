@@ -62,13 +62,14 @@
                         <div class="widget_inner aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
                             <div class="widget-list mb-10">
                                 <h3 class="widget-title mb-4">Tìm kiếm</h3>
-                                <div class="search-box">
-                                    <input type="text" class="form-control" placeholder="Tìm kiếm bài viết"
-                                        aria-label="Search Our Store" fdprocessedid="xpyzpc">
-                                    <button class="btn btn-dark btn-hover-primary" type="button" fdprocessedid="0a9xx">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </div>
+                                <form action="{{route('blogs.search')}}" method="get">
+                                    <div class="search-box">
+                                        <input type="text" class="form-control" name="searchBlog" placeholder="{{ $input ?? 'Tìm kiếm bài viết' }}">
+                                        <button class="btn btn-dark btn-hover-primary" type="submit">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
 
                             <div class="widget-list mb-10">

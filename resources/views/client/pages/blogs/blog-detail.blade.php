@@ -95,6 +95,7 @@
                                     <span style="font-weight: 600;color: black" class="meta-item author mr-1">{{ $blog->user->name }},</span>
                                 </span>
                                 <span class="meta-item date">{{ \Carbon\Carbon::parse($blog->created_at)->format('d/m/Y') }}</span>
+                                <span class="meta-item comment"><a href="#">{{$blog->view}} Lượt xem</a></span>
                                 <span class="meta-item comment"><a href="#">03 Bình luận</a></span>
                             </div>
                             <div class="desc content aos-init aos-animate" data-aos="fade-right" data-aos-delay="300">

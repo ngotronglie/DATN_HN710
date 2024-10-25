@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\CategoryBlog;
+use Illuminate\Http\Request;
 
 class BlogController extends Controller
 {
@@ -35,7 +36,7 @@ class BlogController extends Controller
         ])
             ->where('is_active', 1)
             ->having('blogs_count', '>', 0) // Điều kiện chỉ lấy danh mục có bài viết
-            ->orderBy('id', 'DESC')
+            ->orderBy('blogs_count', 'DESC')
             ->get();
 
 
@@ -71,7 +72,7 @@ class BlogController extends Controller
         ])
             ->where('is_active', 1)
             ->having('blogs_count', '>', 0) // Điều kiện chỉ lấy danh mục có bài viết
-            ->orderBy('id', 'DESC')
+            ->orderBy('blogs_count', 'DESC')
             ->get();
 
 
@@ -93,12 +94,12 @@ class BlogController extends Controller
 
         $blog = (clone $blogQuery)->findOrFail($id);
 
-        $viewsKey = 'blog_viewed_' . $blog->id;
+        // $viewsKey = 'blog_viewed_' . $blog->id;
 
-        if (!session()->has($viewsKey)) {
-            $blog->increment('view');
-            session([$viewsKey => true]);
-        }
+        // if (!session()->has($viewsKey)) {
+        $blog->increment('view');
+        //     session([$viewsKey => true]);
+        // }
 
         $hotblogs = (clone $blogQuery)
             ->orderBy('view', 'desc')
@@ -112,11 +113,50 @@ class BlogController extends Controller
         ])
             ->where('is_active', 1)
             ->having('blogs_count', '>', 0)// chỉ lấy danh mục nếu có bài viết > 1
-            ->orderBy('id', 'DESC')
+            ->orderBy('blogs_count', 'DESC')
             ->get();
 
 
         return view('client.pages.blogs.blog-detail', compact('blog', 'hotblogs', 'categoryBlog'));
+    }
+
+    public function search(Request $request)
+    {
+        $input = $request->input('searchBlog');
+
+        $blogQuery = Blog::with('user', 'categoryBlog')
+            ->where('is_active', 1)
+            ->whereHas('categoryBlog', function ($query) {
+                $query->whereNull('deleted_at');
+            })
+            ->whereHas('user', function ($query) {
+                $query->whereNull('deleted_at');
+            });
+
+
+        $hotblogs = (clone $blogQuery)
+            ->orderBy('view', 'desc')
+            ->take(6)
+            ->get();
+
+        $blogs = $blogQuery->where(function ($query) use ($input) {
+            $query->where('title', 'LIKE', "%{$input}%");
+            //->orWhere('content', 'LIKE', "%{$input}%"); // Nếu muốn tìm cả trong nội dung
+        })->paginate(6);
+
+        $categoryBlog = CategoryBlog::withCount([
+            'blogs' => function ($query) {
+                $query->where('is_active', 1);
+            }
+        ])
+            ->where('is_active', 1)
+            ->having('blogs_count', '>', 0)
+            ->orderBy('blogs_count', 'DESC')
+            ->get();
+
+
+        return view('client.pages.blogs.blog', compact('blogs', 'hotblogs', 'categoryBlog', 'input'));
+
     }
 
 
