@@ -35,7 +35,6 @@ class BlogController extends Controller
             }
         ])
             ->where('is_active', 1)
-            ->having('blogs_count', '>', 0) // Điều kiện chỉ lấy danh mục có bài viết
             ->orderBy('blogs_count', 'DESC')
             ->get();
 
@@ -46,24 +45,37 @@ class BlogController extends Controller
 
     public function getBlogCategory($id)
     {
-        $blogQuery = Blog::with('user', 'categoryBlog')
+
+        $blogQueryAll = Blog::with('user', 'categoryBlog')
             ->where('is_active', 1)
-            ->whereHas('categoryBlog', function ($query) use ($id) {
-                $query->whereNull('deleted_at')
-                    ->where('id', $id); // Điều kiện lọc theo categoryBlog_id
+            ->whereHas('categoryBlog', function ($query) {
+                $query->whereNull('deleted_at');
             })
             ->whereHas('user', function ($query) {
                 $query->whereNull('deleted_at');
             });
 
+
+        $blogQuery = Blog::with('user', 'categoryBlog')
+            ->where('is_active', 1)
+            ->whereHas('categoryBlog', function ($query) use ($id) {
+                $query->whereNull('deleted_at')
+                    ->where('id', $id);
+            })
+            ->whereHas('user', function ($query) {
+                $query->whereNull('deleted_at');
+            });
+
+        $hotblogs = (clone $blogQueryAll)
+            ->orderBy('view', 'desc')
+            ->take(6)
+            ->get();
+
         $blogs = (clone $blogQuery)
             ->orderBy('id', 'DESC')
             ->paginate(6);
 
-        $hotblogs = (clone $blogQuery)
-            ->orderBy('view', 'desc')
-            ->take(6)
-            ->get();
+
 
         $categoryBlog = CategoryBlog::withCount([
             'blogs' => function ($query) {
@@ -71,7 +83,6 @@ class BlogController extends Controller
             }
         ])
             ->where('is_active', 1)
-            ->having('blogs_count', '>', 0) // Điều kiện chỉ lấy danh mục có bài viết
             ->orderBy('blogs_count', 'DESC')
             ->get();
 
@@ -94,12 +105,7 @@ class BlogController extends Controller
 
         $blog = (clone $blogQuery)->findOrFail($id);
 
-        // $viewsKey = 'blog_viewed_' . $blog->id;
-
-        // if (!session()->has($viewsKey)) {
         $blog->increment('view');
-        //     session([$viewsKey => true]);
-        // }
 
         $hotblogs = (clone $blogQuery)
             ->orderBy('view', 'desc')
@@ -112,7 +118,6 @@ class BlogController extends Controller
             }
         ])
             ->where('is_active', 1)
-            ->having('blogs_count', '>', 0)// chỉ lấy danh mục nếu có bài viết > 1
             ->orderBy('blogs_count', 'DESC')
             ->get();
 
@@ -140,8 +145,8 @@ class BlogController extends Controller
             ->get();
 
         $blogs = $blogQuery->where(function ($query) use ($input) {
-            $query->where('title', 'LIKE', "%{$input}%");
-            //->orWhere('content', 'LIKE', "%{$input}%"); // Nếu muốn tìm cả trong nội dung
+            $query->where('title', 'LIKE', "%{$input}%")
+                ->orWhere('content', 'LIKE', "%{$input}%");
         })->paginate(6);
 
         $categoryBlog = CategoryBlog::withCount([
@@ -150,7 +155,6 @@ class BlogController extends Controller
             }
         ])
             ->where('is_active', 1)
-            ->having('blogs_count', '>', 0)
             ->orderBy('blogs_count', 'DESC')
             ->get();
 
