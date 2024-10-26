@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class CommentController extends Controller
 {
@@ -25,23 +27,28 @@ class CommentController extends Controller
         // Xác thực dữ liệu đầu vào
         // $request->validate([
         //     'product_id' => 'required|exists:products,id',
-        //     'content' => 'required|string|max:500',
+        //     'content' => 'required|string|max:255',
         // ]);
 
+        // Kiểm tra từ ngữ thô tục
         if ($this->containsProfanity($request->content)) {
-            return 'Bình luận của bạn chứa từ ngữ không phù hợp. Vui lòng chỉnh sửa.';
+            return response()->json(['error' => 'Bình luận của bạn chứa từ ngữ không phù hợp. Vui lòng chỉnh sửa.'], 400);
         }
 
+        // dd($request->all());
+
         // Lưu bình luận
-        Comment::create([
-            'user_id' => $request->user_id,
+        $comment = Comment::create([
+            'user_id' => $request->user()->id, // Lấy ID của người dùng đã đăng nhập
             'product_id' => $request->product_id,
             'content' => $request->content,
-            'is_active' => $request->is_active, // Đánh dấu bình luận là chưa được duyệt
+            'is_active' => false, // Đánh dấu bình luận là chưa được duyệt
         ]);
 
-        return 'ok';
+        // Trả về bình luận mới vừa được tạo
+        return Redirect::back();
     }
+
 
 
     // Hàm kiểm tra từ ngữ thô tục
@@ -524,5 +531,15 @@ class CommentController extends Controller
         }
 
         return false; // Không tìm thấy từ ngữ thô tục
+    }
+    public function getUser()
+    {
+        $id = $_GET['user_id'];
+        $comment_id = $_GET['commentId'];
+        $user = User::find($id);
+        return response()->json([
+            'data' => $user,
+            'comment_id' => $comment_id
+        ]);
     }
 }

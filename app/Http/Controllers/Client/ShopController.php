@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
@@ -72,7 +73,7 @@ class ShopController extends Controller
             ->where('is_active', 1)
             ->whereHas('category', function ($query) {
                 $query->where('is_active', 1)
-                ->whereNull('deleted_at');
+                    ->whereNull('deleted_at');
             })
             ->with([
                 'galleries',
@@ -99,9 +100,10 @@ class ShopController extends Controller
         $price_sales = $product->variants->pluck('price_sale');
         $product->max_price_sale = $price_sales->max();
         $product->min_price_sale = $price_sales->min();
+        $comments = Comment::whereNull('parent_id')->with('children')->get();
+        // return response()->json($comments);
 
-        return view('client.pages.product-detail', compact('product'));
-
+        return view('client.pages.product-detail', compact('product', 'comments'));
     }
 
 
@@ -154,5 +156,4 @@ class ShopController extends Controller
             'max_price' => $maxPrice
         ]);
     }
-
 }

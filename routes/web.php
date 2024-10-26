@@ -185,10 +185,13 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
     // Quản lý bình luận
     Route::get('comments', [CommentController::class, 'index'])->name('comments.index');
+    Route::post('comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::get('user-comment', [CommentController::class, 'getUser'])->name('comments.user');
     // Route::get('comments/{comment}', [CommentController::class, 'show'])->name('comments.show');
 
     // Quản lí banner
     Route::resource('banners', BannerController::class);
+
 
     //Quản lý đơn hàng
     Route::get('order', [OrderController::class, 'index'])->name('order.index');
@@ -197,7 +200,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('order/ship/{order_id}', [OrderController::class, 'shipOrder'])->name('order.shipOrder');
     Route::get('order/confirm-shipping/{order_id}', [OrderController::class, 'confirmShipping'])->name('order.confirmShipping');
     Route::get('order/cancel/{order_id}', [OrderController::class, 'cancelOrder'])->name('order.cancelOrder');
-    
+
     // Thống kê
     Route::get('statistics', [StatisticsController::class, 'index'])->name('statistics.index');
 });
