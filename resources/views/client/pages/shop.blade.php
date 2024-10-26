@@ -75,11 +75,32 @@
             padding: 0 2px;
         }
 
-        .price {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        /* #old-price {
+            font-size: 0.9em;
+            color: gray;
+            text-decoration: line-through;
+            margin-bottom: 0.7rem;
+
+            font-weight: 500;
+        } */
+
+        #old-price {
+                color: gray;
+                display: inline;
+                margin: 0;
+                margin-left: 5px;
+                font-weight: 500;
+                padding: 0;
+                text-decoration: line-through;
+            }
+
+            #old-pricee {
+                color: gray;
+                display: inline;
+                margin: 0;
+                font-weight: 500;
+                padding: 0;
+            }
 
         .hidden-category {
             display: none;
@@ -121,7 +142,7 @@
                         <div class="shop-top-bar-left mb-md-0 mb-2">
                             <div class="shop-top-show">
                                 {{-- <span>Showing 1–{{$totalPages}} of 39 results</span> --}}
-                                <span>Hiển thị 1/40 của 40 trang</span>
+                                <span>Hiển thị 6/40 của 40 sản phẩm</span>
 
                             </div>
                         </div>
@@ -129,11 +150,10 @@
                         <div class="shop-top-bar-right">
                             <div class="shop-short-by mr-4">
                                 <select class="nice-select" aria-label=".form-select-sm example">
-                                    <option selected>Hiển thị 1</option>
-                                    <option value="1">Show 24</option>
-                                    <option value="2">Show 12</option>
-                                    <option value="3">Show 15</option>
-                                    <option value="3">Show 30</option>
+                                    <option selected>Hiển thị 6</option>
+                                    <option value="1">Show 12</option>
+                                    <option value="2">Show 24</option>
+                                    <option value="3">Hiển thị tất cả</option>
                                 </select>
                             </div>
 
@@ -207,13 +227,15 @@
                                                     </div>
 
                                                     <div class="price price-options">
-                                                        <label>Giá:</label>
+                                                        <label style="margin-right:5px">Giá: </label>
                                                         <span id="product-price-sale-{{ $item->id }}"
                                                             class="show-price">
                                                             {{ $item->min_price_sale == $item->max_price_sale
-                                                                ? number_format($item->min_price_sale) . ' VNĐ'
-                                                                : number_format($item->min_price_sale) . ' - ' . number_format($item->max_price_sale) . ' VNĐ' }}
+                                                                ? number_format($item->min_price_sale) . 'đ'
+                                                                : number_format($item->min_price_sale).'đ' . ' - ' . number_format($item->max_price_sale) . 'đ' }}
                                                         </span>
+                                                        <span id="old-price" class="old-price-{{ $item->id }}"></span>
+
                                                     </div>
 
                                                 </div>
@@ -224,7 +246,8 @@
                                                     class="btn btn-sm btn-outline-dark btn-hover-primary wishlist"><i
                                                         class="fa fa-heart"></i></a>
                                                 <button class="btn btn-sm btn-outline-dark btn-hover-primary"
-                                                    title="Thêm vào giỏ hàng" fdprocessedid="djqltl">Thêm vào giỏ hàng</button>
+                                                    title="Thêm vào giỏ hàng" fdprocessedid="djqltl">Thêm vào giỏ
+                                                    hàng</button>
                                                 <a title="Compare" href="#"
                                                     class="btn btn-sm btn-outline-dark btn-hover-primary compare">
                                                     <i class="fa fa-random"></i></a>
@@ -300,13 +323,15 @@
                         <div class="widget_inner aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
                             <div class="widget-list mb-10">
                                 <h3 class="widget-title mb-4">Tìm kiếm</h3>
-                                <div class="search-box">
-                                    <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm"
-                                        aria-label="Search Our Store" fdprocessedid="brq7c">
-                                    <button class="btn btn-dark btn-hover-primary" type="button" fdprocessedid="yf7q8c">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </div>
+                                <form action="{{ route('shop.search') }}" method="get">
+                                    <div class="search-box">
+                                        <input type="text" class="form-control" name="searchProduct"
+                                            placeholder="{{ $input ?? 'Tìm kiếm sản phẩm' }}">
+                                        <button class="btn btn-dark btn-hover-primary" type="button">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
 
                             <div class="widget-list mb-10">
@@ -336,15 +361,16 @@
                                 <div class="sidebar-body">
                                     <ul class="sidebar-list" id="categoryList">
                                         @foreach ($categories as $index => $item)
-                                        <li class="{{ $index >= 5 ? 'hidden-category' : '' }}">
-                                            <a href="{{ route('shops.category', $item) }}">
-                                                {{ $item->name }} ({{ $item->products_count }})
-                                            </a>
-                                        </li>
+                                            <li class="{{ $index >= 5 ? 'hidden-category' : '' }}">
+                                                <a href="{{ route('shops.category', $item) }}">
+                                                    {{ $item->name }} ({{ $item->products_count }})
+                                                </a>
+                                            </li>
                                         @endforeach
                                     </ul>
                                     @if ($categories->count() > 5)
-                                    <p id="toggleCategories" class="mt-3 text-primary" style="cursor: pointer;">Xem thêm</p>
+                                        <p id="toggleCategories" class="mt-3 text-primary" style="cursor: pointer;">Xem
+                                            thêm</p>
                                     @endif
                                 </div>
 
@@ -355,29 +381,27 @@
                                 <h3 class="widget-title mb-4">Sản phẩm hot</h3>
                                 <div class="sidebar-body product-list-wrapper mb-n6">
                                     @foreach ($producthot as $index => $item)
-                                    <div class="single-product-list product-hover mb-6">
-                                        <div class="thumb">
-                                            <a href="{{route('shops.show', $item->slug)}}" class="image">
-                                                <img class="first-image"
-                                                    src="{{Storage::url($item->img_thumb)}}"
-                                                    alt="Product">
-                                                <img class="second-image"
-                                                    src="{{Storage::url($item->img_thumb)}}"
-                                                    alt="Product">
-                                            </a>
+                                        <div class="single-product-list product-hover mb-6">
+                                            <div class="thumb">
+                                                <a href="{{ route('shops.show', $item->slug) }}" class="image">
+                                                    <img class="first-image" src="{{ Storage::url($item->img_thumb) }}"
+                                                        alt="Product">
+                                                    <img class="second-image" src="{{ Storage::url($item->img_thumb) }}"
+                                                        alt="Product">
+                                                </a>
+                                            </div>
+                                            <div class="content">
+                                                <h5 class="title">
+                                                    <a
+                                                        href="{{ route('shops.show', $item->slug) }}">{{ $item->name }}</a>
+                                                </h5>
+                                                <span id="product-price-sale-{{ $item->id }}" class="show-price">
+                                                    {{ $item->min_price_sale == $item->max_price_sale
+                                                        ? number_format($item->min_price_sale) . 'đ'
+                                                        : number_format($item->min_price_sale) .'đ' . ' - ' . number_format($item->max_price_sale) . 'đ' }}
+                                                </span>
+                                            </div>
                                         </div>
-                                        <div class="content">
-                                            <h5 class="title">
-                                                <a href="{{route('shops.show', $item->slug)}}">{{$item->name}}</a>
-                                            </h5>
-                                            <span id="product-price-sale-{{ $item->id }}"
-                                                class="show-price">
-                                                {{ $item->min_price_sale == $item->max_price_sale
-                                                    ? number_format($item->min_price_sale) . ' VNĐ'
-                                                    : number_format($item->min_price_sale) . ' - ' . number_format($item->max_price_sale) . ' VNĐ' }}
-                                            </span>
-                                        </div>
-                                    </div>
                                     @endforeach
                                 </div>
                             </div>

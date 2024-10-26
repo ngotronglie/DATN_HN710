@@ -6,10 +6,13 @@
         $('.color-btn').removeClass('active');
         $('.size-btn').removeClass('active');
 
+
         $(label).addClass('active');
         let _this = $(label);
         let idProduct = _this.attr('data-productId');
         let idColor = _this.attr('data-id');
+        $('.old-price-' + idProduct).empty();
+
         HT.getSizePrice(idProduct, idColor);
     };
 
@@ -28,13 +31,15 @@
             },
             dataType: 'json',
             success: function (res) {
+                console.log(res);
+
                 if (res) {
                     $('#sizes-prices-' + idProduct).empty();
 
                     let minPrice = res.min_price;
                     let maxPrice = res.max_price;
-                    let formattedMinPrice = Math.floor(minPrice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                    let formattedMaxPrice = Math.floor(maxPrice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' VNĐ';
+                    let formattedMinPrice = Math.floor(minPrice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + 'đ';
+                    let formattedMaxPrice = Math.floor(maxPrice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + 'đ';
 
                     if (minPrice === maxPrice) {
                         $('#product-price-sale-' + idProduct).text(`${formattedMaxPrice}`);
@@ -69,8 +74,16 @@
                 let sizePriceSale = selectedVariant.price_sale && !isNaN(selectedVariant.price_sale)
                     ? parseFloat(selectedVariant.price_sale) : 0;
 
+                let sizePrice = selectedVariant.price && !isNaN(selectedVariant.price)
+                    ? parseFloat(selectedVariant.price) : 0;
+
                 let formattedPriceSale = sizePriceSale.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                $('#product-price-sale-' + idProduct).text(formattedPriceSale + ' VNĐ');
+                let formattedPrice = sizePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+                $('#product-price-sale-' + idProduct).text(formattedPriceSale + 'đ');
+                $('.old-price-' + idProduct).text(formattedPrice +'đ');
+
+
             }
         });
     }

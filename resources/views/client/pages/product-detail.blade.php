@@ -150,22 +150,35 @@
                 <div class="col-lg-7 col-custom">
                     <div class="product-summery position-relative">
 
-                        <div class="product-head mb-3">
+                        {{-- <div class="product-head mb-3" >
                             <h2 class="product-title">{{ $product->name }}</h2>
                         </div>
 
+                        <div data-aos="fade-up" data-aos-delay="200"></div>
                         <div class="price-box mb-2">
                             <span id="product-price-sale-{{ $product->id }}" class="show-price">
-                                {{ $product->min_price_sale == $product->max_price_sale
-                                    ? number_format($product->min_price_sale) . ' VNĐ'
-                                    : number_format($product->min_price_sale) . ' - ' . number_format($product->max_price_sale) . ' VNĐ' }}
                             </span>
-                        </div>
+                            <span style="text-decoration: line-through;font-size: 1.0rem;font-weight: 500" id="old-price"></span>
+                        </div> --}}
 
                         {{-- số lượng từng biến thể --}}
-                        <div class="sku mb-3">
+                        {{-- <div class="sku mb-3">
                             <span class="quantity-product" id="quantity-display-{{ $product->id }}"></span>
+                        </div> --}}
+                        <div class="product-head mb-3" data-aos="fade-up" data-aos-delay="200">
+                            <h2 class="product-title">{{ $product->name }}</h2>
                         </div>
+
+                        <div class="price-box mb-2" data-aos="fade-up" data-aos-delay="200">
+                            <span id="product-price-sale-{{ $product->id }}" class="show-price hidden"></span>
+                            <span id="old-price" class="hidden" style="text-decoration: line-through; font-size: 1.3rem; font-weight: 500"></span>
+                        </div>
+
+                        <div class="sku mb-3" data-aos="fade-up" data-aos-delay="200">
+                            <span class="quantity-product hidden" id="quantity-display-{{ $product->id }}"></span>
+                        </div>
+
+
 
                         <div class="sku mb-3">
                             <span>Lượt xem: {{ $product->view }}</span>
@@ -674,4 +687,19 @@
 
 @section('script')
     <script src="{{ asset('plugins/js/getsizedetail.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+    // Đợi nội dung tải xong rồi thêm hiệu ứng
+    document.querySelectorAll('.show-price, .quantity-product').forEach(element => {
+        element.classList.add('fade-in'); // Thêm lớp `fade-in` để kích hoạt hiệu ứng
+    });
+});
+AOS.init({
+    duration: 1000, // Tốc độ animation
+    easing: 'ease-in-out', // Hiệu ứng easing
+    once: true, // Chạy hiệu ứng một lần khi cuộn đến
+});
+
+
+    </script>
 @endsection

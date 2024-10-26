@@ -61,6 +61,7 @@ Route::get('/shops/category/{id}', [ShopController::class, 'showByCategory'])->n
 Route::get('/shops/{slug}', [ShopController::class, 'show'])->name('shops.show');
 Route::get('shop/ajax/getSizePrice', [ShopController::class, 'getSizePrice']);
 Route::get('shop/ajax/getSizePriceDetail', [ShopController::class, 'getSizePriceDetail']);
+Route::get('/shop-search', [ShopController::class, 'search'])->name('shop.search');
 
 
 // Blog
