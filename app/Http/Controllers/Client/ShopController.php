@@ -23,7 +23,7 @@ class ShopController extends Controller
                     $query->where('is_active', 1);
                 }
             ])
-            ->orderBy('id', 'desc')
+            ->orderBy('products_count', 'desc')
             ->get();
 
         // Định nghĩa một callback tính giá min/max
@@ -83,7 +83,7 @@ class ShopController extends Controller
             ->withCount([
                 'products' => $condition
             ])
-            ->orderBy('id', 'desc')
+            ->orderBy('products_count', 'desc')
             ->get();
 
         $products = Product::where('category_id', $id)
@@ -173,7 +173,7 @@ class ShopController extends Controller
                     $query->where('is_active', 1);
                 }
             ])
-            ->orderBy('id', 'desc')
+            ->orderBy('products_count', 'desc')
             ->get();
 
         // Định nghĩa một callback tính giá min/max
