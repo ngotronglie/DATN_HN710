@@ -23,7 +23,7 @@ class AccountController extends Controller
     }
     public function login(Request $request)
     {
-        $maxAttempts = 100;
+        $maxAttempts = 3;
         $decayMinutes = 15;
         // Kiểm tra nếu người dùng bị khóa tạm thời
         if (RateLimiter::tooManyAttempts($this->throttleKey($request), $maxAttempts)) {
@@ -160,10 +160,10 @@ class AccountController extends Controller
     {
         return view('client.pages.account.forgotpassword');
     }
-    public function forgot(Request $request)
-{
+    public function forgot(Request $request){
     $request->validate(['email' => 'required|email'], [
-        'email.required' => 'Vui lòng nhập email'
+        'email.required' => 'Vui lòng nhập email',
+        'email.email'=>'Email không đúng định dạng'
     ]);
 
     $user = User::where('email', $request->email)->first();

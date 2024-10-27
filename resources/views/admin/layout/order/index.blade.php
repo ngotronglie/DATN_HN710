@@ -94,7 +94,7 @@
                                             @else
                                                 <td>{{ $item->user_name }}</td>
                                             @endif
-                                            <td>{{ \Carbon\Carbon::parse($item->order_date)->format('d/m/Y H:i:s') }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y H:i:s') }}</td>
 
                                             <td>
                                                 {{ number_format($item->total_amount, 0, ',', '.') }} VND

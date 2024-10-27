@@ -11,7 +11,7 @@
                     <h1 class="title">Quên mật khẩu</h1>
                     <ul>
                         <li>
-                            <a href="/">Home </a>
+                            <a href="/">Trang chủ</a>
                         </li>
                         <li class="active">Quên mật khẩu</li>
                     </ul>
@@ -53,7 +53,7 @@
                                                 <div class="form-group">
                                                     <label>Mật khẩu mới</label>
                                                     <input type="password" name="password" class="form-control"
-                                                        placeholder="Password" >
+                                                        placeholder="********" >
                                                         @error('password')
                                                         <small class="text-danger">
                                                             {{$message}}
@@ -63,7 +63,7 @@
                                                 <div class="form-group">
                                                     <label>Nhập lại mật khẩu</label>
                                                     <input type="password" name="password_confirmation" class="form-control"
-                                                        placeholder="Confirm Password" >
+                                                        placeholder="********" >
                                                         @error('password_confirmation')
                                                         <small class="text-danger">
                                                             {{$message}}

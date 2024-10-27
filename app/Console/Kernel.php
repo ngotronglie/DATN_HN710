@@ -5,7 +5,7 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Models\Voucher; // Thêm dòng này để sử dụng model Voucher
-
+use App\Models\User;
 class Kernel extends ConsoleKernel
 {
     /**
@@ -26,6 +26,14 @@ class Kernel extends ConsoleKernel
                    ->where('end_date', '>=', $now)
                    ->update(['is_active' => true]);
         })->daily(); // Chạy scheduler hàng ngày
+       // Xóa các tài khoản chưa xác thực sau 7 ngày
+        // $schedule->call(function () {
+        //     $expirationDate = now()->subDays(7); 
+
+        //     User::whereNull('email_verified_at') 
+        //         ->where('created_at', '<', $expirationDate) 
+        //         ->delete(); //forceDelete()
+        // })->daily(); 
     }
 
     /**

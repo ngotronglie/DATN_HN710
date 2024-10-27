@@ -43,17 +43,17 @@
                     <form action="{{ route('admin.checkLogin') }}" method="post">
                         @csrf
                         <div class="form-group">
-                            <label>Email address</label>
+                            <label>Email</label>
                             <input type="email" name="email" class="form-control" placeholder="Email" value="{{ old('email') }}" required>
                             @error('email')
                             <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Password</label>
+                            <label>Mật khẩu</label>
                             <div class="input-group">
                                 <input type="password" id="password" name="password" class="form-control"
-                                    placeholder="Password" required>
+                                    placeholder="Mật khẩu" required>
                                 <div class="input-group-append">
                                     <span class="input-group-text" onclick="togglePassword()">
                                         <i class="fa fa-eye" id="eyeIcon"></i>
@@ -69,14 +69,13 @@
                         @endif
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox"> Remember Me
-                            </label>
+                                <input type="checkbox" name="remember" id="remember"> Ghi nhớ tôi                            </label>
                             <label class="pull-right">
-                                <a href="{{route('admin.forgot')}}">Forgotten Password?</a>
+                                <a href="{{route('admin.forgot')}}">Quên mật khẩu?</a>
                             </label>
                         </div>
 
-                        <button type="submit" class="btn btn-success btn-flat m-b-30 m-t-30">Sign in</button>
+                        <button type="submit" class="btn btn-success btn-flat m-b-30 m-t-30">Đăng nhập</button>
                     </form>
                 </div>
             </div>

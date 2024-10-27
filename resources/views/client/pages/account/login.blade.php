@@ -11,9 +11,9 @@
                 <h1 class="title">Login</h1>
                 <ul>
                     <li>
-                        <a href="/">Home </a>
+                        <a href="/">Trang chủ </a>
                     </li>
-                    <li class="active">Login</li>
+                    <li class="active">Đăng nhập</li>
                 </ul>
             </div>
         </div>
@@ -62,7 +62,7 @@
                                                         <div class="mb-5" style="position: relative;">
                                                             <div class="input-group">
                                                                 <input type="password" id="password" name="password" class="form-control" 
-                                                                       placeholder="Password" required style="padding-right: 40px;">
+                                                                       placeholder="Mật khẩu" required style="padding-right: 40px;">
                                                                 <div class="input-group-append" 
                                                                      style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
                                                                     <span class="input-group-text" onclick="togglePassword()" style="background: none; border: none;">
@@ -104,7 +104,7 @@
                             
                                                         <!-- Login Button Start -->
                                                         <div class="single-input-item mb-3">
-                                                            <button class="btn btn btn-dark btn-hover-primary rounded-0">Login</button>
+                                                            <button class="btn btn btn-dark btn-hover-primary rounded-0">Đăng nhập</button>
                                                         </div>
                                                         <!-- Login Button End -->
                             
