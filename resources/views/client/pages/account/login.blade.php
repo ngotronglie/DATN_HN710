@@ -88,8 +88,8 @@
                                                             <div class="login-reg-form-meta d-flex align-items-center justify-content-between">
                                                                 <div class="remember-meta mb-3">
                                                                     <div class="custom-control custom-checkbox">
-                                                                        <input type="checkbox" class="custom-control-input" id="rememberMe">
-                                                                        <label class="custom-control-label" for="rememberMe">Nhớ tôi</label>
+                                                                        <input type="checkbox" class="custom-control-input" id="rememberMe" name="remember">
+                                                                        <label class="custom-control-label" for="rememberMe">Ghi nhớ tôi</label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="d-flex justify-content-between mb-3">

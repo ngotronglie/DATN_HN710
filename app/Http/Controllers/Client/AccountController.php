@@ -40,6 +40,7 @@ class AccountController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ], [
+            'email.email'=>'Email không đúng đinh dạng',
             'email.required' => 'Email không được bỏ trống',
             'password.required' => 'Mật khẩu không được bỏ trống',
         ]);
@@ -50,7 +51,9 @@ class AccountController extends Controller
                 'error' => 'Tài khoản của bạn đã bị xóa. Vui lòng liên hệ với quản trị viên.',
             ])->onlyInput('email');
         }
-            if (Auth::attempt($credentials)) {
+        $remember = $request->has('remember');
+
+            if (Auth::attempt($credentials,$remember)) {
             if (Auth::user()->email_verified_at === null) {
                 Auth::logout(); 
                 return back()->withErrors([
