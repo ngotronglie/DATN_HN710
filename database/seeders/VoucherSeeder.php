@@ -12,6 +12,6 @@ class VoucherSeeder extends Seeder
      */
     public function run(): void
     {
-         \App\Models\Voucher::factory(5)->create();
+         \App\Models\Voucher::factory(10)->create();
     }
 }

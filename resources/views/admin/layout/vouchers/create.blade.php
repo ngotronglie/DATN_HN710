@@ -16,7 +16,7 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
+                            <li><a href="#">Bảng điều khiển</a></li>
                             <li><a href="{{ route('admin.vouchers.index') }}">Quản lí Vouchers</a></li>
                             <li class="active">Thêm Voucher</li>
                         </ol>

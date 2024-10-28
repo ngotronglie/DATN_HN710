@@ -7,7 +7,7 @@
                 <div class="col-sm-4">
                     <div class="page-header float-left">
                         <div class="page-title">
-                            <h1>Dashboard</h1>
+                            <h1>Thêm bài viết</h1>
                         </div>
                     </div>
                 </div>
@@ -15,9 +15,9 @@
                     <div class="page-header float-right">
                         <div class="page-title">
                             <ol class="breadcrumb text-right">
-                                <li><a href="#">Dashboard</a></li>
-                                <li><a href="{{ route('admin.blogs.index') }}">Danh sách danh mục</a></li>
-                                <li class="active">Thêm danh mục</li>
+                                <li><a href="#">Bảng điều khiển</a></li>
+                                <li><a href="{{ route('admin.blogs.index') }}">Danh sách bài viết</a></li>
+                                <li class="active">Thêm bài viết</li>
                             </ol>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
         <div class="animated fadeIn">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <strong>Thêm danh mục</strong>
+                    <strong>Thêm bài viết</strong>
                     <a href="{{ route('admin.blogs.index') }}" class="btn btn-primary">
                         <i class="fa fa-arrow-left mr-1"></i> Quay lại
                     </a>

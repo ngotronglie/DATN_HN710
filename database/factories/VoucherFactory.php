@@ -17,12 +17,12 @@ class VoucherFactory extends Factory
     public function definition(): array
     {
         return [
-            'code' => strtoupper($this->faker->unique()->lexify('??????')),
-            'discount' => $this->faker->randomFloat(2, 5, 50),
-            'start_date' => $this->faker->dateTimeBetween('-1 month', '+1 month'),
-            'end_date' => $this->faker->dateTimeBetween('+1 month', '+6 months'),
-            'quantity' => $this->faker->numberBetween(1, 1000),
-            'min_money' => $this->faker->randomFloat(2, 10, 100),
+            'code' => strtoupper(fake()->unique()->lexify('??????')),
+            'discount' => fake()->randomFloat(2, 5, 50),
+            'start_date' => fake()->dateTimeBetween('-1 month', '+1 month'),
+            'end_date' => fake()->dateTimeBetween('+1 month', '+6 months'),
+            'quantity' => fake()->numberBetween(1, 1000),
+            'min_money' => fake()->randomFloat(2, 10, 100),
         ];
     }
 }

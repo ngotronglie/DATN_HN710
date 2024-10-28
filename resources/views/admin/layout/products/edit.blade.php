@@ -7,7 +7,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Dashboard</h1>
+                        <h1>Sửa sản phẩm</h1>
                     </div>
                 </div>
             </div>
@@ -15,9 +15,9 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
+                            <li><a href="#">Bảng điều khiển</a></li>
                             <li><a href="{{ route('admin.products.index') }}">Danh sách sản phẩm</a></li>
-                            <li class="active">Cập nhật sản phẩm</li>
+                            <li class="active">Sửa sản phẩm</li>
                         </ol>
                     </div>
                 </div>

@@ -15,7 +15,7 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
+                            <li><a href="#">Bảng điều khiển</a></li>
                             <li><a href="{{ route('admin.category_blogs.index') }}">Danh sách danh mục</a></li>
                             <li class="active">Chi tiết danh mục</li>
                         </ol>

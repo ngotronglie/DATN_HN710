@@ -14,7 +14,7 @@ class StatisticsController extends Controller
     public function index()
     {
         // Thống kê doanh thu 4 tháng gần nhất
-        $monthlyRevenue = Order::selectRaw('DATE_FORMAT(order_date, "%Y-%m") as month, SUM(total_amount) as total_revenue')
+        $monthlyRevenue = Order::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, SUM(total_amount) as total_revenue')
             ->where('status', 4) // 4 là trạng thái hoàn tất
             ->groupBy('month')
             ->orderBy('month', 'desc')

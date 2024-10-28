@@ -2,15 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Comment;
 use App\Models\Product;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Color>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ProductGallery>
  */
-class CommentFactory extends Factory
+class ProductGalleryFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -20,10 +18,8 @@ class CommentFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::inRandomOrder()->first()->id,
             'product_id' => Product::inRandomOrder()->first()->id,
-            'content' => fake()->sentence(),
-            'parent_id' => Comment::inRandomOrder()->first()->id ?? null,
+            'image' => fake()->imageUrl(640, 480, 'product', true),
         ];
     }
 }

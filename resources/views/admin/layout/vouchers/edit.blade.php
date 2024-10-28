@@ -8,7 +8,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Chỉnh sửa Voucher</h1>
+                        <h1>Sửa voucher</h1>
                     </div>
                 </div>
             </div>
@@ -16,9 +16,9 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
-                            <li><a href="{{ route('admin.vouchers.index') }}">Quản lí Vouchers</a></li>
-                            <li class="active">Chỉnh sửa Voucher</li>
+                            <li><a href="#">Bảng điều khiển</a></li>
+                            <li><a href="{{ route('admin.vouchers.index') }}">Quản lí vouchers</a></li>
+                            <li class="active">Sửa voucher</li>
                         </ol>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong>Chỉnh sửa Voucher</strong>
+                        <strong>Sửa Voucher</strong>
                         <a href="{{ route('admin.vouchers.index') }}" class="btn btn-primary">
                             <i class="fa fa-arrow-left mr-1"></i> Quay lại
                         </a>

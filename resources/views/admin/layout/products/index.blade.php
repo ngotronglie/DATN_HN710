@@ -15,7 +15,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Dashboard</h1>
+                        <h1>Danh sách sản phẩm</h1>
                     </div>
                 </div>
             </div>
@@ -23,9 +23,9 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
-                            <li><a href="#">Quản lí danh mục</a></li>
-                            <li class="active">Danh sách danh mục</li>
+                            <li><a href="#">Bảng điều khiển</a></li>
+                            <li><a href="#">Quản lí sản phẩm</a></li>
+                            <li class="active">Danh sách sản phẩm</li>
                         </ol>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong class="card-title">Danh sách danh mục</strong>
+                        <strong class="card-title">Danh sách sản phẩm</strong>
                         <div class="d-flex">
                             <a class="btn btn-primary mr-2" href="{{ route('admin.products.create') }}">
                                 <i class="fa fa-plus"></i> Thêm mới
