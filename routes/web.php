@@ -68,7 +68,10 @@ Route::get('shop/ajax/getSizePriceDetail', [ShopController::class, 'getSizePrice
 
 // Blog
 Route::get('/blogs', [ClientBlogController::class, 'index'])->name('blogs.index');
+Route::get('/blogs/category/{id}', [ClientBlogController::class, 'getBlogCategory'])->name('blogs.category');
 Route::get('/blogs/{id}', [ClientBlogController::class, 'show'])->name('blogs.show');
+Route::get('/blogs-search', [ClientBlogController::class, 'search'])->name('blogs.search');
+
 
 // Contact
 Route::get('/contact', function () {
