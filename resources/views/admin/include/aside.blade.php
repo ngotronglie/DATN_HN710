@@ -4,9 +4,9 @@
             <div id="main-menu" class="main-menu collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li class="{{ Request::routeIs('admin.dashboard') ? 'active' : '' }}">
-                        <a href="{{ route('admin.dashboard') }}"><i class="menu-icon fa fa-laptop"></i>Dashboard </a>
+                        <a href="{{ route('admin.dashboard') }}"><i class="menu-icon fa fa-laptop"></i>Bảng điều khiển</a>
                     </li>
-                    <li class="menu-title">UI elements</li><!-- /.menu-title -->
+                    <li class="menu-title">Sản phẩm & Khuyến mãi</li><!-- /.menu-title -->
                     {{-- category --}}
                     <li class="menu-item-has-children {{ Request::is('admin/categories*') ? 'active' : '' }} dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
@@ -55,16 +55,6 @@
                         </ul>
                     </li>
                     {{-- end size --}}
-                    {{-- account --}}
-                    <li class="menu-item-has-children {{ Request::is('admin/accounts*') ? 'active' : '' }} dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false"> <i class="menu-icon fa fa-user"></i>Quản lý tài khoản</a>
-                        <ul class="sub-menu children dropdown-menu">
-                            <li><a href="{{ route('admin.accounts.index') }}">Danh sách</a></li>
-                            <li><a href="{{ route('admin.accounts.create') }}">Thêm mới</a></li>
-                        </ul>
-                    </li>
-                    {{-- end account --}}
                     {{-- voucher --}}
                     <li class="menu-item-has-children {{ Request::is('admin/vouchers*') ? 'active' : '' }} dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
@@ -75,6 +65,26 @@
                         </ul>
                     </li>
                     {{-- end voucher --}}
+                    <li class="menu-title">Khách hàng & Nội dung</li><!-- /.menu-title -->
+                    {{-- account --}}
+                    <li class="menu-item-has-children {{ Request::is('admin/accounts*') ? 'active' : '' }} dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false"> <i class="menu-icon fa fa-user"></i>Quản lý tài khoản</a>
+                        <ul class="sub-menu children dropdown-menu">
+                            <li><a href="{{ route('admin.accounts.index') }}">Danh sách</a></li>
+                            <li><a href="{{ route('admin.accounts.create') }}">Thêm mới</a></li>
+                        </ul>
+                    </li>
+                    {{-- end account --}}
+                    {{-- comment --}}
+                    <li class="menu-item-has-children {{ Request::is('admin/comments*') ? 'active' : '' }} dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false"> <i class="menu-icon fa fa-comment"></i>Quản lý bình luận</a>
+                        <ul class="sub-menu children dropdown-menu">
+                            <li></i><a href="{{ route('admin.comments.index') }}">Danh sách</a></li>
+                        </ul>
+                    </li>
+                    {{-- end comment --}}
                     {{-- category blog --}}
                     <li
                         class="menu-item-has-children {{ Request::is('admin/category_blogs*') || Request::is('admin/blogs*') ? 'active' : '' }} dropdown">
@@ -98,75 +108,19 @@
                         </ul>
                     </li>
                     {{-- end banner --}}
-                    {{-- comment --}}
-                    <li class="menu-item-has-children {{ Request::is('admin/comments*') ? 'active' : '' }} dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false"> <i class="menu-icon fa fa-comment"></i>Quản lý bình luận</a>
-                        <ul class="sub-menu children dropdown-menu">
-                            <li></i><a href="{{ route('admin.comments.index') }}">Danh sách</a></li>
-                        </ul>
-                    </li>
-                    {{-- end comment --}}
+                    <li class="menu-title">Đơn hàng & Thống kê</li><!-- /.menu-title -->
                     {{-- order --}}
                     <li class="menu-item-has {{ Request::is('admin/order*') ? 'active' : '' }} ">
                         <a href="{{route('admin.order.index')}}">
                             <i class="menu-icon fa fa-shopping-cart"></i>Quản lý đơn hàng</a>
                     </li>
                     {{-- end order --}}
-                    {{-- order --}}
+                    {{-- statistics --}}
                     <li class="menu-item-has {{ Request::is('admin/statistics*') ? 'active' : '' }} ">
                         <a href="{{route('admin.statistics.index')}}">
                             <i class="menu-icon fa fa-bar-chart-o"></i>Thống kê</a>
                     </li>
-                    {{-- end order --}}
-                    <li class="menu-title">Icons</li><!-- /.menu-title -->
-
-                    <li class="menu-item-has-children dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false"> <i class="menu-icon fa fa-tasks"></i>Icons</a>
-                        <ul class="sub-menu children dropdown-menu">
-                            <li><i class="menu-icon fa fa-fort-awesome"></i><a href="font-fontawesome.html">Font
-                                    Awesome</a></li>
-                            <li><i class="menu-icon ti-themify-logo"></i><a href="font-themify.html">Themefy Icons</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="widgets.html"> <i class="menu-icon ti-email"></i>Widgets </a>
-                    </li>
-                    <li class="menu-item-has-children dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false"> <i class="menu-icon fa fa-bar-chart"></i>Charts</a>
-                        <ul class="sub-menu children dropdown-menu">
-                            <li><i class="menu-icon fa fa-line-chart"></i><a href="charts-chartjs.html">Chart JS</a>
-                            </li>
-                            <li><i class="menu-icon fa fa-area-chart"></i><a href="charts-flot.html">Flot Chart</a>
-                            </li>
-                            <li><i class="menu-icon fa fa-pie-chart"></i><a href="charts-peity.html">Peity Chart</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="menu-item-has-children dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false"> <i class="menu-icon fa fa-area-chart"></i>Maps</a>
-                        <ul class="sub-menu children dropdown-menu">
-                            <li><i class="menu-icon fa fa-map-o"></i><a href="maps-gmap.html">Google Maps</a></li>
-                            <li><i class="menu-icon fa fa-street-view"></i><a href="maps-vector.html">Vector Maps</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="menu-title">Extras</li><!-- /.menu-title -->
-                    <li class="menu-item-has-children dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false"> <i class="menu-icon fa fa-glass"></i>Pages</a>
-                        <ul class="sub-menu children dropdown-menu">
-                            <li><i class="menu-icon fa fa-sign-in"></i><a href="page-login.html">Login</a></li>
-                            <li><i class="menu-icon fa fa-sign-in"></i><a href="page-register.html">Register</a></li>
-                            <li><i class="menu-icon fa fa-paper-plane"></i><a href="pages-forget.html">Forget Pass</a>
-                            </li>
-                        </ul>
-                    </li>
+                    {{-- end statistics --}}
                 </ul>
             </div><!-- /.navbar-collapse -->
         </nav>

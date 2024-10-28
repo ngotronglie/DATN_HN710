@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Product;
+use App\Models\ProductGallery;
+use App\Models\ProductVariant;
 
 class ProductSeeder extends Seeder
 {
@@ -13,7 +15,9 @@ class ProductSeeder extends Seeder
      */
     public function run()
     {
-        // Tạo 20 sản phẩm giả
-        Product::factory()->count(20)->create();
+        Product::factory(10)->create()->each(function ($product) {
+            ProductVariant::factory(5)->create(['product_id' => $product->id]);
+            ProductGallery::factory(3)->create(['product_id' => $product->id]);
+        });
     }
 }

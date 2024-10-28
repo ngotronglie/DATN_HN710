@@ -14,6 +14,8 @@ class OrderSeeder extends Seeder
      */
     public function run(): void
     {
-        Order::factory(5)->has(OrderDetail::factory()->count(3), 'orderDetails')->create();
+        Order::factory(10)->create()->each(function ($order) {
+            OrderDetail::factory(fake()->numberBetween(2, 4))->create(['order_id' => $order->id]);
+        });
     }
 }

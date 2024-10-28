@@ -15,7 +15,7 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
+                            <li><a href="#">Bảng điều khiển</a></li>
                             <li><a href="{{ route('admin.banners.index') }}">Danh sách banner</a></li>
                             <li class="active">Chi tiết banner</li>
                         </ol>

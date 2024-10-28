@@ -7,13 +7,13 @@
 
 @section('content')
 
-<div class="breadcrumbs">
+<div class="breadcrumbs mb-5">
     <div class="breadcrumbs-inner">
         <div class="row m-0">
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Danh sách Voucher đã xóa</h1>
+                        <h1>Danh sách thùng rác</h1>
                     </div>
                 </div>
             </div>
@@ -21,9 +21,9 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
+                            <li><a href="#">Bảng điều khiển</a></li>
                             <li><a href="{{ route('admin.vouchers.index') }}">Quản lí Vouchers</a></li>
-                            <li class="active">Danh sách Voucher đã xóa</li>
+                            <li class="active">Thùng rác</li>
                         </ol>
                     </div>
                 </div>
@@ -32,13 +32,13 @@
     </div>
 </div>
 
-<div class="content">
+<div class="content mb-5">
     <div class="animated fadeIn">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong class="card-title">Danh sách Voucher đã xóa</strong>
+                        <strong class="card-title">Thùng rác</strong>
                         <a href="{{ route('admin.vouchers.index') }}" class="btn btn-primary float-right">Quay lại</a>
                     </div>
                     <div class="card-body">
@@ -48,10 +48,6 @@
                                     <th>STT</th>
                                     <th>Code</th>
                                     <th>Giảm giá</th>
-                                    <th>Số lượng</th>
-                                    <th>Ngày bắt đầu</th>
-                                    <th>Ngày kết thúc</th>
-                                    <th>Giá nhỏ nhất</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
@@ -60,10 +56,6 @@
                                     <th>STT</th>
                                     <th>Code</th>
                                     <th>Giảm giá</th>
-                                    <th>Số lượng</th>
-                                    <th>Ngày bắt đầu</th>
-                                    <th>Ngày kết thúc</th>
-                                    <th>Giá nhỏ nhất</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </tfoot>
@@ -73,10 +65,6 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->code }}</td>
                                     <td>{{ $item->discount }}%</td>
-                                    <td>{{ $item->quantity }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->start_date)->format('d/m/Y') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->end_date)->format('d/m/Y') }}</td>
-                                    <td>{{ number_format($item->min_money, 0, ',', '.') }} VNĐ</td>
                                     <td>
                                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#restoreModal{{ $item->id }}" title="Khôi phục">
                                             <i class="fa fa-repeat"></i>

@@ -15,7 +15,7 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
+                            <li><a href="#">Bảng điều khiển</a></li>
                             <li><a href="{{ route('admin.accounts.index') }}">Danh sách tài khoản</a></li>
                             <li class="active">Chi tiết tài khoản</li>
                         </ol>

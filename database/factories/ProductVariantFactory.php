@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\ProductVariant;
 use App\Models\Product;
 use App\Models\Size;
 use App\Models\Color;
@@ -20,14 +19,12 @@ class ProductVariantFactory extends Factory
     public function definition(): array
     {
         return [
-            'product_id' => Product::factory(),
-            'size_id' => Size::factory(), 
-            'color_id' => Color::factory(), 
-            'quantity' => $this->faker->numberBetween(1, 100),
-            'price' => $this->faker->numberBetween(50000, 300000), 
-            'price_sale' => $this->faker->numberBetween(40000, 250000), 
-            'created_at' => now(),
-            'updated_at' => now(),
+            'product_id' => Product::inRandomOrder()->first()->id,
+            'size_id' => Size::inRandomOrder()->first()->id, 
+            'color_id' => Color::inRandomOrder()->first()->id, 
+            'quantity' => fake()->numberBetween(1, 100),
+            'price' => fake()->numberBetween(50000, 300000), 
+            'price_sale' => fake()->numberBetween(40000, 250000), 
         ];
     }
 }

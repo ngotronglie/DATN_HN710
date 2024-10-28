@@ -20,20 +20,19 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(), 
-            'user_name' => $this->faker->name,
-            'user_email' => $this->faker->unique()->safeEmail,
-            'user_phone' => $this->faker->phoneNumber,
-            'user_address' => $this->faker->address,
-            'voucher_id' => $this->faker->boolean(50) ? Voucher::factory() : null, 
-            'total_amount' => $this->faker->numberBetween(100000, 500000), 
-            'status' => '1',
-            'payment_method' => $this->faker->randomElement(['cod', 'vnpay', 'momo']),
-            'payment_status' => $this->faker->randomElement(['unpaid', 'paid', 'failed', 'refunded']),
-            'order_code' => 'ORD-' . Str::random(8),
-            'note' => $this->faker->sentence(),
-            'created_at' => now(),
-            'updated_at' => now(),
+            'user_id' => User::inRandomOrder()->first()->id ?? null, 
+            'user_name' => fake()->name(),
+            'user_email' => fake()->safeEmail(),
+            'user_phone' => fake()->phoneNumber(),
+            'user_address' => fake()->address(),
+            'voucher_id' => Voucher::inRandomOrder()->first()->id ?? null, 
+            'total_amount' => fake()->numberBetween(100000, 500000), 
+            'status' => fake()->randomElement(['1', '2', '3', '4']),
+            'payment_method' => fake()->randomElement(['cod', 'vnpay', 'momo']),
+            'payment_status' => fake()->randomElement(['unpaid', 'paid', 'failed', 'refunded']),
+            'order_code' => 'ORD-' . strtoupper(Str::random(8)),
+            'note' => fake()->optional()->sentence(),
+            'order_date' => now(),
         ];
     }
 }

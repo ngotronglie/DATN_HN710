@@ -19,15 +19,13 @@ class OrderDetailFactory extends Factory
     public function definition(): array
     {
         return [
-        'order_id' => Order::factory(), 
-            'product_variant_id' => ProductVariant::factory(), 
-            'product_name' => $this->faker->word(),
-            'size_name' => $this->faker->randomElement(['S', 'M', 'L', 'XL']),
-            'color_name' => $this->faker->randomElement(['Red', 'Blue', 'Green']),
-            'quantity' => $this->faker->numberBetween(1, 10),
-            'price' => $this->faker->randomFloat(2, 10, 500),
-            'created_at' => now(),
-            'updated_at' => now(),
+            'order_id' => Order::inRandomOrder()->first()->id, 
+            'product_variant_id' => ProductVariant::inRandomOrder()->first()->id ?? null,
+            'product_name' => fake()->word(),
+            'size_name' => fake()->randomElement(['S', 'M', 'L', 'XL']),
+            'color_name' => fake()->randomElement(['Red', 'Blue', 'Green']),
+            'quantity' => fake()->numberBetween(1, 10),
+            'price' => fake()->randomFloat(2, 10, 500),
         ];
     }
 }
