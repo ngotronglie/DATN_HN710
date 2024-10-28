@@ -64,7 +64,7 @@
                                 <h3 class="widget-title mb-4">Tìm kiếm</h3>
                                 <form action="{{route('blogs.search')}}" method="get">
                                     <div class="search-box">
-                                        <input type="text" class="form-control" name="searchBlog" placeholder="{{ $input ?? 'Tìm kiếm bài viết' }}">
+                                        <input type="text" class="form-control" name="searchBlog" placeholder="Tìm kiếm bài viết" value="{{ $input ?? '' }}">
                                         <button class="btn btn-dark btn-hover-primary" type="submit">
                                             <i class="fa fa-search"></i>
                                         </button>

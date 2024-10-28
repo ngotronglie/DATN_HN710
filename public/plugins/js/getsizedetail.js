@@ -57,7 +57,7 @@
                     let maxPrice = res.max_price;
 
                     let formattedMinPrice = Math.floor(minPrice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                    let formattedMaxPrice = Math.floor(maxPrice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' VNĐ';
+                    let formattedMaxPrice = Math.floor(maxPrice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + 'đ';
 
                     if (minPrice == maxPrice) {
                         $('#product-price-sale-' + idProduct).text(`${formattedMaxPrice}`);
@@ -67,14 +67,6 @@
 
                     $('#sizes-prices-' + idProduct).empty();
 
-                    // res.variants.forEach(function (variant) {
-                    //     $('#sizes-prices-' + idProduct).append(
-                    //         '<li><label class="size-btn" data-quantity="' + variant.quantity + '" data-price="' + variant.price_sale + '" onclick="HT.getSize(this, \'' + variant.size + '\', ' + idProduct + ')">' +
-                    //         variant.size + '</label></li>'
-                    //     );
-                    // });
-
-                    // test
                     res.variants.forEach(function (variant, index) {
                         $('#sizes-prices-' + idProduct).append(
                             '<li>' +
@@ -88,7 +80,6 @@
                         );
                     });
 
-                    //test
                     $(document).ready(function() {
                         const firstColorButton = $('.size-btn.selected');
                         if (firstColorButton.length) {
@@ -106,8 +97,15 @@
                             let sizePriceSale = selectedVariant.price_sale && !isNaN(selectedVariant.price_sale)
                                 ? parseFloat(selectedVariant.price_sale) : 0;
 
+                                let sizePrice = selectedVariant.price && !isNaN(selectedVariant.price)
+                                ? parseFloat(selectedVariant.price) : 0;
+
                             let formattedPriceSale = sizePriceSale.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                            $('#product-price-sale-' + idProduct).text(formattedPriceSale + ' VNĐ');
+                            let formattedPrice = sizePrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+                            $('#product-price-sale-' + idProduct).text(formattedPriceSale + 'đ');
+
+                            $('#old-price').text(formattedPrice + 'đ');
 
                             // Hiển thị số lượng của kích thước đã chọn
                             let quantity = selectedVariant.quantity; // Lấy số lượng từ biến thể đã chọn
@@ -152,7 +150,6 @@
                 return;
             }
 
-            let fixedPrice = parseFloat(selectedVariant.attr('data-price'));
             let quantityProduct = parseFloat(selectedVariant.attr('data-quantity'));
 
 
@@ -185,19 +182,11 @@
 
             input.val(quantity);
             input.data('previousQuantity', quantity);
-            input.data('previousPrice', fixedPrice);
             let productId = input.closest('.product').attr('data-product-id');
 
-            updatePrice(fixedPrice, quantity, productId);
+            updatePrice(quantity, productId);
         });
 
-        function updatePrice(fixedPrice, quantity, productId) {
-            if (fixedPrice > 0) {
-                let totalPrice = (fixedPrice * quantity).toFixed(0);
-                let formattedTotalPrice = totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                $('#product-price-sale-' + productId).text(formattedTotalPrice + ' VNĐ');
-            }
-        }
 
         $(document).on('keypress', 'input.cart-plus-minus-box', function (e) {
             let input = $(this);
@@ -220,7 +209,6 @@
                 return;
             }
 
-            let fixedPrice = parseFloat(selectedVariant.attr('data-price'));
             let quantityProduct = parseFloat(selectedVariant.attr('data-quantity'));
 
 
@@ -249,9 +237,8 @@
                 let productId = input.closest('.product').attr('data-product-id');
 
                 input.data('previousQuantity', quantity);
-                input.data('previousPrice', fixedPrice);
 
-                updatePrice(fixedPrice, quantity, productId);
+                updatePrice(quantity, productId);
             }
         });
     };

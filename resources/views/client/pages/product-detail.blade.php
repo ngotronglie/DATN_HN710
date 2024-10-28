@@ -1,6 +1,7 @@
 @extends('client.index')
 @section('style')
     <style>
+        
         .size-buttons {
             display: flex;
 
@@ -79,6 +80,13 @@
             align-items: center;
             gap: 6px;
         }
+
+        .desc-content img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
     </style>
 @endsection
 @section('main')
@@ -86,12 +94,12 @@
         <div class="breadcrumb-area bg-light">
             <div class="container-fluid">
                 <div class="breadcrumb-content text-center">
-                    <h1 class="title">Single Product</h1>
+                    <h1 class="title">Chi tiết sản phẩm</h1>
                     <ul>
                         <li>
-                            <a href="index.html">Home </a>
+                            <a href="index.html">Trang chủ </a>
                         </li>
-                        <li class="active"> Single Product</li>
+                        <li class="active"> Chi tiết sản phẩm</li>
                     </ul>
                 </div>
             </div>
@@ -150,22 +158,35 @@
                 <div class="col-lg-7 col-custom">
                     <div class="product-summery position-relative">
 
-                        <div class="product-head mb-3">
+                        {{-- <div class="product-head mb-3" >
                             <h2 class="product-title">{{ $product->name }}</h2>
                         </div>
 
+                        <div data-aos="fade-up" data-aos-delay="200"></div>
                         <div class="price-box mb-2">
                             <span id="product-price-sale-{{ $product->id }}" class="show-price">
-                                {{ $product->min_price_sale == $product->max_price_sale
-                                    ? number_format($product->min_price_sale) . ' VNĐ'
-                                    : number_format($product->min_price_sale) . ' - ' . number_format($product->max_price_sale) . ' VNĐ' }}
                             </span>
-                        </div>
+                            <span style="text-decoration: line-through;font-size: 1.0rem;font-weight: 500" id="old-price"></span>
+                        </div> --}}
 
                         {{-- số lượng từng biến thể --}}
-                        <div class="sku mb-3">
+                        {{-- <div class="sku mb-3">
                             <span class="quantity-product" id="quantity-display-{{ $product->id }}"></span>
+                        </div> --}}
+                        <div class="product-head mb-3" data-aos="fade-up" data-aos-delay="200">
+                            <h2 class="product-title">{{ $product->name }}</h2>
                         </div>
+
+                        <div class="price-box mb-2" data-aos="fade-up" data-aos-delay="200">
+                            <span id="product-price-sale-{{ $product->id }}" class="show-price hidden"></span>
+                            <span id="old-price" class="hidden" style="text-decoration: line-through; font-size: 1.3rem; font-weight: 500"></span>
+                        </div>
+
+                        <div class="sku mb-3" data-aos="fade-up" data-aos-delay="200">
+                            <span class="quantity-product hidden" id="quantity-display-{{ $product->id }}"></span>
+                        </div>
+
+
 
                         <div class="sku mb-3">
                             <span>Lượt xem: {{ $product->view }}</span>
@@ -251,7 +272,7 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-uppercase" id="profile-tab" data-bs-toggle="tab" href="#connect-2"
-                                    role="tab" aria-selected="false">Đánh giá</a>
+                                    role="tab" aria-selected="false">Bình luận</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-uppercase" id="contact-tab" data-bs-toggle="tab"
@@ -269,14 +290,16 @@
                                     {!! substr($product->description, 0, 200) !!}...
                                     <a href="javascript:void(0);" class="show-more">Xem thêm</a>
                                 </div>
-                                <div id="fullDescription" style="display:none;" class="ml-2">
+                                <div id="fullDescription" style="display:none;" class="desc-content border p-3 ml-2">
                                     {!! $product->description !!}
                                     <a href="javascript:void(0);" class="show-less">Ẩn bớt</a>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="connect-2" role="tabpanel" aria-labelledby="profile-tab">
-                                <!-- Start Single Content -->
-                                <div class="product_tab_content  border p-3">
+
+
+                                {{-- Bình luận cũ --}}
+                                {{-- <div class="product_tab_content  border p-3">
                                     <!-- Start Single Review -->
                                     <div class="single-review d-flex mb-4">
 
@@ -344,15 +367,11 @@
                                                     @else
                                                         <div class="row comment-input">
                                                             <div class="col-md-6 col-custom comment-form-author mb-3">
-                                                                {{-- <label>Name: <strong>{{ Auth::user()->name }}</strong></label> --}}
-                                                                <input type="hidden" name="name"
-                                                                    value="{{ Auth::user()->name }}">
+                                                                <input type="hidden" name="name" value="{{ Auth::user()->name }}">
                                                             </div>
 
                                                             <div class="col-md-6 col-custom comment-form-email mb-3">
-                                                                {{-- <label>Email: <strong>{{ Auth::user()->email }}</strong></label> --}}
-                                                                <input type="hidden" name="email"
-                                                                    value="{{ Auth::user()->email }}">
+                                                                <input type="hidden" name="email" value="{{ Auth::user()->email }}">
                                                             </div>
                                                         </div>
                                                     @endif
@@ -378,11 +397,75 @@
                                     </div>
                                     <!-- Comments ans Replay End -->
 
+                                </div> --}}
+
+                                {{-- Bình luận mới --}}
+                                <div class="comment-area-wrapper mt-5 aos-init" data-aos="fade-up" data-aos-delay="400">
+                                    <h3 class="title mb-6">5 Comments</h3>
+                                    <div class="single-comment-wrap mb-10">
+                                        <a class="author-thumb" href="#">
+                                            <img
+                                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmhF7UB6jv1t_oyGDzqSb_h0JPspDnfqohVA&sr">
+                                        </a>
+                                        <div class="comments-info">
+                                            <div class="comment-footer d-flex justify-content-between">
+                                                <span class="author"><a href="#"><strong>Duy</strong></a> - July 30, 2023</span>
+                                                <a href="#" class="btn-reply"><i class="fa fa-reply"></i> Reply</a>
+                                            </div>
+                                            <p class="mb-1">Bình luận 1</p>
+                                        </div>
+                                    </div>
+                                    <div class="single-comment-wrap mb-10 comment-reply">
+                                        <a class="author-thumb" href="#">
+                                            <img
+                                                src="https://tse1.mm.bing.net/th?id=OIP.KdRE7KHqL-46M8nrvOX2CgHaHa&pid=Api&P=0&h=220">
+                                        </a>
+                                        <div class="comments-info">
+                                            <div class="comment-footer d-flex justify-content-between">
+                                                <span class="author"><a href="#"><strong>Alex</strong></a> - August 30,
+                                                    2023</span>
+                                            </div>
+                                            <p class="mb-1">Trả lời bình luận 1</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <!-- End Single Content -->
+                                <div class="blog-comment-form-wrapper mt-10 aos-init" data-aos="fade-up" data-aos-delay="400">
+                                    <div class="blog-comment-form-title">
+                                        <h2 class="title">Để lại 1 bình luận</h2>
+                                    </div>
+                                    <div class="comment-box">
+                                        <form action="#">
+                                            <div class="row">
+                                                <div class="col-12 col-custom">
+                                                    <div class="input-item mt-4">
+                                                        <textarea cols="30" rows="5" name="comment" class="rounded-0 w-100 custom-textarea input-area"
+                                                            placeholder="Bình luận"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-custom">
+                                                    <div class="input-item mb-4">
+                                                        <input class="rounded-0 w-100 input-area name" type="hidden"
+                                                            placeholder="Name" fdprocessedid="rg7vs">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-custom">
+                                                    <div class="input-item">
+                                                        <input class="rounded-0 w-100 input-area email" type="hidden"
+                                                            placeholder="Email" fdprocessedid="7z5f7l">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-custom">
+                                                    <button type="submit" class="btn btn-primary btn-hover-dark"
+                                                        fdprocessedid="iu5i8">Bình luận</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+
                             </div>
                             <div class="tab-pane fade" id="connect-3" role="tabpanel" aria-labelledby="contact-tab">
-                                <!-- Chính Sách Giao Hàng Bắt Đầu -->
                                 <div class="shipping-policy mb-n2">
                                     <h4 class="title-3 mb-4">Chính Sách Giao Hàng Của Chúng Tôi</h4>
 
@@ -418,7 +501,6 @@
                                         Hãy cùng chúng tôi khám phá những điều tuyệt vời đang chờ đón bạn!
                                     </p>
                                 </div>
-                                <!-- Chính Sách Giao Hàng Kết Thúc -->
                             </div>
 
                             <div class="tab-pane fade" id="connect-4" role="tabpanel" aria-labelledby="review-tab">
@@ -612,5 +694,18 @@
 @endsection
 
 @section('script')
-    <script src="{{ asset('plugins/js/getsizedetail.js') }}"></script>
+<script src="{{ asset('plugins/js/getsizedetail.js') }}"></script>
+<script>
+        document.addEventListener("DOMContentLoaded", function() {
+    // Đợi nội dung tải xong rồi thêm hiệu ứng
+    document.querySelectorAll('.show-price, .quantity-product').forEach(element => {
+        element.classList.add('fade-in'); // Thêm lớp `fade-in` để kích hoạt hiệu ứng
+    });
+});
+AOS.init({
+    duration: 1000, // Tốc độ animation
+    easing: 'ease-in-out', // Hiệu ứng easing
+    once: true, // Chạy hiệu ứng một lần khi cuộn đến
+});
+</script>
 @endsection
