@@ -22,7 +22,6 @@ class Order extends Model
         'email',
         'address',
         'phone',
-        'order_code',
         'note'
     ];
     public function user()

@@ -8,12 +8,12 @@
         <div class="breadcrumb-area bg-light">
             <div class="container-fluid">
                 <div class="breadcrumb-content text-center">
-                    <h1 class="title">My Account</h1>
+                    <h1 class="title">Tài khoản của tôi</h1>
                     <ul>
                         <li>
-                            <a href="index.html">Home </a>
+                            <a href="index.html">Trang chủ</a>
                         </li>
-                        <li class="active"> My Account</li>
+                        <li class="active">Tài khoản của tôi</li>
                     </ul>
                 </div>
             </div>

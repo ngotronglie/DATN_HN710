@@ -150,7 +150,7 @@
 
                                     <tr>
                                         <th>Thời gian đặt hàng</th>
-                                        <td>{{ \Carbon\Carbon::parse($order->order_date)->format('d/m/Y H:i:s') }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y H:i:s') }}</td>
                                     </tr>
 
                                 </tbody>

@@ -32,7 +32,6 @@ class OrderFactory extends Factory
             'payment_status' => fake()->randomElement(['unpaid', 'paid', 'failed', 'refunded']),
             'order_code' => 'ORD-' . strtoupper(Str::random(8)),
             'note' => fake()->optional()->sentence(),
-            'order_date' => now(),
         ];
     }
 }

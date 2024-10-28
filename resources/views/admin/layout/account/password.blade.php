@@ -46,12 +46,12 @@
                         <input type="hidden" name="email" value="{{ $email }}">
                   
                         <div class="form-group">
-                            <label>Password</label>
-                            <input type="password" name="password" class="form-control" placeholder="Password" required> 
+                            <label>Mật khẩu mới</label>
+                            <input type="password" name="password" class="form-control" placeholder="Mật khẩu mới" required> 
                         </div>
                         <div class="form-group">
-                            <label>Confirm Password</label>
-                            <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm Password" required>
+                            <label>Nhập lại mật khẩu</label>
+                            <input type="password" name="password_confirmation" class="form-control" placeholder="Nhập lại mật khẩu" required>
                         </div>
                         @error('password')
                         <p class="text-danger">
@@ -60,7 +60,7 @@
                         @enderror
 
                         <div class="button-box">
-                        <button type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30">Reset Pasword</button>
+                        <button type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30">Xác nhận</button>
                         </div>
                     </form>
                 </div>

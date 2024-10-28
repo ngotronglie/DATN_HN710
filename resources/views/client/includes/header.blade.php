@@ -47,7 +47,7 @@
                                     <ul>
 
                                         <li class="has-children position-static">
-                                            <a href="/shop">
+                                            <a href="javascript:void(0);">
                                                 @if (Auth::check() && Auth::user()->avatar)
                                                     <i class="bi bi-person-circle" style="font-size: 1.75rem;"></i>
 
@@ -55,7 +55,7 @@
                                                         src="{{ Storage::url(Auth::user()->avatar) }}"
                                                         alt="User Avatar">
                                                 @else
-                                                    <a href="/login" class="header-action-btn d-none d-md-block">
+                                                    <a href="javascript:void(0);"  class="header-action-btn d-none d-md-block">
                                                         <i class="pe-7s-user"></i>
                                                     </a>
                                                 @endif

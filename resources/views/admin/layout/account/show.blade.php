@@ -48,14 +48,15 @@
                                     <th>Email</th>
                                     <td>{{ $account->email }}</td>
                                 </tr>
+                                <tr>
                                 <th>Địa chỉ</th>
                                 <td>{{ $account->address }}</td>
-                                <tr>
                                 </tr>
+                                <tr>
                                 <th>Điện Thoại</th>
                                 <td>{{ $account->phone }}</td>
-                                <tr>
                                 </tr>
+                                <tr>
                                 <th>Ảnh</th>
                                 <td>
                                     @if($account->avatar)
@@ -64,11 +65,25 @@
                                     <span>Chưa cập nhật</span>
                                     @endif
                                 </td>
-                                <tr>
+                                
                                 </tr>
+                                <tr>
+                                    <th>Xác thực</th>
+                                <td>
+                                    @if($account->email_verified_at ==null)
+                                    <span class="badge badge-danger">Chưa xác thực</span>
+                                    @else
+                                    <span class="badge badge-success">Đã xác thực</span>
+                                    @endif
+                                </td>
+                                </tr>
+                                <tr>
                                 <th>Ngày sinh</th>
                                 <td>{{ \Carbon\Carbon::parse($account->date_of_birth)->format('d/m/Y') }}</td>                                <tr>
                                 </tr>
+                                <tr>
+
+                               
                                 <th>Chức vụ</th>
                                 <td>
                                     @php
@@ -83,6 +98,7 @@
                                     @endphp
                                     {{ $role }}
                                 </td>
+                            </tr>
                                 <tr>
                                     <th>Thời gian tạo</th>
                                     <td>{{ \Carbon\Carbon::parse($account->created_at)->format('d/m/Y H:i:s') }}</td>
