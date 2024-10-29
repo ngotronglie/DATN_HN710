@@ -1,0 +1,547 @@
+<?php
+
+namespace App\Http\Controllers\Client;
+
+use App\Http\Controllers\Controller;
+use App\Models\Comment;
+use App\Models\Product;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+
+class CommentController extends Controller
+{
+    // Hiển thị tất cả bình luận của sản phẩm
+    public function index($productId)
+    {
+        $product = Product::findOrFail($productId);
+        $comments = Comment::with('user')
+            ->where('product_id', $productId)
+            ->where('is_active', 1)
+            ->latest()
+            ->paginate(10); // Lấy 10 bình luận đầu tiên
+
+        return view('client.pages.product-detail', compact('product', 'comments'));
+    }
+
+    // API để lấy thêm bình luận
+    public function loadMoreComments(Request $request)
+    {
+        $productId = $request->input('product_id');
+        $page = $request->input('page', 1); // Trang hiện tại
+
+        $comments = Comment::with('user')
+            ->where('product_id', $productId)
+            ->latest()
+            ->paginate(10, ['*'], 'page', $page);
+
+        return response()->json([
+            'comments' => view('client.pages.partial-comments', compact('comments'))->render()
+        ]);
+    }
+
+    // Lưu bình luận mới
+    public function store(Request $request)
+    {
+        // Xác thực dữ liệu đầu vào
+        // $request->validate([
+        //     'product_id' => 'required|exists:products,id',
+        //     'content' => 'required|string|max:255',
+        // ]);
+
+        $product = Product::find($request->product_id);
+        $comments = Comment::where('product_id', $request->product_id)->get();
+
+        // Kiểm tra từ ngữ thô tục
+        if ($this->containsProfanity($request->content)) {
+            $error = 'Bình luận của bạn chứa từ ngữ không phù hợp. Vui lòng chỉnh sửa.';
+            return view('client.pages.product-detail', compact('product', 'comments'))->with(['error' => $error]);
+        }
+
+        // Lưu bình luận
+        $data = $request->all();
+        $data['user_id'] = Auth::user()->id;
+        Comment::create($data);
+
+        return Redirect::back()->with('success', 'Bình luận của bạn đã được đăng.');
+    }
+
+    // Hàm kiểm tra từ ngữ thô tục (tương tự Admin\CommentController)
+    private function containsProfanity($content)
+    {
+        // Đưa vào danh sách các từ thô tục như ví dụ bạn đã cung cấp trong `Admin\CommentController`
+        $profanities = [
+            // Buồi and its variants
+            'buồi',
+            'buoi',
+            'dau buoi',
+            'daubuoi',
+            'caidaubuoi',
+            'nhucaidaubuoi',
+            'dau boi',
+            'bòi',
+            'dauboi',
+            'caidauboi',
+            'đầu bòy',
+            'đầu bùi',
+            'dau boy',
+            'dauboy',
+            'caidauboy',
+
+            // Cặc and its variants
+            'cặc',
+            'cak',
+            'kak',
+            'kac',
+            'cac',
+            'concak',
+            'nungcak',
+            'bucak',
+            'caiconcac',
+            'caiconcak',
+            'cu',
+            'cặk',
+            'cak',
+            'dái',
+            'giái',
+            'zái',
+            'kiu',
+
+            // Cứt and its variants
+            'cứt',
+            'cuccut',
+            'cutcut',
+            'cứk',
+            'cuk',
+            'cười ỉa',
+            'cười ẻ',
+
+            // Đéo and its variants
+            'đéo',
+            'đếch',
+            'đếk',
+            'dek',
+            'đết',
+            'đệt',
+            'đách',
+            'dech',
+            'đ\'',
+            'deo',
+            'd\'',
+            'đel',
+            'đél',
+            'del',
+            'dell ngửi',
+            'dell ngui',
+            'dell chịu',
+            'dell chiu',
+            'dell hiểu',
+            'dell hieu',
+            'dellhieukieugi',
+            'dell nói',
+            'dell noi',
+            'dellnoinhieu',
+            'dell biết',
+            'dell biet',
+            'dell nghe',
+            'dell ăn',
+            'dell an',
+            'dell được',
+            'dell duoc',
+            'dell làm',
+            'dell lam',
+            'dell đi',
+            'dell di',
+            'dell chạy',
+            'dell chay',
+            'deohieukieugi',
+
+            // Địt and its variants
+            'địt',
+            'đm',
+            'dm',
+            'đmm',
+            'dmm',
+            'đmmm',
+            'dmmm',
+            'đmmmm',
+            'dmmmm',
+            'đmmmmm',
+            'dmmmmm',
+            'đcm',
+            'dcm',
+            'đcmm',
+            'dcmm',
+            'đcmmm',
+            'dcmmm',
+            'đcmmmm',
+            'dcmmmm',
+            'đệch',
+            'đệt',
+            'dit',
+            'dis',
+            'diz',
+            'đjt',
+            'djt',
+            'địt mẹ',
+            'địt mịe',
+            'địt má',
+            'địt mía',
+            'địt ba',
+            'địt bà',
+            'địt cha',
+            'địt con',
+            'địt bố',
+            'địt cụ',
+            'dis me',
+            'disme',
+            'dismje',
+            'dismia',
+            'dis mia',
+            'dis mie',
+            'đis mịa',
+            'đis mịe',
+            'ditmemayconcho',
+            'ditmemay',
+            'ditmethangoccho',
+            'ditmeconcho',
+            'dmconcho',
+            'dmcs',
+            'ditmecondi',
+            'ditmecondicho',
+
+            // Đù (đủ) má and its variants
+            'đụ',
+            'đụ mẹ',
+            'đụ mịa',
+            'đụ mịe',
+            'đụ má',
+            'đụ cha',
+            'đụ bà',
+            'đú cha',
+            'đú con mẹ',
+            'đú má',
+            'đú mẹ',
+            'đù cha',
+            'đù má',
+            'đù mẹ',
+            'đù mịe',
+            'đù mịa',
+            'đủ cha',
+            'đủ má',
+            'đủ mẹ',
+            'đủ mé',
+            'đủ mía',
+            'đủ mịa',
+            'đủ mịe',
+            'đủ mie',
+            'đủ mia',
+            'đìu',
+            'đờ mờ',
+            'đê mờ',
+            'đờ ma ma',
+            'đờ mama',
+            'đê mama',
+            'đề mama',
+            'đê ma ma',
+            'đề ma ma',
+            'dou',
+            'doma',
+            'duoma',
+            'dou má',
+            'duo má',
+            'dou ma',
+            'đou má',
+            'đìu má',
+            'á đù',
+            'á đìu',
+            'đậu mẹ',
+            'đậu má',
+
+            // Đĩ and its variants
+            'đĩ',
+            'di~',
+            'đuỹ',
+            'điếm',
+            'cđĩ',
+            'cdi~',
+            'đilol',
+            'điloz',
+            'đilon',
+            'diloz',
+            'dilol',
+            'dilon',
+            'condi',
+            'condi~',
+            'dime',
+            'di me',
+            'dimemay',
+            'condime',
+            'condimay',
+            'condimemay',
+            'con di cho',
+            'con di cho\'',
+            'condicho',
+            'bitch',
+            'biz',
+            'bít chi',
+            'con bích',
+            'con bic',
+            'con bíc',
+            'con bít',
+            'phò',
+
+            // Lồn and its variants
+            'lồn',
+            'l`',
+            'loz',
+            'lìn',
+            'nulo',
+            'ml',
+            'matlon',
+            'cailon',
+            'matlol',
+            'matloz',
+            'thml',
+            'thangmatlon',
+            'thangml',
+            'đỗn lì',
+            'tml',
+            'thml',
+            'diml',
+            'dml',
+            'hãm',
+            'xàm lol',
+            'xam lol',
+            'xạo lol',
+            'xao lol',
+            'con lol',
+            'ăn lol',
+            'an lol',
+            'mát lol',
+            'mat lol',
+            'cái lol',
+            'cai lol',
+            'lòi lol',
+            'loi lol',
+            'ham lol',
+            'củ lol',
+            'cu lol',
+            'ngu lol',
+            'tuổi lol',
+            'tuoi lol',
+            'mõm lol',
+            'mồm lol',
+            'mom lol',
+            'như lol',
+            'nhu lol',
+            'nứng lol',
+            'nung lol',
+            'nug lol',
+            'nuglol',
+            'rảnh lol',
+            'ranh lol',
+            'đách lol',
+            'dach lol',
+            'mu lol',
+            'banh lol',
+            'tét lol',
+            'tet lol',
+            'vạch lol',
+            'vach lol',
+            'cào lol',
+            'cao lol',
+            'tung lol',
+            'mặt lol',
+            'mát lol',
+            'mat lol',
+            'xàm lon',
+            'xam lon',
+            'xạo lon',
+            'xao lon',
+            'con lon',
+            'ăn lon',
+            'an lon',
+            'mát lon',
+            'mat lon',
+            'cái lon',
+            'cai lon',
+            'lòi lon',
+            'loi lon',
+            'ham lon',
+            'củ lon',
+            'cu lon',
+            'ngu lon',
+            'tuổi lon',
+            'tuoi lon',
+            'mõm lon',
+            'mồm lon',
+            'mom lon',
+            'như lon',
+            'nhu lon',
+            'nứng lon',
+            'nung lon',
+            'nug lon',
+            'nuglon',
+            'rảnh lon',
+            'ranh lon',
+            'đách lon',
+            'dach lon',
+            'mu lon',
+            'banh lon',
+            'tét lon',
+            'tet lon',
+            'vạch lon',
+            'vach lon',
+            'cào lon',
+            'cao lon',
+            'tung lon',
+            'mặt lon',
+            'mát lon',
+            'mat lon',
+            'cái lờ',
+            'cl',
+            'clgt',
+            'cờ lờ gờ tờ',
+            'cái lề gì thốn',
+            'đốn cửa lòng',
+            'sml',
+            'sapmatlol',
+            'sapmatlon',
+            'sapmatloz',
+            'sấp mặt',
+            'sap mat',
+            'vlon',
+            'vloz',
+            'vlol',
+            'vailon',
+            'vai lon',
+            'vai lol',
+            'vailol',
+            'nốn lừng',
+            'vcl',
+            'vl',
+            'vleu',
+
+            // Sexual related
+            'chịch',
+            'chich',
+            'vãi',
+            'v~',
+            'đụ',
+            'nứng',
+            'nug',
+            'đút đít',
+            'chổng mông',
+            'banh háng',
+            'xéo háng',
+            'xhct',
+            'xephinh',
+            'la liếm',
+            'đổ vỏ',
+            'xoạc',
+            'xoac',
+            'chich choac',
+            'húp sò',
+            'fuck',
+            'fck',
+            'đụ',
+            'bỏ bú',
+            'buscu',
+
+            // Various humiliation
+            'ngu',
+            'óc chó',
+            'occho',
+            'lao cho',
+            'láo chó',
+            'bố láo',
+            'chó má',
+            'cờ hó',
+            'sảng',
+            'thằng chó',
+            'thang cho\'',
+            'thang cho',
+            'chó điên',
+            'thằng điên',
+            'thang dien',
+            'đồ điên',
+            'sủa bậy',
+            'sủa tiếp',
+            'sủa đi',
+            'sủa càn',
+
+            // Mẹ cha and its variants
+            'mẹ bà',
+            'mẹ cha mày',
+            'me cha may',
+            'mẹ cha anh',
+            'mẹ cha nhà anh',
+            'mẹ cha nhà mày',
+            'me cha nha may',
+            'mả cha mày',
+            'mả cha nhà mày',
+            'ma cha may',
+            'ma cha nha may',
+            'mả mẹ',
+            'mả cha',
+            'kệ mẹ',
+            'kệ mịe',
+            'kệ mịa',
+            'kệ mje',
+            'kệ mja',
+            'ke me',
+            'ke mie',
+            'ke mia',
+            'ke mja',
+            'ke mje',
+            'bỏ mẹ',
+            'bỏ mịa',
+            'bỏ mịe',
+            'bỏ mja',
+            'bỏ mje',
+            'bo me',
+            'bo mia',
+            'bo mie',
+            'bo mje',
+            'bo mja',
+            'chetme',
+            'chet me',
+            'chết mẹ',
+            'chết mịa',
+            'chết mja',
+            'chết mịe',
+            'chết mie',
+            'chet mia',
+            'chet mie',
+            'chet mja',
+            'chet mje',
+            'thấy mẹ',
+            'thấy mịe',
+            'thấy mịa',
+            'thay me',
+            'thay mie',
+            'thay mia',
+            'tổ cha',
+            'bà cha mày',
+            'cmn',
+            'cmnl',
+
+            // Tiên sư and its variants
+            'tiên sư nhà mày',
+            'tiên sư bố',
+            'tổ sư',
+        ];
+
+        $cleanContent = mb_strtolower($content, 'UTF-8');
+        $cleanContent = preg_replace('/[^\w\s]/u', '', $cleanContent);
+
+        foreach ($profanities as $profanity) {
+            if (stripos($cleanContent, $profanity) !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}

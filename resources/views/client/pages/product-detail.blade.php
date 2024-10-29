@@ -99,6 +99,10 @@
         margin-right: 20px
             /* Dãn cách giữa các ảnh */
     }
+
+    /* .active-form {
+        display: block;
+    } */
 </style>
 @endsection
 @section('main')
@@ -301,8 +305,8 @@
                                 @foreach ($comments as $comment)
                                 <div class="single-comment-wrap mb-3" id="comment-{{$comment->id}}">
                                     <a class="author-thumb" href="#">
-                                        <img src=" {{Storage::url($comment->user->avatar)  }}" class=" rounded-circle"
-                                            width="5px" alt="User Avatar" accept="image/*">
+                                        <img src=" {{Storage::url(path: $comment->user->avatar)  }}"
+                                            class=" rounded-circle" width="5px" alt="User Avatar" accept="image/*">
                                     </a>
                                     <div class="comments-info">
                                         <p>
@@ -313,12 +317,11 @@
                                             <span class="author"><a
                                                     href="#"><strong>{{$comment->user->name}}</strong></a>
 
-                                                {{$comment->created_at}}
+                                                {{$comment->created_at->diffForHumans()}}
                                             </span>
-                                            <button id="replyBtn-{{$comment->id}}"
-                                                style="background-color: transparent; border:none;"
+                                            <button style="background-color: transparent; border:none; "
                                                 data-id="{{$comment->id}}" data-user="{{$comment->user_id}}"
-                                                class="btn-reply">
+                                                id="replyBtn-{{$comment->id}}" class="btn-reply">
                                                 <i class="fa fa-reply"></i> Reply
                                             </button>
                                         </div>
@@ -326,14 +329,18 @@
                                 </div>
 
                                 <!-- Vùng chèn textarea trả lời -->
-                                <div id="replyBox-{{$comment->id}}" class="reply-box" style="display:none;">
+                                <form id="replyBox-{{$comment->id}}" class="reply-box active-form"
+                                    action="{{ route('comments.store') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <input type="hidden" name="parent_id" class="parent-id-field"
+                                        id="parent-id-{{$comment->id}}">
                                     <textarea cols="30" rows="3" class="w-100 mt-2" placeholder="Your reply"
-                                        id="box-reply-{{$comment->id}}"></textarea>
-
-                                    <button type="submit" class="btn btn-primary btn-hover-dark mt-2" id="Submit_reply
-                                        " data-comment-id="{{$comment->id}}">Submit
+                                        id="box-reply-{{$comment->id}}" name="content"></textarea>
+                                    <button type="submit" class="btn btn-primary btn-hover-dark mt-2">Submit
                                         Reply</button>
-                                </div>
+                                </form>
+
                                 @if($comment->children != null)
                                 @include('client.pages._comment-child', ['children' => $comment->children])
                                 @endif
@@ -342,19 +349,27 @@
                             </div>
 
                             <!-- Form bình luận -->
+                            @if (auth()->check())
                             <div class="blog-comment-form-wrapper mt-10 aos-init" data-aos="fade-up"
                                 data-aos-delay="400">
                                 <div class="blog-comment-form-title">
                                     <h2 class="title">Leave a comment</h2>
                                 </div>
                                 <div class="comment-box">
-                                    <form id="commentForm" action="{{ route('admin.comments.store') }}" method="POST">
+                                    <form id="commentForm" action="{{ route('comments.store') }}" method="POST">
                                         @csrf
                                         <div class="row">
                                             <input type="hidden" value="{{ $product->id }}" name="product_id">
                                             <div class="col-12 col-custom">
                                                 <div class="input-item mt-4 mb-4">
-                                                    <input type="hidden" name="parent_id" id="parent_id">
+                                                    @if(isset($error))
+                                                    <script>
+                                                        window.alert("{{ $error }}");
+                                                    </script>
+                                                    @endif
+
+
+                                                    <input type="hidden" name="parent_id" id="id_parent">
                                                     <textarea cols="30" rows="5" name="content"
                                                         class="rounded-0 w-100 custom-textarea input-area"
                                                         placeholder="Message" required></textarea>
@@ -368,6 +383,9 @@
                                     </form>
                                 </div>
                             </div>
+                            @else
+                            <p>bạn cần <a href="{{route('login')}}">Đăng nhập </a> để có thể bình luận</p>
+                            @endif
                         </div>
 
                     </div>
@@ -509,83 +527,92 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    var replyButtons = document.querySelectorAll('.btn-reply');
+    var parentInputId = document.querySelector('#id_parent');
+
+    console.log(parentInputId);
+
+    for (const element of replyButtons) {
+
+
+        element.addEventListener('click', () => {
+            // event.preventDefault();
+            console.log(parentInputId);
+
+
+
+            let commentId = element.getAttribute('data-id');
+            let user_id = element.getAttribute('data-user');
+            parentInputId.value =
+                commentId;
+
+
+            $.ajax({
+                url: "{{route('comments.user')}}",
+                method: 'GET',
+
+                data: {
+                    user_id: user_id || '',
+                    commentId: commentId || ''
+                },
+
+                success: function(data) {
+                    console.log(data); // Kiểm tra cấu trúc của data-
+
+                    if (data.comment_id && data.data && data.data.name) {
+                        document.querySelector(`#box-reply-${data.comment_id}`).value =
+                            `@${data.data.name}`;
+                    } else {
+                        console.error("Thiếu dữ liệu c");
+                    }
+                },
+
+                error: function(xhr, error) {
+                    console.debug(xhr);
+                    console.debug(error);
+                },
+            })
+
+        });
+    }
+
+    // Nếu người dùng muốn thêm bình luận mới thì giữ parent_id rỗng
+    var commentForm = document.querySelector('.blog-comment-form-wrapper');
+    commentForm.addEventListener('submit', function() {
+        parentInputId.value = ''; // Xóa giá trị parent_id nếu không phải là trả lời
+    });
+</script>
+<script>
     $(document).ready(function() {
-        // Bắt sự kiện khi nhấn nút reply
-        $('.btn-reply').click(function() {
-            // Lấy ID của comment cần trả lời
+        // Handle click event on the reply button
+        $('.btn-reply').click(function(event) {
+            // Prevent the button from submitting the form or reloading the page
+            event.preventDefault();
+
+            // Get the comment ID to reply to
             var commentId = $(this).data('id');
             var replyBox = $('#replyBox-' + commentId);
 
-            // Ẩn tất cả các hộp trả lời khác ngoại trừ hộp hiện tại
-            $('.reply-box').not(replyBox).slideUp();
-
-            // Hiển thị hoặc ẩn hộp trả lời hiện tại
+            // Hide all other reply boxes except the current one;
+            let parent_Id_box = document.querySelector(`#parent-id-${commentId}`);
+            parent_Id_box.value = commentId;
+            // Toggle visibility of the current reply box
             replyBox.slideToggle();
 
-            // Cập nhật giá trị cho input hidden parent_id để xác định comment nào đang được trả lời
-            $('#parent_id').val(commentId);
 
+            // Debugging output to check if the parent_id is set correctly
+            // console.log("Replying to comment ID:", commentId);
+            // console.log(parent_Id_box);
 
         });
     });
 </script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var replyButtons = document.querySelectorAll('.btn-reply');
-        var parentInput = document.getElementById('parent_id');
-
-
-        replyButtons.forEach(function(button) {
-            button.addEventListener('click', function(event) {
-                event.preventDefault();
-
-                var commentId = button.getAttribute('data-id');
-                var user_id = button.getAttribute('data-user');
-                parentInput.value =
-                    commentId; // Gán giá trị parent_id để biết là đang trả lời bình luận nào
 
 
 
-                $.ajax({
-                    url: "{{route('admin.comments.user')}}",
-                    method: 'GET',
-                    data: {
-                        user_id,
-                        commentId
-                    },
-                    success: function(data) {
-                        document.querySelector(`#box-reply-${data.comment_id}`).value =
-                            `@${data.data.name}`;
-                    }
-                })
-
-            });
-        });
-
-        // Nếu người dùng muốn thêm bình luận mới thì giữ parent_id rỗng
-        var commentForm = document.querySelector('.blog-comment-form-wrapper');
-        commentForm.addEventListener('submit', function() {
-            parentInput.value = ''; // Xóa giá trị parent_id nếu không phải là trả lời
-        });
-    });
-</script>
-
-<script>
-    jQuery(document).ready(function() {
-        jQuery('#image').on('change', function(e) {
-            var input = this;
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    jQuery('#preview').attr('src', e.target.result).show();
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        });
-    });
-</script>
 @endsection
 
 @section('script')
+
 <script src="{{ asset('plugins/js/getsizedetail.js') }}"></script>
 @endsection

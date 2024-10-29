@@ -24,7 +24,7 @@ use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\BlogController as ClientBlogController;
 use App\Http\Controllers\Client\ShopController;
 use App\Http\Controllers\Client\AccountController;
-
+use App\Http\Controllers\Client\CommentController as ClientCommentController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -65,6 +65,11 @@ Route::get('/shops/{slug}', [ShopController::class, 'show'])->name('shops.show')
 Route::get('shop/ajax/getSizePrice', [ShopController::class, 'getSizePrice']);
 Route::get('shop/ajax/getSizePriceDetail', [ShopController::class, 'getSizePriceDetail']);
 
+// Comment
+Route::post('comments', [ClientCommentController::class, 'store'])->name('comments.store');
+Route::get('/comments/user', [ClientCommentController::class, 'getUser'])->name('comments.user');
+Route::get('/comments/load-more', [ClientCommentController::class, 'loadMoreComments'])->name('comments.loadMore');
+Route::get('/replies/load-more', [ClientCommentController::class, 'loadMoreReplies'])->name('replies.loadMore');
 
 // Blog
 Route::get('/blogs', [ClientBlogController::class, 'index'])->name('blogs.index');
@@ -184,10 +189,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::delete('banners/forceDelete/{id}', [BannerController::class, 'forceDelete'])->name('banners.forceDelete');
 
     // Quản lý bình luận
-    Route::get('comments', [CommentController::class, 'index'])->name('comments.index');
-    Route::post('comments', [CommentController::class, 'store'])->name('comments.store');
-    Route::get('user-comment', [CommentController::class, 'getUser'])->name('comments.user');
-    // Route::get('comments/{comment}', [CommentController::class, 'show'])->name('comments.show');
+    Route::get('comments', action: [CommentController::class, 'index'])->name('comments.index');
 
     // Quản lí banner
     Route::resource('banners', BannerController::class);

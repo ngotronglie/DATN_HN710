@@ -46,10 +46,12 @@
                         <strong class="card-title">Danh sách bình luận</strong>
                         <div class="d-flex">
                             <div class="dropdown float-right ml-2">
-                                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-cogs"></i> Tùy chọn
                                 </button>
-                                <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="dropdownMenuButton">
+                                <div class="dropdown-menu dropdown-menu-right shadow"
+                                    aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item activeAll" data-is_active="0" href="#">
                                         <i class="fa fa-toggle-on text-success"></i> Bật các mục đã chọn
                                     </a>
@@ -100,12 +102,14 @@
                                     <td>{{ $comment->product->name }}</td>
                                     <td>{{ Str::limit($comment->content, 50) }}</td>
                                     <td style="width: 12%" class="text-center">
-                                        <input type="checkbox" class="js-switch active" data-model="{{ $comment->is_active }}"
+                                        <input type="checkbox" class="js-switch active"
+                                            data-model="{{ $comment->is_active }}"
                                             {{ $comment->is_active == 1 ? 'checked' : '' }} data-switchery="true"
                                             data-modelId="{{ $comment->id }}" />
                                     </td>
                                     <td class="d-flex">
-                                        <a class="btn btn-primary mr-2" href="#" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
+                                        <a class="btn btn-primary mr-2" href="{{  }}" title="Xem chi tiết"><i
+                                                class="fa fa-eye"></i></a>
                                     </td>
                                 </tr>
                                 @endforeach
