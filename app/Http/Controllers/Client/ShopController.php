@@ -68,7 +68,7 @@ class ShopController extends Controller
         // Tính toán giá min/max cho sản phẩm hot
         $producthot->transform($calculatePriceRange);
 
-        return view('client.pages.shop', compact('products', 'categories', 'producthot'));
+        return view('client.pages.products.shop', compact('products', 'categories', 'producthot'));
     }
 
 
@@ -117,7 +117,7 @@ class ShopController extends Controller
         $products->transform($calculatePrices);
         $producthot->transform($calculatePrices);
 
-        return view('client.pages.shop', compact('products', 'categories', 'producthot'));
+        return view('client.pages.products.shop', compact('products', 'categories', 'producthot'));
     }
 
 
@@ -142,20 +142,33 @@ class ShopController extends Controller
             ->firstOrFail();
 
         $product->increment('view');
-        // $viewsKey = 'product_viewed_' . $product->id;
-
-        // // if (!session()->has($viewsKey)) {
-        //     $product->increment('view');
-        //     // Đánh dấu rằng người dùng đã xem sản phẩm này trong phiên làm việc
-        //     session([$viewsKey => true]);
-        // }
-
 
         $price_sales = $product->variants->pluck('price_sale');
         $product->max_price_sale = $price_sales->max();
         $product->min_price_sale = $price_sales->min();
 
-        return view('client.pages.product-detail', compact('product'));
+        // Lấy sản phẩm liên quan
+        $relatedProducts = Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->where('is_active', 1)
+            ->whereHas('category', function ($query) {
+                $query->where('is_active', 1)
+                    ->whereNull('deleted_at');
+            })
+            ->with([
+                'galleries',
+                'variants' => function ($query) {
+                    $query->whereHas('size', function ($query) {
+                        $query->whereNull('deleted_at');
+                    })->whereHas('color', function ($query) {
+                        $query->whereNull('deleted_at');
+                    });
+                }
+            ])
+            ->take(10)
+            ->get();
+
+        return view('client.pages.products.product-detail', compact('product', 'relatedProducts'));
     }
 
     public function search(Request $request)
@@ -225,7 +238,7 @@ class ShopController extends Controller
         // Tính toán giá min/max cho sản phẩm hot
         $producthot->transform($calculatePriceRange);
 
-        return view('client.pages.shop', compact('products', 'categories', 'producthot', 'input'));
+        return view('client.pages.products.shop', compact('products', 'categories', 'producthot', 'input'));
     }
 
 

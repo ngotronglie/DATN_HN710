@@ -1,7 +1,7 @@
 (function ($) {
-    "use strict";
+	"use strict";
 
-    /*----------------------------------------
+	/*----------------------------------------
 	   Sticky Menu Activation
 	------------------------------------------*/
 
@@ -12,7 +12,7 @@
 			$('.header-sticky').removeClass('sticky');
 		}
 	});
-	
+
 	/*-----------------------------------------
 		Off Canvas Mobile Menu
 	-------------------------------------------*/
@@ -25,9 +25,9 @@
 	$(".offcanvas-btn-close,.offcanvas-overlay").on('click', function () {
 		$("body").removeClass('fix');
 		$(".mobile-menu-wrapper").removeClass('open');
-    });
+	});
 
-    /*-----------------------------------------
+	/*-----------------------------------------
 		Off Canvas Search
 	-------------------------------------------*/
 
@@ -40,7 +40,7 @@
 		$("body").removeClass('fix');
 		$(".offcanvas-search").removeClass('open');
 	});
-	
+
 	/*-----------------------------------------
 		Off Canvas Mobile Menu
 	-------------------------------------------*/
@@ -53,25 +53,25 @@
 	$(".offcanvas-btn-close,.offcanvas-overlay").on('click', function () {
 		$("body").removeClass('fix');
 		$(".cart-offcanvas-wrapper").removeClass('open');
-    });
-    
-    /*----------------------------------------
+	});
+
+	/*----------------------------------------
 		Responsive Mobile Menu
 	------------------------------------------*/
 
 	//Variables
 	var $offCanvasNav = $('.mobile-menu, .category-menu'),
-	$offCanvasNavSubMenu = $offCanvasNav.find('.dropdown');
+		$offCanvasNavSubMenu = $offCanvasNav.find('.dropdown');
 
 	//Close Off Canvas Sub Menu
 	$offCanvasNavSubMenu.slideUp();
 
 	//Category Sub Menu Toggle
-	$offCanvasNav.on('click', 'li a, li .menu-expand', function(e) {
-	var $this = $(this);
-		if ( ($this.parent().attr('class').match(/\b(menu-item-has-children|has-children|has-sub-menu)\b/)) && ($this.attr('href') === '#' || $this.hasClass('menu-expand')) ) {
+	$offCanvasNav.on('click', 'li a, li .menu-expand', function (e) {
+		var $this = $(this);
+		if (($this.parent().attr('class').match(/\b(menu-item-has-children|has-children|has-sub-menu)\b/)) && ($this.attr('href') === '#' || $this.hasClass('menu-expand'))) {
 			e.preventDefault();
-			if ($this.siblings('ul:visible').length){
+			if ($this.siblings('ul:visible').length) {
 				$this.parent('li').removeClass('active');
 				$this.siblings('ul').slideUp();
 			} else {
@@ -82,85 +82,129 @@
 			}
 		}
 	});
-    
-    /*----------------------------------------
+
+	/*----------------------------------------
 	   Slider Activation
 	------------------------------------------*/
 
 	/* Hero Slider Activation */
-    var swiper = new Swiper('.hero-slider .swiper-container', {
-        loop: true,
-        speed: 1150,
-        spaceBetween: 30,
-        slidesPerView: 1,
+	var swiper = new Swiper('.hero-slider .swiper-container', {
+		loop: true,
+		speed: 1150,
+		spaceBetween: 30,
+		slidesPerView: 1,
 		effect: 'fade',
 		pagination: true,
 		navigation: true,
 
 
-        // Navigation arrows
-        navigation: {
-            nextEl: '.hero-slider .home-slider-next',
-            prevEl: '.hero-slider .home-slider-prev'
-        },
-        pagination: {
-            el: '.hero-slider .swiper-pagination',
+		// Navigation arrows
+		navigation: {
+			nextEl: '.hero-slider .home-slider-next',
+			prevEl: '.hero-slider .home-slider-prev'
+		},
+		pagination: {
+			el: '.hero-slider .swiper-pagination',
 			type: 'bullets',
 			clickable: 'true'
 		},
 		// Responsive breakpoints
 	});
-	
-	/* Product Carousel Activation */
-    var productCarousel = new Swiper('.product-carousel .swiper-container', {
-		loop: true,
-		slidesPerView: 3,
+
+	// Đếm số lượng sản phẩm dựa trên trang hiện tại
+	let productCount;
+
+	if (window.location.pathname === '/') {
+		// Đếm sản phẩm trên trang chủ
+		productCount = document.querySelectorAll('.product-carousel .swiper-slide').length;
+	} else if (window.location.pathname.includes('/shops/')) {
+		// Đếm sản phẩm trên trang chi tiết
+		productCount = document.querySelectorAll('.product-carousel .swiper-slide').length;
+	}
+	console.log(productCount);
+	console.log(window.location.pathname);
+
+	const slidesPerView = window.innerWidth >= 1200 ? 4 :
+		window.innerWidth >= 992 ? 3 :
+			window.innerWidth >= 575 ? 2 : 1;
+
+	var productCarousel = new Swiper('.product-carousel .swiper-container', {
+		loop: productCount > slidesPerView,  // Tắt vòng lặp nếu sản phẩm không đủ
+		slidesPerView: slidesPerView,
 		spaceBetween: 0,
-		pagination: true,
-		navigation: true,
 		observer: true,
 		observeParents: true,
 
-		navigation: {
+		navigation: productCount > slidesPerView ? {
 			nextEl: '.product-carousel .swiper-product-button-next',
 			prevEl: '.product-carousel .swiper-product-button-prev'
-		},
-		pagination: {
+		} : false,
+
+		pagination: productCount > slidesPerView ? {
 			el: '.product-carousel .swiper-pagination',
 			type: 'bullets',
-			clickable: 'true'
-		},
-		
-		// Responsive breakpoints
+			clickable: true
+		} : false,
+
 		breakpoints: {
-			// when window width is >= 320px
-			320: {
-				slidesPerView: 1,
-			},
-			// when window width is >= 480px
-			480: {
-				slidesPerView: 1,
-			},
-			// when window width is >= 575px
-			575: {
-				slidesPerView: 2,
-			},
-			// when window width is >= 768px
-			768: {
-				slidesPerView: 2,
-			},
-			// when window width is >= 992px
-			992: {
-				slidesPerView: 3,
-			},
-			// when window width is >= 1200px
-			1200: {
-				slidesPerView: 4,
-			}
+			320: { slidesPerView: 1 },
+			480: { slidesPerView: 1 },
+			575: { slidesPerView: 2 },
+			768: { slidesPerView: 2 },
+			992: { slidesPerView: 3 },
+			1200: { slidesPerView: 4 }
 		}
-	});	
+	});
+	// /* Product Carousel Activation */
+	// var productCarousel = new Swiper('.product-carousel .swiper-container', {
+	// 	loop: true,
+	// 	slidesPerView: 3,
+	// 	spaceBetween: 0,
+	// 	pagination: true,
+	// 	navigation: true,
+	// 	observer: true,
+	// 	observeParents: true,
+
+	// 	navigation: {
+	// 		nextEl: '.product-carousel .swiper-product-button-next',
+	// 		prevEl: '.product-carousel .swiper-product-button-prev'
+	// 	},
+	// 	pagination: {
+	// 		el: '.product-carousel .swiper-pagination',
+	// 		type: 'bullets',
+	// 		clickable: 'true'
+	// 	},
+
+	// 	// Responsive breakpoints
+	// 	breakpoints: {
+	// 		// when window width is >= 320px
+	// 		320: {
+	// 			slidesPerView: 1,
+	// 		},
+	// 		// when window width is >= 480px
+	// 		480: {
+	// 			slidesPerView: 1,
+	// 		},
+	// 		// when window width is >= 575px
+	// 		575: {
+	// 			slidesPerView: 2,
+	// 		},
+	// 		// when window width is >= 768px
+	// 		768: {
+	// 			slidesPerView: 2,
+	// 		},
+	// 		// when window width is >= 992px
+	// 		992: {
+	// 			slidesPerView: 3,
+	// 		},
+	// 		// when window width is >= 1200px
+	// 		1200: {
+	// 			slidesPerView: 4,
+	// 		}
+	// 	}
+	// });	
 	/* Modal Product Carousel Activation */
-    var productCarousel = new Swiper('.modal-product-carousel .swiper-container', {
+	var productCarousel = new Swiper('.modal-product-carousel .swiper-container', {
 		loop: true,
 		slidesPerView: 1,
 		spaceBetween: 0,
@@ -177,8 +221,8 @@
 
 	/* Product Deal Crousel Activation */
 	var productCarousel = new Swiper('.product-deal-carousel .swiper-container', {
-        loop: true,
-        slidesPerView: 2,
+		loop: true,
+		slidesPerView: 2,
 		spaceBetween: 0,
 		pagination: true,
 		navigation: true,
@@ -281,52 +325,52 @@
 		breakpoints: {
 			// when window width is >= 320px
 			320: {
-			slidesPerView: 2,
-			spaceBetween: 20
+				slidesPerView: 2,
+				spaceBetween: 20
 			},
 			// when window width is >= 480px
 			480: {
-			slidesPerView: 3,
-			spaceBetween: 30
+				slidesPerView: 3,
+				spaceBetween: 30
 			},
 			// when window width is >= 768px
 			768: {
-			slidesPerView: 4,
-			spaceBetween: 30
+				slidesPerView: 4,
+				spaceBetween: 30
 			},
 			// when window width is >= 992px
 			992: {
-			slidesPerView: 5,
-			spaceBetween: 30
+				slidesPerView: 5,
+				spaceBetween: 30
 			}
 		}
 	});
 
-    /*-- Single product with Thumbnail Vertical -- */
-    var zoomThumb = new Swiper('.product-thumb-vertical', {
-        spaceBetween: 0,
+	/*-- Single product with Thumbnail Vertical -- */
+	var zoomThumb = new Swiper('.product-thumb-vertical', {
+		spaceBetween: 0,
 		slidesPerView: 4,
-        direction: 'vertical',
-        freeMode: true,
-        watchSlidesVisibility: true,
+		direction: 'vertical',
+		freeMode: true,
+		watchSlidesVisibility: true,
 		watchSlidesProgress: true,
 		// Responsive breakpoints
 		breakpoints: {
 			// when window width is >= 320px
 			320: {
-			slidesPerView: 2,
+				slidesPerView: 2,
 			},
 			// when window width is >= 480px
 			480: {
-			slidesPerView: 3,
+				slidesPerView: 3,
 			},
 			// when window width is >= 575px
 			575: {
-			slidesPerView: 3,
+				slidesPerView: 3,
 			},
 			// when window width is >= 767px
 			767: {
-			slidesPerView: 3,
+				slidesPerView: 3,
 			},
 			// when window width is >= 991px
 			991: {
@@ -338,19 +382,19 @@
 			},
 		}
 	});
-    var zoomTop = new Swiper('.single-product-vertical-tab', {
+	var zoomTop = new Swiper('.single-product-vertical-tab', {
 		spaceBetween: 10,
 		loop: true,
 		navigation: {
 			nextEl: '.product-thumb-vertical .swiper-button-vertical-next',
 			prevEl: '.product-thumb-vertical .swiper-button-vertical-prev',
 		},
-        thumbs: {
-            swiper: zoomThumb
-        }
+		thumbs: {
+			swiper: zoomThumb
+		}
 	});
-	
-    /*-- Single product with Thumbnail Horizental -- */
+
+	/*-- Single product with Thumbnail Horizental -- */
 	var galleryThumbs = new Swiper('.single-product-thumb', {
 		spaceBetween: 10,
 		slidesPerView: 4,
@@ -362,15 +406,15 @@
 		breakpoints: {
 			// when window width is >= 320px
 			320: {
-			slidesPerView: 2,
+				slidesPerView: 2,
 			},
 			// when window width is >= 575px
 			575: {
-			slidesPerView: 3,
+				slidesPerView: 3,
 			},
 			// when window width is >= 767px
 			767: {
-			slidesPerView: 4,
+				slidesPerView: 4,
 			},
 			// when window width is >= 991px
 			991: {
@@ -400,9 +444,9 @@
 	/*  Countdown
 	/*----------------------------------------*/
 
-	$('[data-countdown]').each(function() {
+	$('[data-countdown]').each(function () {
 		var $this = $(this), finalDate = $(this).data('countdown');
-		$this.countdown(finalDate, function(event) {
+		$this.countdown(finalDate, function (event) {
 			$this.html(event.strftime('<div class="single-countdown"><span class="single-countdown_time">%D</span><span class="single-countdown_text">Days</span></div><div class="single-countdown"><span class="single-countdown_time">%H</span><span class="single-countdown_text">Hours</span></div><div class="single-countdown"><span class="single-countdown_time">%M</span><span class="single-countdown_text">Min</span></div><div class="single-countdown"><span class="single-countdown_time">%S</span><span class="single-countdown_text">Sec</span></div>'));
 		});
 	});
@@ -424,31 +468,31 @@
 	/*----------------------------------------*/
 
 	$('.shop_toolbar_btn > button').on('click', function (e) {
-	
+
 		e.preventDefault();
-		
+
 		$('.shop_toolbar_btn > button').removeClass('active');
 		$(this).addClass('active');
-		
+
 		var parentsDiv = $('.shop_wrapper');
 		var viewMode = $(this).data('role');
-		
-		
+
+
 		parentsDiv.removeClass('grid_3 grid_4 grid_5 grid_list').addClass(viewMode);
 
-		if(viewMode == 'grid_3'){
+		if (viewMode == 'grid_3') {
 			parentsDiv.children().addClass('col-lg-4 col-md-4 col-sm-6').removeClass('col-lg-3 col-cust-5 col-12');
-			
+
 		}
 
-		if(viewMode == 'grid_4'){
+		if (viewMode == 'grid_4') {
 			parentsDiv.children().addClass('col-xl-3 col-lg-4 col-md-4 col-sm-6').removeClass('col-lg-4 col-cust-5 col-12');
 		}
-		
-		if(viewMode == 'grid_list'){
+
+		if (viewMode == 'grid_list') {
 			parentsDiv.children().addClass('col-12').removeClass('col-xl-3 col-lg-3 col-lg-4 col-md-6 col-md-4 col-sm-6 col-cust-5');
 		}
-			
+
 	});
 
 	/*----------------------------------------*/
@@ -463,17 +507,17 @@
 	Price Slider Active
 	------------------------------------------- */
 
-	$( "#slider-range" ).slider({
-        range: true,
-        min: 0,
-        max: 500,
-        values: [ 0, 500 ],
-        slide: function( event, ui ) {
-        $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
-       }
-    });
-    $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
-       " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+	$("#slider-range").slider({
+		range: true,
+		min: 0,
+		max: 500,
+		values: [0, 500],
+		slide: function (event, ui) {
+			$("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+		}
+	});
+	$("#amount").val("$" + $("#slider-range").slider("values", 0) +
+		" - $" + $("#slider-range").slider("values", 1));
 
 	/*----------------------------------------*/
 	/*  Cart Plus Minus Button
@@ -509,7 +553,7 @@
 		zoom: true, // Enable/Disable zoom option
 		rotateLeft: true, // Enable/Disable Rotate Left
 		rotateRight: true, // Enable/Disable Rotate Right
-	  });
+	});
 
 	/*-----------------------------------------
 		Sticky Sidebar Activation
@@ -542,101 +586,101 @@
 		$('#ship-box-info').slideToggle(1000);
 	});
 	/*---------------------------------
-        Scroll Up
-    -----------------------------------*/
-    function scrollToTop() {
-        var $scrollUp = $('#scroll-top'),
-            $lastScrollTop = 0,
-            $window = $(window);
+		Scroll Up
+	-----------------------------------*/
+	function scrollToTop() {
+		var $scrollUp = $('#scroll-top'),
+			$lastScrollTop = 0,
+			$window = $(window);
 
-        $window.on('scroll', function () {
-            var st = $(this).scrollTop();
-            if (st > $lastScrollTop) {
-                $scrollUp.removeClass('show');
-            } else {
-                if ($window.scrollTop() > 200) {
-                    $scrollUp.addClass('show');
-                } else {
-                    $scrollUp.removeClass('show');
-                }
-            }
-            $lastScrollTop = st;
-        });
+		$window.on('scroll', function () {
+			var st = $(this).scrollTop();
+			if (st > $lastScrollTop) {
+				$scrollUp.removeClass('show');
+			} else {
+				if ($window.scrollTop() > 200) {
+					$scrollUp.addClass('show');
+				} else {
+					$scrollUp.removeClass('show');
+				}
+			}
+			$lastScrollTop = st;
+		});
 
-        $scrollUp.on('click', function (evt) {
-            $('html, body').animate({scrollTop: 0}, 600);
-            evt.preventDefault();
-        });
-    }
+		$scrollUp.on('click', function (evt) {
+			$('html, body').animate({ scrollTop: 0 }, 600);
+			evt.preventDefault();
+		});
+	}
 	scrollToTop();
 	/*---------------------------------
-	 	MailChimp
-    -----------------------------------*/
-    $('#mc-form').ajaxChimp({
-        language: 'en',
-        callback: mailChimpResponse,
-        // ADD YOUR MAILCHIMP URL BELOW HERE!
-        url: 'http://devitems.us11.list-manage.com/subscribe/post?u=6bbb9b6f5827bd842d9640c82&amp;id=05d85f18ef'
-    });
-    function mailChimpResponse(resp) {
-        if (resp.result === 'success') {
-            $('.mailchimp-success').html('' + resp.msg).fadeIn(900);
-            $('.mailchimp-error').fadeOut(400);
-        } else if (resp.result === 'error') {
-            $('.mailchimp-error').html('' + resp.msg).fadeIn(900);
-        }
+		  MailChimp
+	-----------------------------------*/
+	$('#mc-form').ajaxChimp({
+		language: 'en',
+		callback: mailChimpResponse,
+		// ADD YOUR MAILCHIMP URL BELOW HERE!
+		url: 'http://devitems.us11.list-manage.com/subscribe/post?u=6bbb9b6f5827bd842d9640c82&amp;id=05d85f18ef'
+	});
+	function mailChimpResponse(resp) {
+		if (resp.result === 'success') {
+			$('.mailchimp-success').html('' + resp.msg).fadeIn(900);
+			$('.mailchimp-error').fadeOut(400);
+		} else if (resp.result === 'error') {
+			$('.mailchimp-error').html('' + resp.msg).fadeIn(900);
+		}
 	}
 	/*-------------------------
-        Ajax Contact Form 
-    ---------------------------*/
-    $(function() {
+		Ajax Contact Form 
+	---------------------------*/
+	$(function () {
 
-        // Get the form.
-        var form = $('#contact-form');
+		// Get the form.
+		var form = $('#contact-form');
 
-        // Get the messages div.
-        var formMessages = $('.form-messege');
+		// Get the messages div.
+		var formMessages = $('.form-messege');
 
-        // Set up an event listener for the contact form.
-        $(form).submit(function(e) {
-            // Stop the browser from submitting the form.
-            e.preventDefault();
+		// Set up an event listener for the contact form.
+		$(form).submit(function (e) {
+			// Stop the browser from submitting the form.
+			e.preventDefault();
 
-            // Serialize the form data.
-            var formData = $(form).serialize();
+			// Serialize the form data.
+			var formData = $(form).serialize();
 
-            // Submit the form using AJAX.
-            $.ajax({
-                type: 'POST',
-                url: $(form).attr('action'),
-                data: formData
-            })
-            .done(function(response) {
-                // Make sure that the formMessages div has the 'success' class.
-                $(formMessages).removeClass('error');
-                $(formMessages).addClass('success');
+			// Submit the form using AJAX.
+			$.ajax({
+				type: 'POST',
+				url: $(form).attr('action'),
+				data: formData
+			})
+				.done(function (response) {
+					// Make sure that the formMessages div has the 'success' class.
+					$(formMessages).removeClass('error');
+					$(formMessages).addClass('success');
 
-                // Set the message text.
-                $(formMessages).text(response);
+					// Set the message text.
+					$(formMessages).text(response);
 
-                // Clear the form.
-                $('#contact-form input,#contact-form textarea').val('');
-            })
-            .fail(function(data) {
-                // Make sure that the formMessages div has the 'error' class.
-                $(formMessages).removeClass('success');
-                $(formMessages).addClass('error');
+					// Clear the form.
+					$('#contact-form input,#contact-form textarea').val('');
+				})
+				.fail(function (data) {
+					// Make sure that the formMessages div has the 'error' class.
+					$(formMessages).removeClass('success');
+					$(formMessages).addClass('error');
 
-                // Set the message text.
-                if (data.responseText !== '') {
-                    $(formMessages).text(data.responseText);
-                } else {
-                    $(formMessages).text('Oops! An error occured and your message could not be sent.');
-                }
-            });
-        });
+					// Set the message text.
+					if (data.responseText !== '') {
+						$(formMessages).text(data.responseText);
+					} else {
+						$(formMessages).text('Oops! An error occured and your message could not be sent.');
+					}
+				});
+		});
 
-    });
+	});
 
 })(jQuery);
 

@@ -19,10 +19,10 @@
                         <div class="main-menu position-relative">
                             <ul>
                                 <li class="has-children">
-                                    <a href="/about"><span>About</span></a>
+                                    <a href="{{ route('home') }}"><span>Trang chủ</span></a>
                                 </li>
                                 <li class="has-children position-static">
-                                    <a href="{{route('shops.index')}}"><span>Shop</span> <i class="fa fa-angle-down"></i></a>
+                                    <a href="{{route('shops.index')}}"><span>Cửa hàng</span> <i class="fa fa-angle-down"></i></a>
                                     <ul class="sub-menu">
                                         @foreach ($clientCategories as $item )
                                         <li><a href="{{ route('shops.category', $item->id) }}">{{$item->name}}</a></li>
@@ -30,9 +30,9 @@
                                     </ul>
                                 </li>
                                 <li class="has-children">
-                                    <a href="{{route('blogs.index')}}"><span>Blog</span></a>
+                                    <a href="{{route('blogs.index')}}"><span>Bài viết</span></a>
                                 </li>
-                                <li><a href="/contact"> <span>Contact</span></a></li>
+                                <li><a href="/contact"> <span>Liên hệ</span></a></li>
                             </ul>
                         </div>
                     </div>

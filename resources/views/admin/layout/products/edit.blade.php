@@ -261,11 +261,11 @@
                                     </div>
                                     <div class="form-group col-md">
                                         <label for="variants[{{ $index }}][price]" class="form-control-label">Giá</label>
-                                        <input type="number" name="variants[{{ $index }}][price]" id="variants[{{ $index }}][price]" class="form-control" value="{{ $variant->price }}" placeholder="Nhập giá sản phẩm">
+                                        <input type="number" name="variants[{{ $index }}][price]" id="variants[{{ $index }}][price]" class="form-control" value="{{ number_format($variant->price, 0, '.', '') }}" placeholder="Nhập giá sản phẩm">
                                     </div>
                                     <div class="form-group col-md">
                                         <label for="variants[{{ $index }}][price_sale]" class="form-control-label">Giá khuyến mãi</label>
-                                        <input type="number" name="variants[{{ $index }}][price_sale]" id="variants[{{ $index }}][price_sale]" class="form-control" value="{{ $variant->price_sale }}" placeholder="Nhập giá khuyến mãi">
+                                        <input type="number" name="variants[{{ $index }}][price_sale]" id="variants[{{ $index }}][price_sale]" class="form-control" value="{{ number_format($variant->price_sale, 0, '.', '') }}" placeholder="Nhập giá khuyến mãi">
                                     </div>
                                     <div class="form-group col-md">
                                         <label for="variants[{{ $index }}][quantity]" class="form-control-label">Số lượng</label>

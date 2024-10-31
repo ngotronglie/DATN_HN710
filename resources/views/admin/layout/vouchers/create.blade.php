@@ -85,10 +85,19 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="min_money" class="form-control-label">Tiền bắt đầu giảm giá</label>
+                                <label for="min_money" class="form-control-label">Số tiền tối thiểu</label>
                                 <input type="number" id="min_money" name="min_money" value="{{ old('min_money') }}"
                                     class="form-control" min="0" required>
                                 @error('min_money')
+                                <small class="form-text text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="max_money" class="form-control-label">Số tiền tối đa</label>
+                                <input type="number" id="max_money" name="max_money" value="{{ old('max_money') }}"
+                                    class="form-control" min="0" required>
+                                @error('max_money')
                                 <small class="form-text text-danger">{{ $message }}</small>
                                 @enderror
                             </div>

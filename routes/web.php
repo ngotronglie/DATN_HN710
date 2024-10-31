@@ -41,20 +41,6 @@ use Illuminate\Support\Facades\Route;
 
 // ----------------------------CLIENT ROUTES--------------------------------
 
-
-Route::get('/wishlist', function () {
-    return view('client.pages.wishlist');
-});
-Route::get('/cart', function () {
-    return view('client.pages.cart');
-});
-Route::get('/checkout', function () {
-    return view('client.pages.checkout');
-});
-
-Route::get('/about', function () {
-    return view('client.pages.about');
-});
 // Trang chủ
 Route::get('/', [HomeController::class, 'index'])->name('home');
 

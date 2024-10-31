@@ -175,14 +175,10 @@
                                     <div class="product-inner">
                                         <div class="thumb">
                                             <a href="{{ route('shops.show', $item->slug) }}" class="image">
-                                                {{-- <img class="first-image" src="{{ Storage::url($item->img_thumb) }}"
+                                                <img class="first-image" src="{{ Storage::url($item->img_thumb) }}"
                                                     alt="Product" />
-                                                <img class="second-image" src="{{ Storage::url($item->img_thumb) }}"
-                                                    alt="Product" /> --}}
-                                                <img class="first-image" src="https://khoinguonsangtao.vn/wp-content/uploads/2022/08/hinh-nen-gai-xinh-viet-nam-mac-vay-hoa.jpg"
+                                                <img class="second-image" src="{{ Storage::url($item->first_image) }}"
                                                     alt="Product" />
-                                                <img class="second-image" src="https://phunugioi.com/wp-content/uploads/2020/03/anh-gai-xinh-viet-nam-dep-ben-hoa-sen.jpg"
-                                                    alt="Product" />  
                                             </a>
                                             <div class="actions">
                                                 <a href="wishlist.html" title="Wishlist" class="action wishlist">

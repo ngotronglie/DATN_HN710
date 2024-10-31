@@ -67,8 +67,12 @@
                                     <td>{{ \Carbon\Carbon::parse($voucher->end_date)->format('d/m/Y') }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Giá trị nhỏ nhất</th>
+                                    <th>Số tiền tối thiểu</th>
                                     <td>{{ number_format($voucher->min_money, 0, ',', '.') }} VNĐ</td>
+                                </tr>
+                                <tr>
+                                    <th>Số tiền tối đa</th>
+                                    <td>{{ number_format($voucher->max_money, 0, ',', '.') }} VNĐ</td>
                                 </tr>
                                 <tr>
                                     <th>Thời gian tạo</th>

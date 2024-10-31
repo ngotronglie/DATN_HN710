@@ -23,6 +23,7 @@ class VoucherFactory extends Factory
             'end_date' => fake()->dateTimeBetween('+1 month', '+6 months'),
             'quantity' => fake()->numberBetween(1, 1000),
             'min_money' => fake()->randomFloat(2, 10, 100),
+            'max_money' => fake()->randomFloat(2, 10, 100),
         ];
     }
 }
