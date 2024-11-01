@@ -9,12 +9,12 @@
         <div class="breadcrumb-area bg-light">
             <div class="container-fluid">
                 <div class="breadcrumb-content text-center">
-                    <h1 class="title">Shopping Cart</h1>
+                    <h1 class="title">Giỏ hàng</h1>
                     <ul>
                         <li>
-                            <a href="/">Home </a>
+                            <a href="/">Trang chủ </a>
                         </li>
-                        <li class="active"> Shopping Cart</li>
+                        <li class="active"> Giỏ hàng</li>
                     </ul>
                 </div>
             </div>
@@ -38,28 +38,33 @@
                             <!-- Table Head Start -->
                             <thead>
                                 <tr>
-                                    <th class="pro-thumbnail">Image</th>
-                                    <th class="pro-title">Product</th>
-                                    <th class="pro-price">Price</th>
-                                    <th class="pro-quantity">Quantity</th>
-                                    <th class="pro-subtotal">Total</th>
-                                    <th class="pro-remove">Remove</th>
+                                    <th class="pro-thumbnail">Ảnh</th>
+                                    <th class="pro-title">Tên sản phẩm</th>
+                                    <th class="pro-price">Giá</th>
+                                    <th class="pro-quantity">Số lượng</th>
+                                    <th class="pro-subtotal">Tổng giá</th>
+                                    <th class="pro-remove">Xóa</th>
                                 </tr>
                             </thead>
                             <!-- Table Head End -->
 
                             <!-- Table Body Start -->
                             <tbody>
-                                <tr>
-                                    <td class="pro-thumbnail"><a href="#"><img class="img-fluid"
-                                                src="{{ asset('theme/client/assets/images/products/small-product/1.jpg') }}"
+                                @if (!empty($processedItems))
+                                @foreach ($processedItems as $item)
+                                <tr class="remove-cart">
+                                    <td><a href="#"><img style="width: 45%" class="img-fluid"
+                                                src="{{ Storage::url($item->productVariant->product->img_thumb) }}"
                                                 alt="Product" /></a></td>
-                                    <td class="pro-title"><a href="#">Brother Hoddies in Grey <br> s / green</a></td>
-                                    <td class="pro-price"><span>$95.00</span></td>
+                                    <td class="pro-title"><a href="{{route('shops.show', $item->productVariant->product->slug)}}">{{ $item->productVariant->product->name }}
+                                            <br> {{ $item->productVariant->size->name }} /
+                                            {{ $item->productVariant->color->name }}</a></td>
+                                    <td class="pro-price"><span>{{ number_format($item->productVariant->price_sale) }}
+                                            đ</span></td>
                                     <td class="pro-quantity">
                                         <div class="quantity">
                                             <div class="cart-plus-minus">
-                                                <input class="cart-plus-minus-box" value="0" type="text">
+                                                <input class="cart-plus-minus-box" value="{{ $item->quantity }}" type="text">
                                                 <div class="dec qtybutton">-</div>
                                                 <div class="inc qtybutton">+</div>
                                                 <div class="dec qtybutton"><i class="fa fa-minus"></i></div>
@@ -67,69 +72,19 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="pro-subtotal"><span>$95.00</span></td>
-                                    <td class="pro-remove"><a href="#"><i class="pe-7s-trash"></i></a></td>
+                                    <td class="pro-subtotal"><span id="total-{{$item->id}}">{{ number_format($item->total_price) }} đ</span></td>
+                                    <td class="pro-remove"><span data-id="{{$item->id}}" data-quantity="{{$item->productVariant->quantity}}"
+                                     class="deleteCart"><i class="pe-7s-trash"></i></span></td>
                                 </tr>
-                                <tr>
-                                    <td class="pro-thumbnail"><a href="#"><img class="img-fluid"
-                                                src="{{ asset('theme/client/assets/images/products/small-product/2.jpg') }}"
-                                                alt="Product" /></a></td>
-                                    <td class="pro-title"><a href="#">Basic Jogging Shorts <br> Blue</a></td>
-                                    <td class="pro-price"><span>$75.00</span></td>
-                                    <td class="pro-quantity">
-                                        <div class="quantity">
-                                            <div class="cart-plus-minus">
-                                                <input class="cart-plus-minus-box" value="0" type="text">
-                                                <div class="dec qtybutton">-</div>
-                                                <div class="inc qtybutton">+</div>
-                                                <div class="dec qtybutton"><i class="fa fa-minus"></i></div>
-                                                <div class="inc qtybutton"><i class="fa fa-plus"></i></div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="pro-subtotal"><span>$75.00</span></td>
-                                    <td class="pro-remove"><a href="#"><i class="pe-7s-trash"></i></a></td>
+                            @endforeach
+                            @else
+                            <tr id="cart-null">
+                                <td colspan="6"><p>Giỏ hàng của bạn hiện đang trống.</p></td>
+                            </tr>
+                                @endif
+                                <tr id="cart-null">
                                 </tr>
-                                <tr>
-                                    <td class="pro-thumbnail"><a href="#"><img class="img-fluid"
-                                                src="{{ asset('theme/client/assets/images/products/small-product/10.jpg') }}"
-                                                alt="Product" /></a></td>
-                                    <td class="pro-title"><a href="#">Lust For Life <br> Bulk/S</a></td>
-                                    <td class="pro-price"><span>$295.00</span></td>
-                                    <td class="pro-quantity">
-                                        <div class="quantity">
-                                            <div class="cart-plus-minus">
-                                                <input class="cart-plus-minus-box" value="0" type="text">
-                                                <div class="dec qtybutton">-</div>
-                                                <div class="inc qtybutton">+</div>
-                                                <div class="dec qtybutton"><i class="fa fa-minus"></i></div>
-                                                <div class="inc qtybutton"><i class="fa fa-plus"></i></div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="pro-subtotal"><span>$295.00</span></td>
-                                    <td class="pro-remove"><a href="#"><i class="pe-7s-trash"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <td class="pro-thumbnail"><a href="#"><img class="img-fluid"
-                                                src="{{ asset('theme/client/assets/images/products/small-product/4.jpg') }}"
-                                                alt="Product" /></a></td>
-                                    <td class="pro-title"><a href="#">Simple Woven Fabrics</a></td>
-                                    <td class="pro-price"><span>$60.00</span></td>
-                                    <td class="pro-quantity">
-                                        <div class="quantity">
-                                            <div class="cart-plus-minus">
-                                                <input class="cart-plus-minus-box" value="2" type="text">
-                                                <div class="dec qtybutton">-</div>
-                                                <div class="inc qtybutton">+</div>
-                                                <div class="dec qtybutton"><i class="fa fa-minus"></i></div>
-                                                <div class="inc qtybutton"><i class="fa fa-plus"></i></div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="pro-subtotal"><span>$110.00</span></td>
-                                    <td class="pro-remove"><a href="#"><i class="pe-7s-trash"></i></a></td>
-                                </tr>
+
                             </tbody>
                             <!-- Table Body End -->
 
@@ -137,26 +92,6 @@
                     </div>
                     <!-- Cart Table End -->
 
-                    <!-- Cart Update Option Start -->
-                    <div class="cart-update-option d-block d-md-flex justify-content-between">
-
-                        <!-- Apply Coupon Wrapper Start -->
-                        <div class="apply-coupon-wrapper">
-                            <form action="#" method="post" class=" d-block d-md-flex">
-                                <input type="text" placeholder="Enter Your Coupon Code" required />
-                                <button class="btn btn-dark btn-hover-primary rounded-0">Apply Coupon</button>
-                            </form>
-                        </div>
-                        <!-- Apply Coupon Wrapper End -->
-
-                        <!-- Cart Update Start -->
-                        <div class="cart-update mt-sm-16">
-                            <a href="#" class="btn btn-dark btn-hover-primary rounded-0">Update Cart</a>
-                        </div>
-                        <!-- Cart Update End -->
-
-                    </div>
-                    <!-- Cart Update Option End -->
 
                 </div>
             </div>
@@ -171,23 +106,23 @@
                         <div class="cart-calculate-items">
 
                             <!-- Cart Calculate Items Title Start -->
-                            <h3 class="title">Cart Totals</h3>
+                            <h3 class="title">Tổng đơn</h3>
                             <!-- Cart Calculate Items Title End -->
 
                             <!-- Responsive Table Start -->
                             <div class="table-responsive">
                                 <table class="table">
                                     <tr>
-                                        <td>Sub Total</td>
-                                        <td>$230</td>
+                                        <td>Tổng cộng</td>
+                                        <td><span class="totalAll">{{ number_format($total) }} đ</span></td>
                                     </tr>
                                     <tr>
-                                        <td>Shipping</td>
-                                        <td>$70</td>
+                                        <td>Phí vận chuyển</td>
+                                        <td>30,000 đ</td>
                                     </tr>
                                     <tr class="total">
-                                        <td>Total</td>
-                                        <td class="total-amount">$300</td>
+                                        <td>Đơn giá</td>
+                                        <td class="total-amount">{{ number_format($total + 30000) }} đ</td>
                                     </tr>
                                 </table>
                             </div>
@@ -195,10 +130,8 @@
 
                         </div>
                         <!-- Cart Calculate Items End -->
-
                         <!-- Cart Checktout Button Start -->
-                        <a href="checkout.html" class="btn btn-dark btn-hover-primary rounded-0 w-100">Proceed To
-                            Checkout</a>
+                        <a href="checkout.html" class="btn btn-dark btn-hover-primary rounded-0 w-100">Thanh toán</a>
                         <!-- Cart Checktout Button End -->
 
                     </div>
@@ -209,4 +142,8 @@
 
         </div>
     </div>
+@endsection
+
+@section('script')
+<script src="{{ asset('plugins/js/updateQuatityCart.js') }}"></script>
 @endsection

@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\StatisticsController;
+use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\ContactController;
 
 use App\Http\Controllers\Ajax\DeleteController;
@@ -65,6 +66,14 @@ Route::get('/shops/{slug}', [ShopController::class, 'show'])->name('shops.show')
 Route::get('shop/ajax/getSizePrice', [ShopController::class, 'getSizePrice']);
 Route::get('shop/ajax/getSizePriceDetail', [ShopController::class, 'getSizePriceDetail']);
 Route::get('/shop-search', [ShopController::class, 'search'])->name('shop.search');
+
+//cart
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/ajax/addToCart', [CartController::class, 'addToCart']);
+Route::delete('/ajax/deleteToCartHeader', [CartController::class, 'deleteToCart']);
+Route::post('/ajax/updateQuantityCart', [CartController::class, 'updateQuantity']);
+
+
 
 
 // Blog
@@ -134,7 +143,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('accounts/listUser', [UserController::class, 'listUser'])->name('accounts.listUser');
 
     // Các route resource cho accounts
-    
+
     Route::resource('accounts', UserController::class);
 
     // Quản lý các size đã bị xóa mềm
@@ -205,7 +214,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('order/ship/{order_id}', [OrderController::class, 'shipOrder'])->name('order.shipOrder');
     Route::get('order/confirm-shipping/{order_id}', [OrderController::class, 'confirmShipping'])->name('order.confirmShipping');
     Route::get('order/cancel/{order_id}', [OrderController::class, 'cancelOrder'])->name('order.cancelOrder');
-    
+
     // Thống kê
     Route::get('statistics', [StatisticsController::class, 'index'])->name('statistics.index');
 });

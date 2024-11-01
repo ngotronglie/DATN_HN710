@@ -22,15 +22,18 @@
                                     <a href="/about"><span>About</span></a>
                                 </li>
                                 <li class="has-children position-static">
-                                    <a href="{{route('shops.index')}}"><span>Shop</span> <i class="fa fa-angle-down"></i></a>
+                                    <a href="{{ route('shops.index') }}"><span>Shop</span> <i
+                                            class="fa fa-angle-down"></i></a>
                                     <ul class="sub-menu">
-                                        @foreach ($clientCategories as $item )
-                                        <li><a href="{{ route('shops.category', $item->id) }}">{{$item->name}}</a></li>
+                                        @foreach ($clientCategories as $item)
+                                            <li><a
+                                                    href="{{ route('shops.category', $item->id) }}">{{ $item->name }}</a>
+                                            </li>
                                         @endforeach
                                     </ul>
                                 </li>
                                 <li class="has-children">
-                                    <a href="{{route('blogs.index')}}"><span>Blog</span></a>
+                                    <a href="{{ route('blogs.index') }}"><span>Blog</span></a>
                                 </li>
                                 <li><a href="/contact"> <span>Contact</span></a></li>
                             </ul>
@@ -55,7 +58,8 @@
                                                         src="{{ Storage::url(Auth::user()->avatar) }}"
                                                         alt="User Avatar">
                                                 @else
-                                                    <a href="javascript:void(0);"  class="header-action-btn d-none d-md-block">
+                                                    <a href="javascript:void(0);"
+                                                        class="header-action-btn d-none d-md-block">
                                                         <i class="pe-7s-user"></i>
                                                     </a>
                                                 @endif
@@ -65,7 +69,7 @@
                                                 <li><a href="/checkout">Thông báo</a></li>
                                                 <li><a href="/checkout">Trung tâm trợ giúp</a></li>
                                                 @if ((Auth::check() && Auth::user()->role == 1) || Auth::user()->role == 2)
-                                                    <li><a href="{{route('admin.dashboard')}}">Quản trị viên</a></li>
+                                                    <li><a href="{{ route('admin.dashboard') }}">Quản trị viên</a></li>
                                                 @endif
                                                 <li>
 
@@ -83,9 +87,9 @@
                                     </ul>
                                 </div>
                             @else
-                            <a href="/login" class="header-action-btn d-none d-md-block">
-                                <i class="pe-7s-user"></i>
-                            </a>
+                                <a href="/login" class="header-action-btn d-none d-md-block">
+                                    <i class="pe-7s-user"></i>
+                                </a>
                             @endif
 
 
@@ -101,7 +105,8 @@
                             <!-- Shopping Cart Header Action Button Start -->
                             <a href="javascript:void(0)" class="header-action-btn header-action-btn-cart">
                                 <i class="pe-7s-shopbag"></i>
-                                <span style="position: absolute; top:-4 " class="header-action-num">3</span>
+                                <span style="position: absolute; top:-4 "
+                                    class="header-action-num">{{ $uniqueVariantCount ?? 0 }}</span>
                             </a>
                             <!-- Shopping Cart Header Action Button End -->
 
@@ -225,107 +230,57 @@
             <!-- Offcanvas Cart Content Start -->
             <div class="offcanvas-cart-content">
                 <!-- Offcanvas Cart Title Start -->
-                <h2 class="offcanvas-cart-title mb-10">Shopping Cart</h2>
+                <h2 class="offcanvas-cart-title mb-6">Giỏ hàng</h2>
                 <!-- Offcanvas Cart Title End -->
 
-                <!-- Cart Product/Price Start -->
-                <div class="cart-product-wrapper mb-6">
+                @if (!empty($processedItems))
+                    @foreach ($processedItems as $item)
+                        <div id="cart-{{ $item->id }}" class="cart-product-wrapper mb-2">
 
-                    <!-- Single Cart Product Start -->
-                    <div class="single-cart-product">
-                        <div class="cart-product-thumb">
-                            <a href="single-product.html"><img
-                                    src="{{ asset('theme/client/assets/images/products/small-product/1.jpg') }}"
-                                    alt="Cart Product"></a>
+                            <!-- Single Cart Product Start -->
+                            <div class="single-cart-product">
+                                <div class="cart-product-thumb">
+                                    <a href="single-product.html"><img
+                                            src="{{ Storage::url($item->productVariant->product->img_thumb) }}"
+                                            alt="Cart Product"></a>
+                                </div>
+                                <div class="cart-product-content">
+                                    <h3 class="title"><a
+                                            href="{{ route('shops.show', $item->productVariant->product->slug) }}">{{ $item->productVariant->product->name }}
+                                            <br> {{ $item->productVariant->size->name }} /
+                                            {{ $item->productVariant->color->name }}</a></h3>
+                                    <span class="price">
+                                        <span class="new">{{ number_format($item->productVariant->price_sale) }}
+                                            đ</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <!-- Single Cart Product End -->
+
+                            <!-- Product Remove Start -->
+                            <div class="cart-product-remove">
+                                <span class="deleteCart" data-id="{{ $item->id }}"><i
+                                        class="fa fa-trash"></i></span>
+                            </div>
+                            <!-- Product Remove End -->
+
                         </div>
-                        <div class="cart-product-content">
-                            <h3 class="title"><a href="single-product.html">Brother Hoddies in Grey</a></h3>
-                            <span class="price">
-                                <span class="new">$38.50</span>
-                                <span class="old">$40.00</span>
-                            </span>
-                        </div>
-                    </div>
-                    <!-- Single Cart Product End -->
-
-                    <!-- Product Remove Start -->
-                    <div class="cart-product-remove">
-                        <a href="#"><i class="fa fa-trash"></i></a>
-                    </div>
-                    <!-- Product Remove End -->
-
-                </div>
-                <!-- Cart Product/Price End -->
-
-                <!-- Cart Product/Price Start -->
-                <div class="cart-product-wrapper mb-6">
-
-                    <!-- Single Cart Product Start -->
-                    <div class="single-cart-product">
-                        <div class="cart-product-thumb">
-                            <a href="single-product.html"><img
-                                    src="{{ asset('theme/client/assets/images/products/small-product/2.jpg') }}"
-                                    alt="Cart Product"></a>
-                        </div>
-                        <div class="cart-product-content">
-                            <h3 class="title"><a href="single-product.html">Basic Jogging Shorts</a></h3>
-                            <span class="price">
-                                <span class="new">$14.50</span>
-                                <span class="old">$18.00</span>
-                            </span>
-                        </div>
-                    </div>
-                    <!-- Single Cart Product End -->
-
-                    <!-- Product Remove Start -->
-                    <div class="cart-product-remove">
-                        <a href="#"><i class="fa fa-trash"></i></a>
-                    </div>
-                    <!-- Product Remove End -->
-
-                </div>
-                <!-- Cart Product/Price End -->
+                    @endforeach
+                @else
+                <p>Giỏ hàng của bạn hiện đang trống.</p>
+                @endif
+                <div class="cartNull" style="text-align: center"></div>
 
                 <!-- Cart Product/Price Start -->
-                <div class="cart-product-wrapper mb-6">
 
-                    <!-- Single Cart Product Start -->
-                    <div class="single-cart-product">
-                        <div class="cart-product-thumb">
-                            <a href="single-product.html"><img
-                                    src="{{ asset('theme/client/assets/images/products/small-product/3.jpg') }}"
-                                    alt="Cart Product"></a>
-                        </div>
-                        <div class="cart-product-content">
-                            <h3 class="title"><a href="single-product.html">Enjoy The Rest T-Shirt</a></h3>
-                            <span class="price">
-                                <span class="new">$20.00</span>
-                                <span class="old">$21.00</span>
-                            </span>
-                        </div>
-                    </div>
-                    <!-- Single Cart Product End -->
-
-                    <!-- Product Remove Start -->
-                    <div class="cart-product-remove">
-                        <a href="#"><i class="fa fa-trash"></i></a>
-                    </div>
-                    <!-- Product Remove End -->
-
-                </div>
                 <!-- Cart Product/Price End -->
 
-                <!-- Cart Product Total Start -->
-                <div class="cart-product-total">
-                    <span class="value">Subtotal</span>
-                    <span class="price">220$</span>
-                </div>
-                <!-- Cart Product Total End -->
 
                 <!-- Cart Product Button Start -->
                 <div class="cart-product-btn mt-4">
-                    <a href="cart.html" class="btn btn-dark btn-hover-primary rounded-0 w-100">View cart</a>
-                    <a href="checkout.html" class="btn btn-dark btn-hover-primary rounded-0 w-100 mt-4">Checkout</a>
+                    <a href="{{ route('cart.index') }}" class="btn btn-dark btn-hover-primary rounded-0 w-100">Giỏ
+                        hàng</a>
+                    <a href="checkout.html" class="btn btn-dark btn-hover-primary rounded-0 w-100 mt-4">Thanh toán</a>
                 </div>
                 <!-- Cart Product Button End -->
 
