@@ -169,6 +169,8 @@
                         {{-- Product --}}
                         @if ($products->isEmpty())
                             <h1 class="text-center">Hiện không có sản phẩm!</h1>
+                            <span class="show-price maxPrice"data-maxPrice="{{$maxPrice}}">
+                            </span>
                         @else
                             @foreach ($products as $item)
                                 <div class="col-lg-4 col-md-4 col-sm-6 product" data-aos="fade-up" data-aos-delay="200">
@@ -220,7 +222,7 @@
                                                     <div class="price price-options">
                                                         <label style="margin-right:5px">Giá: </label>
                                                         <span id="product-price-sale-{{ $item->id }}"
-                                                            class="show-price">
+                                                            class="show-price maxPrice" data-filpro="{{$item->id ?? 0}}" data-maxPrice="{{$maxPrice}}">
                                                             {{ $item->min_price_sale == $item->max_price_sale
                                                                 ? number_format($item->min_price_sale) . 'đ'
                                                                 : number_format($item->min_price_sale).'đ' . ' - ' . number_format($item->max_price_sale) . 'đ' }}
@@ -328,23 +330,17 @@
 
                             <div class="widget-list mb-10">
                                 <h3 class="widget-title mb-5">Lọc giá</h3>
-                                <!-- Widget Menu Start -->
-                                <form action="#">
-                                    <div id="slider-range"
-                                        class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
-                                        <div class="ui-slider-range ui-corner-all ui-widget-header"
-                                            style="left: 0%; width: 100%;"></div><span tabindex="0"
-                                            class="ui-slider-handle ui-corner-all ui-state-default"
-                                            style="left: 0%;"></span><span tabindex="0"
-                                            class="ui-slider-handle ui-corner-all ui-state-default"
-                                            style="left: 100%;"></span>
+                                <form action="{{ route('shop.filter') }}" method="GET">
+                                    <div id="slider-range" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
+                                        <div class="ui-slider-range ui-corner-all ui-widget-header" style="left: 0%; width: 100%;"></div>
+                                        <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 0%;"></span>
+                                        <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 100%;"></span>
                                     </div>
-                                    <button class="slider-range-submit" type="submit"
-                                        fdprocessedid="dfq28k">Lọc</button>
-                                    <input class="slider-range-amount" type="text" name="text" id="amount"
-                                        fdprocessedid="wcqd7o">
+                                    <input class="slider-range-amount" type="text" id="amount" readonly>
+                                    <input type="hidden" name="min_price" id="min-price">
+                                    <input type="hidden" name="max_price" id="max-price">
+                                    <button class="slider-range-submit" type="submit">Lọc</button>
                                 </form>
-                                <!-- Widget Menu End -->
                             </div>
 
 
@@ -408,19 +404,4 @@
 
 @section('script')
     <script src="{{ asset('plugins/js/getsize.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            $("#toggleCategories").on("click", function() {
-                var isHidden = $(".hidden-category").is(":hidden");
-
-                if (isHidden) {
-                    $(".hidden-category").slideDown();
-                    $(this).text("Ẩn bớt");
-                } else {
-                    $(".hidden-category").slideUp();
-                    $(this).text("Xem thêm");
-                }
-            });
-        });
-    </script>
 @endsection

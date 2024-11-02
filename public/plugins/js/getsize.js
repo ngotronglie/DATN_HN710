@@ -8,6 +8,84 @@
     let idProAddCart = null;
     let idcart = null;
 
+    $(document).ready(function() {
+        $("#toggleCategories").on("click", function() {
+            var isHidden = $(".hidden-category").is(":hidden");
+
+            if (isHidden) {
+                $(".hidden-category").slideDown();
+                $(this).text("Ẩn bớt");
+            } else {
+                $(".hidden-category").slideUp();
+                $(this).text("Xem thêm");
+            }
+        });
+    });
+
+    function formatCurrency(value) {
+        if (isNaN(value)) return "0đ"; // Kiểm tra nếu giá trị không phải là số
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " đ";
+    }
+
+    $(function() {
+        let max_price = $('.maxPrice').attr('data-maxPrice');
+
+        // Lấy giá trị từ thuộc tính data-filpro
+        let pro = $('.maxPrice').attr('data-filpro');
+
+        // Hàm để lấy giá trị tham số từ URL
+        function getParameterByName(name) {
+            let url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        // Lấy các giá trị từ URL
+        let filMax_price = getParameterByName('max_price');
+        let filMin_price = getParameterByName('min_price');
+
+        // In ra các giá trị để kiểm tra
+        console.log('filMin_price:', filMin_price); // Kiểm tra giá trị min_price
+        console.log('filMax_price:', filMax_price); // Kiểm tra giá trị max_price
+        console.log('pro:', pro); // Kiểm tra giá trị pro
+
+        // Giá trị tối đa ban đầu
+        var initialMaxPrice = max_price ? parseInt(max_price) : 0;
+
+        // Giá trị ban đầu cho minPrice và maxPrice
+        var minPrice = filMin_price ? parseInt(filMin_price) : 0;
+        var maxPrice = filMax_price ? parseInt(filMax_price) : initialMaxPrice;
+
+        // Kiểm tra xem có sản phẩm nào không
+        if (typeof pro === 'undefined') {
+            // Nếu không có sản phẩm nào
+            minPrice = filMin_price; // Giữ lại minPrice là 0
+            maxPrice = filMax_price; // Giữ giá trị tối đa ban đầu
+        }
+
+        $("#slider-range").slider({
+            range: true,
+            min: 0,
+            max: initialMaxPrice, // Sử dụng giá trị tối đa ban đầu
+            values: [minPrice, maxPrice],
+            slide: function(event, ui) {
+                $("#amount").val(formatCurrency(ui.values[0]) + " - " + formatCurrency(ui.values[1]));
+                $("#min-price").val(ui.values[0]);
+                $("#max-price").val(ui.values[1]);
+            }
+        });
+
+        // Cập nhật giá trị ban đầu cho các trường nhập liệu
+        $("#amount").val(formatCurrency($("#slider-range").slider("values", 0)) + " - " + formatCurrency($("#slider-range").slider("values", 1)));
+        $("#min-price").val($("#slider-range").slider("values", 0));
+        $("#max-price").val($("#slider-range").slider("values", 1));
+    });
+
+
 
     HT.selectColor = (label) => {
         idProAddCart = null;

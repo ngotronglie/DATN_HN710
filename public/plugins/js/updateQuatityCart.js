@@ -96,6 +96,8 @@
             if ($this.hasClass('inc')) {
                 quantity = previousQuantity++;
                 input.data('previousQuantity');
+                console.log(id);
+
 
             } else if ($this.hasClass('dec') && previousQuantity > 1) {
                 quantity = previousQuantity--;

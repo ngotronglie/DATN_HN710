@@ -45,9 +45,9 @@
 
                             $('#cart-null').append('<td colspan="6"><p>Giỏ hàng của bạn hiện đang trống.</p></td>');
 
-                            $('.totalAll').empty();
+                            $('.totalAll').empty().html('0 đ');
 
-                            $('.total-amount').empty();
+                            $('.total-amount').empty().html('30,000 đ');
                         }
                         swal({
                             content: {

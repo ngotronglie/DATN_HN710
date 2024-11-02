@@ -106,7 +106,7 @@
                             <a href="javascript:void(0)" class="header-action-btn header-action-btn-cart">
                                 <i class="pe-7s-shopbag"></i>
                                 <span style="position: absolute; top:-4 "
-                                    class="header-action-num">{{ $uniqueVariantCount ?? 0 }}</span>
+                                    class="header-action-num">{{ $uniqueVariantCount }}</span>
                             </a>
                             <!-- Shopping Cart Header Action Button End -->
 
