@@ -31,9 +31,7 @@ class ShopController extends Controller
                         $query->whereNull('deleted_at');
                     });
                 }
-            ])
-            ->orderBy('id', 'desc')
-            ->paginate(6);
+            ])->paginate(6);
 
         $producthot = $this->productHot();
 
@@ -92,7 +90,7 @@ class ShopController extends Controller
 
         $products = Product::where('category_id', $id)
             ->where('is_active', 1)
-            ->whereHas('category', $condition) // Áp dụng điều kiện cho category
+            ->whereHas('category', $condition)
             ->with([
                 'variants' => function ($query) {
                     $query->whereHas('size', function ($query) {
@@ -180,14 +178,12 @@ class ShopController extends Controller
                     });
                 }
             ])
-            ->orderBy('id', 'desc') // Sắp xếp giống như trong index
+            ->orderBy('id', 'desc')
             ->paginate(6);
 
-        // Tính toán giá cho sản phẩm và sản phẩm hot
         $products->getCollection()->transform($calculatePriceRange);
         $producthot->transform($calculatePriceRange);
 
-        // Tính toán giá tối đa cho kết quả tìm kiếm
 
         $maxPrice = $this->getMaxPrice();
 
@@ -233,7 +229,6 @@ class ShopController extends Controller
         $producthot = $this->productHot();
         $producthot->transform($calculatePriceRange);
         $maxPrice = $this->getMaxPrice();
-//dd($maxPrice);
         return view('client.pages.shop', compact('products', 'categories', 'producthot', 'min_price', 'max_price', 'maxPrice'));
     }
 

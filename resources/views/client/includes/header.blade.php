@@ -259,8 +259,7 @@
 
                             <!-- Product Remove Start -->
                             <div class="cart-product-remove">
-                                <span class="deleteCart" data-id="{{ $item->id }}"><i
-                                        class="fa fa-trash"></i></span>
+                                <span class="deleteCart" data-id="{{ $item->id }}"><i class="fa fa-trash" style="font-size: 1.3rem;"></i></span>
                             </div>
                             <!-- Product Remove End -->
 

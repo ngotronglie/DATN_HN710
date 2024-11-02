@@ -88,7 +88,7 @@
             let id = $this.closest('tr').find('.deleteCart').data('id');
             let input = $this.siblings('input.cart-plus-minus-box');
             let maxQuantity = $this.closest('tr').find('.deleteCart').data('quantity') || 10;
-            let previousQuantity = parseInt(input.val()) || 1; // Lấy số lượng từ input hiện tại
+            let previousQuantity = parseInt(input.val()) || 1; 
             let quantityOld = parseInt(input.data('previousQuantity') || previousQuantity - 1);
 
             let quantity = previousQuantity;

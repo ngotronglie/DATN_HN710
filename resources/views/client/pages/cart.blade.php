@@ -74,7 +74,7 @@
                                     </td>
                                     <td class="pro-subtotal"><span id="total-{{$item->id}}">{{ number_format($item->total_price) }} đ</span></td>
                                     <td class="pro-remove"><span data-id="{{$item->id}}" data-quantity="{{$item->productVariant->quantity}}"
-                                     class="deleteCart"><i class="pe-7s-trash"></i></span></td>
+                                     class="deleteCart"><i class="pe-7s-trash" style="font-size: 1.5rem;"></i></span></td>
                                 </tr>
                             @endforeach
                             @else
@@ -114,7 +114,7 @@
                                 <table class="table">
                                     <tr>
                                         <td>Tổng cộng</td>
-                                        <td><span class="totalAll">{{ number_format($total) }} đ</span></td>
+                                        <td><span style="font-weight:600 " class="totalAll">{{ number_format($total) }} đ</span></td>
                                     </tr>
                                     <tr>
                                         <td>Phí vận chuyển</td>
