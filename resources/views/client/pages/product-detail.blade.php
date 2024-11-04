@@ -1,106 +1,106 @@
 @extends('client.index')
 @section('style')
 <style>
-    .size-buttons {
-        display: flex;
+.size-buttons {
+    display: flex;
 
-        flex-wrap: wrap;
-        gap: 8px;
-        padding: 8px 0;
-    }
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 0;
+}
 
-    .size-buttons li {
-        list-style: none;
-        margin: 0;
-    }
+.size-buttons li {
+    list-style: none;
+    margin: 0;
+}
 
-    .size-btn {
-        display: inline-block;
-        padding: 0 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-        flex: 1 1 auto;
-    }
+.size-btn {
+    display: inline-block;
+    padding: 0 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    flex: 1 1 auto;
+}
 
-    .size-btn:hover {
-        background-color: #f0f0f0;
-    }
+.size-btn:hover {
+    background-color: #f0f0f0;
+}
 
-    .size-btn.active {
-        background-color: #3498db;
-        color: white;
-        border-color: #2980b9;
-    }
+.size-btn.active {
+    background-color: #3498db;
+    color: white;
+    border-color: #2980b9;
+}
 
-    .color-buttons {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        gap: 10px;
-    }
+.color-buttons {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 10px;
+}
 
-    .color-buttons li {
-        display: inline-block;
-    }
+.color-buttons li {
+    display: inline-block;
+}
 
-    .color-btn {
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        cursor: pointer;
-        border: 2px solid transparent;
-        transition: border-color 0.3s;
-    }
+.color-btn {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.3s;
+}
 
-    .color-btn.active {
-        border-color: #000;
-    }
+.color-btn.active {
+    border-color: #000;
+}
 
-    .price {
-        color: #333;
-        font-weight: bold;
-    }
+.price {
+    color: #333;
+    font-weight: bold;
+}
 
-    .show-price {
-        color: #dc3545;
-        font-size: 1.4rem;
-        font-weight: 700;
-    }
+.show-price {
+    color: #dc3545;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
 
-    .price span {
-        padding: 0 2px;
-    }
+.price span {
+    padding: 0 2px;
+}
 
-    .price {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
+.price {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
 
-    .reply-box {
-        display: none;
-        margin-top: 10px;
-        margin-left: 20px;
-        margin-bottom: 20px;
-        /* Để các comment trả lời cách nhau */
-    }
+.reply-box {
+    display: none;
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    /* Để các comment trả lời cách nhau */
+}
 
-    .author-thumb img {
-        width: 30px;
-        /* Kích thước ảnh nhỏ */
-        height: 60px;
-        /* border-radius: 100%; */
-        /* Bo tròn ảnh */
-        object-fit: cover;
-        /* Giữ tỉ lệ hình ảnh */
-        margin-right: 20px
-            /* Dãn cách giữa các ảnh */
-    }
+.author-thumb img {
+    width: 30px;
+    /* Kích thước ảnh nhỏ */
+    height: 60px;
+    /* border-radius: 100%; */
+    /* Bo tròn ảnh */
+    object-fit: cover;
+    /* Giữ tỉ lệ hình ảnh */
+    margin-right: 20px
+        /* Dãn cách giữa các ảnh */
+}
 
-    /* .active-form {
+/* .active-form {
         display: block;
     } */
 </style>
@@ -364,7 +364,7 @@
                                                 <div class="input-item mt-4 mb-4">
                                                     @if(isset($error))
                                                     <script>
-                                                        window.alert("{{ $error }}");
+                                                    window.alert("{{ $error }}");
                                                     </script>
                                                     @endif
 
@@ -527,85 +527,91 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    var replyButtons = document.querySelectorAll('.btn-reply');
-    var parentInputId = document.querySelector('#id_parent');
+var replyButtons = document.querySelectorAll('.btn-reply');
+var parentInputId = document.querySelector('#id_parent');
 
-    console.log(parentInputId);
+console.log(parentInputId);
 
-    for (const element of replyButtons) {
-
-
-        element.addEventListener('click', () => {
-            // event.preventDefault();
-            console.log(parentInputId);
+for (const element of replyButtons) {
 
 
-
-            let commentId = element.getAttribute('data-id');
-            let user_id = element.getAttribute('data-user');
-            parentInputId.value =
-                commentId;
+    element.addEventListener('click', () => {
+        // event.preventDefault();
+        console.log(parentInputId);
 
 
-            $.ajax({
-                url: "{{route('comments.user')}}",
-                method: 'GET',
 
-                data: {
-                    user_id: user_id || '',
-                    commentId: commentId || ''
-                },
+        let commentId = element.getAttribute('data-id');
+        let user_id = element.getAttribute('data-user');
+        parentInputId.value =
+            commentId;
 
-                success: function(data) {
-                    console.log(data); // Kiểm tra cấu trúc của data-
 
-                    if (data.comment_id && data.data && data.data.name) {
-                        document.querySelector(`#box-reply-${data.comment_id}`).value =
-                            `@${data.data.name}`;
+        $.ajax({
+            url: "{{route('comments.user')}}",
+            method: 'GET',
+
+            data: {
+                user_id: user_id || '',
+                commentId: commentId || ''
+            },
+
+            success: function(data) {
+                console.log(data); // Kiểm tra cấu trúc của data-
+
+                if (data.comment_id && data.data && data.data.name) {
+                    const replyBox = document.querySelector(`#box-reply-${data.comment_id}`);
+                    if (replyBox) {
+                        replyBox.value = `@${data.data.name}`;
                     } else {
-                        console.error("Thiếu dữ liệu c");
+                        console.error(
+                        `Không tìm thấy phần tử với id #box-reply-${data.comment_id}`);
                     }
-                },
 
-                error: function(xhr, error) {
-                    console.debug(xhr);
-                    console.debug(error);
-                },
-            })
+                } else {
+                    console.error("Thiếu dữ liệu c");
+                }
+            },
 
-        });
-    }
+            error: function(xhr, error) {
+                console.debug(xhr);
+                console.debug(error);
+            },
+        })
 
-    // Nếu người dùng muốn thêm bình luận mới thì giữ parent_id rỗng
-    var commentForm = document.querySelector('.blog-comment-form-wrapper');
-    commentForm.addEventListener('submit', function() {
-        parentInputId.value = ''; // Xóa giá trị parent_id nếu không phải là trả lời
     });
+}
+
+// Nếu người dùng muốn thêm bình luận mới thì giữ parent_id rỗng
+var commentForm = document.querySelector('.blog-comment-form-wrapper');
+commentForm.addEventListener('submit', function() {
+    parentInputId.value = ''; // Xóa giá trị parent_id nếu không phải là trả lời
+});
 </script>
 <script>
-    $(document).ready(function() {
-        // Handle click event on the reply button
-        $('.btn-reply').click(function(event) {
-            // Prevent the button from submitting the form or reloading the page
-            event.preventDefault();
+$(document).ready(function() {
+    // Handle click event on the reply button
+    $('.btn-reply').click(function(event) {
+        // Prevent the button from submitting the form or reloading the page
+        event.preventDefault();
 
-            // Get the comment ID to reply to
-            var commentId = $(this).data('id');
-            var replyBox = $('#replyBox-' + commentId);
+        // Get the comment ID to reply to
+        var commentId = $(this).data('id');
+        var replyBox = $('#replyBox-' + commentId);
 
-            // Hide all other reply boxes except the current one;
-            let parent_Id_box = document.querySelector(`#parent-id-${commentId}`);
-            parent_Id_box.value = commentId;
-            // Toggle visibility of the current reply box
-            replyBox.slideToggle();
+        // Hide all other reply boxes except the current one;
+        let parent_Id_box = document.querySelector(`#parent-id-${commentId}`);
+        parent_Id_box.value = commentId;
+        // Toggle visibility of the current reply box
+        replyBox.slideToggle();
 
 
-            // Debugging output to check if the parent_id is set correctly
-            // console.log("Replying to comment ID:", commentId);
-            // console.log(parent_Id_box);
+        // Debugging output to check if the parent_id is set correctly
+        // console.log("Replying to comment ID:", commentId);
+        // console.log(parent_Id_box);
 
-        });
     });
+});
 </script>
 
 
