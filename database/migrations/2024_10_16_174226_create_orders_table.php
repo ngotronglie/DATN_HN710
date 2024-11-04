@@ -23,7 +23,7 @@ return new class extends Migration
         $table->foreignIdFor(Voucher::class)->nullable()->constrained()->onDelete('set null'); 
         $table->bigInteger('total_amount');
         $table->string('status')->default('1');
-        $table->enum('payment_method', ['cod', 'vnpay', 'momo'])->default('cod'); 
+        $table->enum('payment_method', ['cod', 'online'])->default('cod'); 
         $table->enum('payment_status', ['unpaid', 'paid', 'failed', 'refunded'])->default('unpaid');//Đơn hàng chưa thanh toán, Đơn hàng đã thanh toán, Giao dịch thanh toán k thành công, Hoàn tiền
         $table->string('order_code')->unique();
         $table->text('note')->nullable();

@@ -303,7 +303,11 @@
                                                     class="fa fa-times-circle"></i></a>
                                         @endif
                                     @endif
-
+                                    @if ($order->status == 2 || ($order->payment_status == 'paid' && $order->payment_method == 'cod'))
+                                    <a class="btn btn-hover-d btn-dark ml-2" target="_blank" href="{{route('admin.order.printOrder', $order->order_code)}}" title="In đơn hàng">
+                                        <i class="fa fa-print"></i>
+                                    </a>
+                                @endif
                                 </div>
                             @endif
 

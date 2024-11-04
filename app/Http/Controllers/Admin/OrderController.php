@@ -9,7 +9,8 @@ use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
-
+// use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 class OrderController extends Controller
 {
     /**
@@ -94,8 +95,25 @@ class OrderController extends Controller
             return redirect()->back()->with('error', 'Không thể hủy đơn hàng với trạng thái hiện tại');
         }
     }
-
-
+    public function print_order($checkout_code) {
+        $order = Order::with(['user', 'voucher', 'orderDetails.productVariant.product'])
+                        ->where('order_code', $checkout_code)
+                        ->firstOrFail();
+        
+        if ($order->status == 2 || ($order->payment_status == 'paid' && $order->payment_method == 'cod')) {
+            $data = [
+                'title' => "Hóa đơn chi tiết",
+                'date' => date('d/m/Y'),
+                'order' => $order
+            ];
+            
+            $pdf = Pdf::loadView('admin.layout.order.invoice', $data);
+            return $pdf->stream();
+        } else {
+            return redirect()->back()->with('error', 'Không hợp lệ');
+        }
+    }
+    
     /**
      * Show the form for creating a new resource.
      */

@@ -143,6 +143,11 @@
                                                         </a>
                                                     @endif
                                                 @endif
+                                                @if ($item->status == 2 || ($item->payment_status == 'paid' && $item->payment_method == 'cod'))
+                                                <a class="btn btn-hover-d btn-dark ml-2" target="_blank" href="{{route('admin.order.printOrder', $item->order_code)}}" title="In đơn hàng">
+                                                    <i class="fa fa-print"></i>
+                                                </a>
+                                            @endif
                                             </td>                                      
                                             
                                         </tr>
