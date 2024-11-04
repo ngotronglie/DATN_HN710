@@ -194,6 +194,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
     
     // Thống kê
     Route::get('statistics', [StatisticsController::class, 'index'])->name('statistics.index');
+    Route::post('statistics/show', [StatisticsController::class, 'showStatistics'])->name('statistics.show');
 });
 
 //ajax category

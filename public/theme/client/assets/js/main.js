@@ -129,18 +129,18 @@
 			window.innerWidth >= 575 ? 2 : 1;
 
 	var productCarousel = new Swiper('.product-carousel .swiper-container', {
-		loop: productCount > slidesPerView,  // Tắt vòng lặp nếu sản phẩm không đủ
+		loop: productCount >= slidesPerView,  // Tắt vòng lặp nếu sản phẩm không đủ
 		slidesPerView: slidesPerView,
 		spaceBetween: 0,
 		observer: true,
 		observeParents: true,
 
-		navigation: productCount > slidesPerView ? {
+		navigation: productCount >= slidesPerView ? {
 			nextEl: '.product-carousel .swiper-product-button-next',
 			prevEl: '.product-carousel .swiper-product-button-prev'
 		} : false,
 
-		pagination: productCount > slidesPerView ? {
+		pagination: productCount >= slidesPerView ? {
 			el: '.product-carousel .swiper-pagination',
 			type: 'bullets',
 			clickable: true

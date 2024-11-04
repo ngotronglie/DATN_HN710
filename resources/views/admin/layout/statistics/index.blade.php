@@ -29,13 +29,48 @@
     <div class="animated fadeIn">
         <div class="row">
 
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Nhập khoảng thời gian để xem thống kê</h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('admin.statistics.show') }}" method="POST">
+                            @csrf
+                            <div class="form-group row">
+                                <label for="start-date" class="col-sm-2 col-form-label">Ngày bắt đầu:</label>
+                                <div class="col-sm-4">
+                                  <input type="date" class="form-control" id="start-date" name="start-date" value="{{ session('startDate', old('start-date')) }}">
+                                  @error('start-date')
+                                    <small class="text-danger">{{ $message }}</small>
+                                  @enderror
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="end-date" class="col-sm-2 col-form-label">Ngày kết thúc:</label>
+                                <div class="col-sm-4">
+                                  <input type="date" class="form-control" id="end-date" name="end-date" value="{{ session('endDate', old('end-date')) }}">
+                                  @error('end-date')
+                                    <small class="text-danger">{{ $message }}</small>
+                                  @enderror
+                                </div>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-success">Xem thống kê</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+
             <!-- Doanh thu 4 tháng gần nhất -->
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong class="card-title">Doanh thu 4 tháng gần nhất</strong>
+                        <strong class="card-title">Doanh thu theo tháng</strong>
                         <div>
-                            <a class="btn btn-primary mr-1" href="#" data-toggle="modal" data-target="#chartModal" onclick="showChart('monthlyRevenue')">
+                            <a class="btn btn-primary mr-1" href="#" data-toggle="modal" data-target="{{$monthlyRevenue->isEmpty() ? '' : '#chartModal'}}" onclick="showChart('monthlyRevenue')">
                                 <i class="fa fa-signal"></i> Xem biểu đồ
                             </a>
                         </div>
@@ -75,59 +110,13 @@
                 </div>
             </div>
 
-            <!-- Số lượng đơn hàng theo trạng thái -->
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong class="card-title">Số lượng sản phẩm</strong>
-                        <div>
-                            <a class="btn btn-primary mr-1" href="#" data-toggle="modal" data-target="#chartModal" onclick="showChart('categoryStatistics')">
-                                <i class="fa fa-signal"></i> Xem biểu đồ
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <table id="" class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Tên danh mục</th>
-                                    <th>Số lượng sản phẩm</th>
-                                    <th>Giá thấp nhất</th>
-                                    <th>Giá cao nhất</th>
-                                    <th>Giá trung bình</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if($categoryStatistics->isEmpty())
-                                <tr>
-                                    <td colspan="6" class="text-center"><strong>Không có dữ liệu</strong></td>
-                                </tr>
-                                @else
-                                @foreach($categoryStatistics as $key => $category)
-                                <tr>
-                                    <td>{{ $key + 1 }}</td>
-                                    <td>{{ $category->name }}</td>
-                                    <td>{{ $category->total_products }}</td>
-                                    <td>{{ $category->lowest_price ? number_format($category->lowest_price, 0, ',', '.') : 'N/A' }} @if($category->lowest_price)VNĐ@endif</td>
-                                    <td>{{ $category->highest_price ? number_format($category->highest_price, 0, ',', '.') : 'N/A' }} @if($category->highest_price)VNĐ@endif</td>
-                                    <td>{{ $category->average_price ? number_format($category->average_price, 0, ',', '.') : 'N/A' }} @if($category->average_price)VNĐ@endif</td>
-                                </tr>
-                                @endforeach
-                                @endif
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
             <!-- Sản phẩm bán chạy nhất -->
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <strong class="card-title">Sản phẩm bán chạy nhất</strong>
                         <div>
-                            <a class="btn btn-primary mr-1" href="#" data-toggle="modal" data-target="#chartModal" onclick="showChart('bestSellingProducts')">
+                            <a class="btn btn-primary mr-1" href="#" data-toggle="modal" data-target="{{$bestSellingProducts->isEmpty() ? '' : '#chartModal'}}" onclick="showChart('bestSellingProducts')">
                                 <i class="fa fa-signal"></i> Xem biểu đồ
                             </a>
                         </div>
@@ -170,7 +159,7 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <strong class="card-title">Sản phẩm không bán chạy</strong>
                         <div>
-                            <a class="btn btn-primary mr-1" href="#" data-toggle="modal" data-target="#chartModal" onclick="showChart('leastSellingProducts')">
+                            <a class="btn btn-primary mr-1" href="#" data-toggle="modal" data-target="{{$leastSellingProducts->isEmpty() ? '' : '#chartModal'}}" onclick="showChart('leastSellingProducts')">
                                 <i class="fa fa-signal"></i> Xem biểu đồ
                             </a>
                         </div>
@@ -247,6 +236,10 @@
 
         // Dữ liệu cho từng loại biểu đồ
         if (type === 'monthlyRevenue') {
+            if ({!! json_encode($monthlyRevenue->isEmpty()) !!}) {
+                alert('Không có dữ liệu để hiển thị biểu đồ doanh thu hàng tháng');
+                return;
+            }
             chartData = {
                 type: 'bar',
                 data: {
@@ -308,61 +301,11 @@
                     }
                 }
             };
-        } else if (type === 'categoryStatistics') {
-            chartData = {
-                type: 'bar',
-                data: {
-                    labels: {!! json_encode($categoryStatistics->pluck('name')) !!}, // Lấy tên danh mục từ dữ liệu
-                    datasets: [
-                        {
-                            label: 'Giá thấp nhất',
-                            data: {!! json_encode($categoryStatistics->pluck('lowest_price')) !!},
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)', // Màu đỏ nhạt
-                            borderColor: 'rgba(255, 99, 132, 1)', // Viền màu đỏ
-                            borderWidth: 1
-                        },
-                        {
-                            label: 'Giá cao nhất',
-                            data: {!! json_encode($categoryStatistics->pluck('highest_price')) !!},
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)', // Màu xanh dương nhạt
-                            borderColor: 'rgba(54, 162, 235, 1)', // Viền màu xanh dương
-                            borderWidth: 1
-                        },
-                        {
-                            label: 'Giá trung bình',
-                            data: {!! json_encode($categoryStatistics->pluck('average_price')) !!},
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)', // Màu xanh ngọc nhạt
-                            borderColor: 'rgba(75, 192, 192, 1)', // Viền màu xanh ngọc
-                            borderWidth: 1
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            beginAtZero: true
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'top'
-                        },
-                        tooltip: {
-                            enabled: true
-                        },
-                        title: {
-                            display: true,
-                            text: 'Biểu đồ so sánh giá theo danh mục sản phẩm',
-                            font: {
-                                size: 16
-                            }
-                        }
-                    }
-                }
-            };
         } else if (type === 'bestSellingProducts') {
+            if ({!! json_encode($bestSellingProducts->isEmpty()) !!}) {
+                alert('Không có dữ liệu để hiển thị biểu đồ sản phẩm bán chạy');
+                return;
+            }
             chartData = {
                 type: 'pie',
                 data: {
@@ -414,6 +357,10 @@
                 }
             };
         } else if (type === 'leastSellingProducts') {
+            if ({!! json_encode($leastSellingProducts->isEmpty()) !!}) {
+                alert('Không có dữ liệu để hiển thị biểu đồ sản phẩm không bán chạy');
+                return;
+            }
             chartData = {
                 type: 'pie',
                 data: {
@@ -468,6 +415,7 @@
 
         // Tạo biểu đồ
         chartInstance = new Chart(ctx, chartData);
+        
     }
 </script>
 

@@ -45,6 +45,10 @@
                                     <td>{{ $category->name }}</td>
                                 </tr>
                                 <tr>
+                                    <th>Số lượng sản phẩm</th>
+                                    <td>{{ $productCount }}</td>
+                                </tr>
+                                <tr>
                                     <th>Trạng thái</th>
                                     <td>
                                         @if($category->is_active)

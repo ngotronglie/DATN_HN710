@@ -25,7 +25,7 @@ class HomeController extends Controller
             })
             ->with(['galleries', 'variants'])
             ->orderByDesc('view')
-            ->take(1)
+            ->take(10)
             ->get();
 
         // Sản phẩm mới nhất
