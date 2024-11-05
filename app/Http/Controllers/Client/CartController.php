@@ -61,17 +61,27 @@ class CartController extends Controller
                 ]);
             }
         } else {
+
             $cart = session()->get('cart', ['items' => []]);
+
 
             $cartItem = collect($cart['items'])->firstWhere('product_variant_id', $productVariantId);
             $currentQuantity = $cartItem ? $cartItem['quantity'] : 0;
 
-            if ($currentQuantity + $quantity > $quantityProduct) {
+
+            $coutQuantity = $currentQuantity + $quantity;
+
+            if ($coutQuantity > $quantityProduct) {
+                session()->put('cart', $cart);
                 return response()->json(['message' => 'Số lượng sản phẩm trong giỏ hàng vượt quá giới hạn cho phép!'], 400);
             }
 
             if ($cartItem) {
-                $cartItem['quantity'] += $quantity;
+                $index = collect($cart['items'])->search(function ($item) use ($productVariantId) {
+                    return $item['product_variant_id'] === $productVariantId;
+                });
+
+                $cart['items'][$index]['quantity'] += $quantity;
             } else {
                 $cart['items'][] = [
                     'product_variant_id' => $productVariantId,
@@ -80,15 +90,16 @@ class CartController extends Controller
             }
 
             session()->put('cart', $cart);
+
+            $processedItemsData = $this->getCartItemsData(null);
+
+            return response()->json([
+                'message' => 'Thêm sản phẩm vào giỏ hàng thành công!',
+                'cartItems' => $processedItemsData['processedItems'],
+                'uniqueVariantCount' => $processedItemsData['uniqueVariantCount'],
+            ]);
+
         }
-
-        $processedItemsData = $user ? $this->getCartItemsData($user->id) : $this->getCartItemsData(null);
-
-        return response()->json([
-            'message' => 'Thêm sản phẩm vào giỏ hàng thành công!',
-            'cartItems' => $processedItemsData['processedItems'],
-            'uniqueVariantCount' => $processedItemsData['uniqueVariantCount'],
-        ]);
     }
 
 

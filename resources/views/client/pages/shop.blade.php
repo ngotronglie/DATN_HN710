@@ -179,7 +179,7 @@
                                             <a href="{{ route('shops.show', $item->slug) }}" class="image">
                                                 <img class="first-image" src="{{ Storage::url($item->img_thumb) }}"
                                                     alt="Product" />
-                                                <img class="second-image" src="{{ Storage::url($item->img_thumb) }}"
+                                                <img class="second-image" src="{{ Storage::url($item->first_image) }}"
                                                     alt="Product" />
                                             </a>
                                             <div class="actions">
@@ -220,7 +220,7 @@
                                                     </div>
 
                                                     <div class="price price-options">
-                                                        <label style="margin-right:5px">Giá: </label>
+                                                        <label style="margin-right:5px"></label>
                                                         <span id="product-price-sale-{{ $item->id }}"
                                                             class="show-price maxPrice" data-filpro="{{$item->id ?? 0}}" data-maxPrice="{{$maxPrice}}">
                                                             {{ $item->min_price_sale == $item->max_price_sale
@@ -374,7 +374,7 @@
                                                 <a href="{{ route('shops.show', $item->slug) }}" class="image">
                                                     <img class="first-image" src="{{ Storage::url($item->img_thumb) }}"
                                                         alt="Product">
-                                                    <img class="second-image" src="{{ Storage::url($item->img_thumb) }}"
+                                                    <img class="second-image" src="{{ Storage::url($item->first_image) }}"
                                                         alt="Product">
                                                 </a>
                                             </div>
@@ -383,7 +383,7 @@
                                                     <a
                                                         href="{{ route('shops.show', $item->slug) }}">{{ $item->name }}</a>
                                                 </h5>
-                                                <span id="product-price-sale-{{ $item->id }}" class="show-price">
+                                                <span style="font-size: 0.9rem" id="product-price-sale-{{ $item->id }}" class="show-price">
                                                     {{ $item->min_price_sale == $item->max_price_sale
                                                         ? number_format($item->min_price_sale) . 'đ'
                                                         : number_format($item->min_price_sale) .'đ' . ' - ' . number_format($item->max_price_sale) . 'đ' }}
