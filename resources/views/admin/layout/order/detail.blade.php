@@ -123,23 +123,8 @@
                                     </tr>
                                     <tr>
                                         <th>Phương thức thanh toán</th>
-                                        <td>
-                                            @switch($order->payment_method)
-                                                @case('cod')
-                                                    Thanh toán khi nhận hàng (COD)
-                                                @break
-
-                                                @case('vnpay')
-                                                    Thanh toán online (VNPAY)
-                                                @break
-
-                                                @case('momo')
-                                                    Thanh toán online (MOMO)
-                                                @break
-
-                                                @default
-                                                    Không xác định
-                                            @endswitch
+                                        <td>                                       
+                                            {{ $order->payment_method == 'cod' ? 'Thanh toán khi nhận hàng' : 'Thanh toán online' }}
                                         </td>
                                     </tr>
 

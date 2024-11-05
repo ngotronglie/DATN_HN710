@@ -116,10 +116,11 @@
                                                 @endif
                                             </td>
                                             <td class="d-flex">
-                                                @if ($item->status != 6) <!-- Nếu trạng thái khác "Đã hủy" thì hiển thị các nút khác -->
-                                                    <a class="btn btn-primary mr-2" href="{{ route('admin.order.detail', $item) }}" title="Xem chi tiết">
-                                                        <i class="fa fa-eye"></i>
-                                                    </a>
+                                                <a class="btn btn-primary mr-2" href="{{ route('admin.order.detail', $item) }}" title="Xem chi tiết">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                                @if ($item->status != 6 && $item->canProceed()) <!-- Nếu trạng thái khác "Đã hủy" thì hiển thị các nút khác -->
+                                                   
                                             
                                                     @if($item->status == 1)
                                                         <a class="btn btn-success" href="{{ route('admin.order.confirmOrder', $item->id) }}"
