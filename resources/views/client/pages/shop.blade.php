@@ -182,9 +182,10 @@
                                                 <img class="second-image" src="{{ Storage::url($item->first_image) }}"
                                                     alt="Product" />
                                             </a>
+                                            {{-- lam tu day them san pham vao db san pham yeu thich --}}
                                             <div class="actions">
-                                                <a href="wishlist.html" title="Wishlist" class="action wishlist">
-                                                    <i class="pe-7s-like"></i></a>
+                                                <span title="Wishlist" data-id="{{$item->id}}" id="favorite-{{$item->id}}" class="action favorite wishlist">
+                                                    <i class="pe-7s-like"></i></span>
                                                 <a href="#" class="action quickview" data-bs-toggle="modal"
                                                     data-bs-target="#exampleModalCenter"><i class="pe-7s-search"></i></a>
                                                 <a href="#" class="action compare"><i class="pe-7s-shuffle"></i></a>

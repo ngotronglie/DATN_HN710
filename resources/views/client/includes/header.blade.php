@@ -97,9 +97,16 @@
                             <!-- User Account Header Action Button End -->
 
                             <!-- Wishlist Header Action Button Start -->
-                            <a href="/wishlist" class="header-action-btn header-action-btn-wishlist d-none d-md-block">
+                            @if (Auth::check())
+                            <a href="{{route('favorite_Prd.index')}}" class="header-action-btn header-action-btn-wishlist d-none d-md-block">
                                 <i class="pe-7s-like"></i>
                             </a>
+                            @else
+                            <span class="header-action-btn header-action-btn-wishlist d-none d-md-block">
+                                <i class="pe-7s-like"></i>
+                            </span>
+                            @endif
+
                             <!-- Wishlist Header Action Button End -->
 
                             <!-- Shopping Cart Header Action Button Start -->

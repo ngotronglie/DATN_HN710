@@ -5,6 +5,26 @@
 
     let idcart = null;
 
+    HT.checkFavorite = () => {
+
+        $('.header-action-btn-wishlist').click(function(){
+            $.ajax({
+                url: '/san-pham-yeu-thich',
+                method: 'GET',
+                success: function(res) {
+
+                    if (!res.status && res.script) {
+                        eval(res.script);
+                    }
+
+                },
+                error: function(xhr, status, error) {
+                    console.error('Có lỗi xảy ra:', error);
+                }
+            });
+        })
+    };
+
     HT.deleleCart = () => {
         $('.deleteCart').click(function () {
 
@@ -71,6 +91,7 @@
     }
 
     $(document).ready(function () {
+        HT.checkFavorite();
         HT.deleleCart();
     });
 })(jQuery);

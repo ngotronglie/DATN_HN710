@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\Client\CartController;
+use App\Http\Controllers\Client\FavoriteController;
 use App\Http\Controllers\ContactController;
 
 use App\Http\Controllers\Ajax\DeleteController;
@@ -42,17 +43,6 @@ use Illuminate\Support\Facades\Route;
 
 // ----------------------------CLIENT ROUTES--------------------------------
 
-
-Route::get('/wishlist', function () {
-    return view('client.pages.wishlist');
-});
-Route::get('/cart', function () {
-    return view('client.pages.cart');
-});
-Route::get('/checkout', function () {
-    return view('client.pages.checkout');
-});
-
 Route::get('/about', function () {
     return view('client.pages.about');
 });
@@ -74,6 +64,12 @@ Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/ajax/addToCart', [CartController::class, 'addToCart']);
 Route::delete('/ajax/deleteToCartHeader', [CartController::class, 'deleteToCart']);
 Route::post('/ajax/updateQuantityCart', [CartController::class, 'updateQuantity']);
+
+//sản phẩm yêu thích
+Route::get('/san-pham-yeu-thich', [FavoriteController::class, 'index'])->name('favorite_Prd.index');
+Route::post('/ajax/addToCart', [CartController::class, 'addToCart']);
+Route::post('/ajax/addToFavorite', [FavoriteController::class, 'addToFavorite']);
+Route::delete('/ajax/deleteToFavorite', [FavoriteController::class, 'deleteToFavorite']);
 
 
 

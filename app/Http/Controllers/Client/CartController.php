@@ -47,7 +47,9 @@ class CartController extends Controller
             $currentQuantity = $cartItem ? $cartItem->quantity : 0;
 
             if ($currentQuantity + $quantity > $quantityProduct) {
-                return response()->json(['message' => 'Số lượng sản phẩm trong giỏ hàng vượt quá giới hạn cho phép!'], 400);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Số lượng sản phẩm trong giỏ hàng vượt quá giới hạn cho phép!']);
             }
 
             if ($cartItem) {
@@ -60,6 +62,14 @@ class CartController extends Controller
                     'quantity' => $quantity,
                 ]);
             }
+
+            $processedItemsData = $this->getCartItemsData($user->id);
+
+            return response()->json([
+                'message' => 'Thêm sản phẩm vào giỏ hàng thành công!',
+                'cartItems' => $processedItemsData['processedItems'],
+                'uniqueVariantCount' => $processedItemsData['uniqueVariantCount'],
+            ]);
         } else {
 
             $cart = session()->get('cart', ['items' => []]);
@@ -103,49 +113,11 @@ class CartController extends Controller
     }
 
 
-    public function updateQuantitybackup(Request $request)
-    {
-        $id = $request->input('id');
-        $quantity = $request->input('quantity');
-
-        $cartItem = CartItem::with('productVariant')->find($id);
-
-        if ($cartItem) {
-            $cartItem->quantity = $quantity;
-            $cartItem->save();
-
-            $totalPrice = $cartItem->productVariant->price_sale * $cartItem->quantity;
-
-            $totalCartPrice = CartItem::whereHas('cart', function ($query) {
-                $query->where('user_id', auth()->id());
-            })->with('productVariant')
-                ->get()
-                ->sum(function ($item) {
-                    return $item->productVariant->price_sale * $item->quantity;
-                });
-
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Cập nhật số lượng thành công!',
-                'new_quantity' => $cartItem->quantity,
-                'price_sale' => $cartItem->productVariant->price_sale,
-                'total_price' => $totalPrice,
-                'total_cart_price' => $totalCartPrice,
-            ]);
-        }
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Sản phẩm không tồn tại trong giỏ hàng!',
-        ]);
-    }
     public function updateQuantity(Request $request)
     {
 
         $id = $request->input('id');
         $quantity = $request->input('quantity');
-
 
         $user = auth()->user();
 
@@ -258,6 +230,7 @@ class CartController extends Controller
             session()->put('cart', $sessionCart);
 
             if ($itemFound) {
+
                 $processedItemsData = $this->getCartItemsData(null);
 
                 return response()->json([

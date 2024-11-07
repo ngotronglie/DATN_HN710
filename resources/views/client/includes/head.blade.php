@@ -39,6 +39,11 @@
     <link rel="stylesheet" href="{{ asset('theme/client/css/plugins/lightgallery.min.css ') }}" />
 
     @yield('style')
+    <style>
+        .swal-title {
+    font-size: 1.5rem; /* Điều chỉnh kích cỡ chữ */
+}
+    </style>
     <script>
         var BASE_URL = '{{ config('app.url') }}';
     </script>

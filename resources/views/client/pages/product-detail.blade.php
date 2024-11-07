@@ -218,7 +218,7 @@
                                         </button>
                                     </div>
                                     <div class="add-to-wishlist">
-                                        <button class="btn btn-outline-dark btn-hover-primary">
+                                        <button class="btn btn-outline-dark btn-hover-primary favorite">
                                             Thêm vào sản phẩm yêu thích
                                         </button>
                                     </div>
