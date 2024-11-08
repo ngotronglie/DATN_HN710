@@ -52,9 +52,9 @@
                                     <option value="5" {{ request('status') == 5 ? 'selected' : '' }}>Chờ hủy ({{ $statusCounts['pending_cancel'] }})</option>
                                     <option value="6" {{ request('status') == 6 ? 'selected' : '' }}>Đã hủy ({{ $statusCounts['canceled'] }})</option>
                                 </select>
-                                
+
                             </div>
-                            
+
                         </div>
                         <div class="card-body">
                             <table id="bootstrap-data-table" class="table table-striped table-bordered">
@@ -99,7 +99,7 @@
                                             <td>
                                                 {{ number_format($item->total_amount, 0, ',', '.') }} VND
                                             </td>
-                                            
+
                                             <td>
                                                 @if ($item->status == 1)
                                                     Chờ xác nhận
@@ -120,7 +120,7 @@
                                                     <a class="btn btn-primary mr-2" href="{{ route('admin.order.detail', $item) }}" title="Xem chi tiết">
                                                         <i class="fa fa-eye"></i>
                                                     </a>
-                                            
+
                                                     @if($item->status == 1)
                                                         <a class="btn btn-success" href="{{ route('admin.order.confirmOrder', $item->id) }}"
                                                            onclick="return confirm('Bạn có chắc chắn muốn xác nhận đơn hàng này không?');">
@@ -143,15 +143,15 @@
                                                         </a>
                                                     @endif
                                                 @endif
-                                            </td>                                      
-                                            
+                                            </td>
+
                                         </tr>
                                     @endforeach
 
                                 </tbody>
-                              
-                                
-                                
+
+
+
                             </table>
                         </div>
                     </div>
@@ -162,7 +162,7 @@
         </div><!-- .animated -->
     </div><!-- .content -->
 
-   
+
 @endsection
 @section('script')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.js"></script>
@@ -190,5 +190,5 @@
 }
 
    </script>
-    
+
 @endsection
