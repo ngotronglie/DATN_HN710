@@ -15,6 +15,8 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\StatisticsController;
+use App\Http\Controllers\Client\CartController;
+use App\Http\Controllers\Client\FavoriteController;
 use App\Http\Controllers\ContactController;
 
 use App\Http\Controllers\Ajax\DeleteController;
@@ -51,14 +53,25 @@ Route::get('/shops/{slug}', [ShopController::class, 'show'])->name('shops.show')
 Route::get('shop/ajax/getSizePrice', [ShopController::class, 'getSizePrice']);
 Route::get('shop/ajax/getSizePriceDetail', [ShopController::class, 'getSizePriceDetail']);
 Route::get('/shop-search', [ShopController::class, 'search'])->name('shop.search');
+Route::get('/shop-filter', [ShopController::class, 'filter'])->name('shop.filter');
 
+//cart
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/ajax/addToCart', [CartController::class, 'addToCart']);
+Route::delete('/ajax/deleteToCartHeader', [CartController::class, 'deleteToCart']);
+Route::post('/ajax/updateQuantityCart', [CartController::class, 'updateQuantity']);
+
+//sản phẩm yêu thích
+Route::get('/san-pham-yeu-thich', [FavoriteController::class, 'index'])->name('favorite_Prd.index');
+Route::post('/ajax/addToCart', [CartController::class, 'addToCart']);
+Route::post('/ajax/addToFavorite', [FavoriteController::class, 'addToFavorite']);
+Route::delete('/ajax/deleteToFavorite', [FavoriteController::class, 'deleteToFavorite']);
 
 // Blog
 Route::get('/blogs', [ClientBlogController::class, 'index'])->name('blogs.index');
 Route::get('/blogs/category/{id}', [ClientBlogController::class, 'getBlogCategory'])->name('blogs.category');
 Route::get('/blogs/{id}', [ClientBlogController::class, 'show'])->name('blogs.show');
 Route::get('/blogs-search', [ClientBlogController::class, 'search'])->name('blogs.search');
-
 
 // Contact
 Route::get('/contact', function () {
@@ -120,7 +133,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('accounts/listUser', [UserController::class, 'listUser'])->name('accounts.listUser');
 
     // Các route resource cho accounts
-    
+
     Route::resource('accounts', UserController::class);
 
     // Quản lý các size đã bị xóa mềm
@@ -191,6 +204,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('order/ship/{order_id}', [OrderController::class, 'shipOrder'])->name('order.shipOrder');
     Route::get('order/confirm-shipping/{order_id}', [OrderController::class, 'confirmShipping'])->name('order.confirmShipping');
     Route::get('order/cancel/{order_id}', [OrderController::class, 'cancelOrder'])->name('order.cancelOrder');
+
     Route::get('order-print/{checkout_code}', [OrderController::class, 'print_order'])->name('order.printOrder');
 
     // Thống kê

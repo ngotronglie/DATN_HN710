@@ -77,7 +77,7 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="name" class=" form-control-label">Danh mục bài viết</label>
-                                <select name="category_blog_id" class="form-control">
+                                <select name="category_blog_id" class="form-control select2">
                                     <option value="">--Vui lòng chọn--</option>
                                     @foreach ($ctgrbl as $bl)
                                     <option value="{{$bl->id}}" {{ old('category_blog_id') == $bl->id ? 'selected' : '' }}>{{$bl->name}}</option>

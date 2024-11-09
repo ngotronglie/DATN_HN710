@@ -18,10 +18,14 @@
 <script src="{{ asset('theme/client/assets/js/plugins/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('theme/client/assets/js/plugins/lightgallery-all.min.js') }}"></script>
 <script src="{{ asset('theme/client/assets/js/plugins/thia-sticky-sidebar.min.js') }}"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 
 
 
 <!--Main JS-->
 <script src="{{ asset('theme/client/assets/js/main.js') }}"></script>
+<script src="{{ asset('plugins/js/deleteCart.js') }}"></script>
+
 
 @yield('script')

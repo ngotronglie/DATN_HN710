@@ -1,7 +1,7 @@
 @extends('client.index')
 @section('style')
     <style>
-        
+
         .size-buttons {
             display: flex;
 
@@ -108,8 +108,8 @@
 
     <div class="section section-margin">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-5 offset-lg-0 col-md-8 offset-md-2 col-custom">
+            <div class="row" data-aos="fade-up" data-aos-delay="200">
+                <div class="col-lg-5 offset-lg-0 col-md-8 offset-md-2 col-custom" >
                     <div class="product-details-img">
                         <div
                             class="single-product-img swiper-container gallery-top swiper-container-initialized swiper-container-horizontal">
@@ -156,36 +156,22 @@
                     </div>
                 </div>
                 <div class="col-lg-7 col-custom">
-                    <div class="product-summery position-relative">
+                    <div class="product-summery position-relative" data-aos="fade-up" data-aos-delay="200">
 
-                        {{-- <div class="product-head mb-3" >
+                        <div class="product-head mb-3" >
                             <h2 class="product-title">{{ $product->name }}</h2>
                         </div>
 
-                        <div data-aos="fade-up" data-aos-delay="200"></div>
+                        <div></div>
                         <div class="price-box mb-2">
                             <span id="product-price-sale-{{ $product->id }}" class="show-price">
                             </span>
                             <span style="text-decoration: line-through;font-size: 1.0rem;font-weight: 500" id="old-price"></span>
-                        </div> --}}
-
-                        {{-- số lượng từng biến thể --}}
-                        {{-- <div class="sku mb-3">
-                            <span class="quantity-product" id="quantity-display-{{ $product->id }}"></span>
-                        </div> --}}
-                        <div class="product-head mb-3" data-aos="fade-up" data-aos-delay="200">
-                            <h2 class="product-title">{{ $product->name }}</h2>
                         </div>
 
-                        <div class="price-box mb-2" data-aos="fade-up" data-aos-delay="200">
-                            <span id="product-price-sale-{{ $product->id }}" class="show-price hidden"></span>
-                            <span id="old-price" class="hidden" style="text-decoration: line-through; font-size: 1.3rem; font-weight: 500"></span>
+                         <div class="sku mb-3">
+                            <span class="quantity-product" id="quantity-display-{{ $product->id }}">Số lượng: </span>
                         </div>
-
-                        <div class="sku mb-3" data-aos="fade-up" data-aos-delay="200">
-                            <span class="quantity-product hidden" id="quantity-display-{{ $product->id }}"></span>
-                        </div>
-
 
 
                         <div class="sku mb-3">
@@ -227,13 +213,14 @@
 
                                 <div class="cart-wishlist-btn mb-4">
                                     <div class="add-to_cart">
-                                        <a class="btn btn-outline-dark btn-hover-primary" href="cart.html">Thêm vào giỏ
-                                            hàng</a>
+                                        <button class="btn btn-outline-dark btn-hover-primary">
+                                            Thêm vào giỏ hàng
+                                        </button>
                                     </div>
                                     <div class="add-to-wishlist">
-                                        <a class="btn btn-outline-dark btn-hover-primary" href="wishlist.html">Thêm vào
-                                            sản phẩm yêu thích
-                                        </a>
+                                        <button class="btn btn-outline-dark btn-hover-primary favorite">
+                                            Thêm vào sản phẩm yêu thích
+                                        </button>
                                     </div>
                                 </div>
 
@@ -638,17 +625,4 @@
 
 @section('script')
 <script src="{{ asset('plugins/js/getsizedetail.js') }}"></script>
-<script>
-        document.addEventListener("DOMContentLoaded", function() {
-    // Đợi nội dung tải xong rồi thêm hiệu ứng
-    document.querySelectorAll('.show-price, .quantity-product').forEach(element => {
-        element.classList.add('fade-in'); // Thêm lớp `fade-in` để kích hoạt hiệu ứng
-    });
-});
-AOS.init({
-    duration: 1000, // Tốc độ animation
-    easing: 'ease-in-out', // Hiệu ứng easing
-    once: true, // Chạy hiệu ứng một lần khi cuộn đến
-});
-</script>
 @endsection
