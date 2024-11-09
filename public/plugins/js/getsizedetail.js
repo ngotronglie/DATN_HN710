@@ -498,7 +498,7 @@
     }
 
 
-    HT.addToCart = () => {
+    HT.addToFavorite = () => {
         $('.favorite').click(function () {
 
             let option = {
@@ -580,6 +580,7 @@
         HT.getSizePrice();
         HT.updatePriceWithQuantity();
         HT.addToCart();
+        HT.addToFavorite();
     });
 })(jQuery);
 
