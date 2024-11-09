@@ -40,4 +40,14 @@ class Order extends Model
     {
         return $this->hasMany(OrderDetail::class);
     }
+    // Không cho phép chuyển trạng thái nếu là thanh toán online và trạng thái thanh toán là chưa thanh toán hoặc không thành công hoặc hoàn tiền
+    public function canProceed()
+    {
+        return !($this->payment_method === 'online' && in_array($this->payment_status, ['unpaid', 'failed','refunded']));
+    }
+     // Chỉ cho phép hoàn tiền nếu đơn hàng đã thanh toán và không ở trạng thái hoàn tiền
+
+    // public function canRefund(){
+    // return $this->payment_status === 'paid' && $this->status !== 6; 
+//}
 }

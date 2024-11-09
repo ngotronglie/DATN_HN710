@@ -116,10 +116,11 @@
                                                 @endif
                                             </td>
                                             <td class="d-flex">
-                                                @if ($item->status != 6) <!-- Nếu trạng thái khác "Đã hủy" thì hiển thị các nút khác -->
-                                                    <a class="btn btn-primary mr-2" href="{{ route('admin.order.detail', $item) }}" title="Xem chi tiết">
-                                                        <i class="fa fa-eye"></i>
-                                                    </a>
+                                                <a class="btn btn-primary mr-2" href="{{ route('admin.order.detail', $item) }}" title="Xem chi tiết">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                                @if ($item->status != 6 && $item->canProceed()) <!-- Nếu trạng thái khác "Đã hủy" thì hiển thị các nút khác -->
+                                                   
                                             
                                                     @if($item->status == 1)
                                                         <a class="btn btn-success" href="{{ route('admin.order.confirmOrder', $item->id) }}"
@@ -143,6 +144,11 @@
                                                         </a>
                                                     @endif
                                                 @endif
+                                                @if ($item->status == 2 || ($item->payment_status == 'paid' && $item->payment_method == 'cod'))
+                                                <a class="btn btn-hover-d btn-dark ml-2" target="_blank" href="{{route('admin.order.printOrder', $item->order_code)}}" title="In đơn hàng">
+                                                    <i class="fa fa-print"></i>
+                                                </a>
+                                            @endif
                                             </td>                                      
                                             
                                         </tr>

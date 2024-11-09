@@ -123,23 +123,8 @@
                                     </tr>
                                     <tr>
                                         <th>Phương thức thanh toán</th>
-                                        <td>
-                                            @switch($order->payment_method)
-                                                @case('cod')
-                                                    Thanh toán khi nhận hàng (COD)
-                                                @break
-
-                                                @case('vnpay')
-                                                    Thanh toán online (VNPAY)
-                                                @break
-
-                                                @case('momo')
-                                                    Thanh toán online (MOMO)
-                                                @break
-
-                                                @default
-                                                    Không xác định
-                                            @endswitch
+                                        <td>                                       
+                                            {{ $order->payment_method == 'cod' ? 'Thanh toán khi nhận hàng' : 'Thanh toán online' }}
                                         </td>
                                     </tr>
 
@@ -303,7 +288,11 @@
                                                     class="fa fa-times-circle"></i></a>
                                         @endif
                                     @endif
-
+                                    @if ($order->status == 2 || ($order->payment_status == 'paid' && $order->payment_method == 'cod'))
+                                    <a class="btn btn-hover-d btn-dark ml-2" target="_blank" href="{{route('admin.order.printOrder', $order->order_code)}}" title="In đơn hàng">
+                                        <i class="fa fa-print"></i>
+                                    </a>
+                                @endif
                                 </div>
                             @endif
 

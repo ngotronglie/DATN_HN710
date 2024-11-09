@@ -191,7 +191,8 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('order/ship/{order_id}', [OrderController::class, 'shipOrder'])->name('order.shipOrder');
     Route::get('order/confirm-shipping/{order_id}', [OrderController::class, 'confirmShipping'])->name('order.confirmShipping');
     Route::get('order/cancel/{order_id}', [OrderController::class, 'cancelOrder'])->name('order.cancelOrder');
-    
+    Route::get('order-print/{checkout_code}', [OrderController::class, 'print_order'])->name('order.printOrder');
+
     // Thống kê
     Route::get('statistics', [StatisticsController::class, 'index'])->name('statistics.index');
     Route::post('statistics/show', [StatisticsController::class, 'showStatistics'])->name('statistics.show');
