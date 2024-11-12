@@ -236,9 +236,9 @@
                                             </div>
 
                                             <div class="shop-list-btn">
-                                                <a title="Wishlist" href="#"
-                                                    class="btn btn-sm btn-outline-dark btn-hover-primary wishlist"><i
-                                                        class="fa fa-heart"></i></a>
+                                                <span title="Wishlist" data-id="{{$item->id}}" id="favorite2-{{$item->id}}"
+                                                    class="btn btn-sm btn-outline-dark btn-hover-primary wishlist favorite2"><i
+                                                        class="fa fa-heart"></i></span>
                                                 <button id="addcart-{{$item->id}}"
                                                     data-id="{{$item->id}}"
                                                     class="btn btn-sm btn-outline-dark btn-hover-primary"

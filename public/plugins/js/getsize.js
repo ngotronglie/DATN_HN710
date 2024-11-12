@@ -336,7 +336,7 @@
                         content: {
                             element: "span",
                             attributes: {
-                                innerHTML: "<h1 style='font-size: 1.3rem;'>Vui lòng chọn biến thể trước khi thêm vào giỏ hàng!</h1>",
+                                innerHTML: "<h1 style='font-size: 1.3rem;'>Vui lòng chọn kích cỡ, màu trước khi thêm vào giỏ hàng!</h1>",
                             },
                         },
                         text: "",
@@ -403,7 +403,7 @@
                                       })
                                       .then((willDelete) => {
                                         if (willDelete) {
-                                          window.location.href = "/login"; // Chuyển đến trang đăng nhập
+                                          window.location.href = "/login";
                                         }
                                       });
                                 }
@@ -446,7 +446,116 @@
                         content: {
                             element: "span",
                             attributes: {
-                                innerHTML: "<h1 style='font-size: 1.3rem;'>Vui lòng chọn biến thể trước khi thêm vào yêu thích!</h1>",
+                                innerHTML: "<h1 style='font-size: 1.3rem;'>Vui lòng chọn kích cỡ, màu trước khi thêm vào yêu thích!</h1>",
+                            },
+                        },
+                        text: "",
+                        icon: "error",
+                        button: "Đóng",
+                    });
+                }
+            });
+
+
+        });
+    };
+
+    HT.addfavorite2 = () => {
+        $('.favorite2').each(function () {
+            let btn = $(this);
+            let id = btn.attr('data-id');
+
+            $('#favorite2-' + id).click(function () {
+                if (selectedVariantId) {
+                    if (id == idProAddCart) {
+
+                        let option = {
+                            'product_variant_id': selectedVariantId,
+                            '_token': token
+                        }
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '/ajax/addToFavorite',
+                            data: option,
+                            dataType: 'json',
+                            success: function (res) {
+                                if (res.success == false) {
+                                    swal({
+                                        content: {
+                                            element: "span",
+                                            attributes: {
+                                                innerHTML: "<h1 style='font-size: 1.3rem;'>Sản phẩm đã thêm vào mục yêu thích rồi!</h1>",
+                                            },
+                                        },
+                                        text: "",
+                                        icon: "error",
+                                        button: "Đóng",
+                                    });
+
+                                }else if (res.status == false) {
+                                    swal({
+                                        title: "Bạn muốn thêm vào mục yêu thích?",
+                                        text: "Bạn cần phải đăng nhập để xử dụng chức năng này!",
+                                        icon: "warning",
+                                        buttons: {
+                                          cancel: "Hủy",
+                                          confirm: {
+                                            text: "Đăng nhập",
+                                            value: true,
+                                            visible: true,
+                                            className: "swal-link-button",
+                                            closeModal: false
+                                          }
+                                        },
+                                        dangerMode: true,
+                                      })
+                                      .then((willDelete) => {
+                                        if (willDelete) {
+                                          window.location.href = "/login";
+                                        }
+                                      });
+                                }
+                                else {
+                                    swal({
+                                        content: {
+                                            element: "span",
+                                            attributes: {
+                                                innerHTML: "<h1 style='font-size: 1.3rem;'>Đã thêm vào mục yêu thích!</h1>",
+                                            },
+                                        },
+                                        text: "",
+                                        icon: "success",
+                                        button: "Đóng",
+                                    });
+
+                                }
+
+
+                            },
+                            error: function (xhr, status, error) {
+                                console.log(status);
+                            }
+                        });
+                    } else {
+                        swal({
+                            content: {
+                                element: "span",
+                                attributes: {
+                                    innerHTML: "<h1 style='font-size: 1.3rem;'>Vui lòng thêm đúng sản phẩm đã chọn!</h1>",
+                                },
+                            },
+                            text: "",
+                            icon: "error",
+                            button: "Đóng",
+                        });
+                    }
+                } else {
+                    swal({
+                        content: {
+                            element: "span",
+                            attributes: {
+                                innerHTML: "<h1 style='font-size: 1.3rem;'>Vui lòng chọn kích cỡ, màu trước khi thêm vào yêu thích!</h1>",
                             },
                         },
                         text: "",
@@ -467,5 +576,7 @@
         HT.selectColor();
         HT.addCart();
         HT.addfavorite();
+        HT.addfavorite2();
+
     });
 })(jQuery);
