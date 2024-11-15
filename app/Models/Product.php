@@ -50,4 +50,9 @@ class Product extends Model
             })
             ->sum('quantity'); // Tính tổng số lượng của các biến thể
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

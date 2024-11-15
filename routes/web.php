@@ -188,8 +188,12 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::put('banners/restore/{id}', [BannerController::class, 'restore'])->name('banners.restore');
     Route::delete('banners/forceDelete/{id}', [BannerController::class, 'forceDelete'])->name('banners.forceDelete');
 
-    // Quản lý bình luận
-    Route::get('comments', action: [CommentController::class, 'index'])->name('comments.index');
+    // Danh sách bình luận
+    Route::get('comments', [CommentController::class, 'index'])->name('comments.index');
+    
+    // Chi tiết bình luận
+    Route::get('comments/{id}', [CommentController::class, 'show'])->name('comments.show');
+    Route::get('comments/{parent_id}/children', [CommentController::class, 'showChildren'])->name('comments.showChildren');
 
     // Quản lí banner
     Route::resource('banners', BannerController::class);

@@ -613,12 +613,8 @@ $(document).ready(function() {
     });
 });
 </script>
-
-
-
 @endsection
 
 @section('script')
-
 <script src="{{ asset('plugins/js/getsizedetail.js') }}"></script>
 @endsection
