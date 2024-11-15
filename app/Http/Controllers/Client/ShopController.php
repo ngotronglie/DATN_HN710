@@ -167,6 +167,128 @@ class ShopController extends Controller
         return view('client.pages.products.product-detail', compact('product', 'relatedProducts'));
     }
 
+    // public function showAjax($slug)
+    // {
+    //     $product = Product::where('slug', $slug)
+    //         ->where('is_active', 1)
+    //         ->whereHas('category', function ($query) {
+    //             $query->where('is_active', 1)
+    //                 ->whereNull('deleted_at');
+    //         })
+    //         ->with([
+    //             'galleries',
+    //             'variants' => function ($query) {
+    //                 $query->whereHas('size', function ($query) {
+    //                     $query->whereNull('deleted_at');
+    //                 })->whereHas('color', function ($query) {
+    //                     $query->whereNull('deleted_at');
+    //                 });
+    //             }
+    //         ])
+    //         ->firstOrFail();
+
+    //     $price_sales = $product->variants->pluck('price_sale');
+    //     $product->max_price_sale = $price_sales->max();
+    //     $product->min_price_sale = $price_sales->min();
+
+    //     return response()->json($product);
+    // }
+
+
+    public function showAjax($slug)
+{
+    $product = Product::where('slug', $slug)
+        ->where('is_active', 1)
+        ->whereHas('category', function ($query) {
+            $query->where('is_active', 1)
+                ->whereNull('deleted_at');
+        })
+        ->with([
+            'galleries',
+            'variants' => function ($query) {
+                $query->whereHas('size', function ($query) {
+                    $query->whereNull('deleted_at');
+                })->whereHas('color', function ($query) {
+                    $query->whereNull('deleted_at');
+                })
+                ->with(['size', 'color']); // Tải thêm quan hệ size và color cho từng variant
+            }
+        ])
+        ->firstOrFail();
+
+    // Tính toán min và max cho `price_sale`
+    $price_sales = $product->variants->pluck('price_sale');
+    $product->max_price_sale = $price_sales->max();
+    $product->min_price_sale = $price_sales->min();
+
+    // Định dạng phản hồi JSON với thông tin chi tiết về size và color
+    // $productData = [
+    //     'id' => $product->id,
+    //     'name' => $product->name,
+    //     'slug' => $product->slug,
+    //     'view' => $product->view,
+    //     'img_thumb'=> $product->img_thumb,
+    //     'galleries' => $product->galleries,
+    //     'min_price_sale' => $product->min_price_sale,
+    //     'max_price_sale' => $product->max_price_sale,
+    //     'variants' => $product->variants->map(function ($variant) {
+    //         return [
+    //             'id' => $variant->id,
+    //             'price' => $variant->price,
+    //             'price_sale' => $variant->price_sale,
+    //             'quantity' => $variant->quantity,
+    //             'size' => [
+    //                 'id' => $variant->size->id,
+    //                 'name' => $variant->size->name,
+    //             ],
+    //             'color' => [
+    //                 'id' => $variant->color->id,
+    //                 'name' => $variant->color->name,
+    //                 'hex_code' => $variant->color->hex_code,
+    //             ]
+    //         ];
+    //     })
+    // ];
+
+    $productData = [
+        'id' => $product->id,
+        'name' => $product->name,
+        'slug' => $product->slug,
+        'view' => $product->view,
+        'img_thumb'=> $product->img_thumb,
+        // Gộp img_thumb vào mảng galleries
+        // Lấy các giá trị 'image' từ mảng galleries
+
+       'galleries' => array_merge([$product->img_thumb], array_map(function ($gallery) {
+            return $gallery['image'];
+        }, $product->galleries->toArray())
+    ),
+        'min_price_sale' => $product->min_price_sale,
+        'max_price_sale' => $product->max_price_sale,
+        'variants' => $product->variants->map(function ($variant) {
+            return [
+                'id' => $variant->id,
+                'price' => $variant->price,
+                'price_sale' => $variant->price_sale,
+                'quantity' => $variant->quantity,
+                'size' => [
+                    'id' => $variant->size->id,
+                    'name' => $variant->size->name,
+                ],
+                'color' => [
+                    'id' => $variant->color->id,
+                    'name' => $variant->color->name,
+                    'hex_code' => $variant->color->hex_code,
+                ]
+            ];
+        })
+    ];
+
+
+    return response()->json($productData);
+}
+
+
     public function search(Request $request)
     {
         $input = $request->input('searchProduct');

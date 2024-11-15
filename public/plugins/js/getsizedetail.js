@@ -4,6 +4,7 @@
     var token = $('meta[name="csrf-token"]').attr('content');
     let selectedVariantId = null;
     let idcart = null;
+    let debounceTimeout;
 
     $(document).ready(function () {
         const firstColorButton = $('.color-buttons .color-btn.selected');
@@ -31,7 +32,6 @@
 
         let input = $('.cart-plus-minus-box');
         input.val(1);
-        input.data('previousQuantity', 1);
 
         let _this = $(label);
         let idProduct = _this.attr('data-productId');
@@ -117,8 +117,6 @@
                             $('#quantity-display-' + idProduct).text('Số lượng: ' + quantity); // Hiển thị số lượng
                             let input = $(this).closest('.product').find('input.cart-plus-minus-box');
                             input.val(1);
-                            input.data('previousQuantity', 1);
-
                         }
                     });
                 }
@@ -135,11 +133,11 @@
         $(document).on('click', '.qtybutton', function () {
             let $this = $(this);
             let input = $this.siblings('input.cart-plus-minus-box');
-
             let previousQuantity = parseInt(input.data('previousQuantity')) || 1;
-
             let selectedVariant = input.closest('.product').find('.size-btn.active');
+            let quantityProduct = parseFloat(selectedVariant.attr('data-quantity'));
             let selectedColor = input.closest('.product-summery.position-relative').find('.color-btn.colorGetSize.active');
+            let quantity;
 
             if (!selectedColor.length) {
                 swal({
@@ -174,9 +172,6 @@
                 input.data('previousQuantity', 1);
                 return;
             }
-
-            let quantityProduct = parseFloat(selectedVariant.attr('data-quantity'));
-
 
             function validateInput(value) {
                 if (!/^\d*$/.test(value)) {
@@ -221,8 +216,6 @@
                 }
                 return true;
             }
-
-            let quantity;
 
             if ($this.hasClass('inc')) {
                 quantity = previousQuantity + 1;
@@ -343,14 +336,11 @@
     };
 
     HT.addToCart = () => {
+
         $('.add-to_cart').click(function () {
             let input = $('.qtybutton').siblings('input.cart-plus-minus-box');
             let selectedVariant = input.closest('.product').find('.size-btn.active');
-
             let quantityProduct = parseFloat(selectedVariant.attr('data-quantity'));
-
-
-            console.log(selectedVariantId);
             let quantity = input.val();
 
             let option = {
@@ -359,28 +349,15 @@
                 'quantityProduct': quantityProduct,
                 '_token': token
             }
-            console.log(option);
 
-
-            $.ajax({
-                type: 'POST',
-                url: '/ajax/addToCart',
-                data: option,
-                dataType: 'json',
-                success: function (res) {
-                    if (res.success == false) {
-                        swal({
-                            content: {
-                                element: "span",
-                                attributes: {
-                                    innerHTML: "<h1 style='font-size: 1.3rem;'>Số lượng sản phẩm trong giỏ hàng vượt quá giới hạn cho phép!</h1>",
-                                },
-                            },
-                            text: "",
-                            icon: "error",
-                            button: "Đóng",
-                        });
-                    } else {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(() => {
+                $.ajax({
+                    type: 'POST',
+                    url: '/ajax/addToCart',
+                    data: option,
+                    dataType: 'json',
+                    success: function (res) {
                         swal({
                             content: {
                                 element: "span",
@@ -394,46 +371,45 @@
                         });
                         $('.header-action-num').html(res.uniqueVariantCount);
 
-
                         const cartContent = $('.offcanvas-cart-content');
                         cartContent.empty();
 
                         if (res.cartItems.length > 0) {
-                            console.log(res);
-                            const productHtml = `
-                                        <h2 class="offcanvas-cart-title mb-6">Giỏ hàng</h2>` +
-                                res.cartItems.map(item => `
-                                            <div id="cart-header-${item.id}" class="cart-product-wrapper mb-2">
-                                                <div class="single-cart-product">
-                                                    <div class="cart-product-thumb">
-                                                        <a href="single-product.html">
-                                                            <img src="/storage/${item.img_thumb}" alt="Cart Product">
-                                                        </a>
-                                                    </div>
-                                                    <div class="cart-product-content">
-                                                        <h3 class="title">
-                                                            <a href="/shops/${item.slug}">${item.productVariant.product.name}
-                                                                <br> ${item.size_name} / ${item.color_name}
-                                                            </a>
-                                                        </h3>
-                                                        <span class="price">
-                                                            <span class="new">${new Intl.NumberFormat('vi-VN').format(item.price_sale)} đ</span>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="cart-product-remove">
-                                                    <span class="deleteCart" data-id="${item.id}">
-                                                        <i class="fa fa-trash"></i>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        `).join('') + `
-                                        <div class="cartNull" style="text-align: center"></div>
 
-                                        <div class="cart-product-btn mt-4">
-                                            <a href="/cart" class="btn btn-dark btn-hover-primary rounded-0 w-100">Giỏ hàng</a>
-                                            <a href="/checkout" class="btn btn-dark btn-hover-primary rounded-0 w-100 mt-4">Thanh toán</a>
-                                        </div>`;
+                            const productHtml = `
+                                                <h2 class="offcanvas-cart-title mb-6">Giỏ hàng</h2>` +
+                                res.cartItems.map(item => `
+                                                    <div id="cart-header-${item.id}" class="cart-product-wrapper mb-2">
+                                                        <div class="single-cart-product">
+                                                            <div class="cart-product-thumb">
+                                                                <a href="single-product.html">
+                                                                    <img src="/storage/${item.img_thumb}" alt="Cart Product">
+                                                                </a>
+                                                            </div>
+                                                            <div class="cart-product-content">
+                                                                <h3 class="title">
+                                                                    <a href="/shops/${item.slug}">${item.productVariant.product.name}
+                                                                        <br> ${item.size_name} / ${item.color_name}
+                                                                    </a>
+                                                                </h3>
+                                                                <span class="price">
+                                                                    <span class="new">${new Intl.NumberFormat('vi-VN').format(item.price_sale)} đ</span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cart-product-remove">
+                                                            <span class="deleteCart" data-id="${item.id}">
+                                                                <i class="fa fa-trash"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                `).join('') + `
+                                                <div class="cartNull" style="text-align: center"></div>
+
+                                                <div class="cart-product-btn mt-4">
+                                                    <a href="/cart" class="btn btn-dark btn-hover-primary rounded-0 w-100">Giỏ hàng</a>
+                                                    <a href="/checkout" class="btn btn-dark btn-hover-primary rounded-0 w-100 mt-4">Thanh toán</a>
+                                                </div>`;
 
                             cartContent.html(productHtml);
                         } else {
@@ -443,14 +419,13 @@
                         $('.deleteCart').click(function () {
 
                             let id = $(this).attr('data-id');
-                            console.log(id);
                             idcart = id;
-                            console.log(idcart);
 
                             let option = {
                                 'id': id,
                                 '_token': token
                             }
+
                             $.ajax({
                                 type: 'DELETE',
                                 url: '/ajax/deleteToCartHeader',
@@ -484,95 +459,115 @@
                             });
 
                         })
+                    },
+                    error: function (xhr) {
+                        let hasShownErrorMessage = false;
 
-                    }
-
-                },
-                error: function (xhr, status, error) {
-                    console.log(error);
-                }
-            });
-
-
-        })
-    }
-
-
-    HT.addToFavorite = () => {
-        $('.favorite').click(function () {
-
-            let option = {
-                'product_variant_id': selectedVariantId,
-                '_token': token
-            }
-            console.log(option);
-
-
-            $.ajax({
-                type: 'POST',
-                url: '/ajax/addToFavorite',
-                data: option,
-                dataType: 'json',
-                success: function (res) {
-                    if (res.success == false) {
-                        swal({
-                            content: {
-                                element: "span",
-                                attributes: {
-                                    innerHTML: "<h1 style='font-size: 1.3rem;'>Sản phẩm đã thêm vào mục yêu thích rồi!</h1>",
-                                },
-                            },
-                            text: "",
-                            icon: "error",
-                            button: "Đóng",
-                        });
-                    }
-                    else if (res.status == false) {
-                        swal({
-                            title: "Bạn muốn thêm vào mục yêu thích?",
-                            text: "Bạn Cần phải đăng nhập để xử dụng chức năng này!",
-                            icon: "warning",
-                            buttons: {
-                              cancel: "Hủy",
-                              confirm: {
-                                text: "Đăng nhập",
-                                value: true,
-                                visible: true,
-                                className: "swal-link-button",
-                                closeModal: false
-                              }
-                            },
-                            dangerMode: true,
-                          })
-                          .then((willDelete) => {
-                            if (willDelete) {
-                              window.location.href = "/login"; // Chuyển đến trang đăng nhập
+                        $(document).ajaxError(function (event, xhr) {
+                            if (!hasShownErrorMessage && xhr.responseJSON && xhr.responseJSON.errors) {
+                                // Lấy tất cả các thông báo lỗi và in ra từng cái
+                                let errorMessages = xhr.responseJSON.errors;
+                                for (let key in errorMessages) {
+                                    if (errorMessages.hasOwnProperty(key)) {
+                                        swal({
+                                            content: {
+                                                element: "span",
+                                                attributes: {
+                                                    innerHTML: `<h1 style='font-size: 1.3rem;'>${errorMessages[key][0]}</h1>`,
+                                                },
+                                            },
+                                            text: "",
+                                            icon: "error",
+                                            button: "Đóng",
+                                        });
+                                    }
+                                }
+                                hasShownErrorMessage = true; // Đặt cờ để không in lại
                             }
-                          });
-                    }
-                     else {
-                        swal({
-                            content: {
-                                element: "span",
-                                attributes: {
-                                    innerHTML: "<h1 style='font-size: 1.3rem;'>Đã thêm vào mục yêu thích!</h1>",
-                                },
-                            },
-                            text: "",
-                            icon: "success",
-                            button: "Đóng",
                         });
+                        let input = $('.cart-plus-minus-box');
+                        input.val(1);
                     }
-
-                },
-                error: function (xhr, status, error) {
-                    console.log(error);
-                }
-            });
-
-
+                });
+            }, 400);
         })
     }
+
+
+    // HT.addToFavorite = () => {
+    //     $('.favorite').click(function () {
+
+    //         let option = {
+    //             'product_variant_id': selectedVariantId,
+    //             '_token': token
+    //         }
+
+    //         clearTimeout(debounceTimeout);
+    //         debounceTimeout = setTimeout(() => {
+    //             $.ajax({
+    //                 type: 'POST',
+    //                 url: '/ajax/addToFavorite',
+    //                 data: option,
+    //                 dataType: 'json',
+    //                 success: function (res) {
+    //                     if (res.success == false) {
+    //                         swal({
+    //                             content: {
+    //                                 element: "span",
+    //                                 attributes: {
+    //                                     innerHTML: "<h1 style='font-size: 1.3rem;'>Sản phẩm đã thêm vào mục yêu thích rồi!</h1>",
+    //                                 },
+    //                             },
+    //                             text: "",
+    //                             icon: "error",
+    //                             button: "Đóng",
+    //                         });
+    //                     }
+    //                     else if (res.status == false) {
+    //                         swal({
+    //                             title: "Bạn muốn thêm vào mục yêu thích?",
+    //                             text: "Bạn Cần phải đăng nhập để xử dụng chức năng này!",
+    //                             icon: "warning",
+    //                             buttons: {
+    //                                 cancel: "Hủy",
+    //                                 confirm: {
+    //                                     text: "Đăng nhập",
+    //                                     value: true,
+    //                                     visible: true,
+    //                                     className: "swal-link-button",
+    //                                     closeModal: false
+    //                                 }
+    //                             },
+    //                             dangerMode: true,
+    //                         })
+    //                             .then((willDelete) => {
+    //                                 if (willDelete) {
+    //                                     window.location.href = "/login"; // Chuyển đến trang đăng nhập
+    //                                 }
+    //                             });
+    //                     }
+    //                     else {
+    //                         swal({
+    //                             content: {
+    //                                 element: "span",
+    //                                 attributes: {
+    //                                     innerHTML: "<h1 style='font-size: 1.3rem;'>Đã thêm vào mục yêu thích!</h1>",
+    //                                 },
+    //                             },
+    //                             text: "",
+    //                             icon: "success",
+    //                             button: "Đóng",
+    //                         });
+    //                     }
+
+    //                 },
+    //                 error: function (xhr, status, error) {
+    //                     console.log(error);
+    //                 }
+    //             });
+    //         }, 400);
+    //     })
+    // }
 
     window.HT = HT;
 
@@ -580,7 +575,7 @@
         HT.getSizePrice();
         HT.updatePriceWithQuantity();
         HT.addToCart();
-        HT.addToFavorite();
+        //HT.addToFavorite();
     });
 })(jQuery);
 

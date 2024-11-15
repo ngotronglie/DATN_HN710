@@ -39,6 +39,11 @@ class Product extends Model
         return $this->hasMany(ProductVariant::class);
     }
 
+    public function favoriteItems()
+    {
+        return $this->hasMany(FavoriteItem::class);
+    }
+
     public function getTotalQuantityAttribute()
     {
         return $this->variants()

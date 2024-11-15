@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Favorite;
-use App\Models\ProductVariant;
+use App\Models\Product;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,7 +16,7 @@ return new class extends Migration
     Schema::create('favorite_items', function (Blueprint $table) {
         $table->id();
         $table->foreignIdFor(Favorite::class)->constrained()->onDelete('cascade'); // Mối quan hệ với bảng `favorites`
-        $table->foreignIdFor(ProductVariant::class)->constrained()->onDelete('cascade'); // Mối quan hệ với sản phẩm
+        $table->foreignIdFor(Product::class)->constrained()->onDelete('cascade'); // Mối quan hệ với sản phẩm
         $table->timestamps();
     });
 }

@@ -50,6 +50,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/shops', [ShopController::class, 'index'])->name('shops.index');
 Route::get('/shops/category/{id}', [ShopController::class, 'showByCategory'])->name('shops.category');
 Route::get('/shops/{slug}', [ShopController::class, 'show'])->name('shops.show');
+Route::get('/ajax/shops/{slug}', [ShopController::class, 'showAjax']);
 Route::get('shop/ajax/getSizePrice', [ShopController::class, 'getSizePrice']);
 Route::get('shop/ajax/getSizePriceDetail', [ShopController::class, 'getSizePriceDetail']);
 Route::get('/shop-search', [ShopController::class, 'search'])->name('shop.search');

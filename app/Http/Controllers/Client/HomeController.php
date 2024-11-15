@@ -25,7 +25,6 @@ class HomeController extends Controller
             })
             ->with(['galleries', 'variants'])
             ->orderByDesc('view')
-            ->take(10)
             ->get();
 
         // Sản phẩm mới nhất
@@ -45,7 +44,6 @@ class HomeController extends Controller
                 }
             ])
             ->orderBy('id', 'desc')
-            ->take(10)
             ->get();
 
         // Sản phẩm bán chạy nhất
@@ -69,7 +67,6 @@ class HomeController extends Controller
             }])
             ->having('total_sold', '>', 0)
             ->orderByDesc('total_sold')
-            ->take(10)
             ->get();
 
         return view("client.includes.main", compact('banners', 'productViews', 'newProducts', 'bestSellingProducts'));

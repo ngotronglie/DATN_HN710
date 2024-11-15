@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AddToCartRequest;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\ProductVariant;
@@ -28,7 +29,7 @@ class CartController extends Controller
         return view('client.pages.cart', compact('processedItems', 'total'));
     }
 
-    public function addToCart(Request $request)
+    public function addToCart(AddToCartRequest $request)
     {
         $user = auth()->user();
 
@@ -82,8 +83,9 @@ class CartController extends Controller
             $coutQuantity = $currentQuantity + $quantity;
 
             if ($coutQuantity > $quantityProduct) {
-                session()->put('cart', $cart);
-                return response()->json(['message' => 'Số lượng sản phẩm trong giỏ hàng vượt quá giới hạn cho phép!'], 400);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Số lượng sản phẩm trong giỏ hàng vượt quá giới hạn cho phép!']);
             }
 
             if ($cartItem) {
@@ -104,7 +106,7 @@ class CartController extends Controller
             $processedItemsData = $this->getCartItemsData(null);
 
             return response()->json([
-                'message' => 'Thêm sản phẩm vào giỏ hàng thành công!',
+                'message' => 'Đã thêm sản phẩm vào giỏ hàng!',
                 'cartItems' => $processedItemsData['processedItems'],
                 'uniqueVariantCount' => $processedItemsData['uniqueVariantCount'],
             ]);
