@@ -67,9 +67,6 @@ Route::get('shop/ajax/getSizePriceDetail', [ShopController::class, 'getSizePrice
 
 // Comment
 Route::post('comments', [ClientCommentController::class, 'store'])->name('comments.store');
-Route::get('/comments/user', [ClientCommentController::class, 'getUser'])->name('comments.user');
-Route::get('/comments/load-more', [ClientCommentController::class, 'loadMoreComments'])->name('comments.loadMore');
-Route::get('/replies/load-more', [ClientCommentController::class, 'loadMoreReplies'])->name('replies.loadMore');
 
 // Blog
 Route::get('/blogs', [ClientBlogController::class, 'index'])->name('blogs.index');

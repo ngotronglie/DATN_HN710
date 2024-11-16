@@ -80,29 +80,16 @@
     gap: 6px;
 }
 
-.reply-box {
-    display: none;
-    margin-top: 10px;
-    margin-left: 20px;
-    margin-bottom: 20px;
-    /* Để các comment trả lời cách nhau */
+.custom-link {
+    color: #007bff; /* Màu xanh Bootstrap */
+    text-decoration: underline; /* Gạch chân */
 }
 
-.author-thumb img {
-    width: 30px;
-    /* Kích thước ảnh nhỏ */
-    height: 60px;
-    /* border-radius: 100%; */
-    /* Bo tròn ảnh */
-    object-fit: cover;
-    /* Giữ tỉ lệ hình ảnh */
-    margin-right: 20px
-        /* Dãn cách giữa các ảnh */
+.custom-link:hover {
+    color: #0056b3; /* Màu xanh đậm hơn khi hover */
+    text-decoration: underline; /* Gạch chân khi hover */
 }
 
-/* .active-form {
-        display: block;
-    } */
 </style>
 @endsection
 @section('main')
@@ -269,11 +256,11 @@
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active text-uppercase" id="home-tab" data-bs-toggle="tab"
-                                href="#connect-1" role="tab" aria-selected="true">Mô tả</a>
+                                href="#connect-1" role="tab" aria-selected="true">Bình luận</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-uppercase" id="profile-tab" data-bs-toggle="tab" href="#connect-2"
-                                role="tab" aria-selected="false">Bình Luận</a>
+                                role="tab" aria-selected="false">Mô tả</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-uppercase" id="contact-tab" data-bs-toggle="tab" href="#connect-3"
@@ -285,8 +272,90 @@
                         </li>
                     </ul>
                     <div class="tab-content mb-text" id="myTabContent">
-                        <div class="tab-pane fade show active" id="connect-1" role="tabpanel"
-                            aria-labelledby="home-tab">
+                        <div class="tab-pane fade show active" id="connect-1" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="comment-area-wrapper mt-5 aos-init" data-aos="fade-up" data-aos-delay="400">
+                                <h3 class="title mb-6">{{ $totalComments }} bình luận</h3>
+                                @foreach ($comments as $item)
+                                <div class="single-comment-wrap">
+                                    <a class="author-thumb" href="#">
+                                        <img
+                                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmhF7UB6jv1t_oyGDzqSb_h0JPspDnfqohVA&sr">
+                                    </a>
+                                    <div class="comments-info">
+                                        <div class="comment-footer d-flex justify-content-between">
+                                            <span class="author"><a href="#"><strong>{{ $item->user->name }}</strong></a> - {{ $item->created_at->diffForHumans() }}</span>
+                                            <a href="javascript:void(0);" class="btn-reply" onclick="showReplyForm({{ $item->id }})"><i class="fa fa-reply"></i> Trả lời</a>
+                                        </div>
+                                        <p class="mb-1">{{ $item->content }}</p>
+                                    </div>
+                                </div>
+                                <div id="reply-form-{{ $item->id }}" class="reply-form d-none comment-box mb-2">
+                                    <form action="{{ route('comments.store') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        <input type="hidden" name="parent_id" value="{{ $item->id }}">
+                                        <textarea name="content" class="form-control mb-2" placeholder="Viết câu trả lời..."></textarea>
+                                        <button type="submit" class="btn btn-sm btn-primary">Gửi</button>
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="hideReplyForm({{ $item->id }})">Hủy</button>
+                                    </form>
+                                </div>
+                                @foreach ($item->children as $child)
+                                <div class="single-comment-wrap mb-4 comment-reply">
+                                    <a class="author-thumb" href="#">
+                                        <img
+                                            src="https://tse1.mm.bing.net/th?id=OIP.KdRE7KHqL-46M8nrvOX2CgHaHa&pid=Api&P=0&h=220">
+                                    </a>
+                                    <div class="comments-info">
+                                        <div class="comment-footer d-flex justify-content-between">
+                                            <span class="author"><a href="#"><strong>{{ $child->user->name }}</strong></a> - {{ $child->created_at->diffForHumans() }}</span>
+                                        </div>
+                                        <p class="mb-1">{{ $child->content }}</p>
+                                    </div>
+                                </div>
+                                @endforeach
+                                @endforeach
+                                <div>
+                                    {{ $comments->links('pagination::bootstrap-5') }}
+                                </div>
+                            </div>
+                            
+                            <div class="blog-comment-form-wrapper mt-10 aos-init" data-aos="fade-up" data-aos-delay="400">
+                                <div class="blog-comment-form-title">
+                                    <h2 class="title">Để lại 1 bình luận</h2>
+                                </div>
+                                @if (auth()->check())
+                                <div class="comment-box">
+                                    <form action="{{ route('comments.store') }}" method="POST">
+                                        @csrf
+                                        <div class="row">
+                                            <input type="hidden" value="{{ $product->id }}" name="product_id">
+                                            <div class="col-12 col-custom">
+                                                <div class="input-item mt-4">
+                                                    <textarea cols="30" rows="5" name="content" class="rounded-0 w-100 custom-textarea input-area" placeholder="Bạn muốn viết gì?">{{ old('content') }}</textarea>
+                                                    @error('content')
+                                                        <small class="form-text text-danger">{{ $message }}</small>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-custom">
+                                                <button type="submit" class="btn btn-primary btn-hover-dark"
+                                                    fdprocessedid="iu5i8">Bình luận</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                @else
+                                <div class="alert alert-warning text-center">
+                                    Bạn cần 
+                                    <a href="{{ route('login') }}" class="custom-link">Đăng nhập</a> 
+                                    để có thể bình luận!
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="connect-2" role="tabpanel" aria-labelledby="profile-tab">
+
                             <div id="shortDescription" class="desc-content border p-3">
                                 {!! substr($product->description, 0, 200) !!}...
                                 <a href="javascript:void(0);" class="show-more">Xem thêm</a>
@@ -295,97 +364,95 @@
                                 {!! $product->description !!}
                                 <a href="javascript:void(0);" class="show-less">Ẩn bớt</a>
                             </div>
+
                         </div>
 
-                        <div class="tab-pane fade show active" id="connect-2" role="tabpanel"
-                            aria-labelledby="home-tab">
-                            <div class="comment-area-wrapper mt-5 aos-init" data-aos="fade-up" data-aos-delay="400">
-                                <h3 class="title mb-6">5 Comments</h3>
+                        <div class="tab-pane fade" id="connect-3" role="tabpanel" aria-labelledby="contact-tab">
+                            <div class="shipping-policy mb-n2">
+                                <h4 class="title-3 mb-4">Chính Sách Giao Hàng Của Chúng Tôi</h4>
 
-                                @foreach ($comments as $comment)
-                                <div class="single-comment-wrap mb-3" id="comment-{{$comment->id}}">
-                                    <a class="author-thumb" href="#">
-                                        <img src=" {{Storage::url(path: $comment->user->avatar)  }}"
-                                            class=" rounded-circle" width="5px" alt="User Avatar" accept="image/*">
-                                    </a>
-                                    <div class="comments-info">
-                                        <p>
-                                        <p class="mb-1">{{$comment->content}}</p>
-                                        </p>
+                                <ul class="policy-list mb-2">
+                                    <li>Thời gian giao hàng: **1-2 ngày làm việc** (Thường sẽ hoàn thành vào cuối
+                                        ngày)</li>
+                                    <li><a href="#">Cam kết hoàn tiền trong vòng 30 ngày</a></li>
+                                    <li>Hỗ trợ khách hàng trực tuyến 24/7</li>
+                                    <li>Chúng tôi cam kết mang đến cho bạn trải nghiệm mua sắm tốt nhất.</li>
+                                    <li>Đội ngũ hỗ trợ luôn sẵn sàng giúp đỡ bạn trong mọi tình huống khó khăn.</li>
+                                    <li>Mỗi khách hàng đều xứng đáng nhận được sự chăm sóc và hỗ trợ tận tâm từ
+                                        chúng tôi.</li>
+                                </ul>
 
-                                        <div class="comment-footer d-flex justify-content-between">
-                                            <span class="author"><a
-                                                    href="#"><strong>{{$comment->user->name}}</strong></a>
+                                <p class="desc-content mb-2">
+                                    Chúng tôi cung cấp nhiều lựa chọn linh hoạt để đáp ứng nhu cầu của bạn. Mọi sản
+                                    phẩm và dịch vụ đều được kiểm tra kỹ lưỡng nhằm đảm bảo chất lượng và độ tin
+                                    cậy.
+                                </p>
 
-                                                {{$comment->created_at->diffForHumans()}}
-                                            </span>
-                                            <button style="background-color: transparent; border:none; "
-                                                data-id="{{$comment->id}}" data-user="{{$comment->user_id}}"
-                                                id="replyBtn-{{$comment->id}}" class="btn-reply">
-                                                <i class="fa fa-reply"></i> Reply
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                                <p class="desc-content mb-2">
+                                    Sự minh bạch trong quy trình và cam kết chất lượng là những tiêu chí hàng đầu mà
+                                    chúng tôi hướng tới. Chúng tôi luôn nỗ lực không ngừng để đáp ứng và vượt qua
+                                    mong đợi của bạn.
+                                </p>
 
-                                <!-- Vùng chèn textarea trả lời -->
-                                <form id="replyBox-{{$comment->id}}" class="reply-box active-form"
-                                    action="{{ route('comments.store') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                    <input type="hidden" name="parent_id" class="parent-id-field"
-                                        id="parent-id-{{$comment->id}}">
-                                    <textarea cols="30" rows="3" class="w-100 mt-2" placeholder="Your reply"
-                                        id="box-reply-{{$comment->id}}" name="content"></textarea>
-                                    <button type="submit" class="btn btn-primary btn-hover-dark mt-2">Submit
-                                        Reply</button>
-                                </form>
+                                <p class="desc-content mb-2">
+                                    Với thiết kế tinh tế và tính năng tiện ích, chúng tôi tự tin rằng bạn sẽ tìm
+                                    thấy những sản phẩm phù hợp với nhu cầu của mình.
+                                </p>
 
-                                @if($comment->children != null)
-                                @include('client.pages._comment-child', ['children' => $comment->children])
-                                @endif
-                                @endforeach
-
+                                <p class="desc-content mb-2">
+                                    Hãy cùng chúng tôi khám phá những điều tuyệt vời đang chờ đón bạn!
+                                </p>
                             </div>
+                        </div>
 
-                            <!-- Form bình luận -->
-                            @if (auth()->check())
-                            <div class="blog-comment-form-wrapper mt-10 aos-init" data-aos="fade-up"
-                                data-aos-delay="400">
-                                <div class="blog-comment-form-title">
-                                    <h2 class="title">Leave a comment</h2>
-                                </div>
-                                <div class="comment-box">
-                                    <form id="commentForm" action="{{ route('comments.store') }}" method="POST">
-                                        @csrf
-                                        <div class="row">
-                                            <input type="hidden" value="{{ $product->id }}" name="product_id">
-                                            <div class="col-12 col-custom">
-                                                <div class="input-item mt-4 mb-4">
-                                                    @if(isset($error))
-                                                    <script>
-                                                    window.alert("{{ $error }}");
-                                                    </script>
-                                                    @endif
-
-
-                                                    <input type="hidden" name="parent_id" id="id_parent">
-                                                    <textarea cols="30" rows="5" name="content"
-                                                        class="rounded-0 w-100 custom-textarea input-area"
-                                                        placeholder="Message" required></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-custom mt-4">
-                                                <button type="submit" class="btn btn-primary btn-hover-dark">Post
-                                                    comment</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+                        <div class="tab-pane fade" id="connect-4" role="tabpanel" aria-labelledby="review-tab">
+                            <div class="size-tab table-responsive-lg">
+                                <h4 class="title-3 mb-4">Bảng kích thước</h4>
+                                <table class="table border mb-0">
+                                    <tbody>
+                                        <tr>
+                                            <td class="cun-name"><span>UK</span></td>
+                                            <td>18</td>
+                                            <td>20</td>
+                                            <td>22</td>
+                                            <td>24</td>
+                                            <td>26</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cun-name"><span>European</span></td>
+                                            <td>46</td>
+                                            <td>48</td>
+                                            <td>50</td>
+                                            <td>52</td>
+                                            <td>54</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cun-name"><span>usa</span></td>
+                                            <td>14</td>
+                                            <td>16</td>
+                                            <td>18</td>
+                                            <td>20</td>
+                                            <td>22</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cun-name"><span>Australia</span></td>
+                                            <td>28</td>
+                                            <td>10</td>
+                                            <td>12</td>
+                                            <td>14</td>
+                                            <td>16</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cun-name"><span>Canada</span></td>
+                                            <td>24</td>
+                                            <td>18</td>
+                                            <td>14</td>
+                                            <td>42</td>
+                                            <td>36</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                            @else
-                            <p>bạn cần <a href="{{route('login')}}">Đăng nhập </a> để có thể bình luận</p>
-                            @endif
                         </div>
 
                     </div>
@@ -525,96 +592,17 @@
 
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-var replyButtons = document.querySelectorAll('.btn-reply');
-var parentInputId = document.querySelector('#id_parent');
-
-console.log(parentInputId);
-
-for (const element of replyButtons) {
-
-
-    element.addEventListener('click', () => {
-        // event.preventDefault();
-        console.log(parentInputId);
-
-
-
-        let commentId = element.getAttribute('data-id');
-        let user_id = element.getAttribute('data-user');
-        parentInputId.value =
-            commentId;
-
-
-        $.ajax({
-            url: "{{route('comments.user')}}",
-            method: 'GET',
-
-            data: {
-                user_id: user_id || '',
-                commentId: commentId || ''
-            },
-
-            success: function(data) {
-                console.log(data); // Kiểm tra cấu trúc của data-
-
-                if (data.comment_id && data.data && data.data.name) {
-                    const replyBox = document.querySelector(`#box-reply-${data.comment_id}`);
-                    if (replyBox) {
-                        replyBox.value = `@${data.data.name}`;
-                    } else {
-                        console.error(
-                        `Không tìm thấy phần tử với id #box-reply-${data.comment_id}`);
-                    }
-
-                } else {
-                    console.error("Thiếu dữ liệu c");
-                }
-            },
-
-            error: function(xhr, error) {
-                console.debug(xhr);
-                console.debug(error);
-            },
-        })
-
-    });
-}
-
-// Nếu người dùng muốn thêm bình luận mới thì giữ parent_id rỗng
-var commentForm = document.querySelector('.blog-comment-form-wrapper');
-commentForm.addEventListener('submit', function() {
-    parentInputId.value = ''; // Xóa giá trị parent_id nếu không phải là trả lời
-});
-</script>
-<script>
-$(document).ready(function() {
-    // Handle click event on the reply button
-    $('.btn-reply').click(function(event) {
-        // Prevent the button from submitting the form or reloading the page
-        event.preventDefault();
-
-        // Get the comment ID to reply to
-        var commentId = $(this).data('id');
-        var replyBox = $('#replyBox-' + commentId);
-
-        // Hide all other reply boxes except the current one;
-        let parent_Id_box = document.querySelector(`#parent-id-${commentId}`);
-        parent_Id_box.value = commentId;
-        // Toggle visibility of the current reply box
-        replyBox.slideToggle();
-
-
-        // Debugging output to check if the parent_id is set correctly
-        // console.log("Replying to comment ID:", commentId);
-        // console.log(parent_Id_box);
-
-    });
-});
-</script>
 @endsection
 
 @section('script')
 <script src="{{ asset('plugins/js/getsizedetail.js') }}"></script>
+<script>
+function showReplyForm(commentId) {
+    document.getElementById(`reply-form-${commentId}`).classList.remove('d-none');
+}
+
+function hideReplyForm(commentId) {
+    document.getElementById(`reply-form-${commentId}`).classList.add('d-none');
+}
+</script>
 @endsection

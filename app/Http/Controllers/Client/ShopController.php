@@ -100,10 +100,21 @@ class ShopController extends Controller
         $price_sales = $product->variants->pluck('price_sale');
         $product->max_price_sale = $price_sales->max();
         $product->min_price_sale = $price_sales->min();
-        $comments = Comment::whereNull('parent_id')->with('children')->get();
-        // return response()->json($comments);
 
-        return view('client.pages.product-detail', compact('product', 'comments'));
+        $comments = Comment::where('product_id', $product->id)
+            ->where('is_active', 1)
+            ->whereNull('parent_id')
+            ->with(['children' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            }])
+            ->orderBy('created_at', 'desc')
+            ->paginate(2);
+
+        $totalComments = Comment::where('product_id', $product->id)
+            ->where('is_active', 1)
+            ->count();
+
+        return view('client.pages.product-detail', compact('product', 'comments', 'totalComments'));
     }
 
 

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Models\Product;
-use App\Models\User;
 
 class CommentController extends Controller
 {
@@ -60,16 +59,5 @@ class CommentController extends Controller
         }
 
         return view('admin.layout.comments.showChildren', compact('childComments', 'parentComment', 'product'));
-    }
-
-    public function getUser()
-    {
-        $id = $_GET['user_id'];
-        $comment_id = $_GET['commentId'];
-        $user = User::find($id);
-        return response()->json([
-            'data' => $user,
-            'comment_id' => $comment_id
-        ]);
     }
 }

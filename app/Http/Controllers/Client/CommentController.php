@@ -7,69 +7,39 @@ use App\Models\Comment;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 
 class CommentController extends Controller
 {
-    // Hiển thị tất cả bình luận của sản phẩm
-    public function index($productId)
-    {
-        $product = Product::findOrFail($productId);
-        $comments = Comment::with('user')
-            ->where('product_id', $productId)
-            ->where('is_active', 1)
-            ->latest()
-            ->paginate(10); // Lấy 10 bình luận đầu tiên
-
-        return view('client.pages.product-detail', compact('product', 'comments'));
-    }
-
-    // API để lấy thêm bình luận
-    public function loadMoreComments(Request $request)
-    {
-        $productId = $request->input('product_id');
-        $page = $request->input('page', 1); // Trang hiện tại
-
-        $comments = Comment::with('user')
-            ->where('product_id', $productId)
-            ->latest()
-            ->paginate(10, ['*'], 'page', $page);
-
-        return response()->json([
-            'comments' => view('client.pages.partial-comments', compact('comments'))->render()
-        ]);
-    }
-
-    // Lưu bình luận mới
     public function store(Request $request)
     {
-        // Xác thực dữ liệu đầu vào
-        // $request->validate([
-        //     'product_id' => 'required|exists:products,id',
-        //     'content' => 'required|string|max:255',
-        // ]);
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'parent_id' => 'nullable|exists:products,id',
+            'content' => 'required|string|max:255',
+        ], 
+        [
+            'content.required' => 'Nội dung không được bỏ trống',
+            'content.max' => 'Nội dung tối đa 255 kí tự',
+        ]);
 
         $product = Product::find($request->product_id);
-        $comments = Comment::where('product_id', $request->product_id)->get();
 
         // Kiểm tra từ ngữ thô tục
         if ($this->containsProfanity($request->content)) {
             $error = 'Bình luận của bạn chứa từ ngữ không phù hợp. Vui lòng chỉnh sửa.';
-            return view('client.pages.product-detail', compact('product', 'comments'))->with(['error' => $error]);
+            return redirect()->route('shops.show', ['slug' => $product->slug])->with(['error' => $error]);
         }
 
-        // Lưu bình luận
         $data = $request->all();
         $data['user_id'] = Auth::user()->id;
         Comment::create($data);
 
-        return Redirect::back()->with('success', 'Bình luận của bạn đã được đăng.');
+        return redirect()->route('shops.show', ['slug' => $product->slug])->with('success', 'Bình luận của bạn đã được đăng.');
     }
 
-    // Hàm kiểm tra từ ngữ thô tục (tương tự Admin\CommentController)
+    // Hàm kiểm tra từ ngữ thô tục
     private function containsProfanity($content)
     {
-        // Đưa vào danh sách các từ thô tục như ví dụ bạn đã cung cấp trong `Admin\CommentController`
         $profanities = [
             // Buồi and its variants
             'buồi',

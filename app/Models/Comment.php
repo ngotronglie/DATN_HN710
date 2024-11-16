@@ -37,7 +37,7 @@ class Comment extends Model
 
     public function children()
     {
-        return $this->hasMany(Comment::class, 'parent_id')->orderBy('created_at', 'desc');
+        return $this->hasMany(Comment::class, 'parent_id');
     }
 
 }
