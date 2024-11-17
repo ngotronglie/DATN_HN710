@@ -31,12 +31,12 @@
                             <h2 class="product-title" id="name-prd"></h2>
                         </div>
                         <div class="price-box mb-2">
-                            <span id="product-price-sale" class="show-price" style="color: #dc3545;font-size: 1.4rem;font-weight: 700;"></span>
-                            <span id="old-price" style="text-decoration: line-through;font-size: 1.0rem;font-weight: 500"></span>
+                            <span id="product-price-sale-modal" class="show-price" style="color: #dc3545;font-size: 1.4rem;font-weight: 700;"></span>
+                            <span id="old-price-modal" style="text-decoration: line-through;font-size: 1.0rem;font-weight: 500"></span>
                         </div>
 
                         <div class="sku mb-3">
-                            <span id="quantity_prd"></span>
+                            <span class="quantity_prd_modal" id="quantity_prd_modal"></span>
                         </div>
 
                         <div class="sku mb-3">
@@ -70,7 +70,7 @@
                                         </button>
                                     </div>
                                     <div class="add-to-wishlist">
-                                        <button class="btn btn-outline-dark btn-hover-primary favorite">
+                                        <button class="btn btn-outline-dark btn-hover-primary favoritePro addFavorite">
                                             Thêm vào sản phẩm yêu thích
                                         </button>
                                     </div>

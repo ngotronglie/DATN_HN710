@@ -2,6 +2,7 @@
     "use strict";
     var HT = {};
     var token = $('meta[name="csrf-token"]').attr('content');
+    let mes = '';
 
     HT.upQuatity = () => {
         let debounceTimeout;
@@ -9,45 +10,18 @@
         function validateInput(value, maxQuantity, input, quantityOld) {
             input = $(input);
             if (!/^\d+$/.test(value)) {
-                swal({
-                    content: {
-                        element: "span",
-                        attributes: {
-                            innerHTML: "<h1 style='font-size: 1.3rem;'>Vui lòng chỉ nhập số!</h1>",
-                        },
-                    },
-                    text: "",
-                    icon: "error",
-                    button: "Đóng",
-                });
+                mes = 'Vui lòng chỉ nhập số';
+                swalError(mes);
                 input.val(quantityOld);
                 return false;
             } else if (value === 0) {
-                swal({
-                    content: {
-                        element: "span",
-                        attributes: {
-                            innerHTML: "<h1 style='font-size: 1.3rem;'>Vui lòng nhập số lượng nhiều hơn 0!</h1>",
-                        },
-                    },
-                    text: "",
-                    icon: "error",
-                    button: "Đóng",
-                });
+                mes = "Số lượng phải lớn hơn hoặc bằng 1";
+                swalError(mes);
                 input.val(quantityOld);
                 return false;
             } else if (value > maxQuantity) {
-                swal({
-                    content: {
-                        element: "span",
-                        attributes: {
-                            innerHTML: "<h1 style='font-size: 1.3rem;'>Vui lòng nhập số lượng ít hơn số lượng sản phẩm!</h1>",
-                        },
-                    },
-                    text: "",
-                    icon: "error",
-                    button: "Đóng",
-                });
+                mes = 'Số lượng phải nhỏ hơn số lượng có sẵn',
+                    swalError(mes);
                 input.val(quantityOld);
                 return false;
             }
@@ -110,11 +84,10 @@
 
             input.val(quantity).data('previousQuantity', quantity);
 
-            //Chờ debounce 500ms trước khi gửi AJAX
             clearTimeout(debounceTimeout);
             debounceTimeout = setTimeout(() => {
                 sendAjax(id, quantity);
-            }, 500);
+            }, 400);
         });
 
         $(document).on('focus', 'input.cart-plus-minus-box', function () {
@@ -132,49 +105,22 @@
 
 
                 if (quantity > maxQuantity) {
-                    swal({
-                        content: {
-                            element: "span",
-                            attributes: {
-                                innerHTML: "<h1 style='font-size: 1.3rem;'>Vui lòng nhập số lượng ít hơn số lượng sản phẩm!!</h1>",
-                            },
-                        },
-                        text: "",
-                        icon: "error",
-                        button: "Đóng",
-                    });
+                    mes = "Số lượng phải nhỏ hơn số lượng có sẵn";
+                    swalError(mes)
                     input.val(previousQuantity);
                     return;
                 }
 
                 if (!/^\d*$/.test(input.val())) {
-                    swal({
-                        content: {
-                            element: "span",
-                            attributes: {
-                                innerHTML: "<h1 style='font-size: 1.3rem;'>Vui lòng nhập số lượng hợp lệ!</h1>",
-                            },
-                        },
-                        text: "",
-                        icon: "error",
-                        button: "Đóng",
-                    });
+                    mes = "Vui lòng chỉ nhập số";
+                    swalError(mes);
                     input.val(previousQuantity);
                     return;
                 }
 
                 if (quantity == 0) {
-                    swal({
-                        content: {
-                            element: "span",
-                            attributes: {
-                                innerHTML: "<h1 style='font-size: 1.3rem;'>Vui lòng nhập số lượng lớn hơn 0!</h1>",
-                            },
-                        },
-                        text: "",
-                        icon: "error",
-                        button: "Đóng",
-                    });
+                    mes = "Số lượng phải lớn hơn hoặc bằng 1";
+                    swalError(mes);
                     input.val(previousQuantity);
                     return;
                 }

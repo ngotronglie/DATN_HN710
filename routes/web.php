@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\StatisticsController;
+use App\Http\Controllers\Ajax\ShopAjaxController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\FavoriteController;
 use App\Http\Controllers\ContactController;
@@ -51,8 +52,10 @@ Route::get('/shops', [ShopController::class, 'index'])->name('shops.index');
 Route::get('/shops/category/{id}', [ShopController::class, 'showByCategory'])->name('shops.category');
 Route::get('/shops/{slug}', [ShopController::class, 'show'])->name('shops.show');
 Route::get('/ajax/shops/{slug}', [ShopController::class, 'showAjax']);
-Route::get('shop/ajax/getSizePrice', [ShopController::class, 'getSizePrice']);
-Route::get('shop/ajax/getSizePriceDetail', [ShopController::class, 'getSizePriceDetail']);
+//Route::get('shop/ajax/getSizePrice', [ShopController::class, 'getSizePrice']);
+Route::get('shop/ajax/getSizePriceDetail', [ShopAjaxController::class, 'getSizePriceDetail']);
+Route::get('shop/ajax/getSizePriceDetail2', [ShopAjaxController::class, 'getSizePriceDetail']);
+
 Route::get('/shop-search', [ShopController::class, 'search'])->name('shop.search');
 Route::get('/shop-filter', [ShopController::class, 'filter'])->name('shop.filter');
 

@@ -138,7 +138,7 @@
                                         </button>
                                     </div>
                                     <div class="add-to-wishlist">
-                                        <button class="btn btn-outline-dark btn-hover-primary favorite">
+                                        <button class="btn btn-outline-dark btn-hover-primary favorite addFavorite" data-slug="{{$product->slug}}" data-id="{{$product->id}}">
                                             Thêm vào sản phẩm yêu thích
                                         </button>
                                     </div>
@@ -500,19 +500,35 @@
                                                     <span class="sale">New</span>
                                             </span>
                                             <div class="actions">
-                                                <a href="#" class="action wishlist"><i class="pe-7s-like"></i></a>
-                                                <a href="#" class="action quickview" data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><i class="pe-7s-search"></i></a>
-                                                <a href="#" class="action compare"><i class="pe-7s-shuffle"></i></a>
+                                                <span class="action addFavorite"
+                                                data-slug="{{ $item->slug }}"
+                                                data-id="{{ $item->id }}">
+                                                <i class="pe-7s-like"></i>
+                                            </span>
+                                            <span class="action quickview showProduct"
+                                            data-slug="{{ $item->slug }}"
+                                            data-id="{{ $item->id }}" data-bs-toggle="modal"
+                                            data-bs-target="#exampleModalCenter">
+                                            <i class="pe-7s-search"></i>
+                                        </span>
+                                                        <a href="#" class="action compare"><i class="pe-7s-shuffle"></i></a>
                                             </div>
                                         </div>
                                         <div class="content">
                                             <h5 class="title"><a href="{{ route('shops.show', $item->slug) }}">{{ $item->name }}</a></h5>
                                             <span class="price">
-                                                    <span class="new">{{ number_format($item->min_price_sale, 0, ',', '.') }}đ - {{ number_format($item->max_price_sale, 0, ',', '.') }}đ</span>
+                                                    <span class="new">{{ $item->min_price_sale == $item->max_price_sale
+                                                        ? number_format($item->min_price_sale, 0, ',', '.') . ' đ'
+                                                        : number_format($item->min_price_sale, 0, ',', '.') . 'đ - ' . number_format($item->max_price_sale, 0, ',', '.') . ' đ' }}</span>
                                             {{-- <span class="old"></span> --}}
                                             </span>
-                                            <button class="btn btn-sm btn-outline-dark btn-hover-primary">Add To Cart</button>
-                                        </div>
+                                            <button
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary showProduct"
+                                            data-slug="{{ $item->slug }}"
+                                            data-id="{{ $item->id }}" data-bs-toggle="modal"
+                                            data-bs-target="#exampleModalCenter">Thêm vào giỏ hàng
+                                        </button>
+                                                </div>
                                     </div>
                                     <!-- Single Product End -->
 
@@ -545,4 +561,6 @@
 
 @section('script')
 <script src="{{ asset('plugins/js/getsizedetail.js') }}"></script>
+<script src="{{ asset('plugins/js/addCartAddFavorite.js') }}"></script>
+
 @endsection

@@ -24,8 +24,10 @@
 
 
 <!--Main JS-->
+<script src="{{ asset('plugins/js/alertSwal.js') }}"></script>
 <script src="{{ asset('theme/client/assets/js/main.js') }}"></script>
-<script src="{{ asset('plugins/js/deleteCart.js') }}"></script>
+<script src="{{ asset('plugins/js/deleteCartCheckFavorite.js') }}"></script>
+
 
 
 @yield('script')

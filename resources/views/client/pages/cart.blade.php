@@ -59,8 +59,7 @@
                                     <td class="pro-title"><a href="{{route('shops.show', $item->productVariant->product->slug)}}">{{ $item->productVariant->product->name }}
                                             <br> {{ $item->productVariant->size->name }} /
                                             {{ $item->productVariant->color->name }}</a></td>
-                                    <td class="pro-price"><span>{{ number_format($item->productVariant->price_sale) }}
-                                            đ</span></td>
+                                    <td class="pro-price"><span>{{ number_format($item->productVariant->price_sale, 0, ',', '.') . ' đ' }}</span></td>
                                     <td class="pro-quantity">
                                         <div class="quantity">
                                             <div class="cart-plus-minus">
@@ -72,7 +71,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="pro-subtotal"><span id="total-{{$item->id}}">{{ number_format($item->total_price) }} đ</span></td>
+                                    <td class="pro-subtotal"><span id="total-{{$item->id}}">{{ number_format($item->total_price, 0, ',', '.') . 'đ' }} đ</span></td>
                                     <td class="pro-remove"><span data-id="{{$item->id}}" data-quantity="{{$item->productVariant->quantity}}"
                                      class="deleteCart"><i class="pe-7s-trash" style="font-size: 1.5rem;"></i></span></td>
                                 </tr>
@@ -114,15 +113,15 @@
                                 <table class="table">
                                     <tr>
                                         <td>Tổng cộng</td>
-                                        <td><span style="font-weight:600 " class="totalAll">{{ number_format($total) }} đ</span></td>
+                                        <td><span style="font-weight:600 " class="totalAll">{{ number_format($total, 0, ',', '.') . 'đ' }}</span></td>
                                     </tr>
                                     <tr>
                                         <td>Phí vận chuyển</td>
-                                        <td>30,000 đ</td>
+                                        <td>30.000 đ</td>
                                     </tr>
                                     <tr class="total">
                                         <td>Đơn giá</td>
-                                        <td class="total-amount">{{ number_format($total + 30000) }} đ</td>
+                                        <td class="total-amount">{{ number_format($total + 30000, 0, ',', '.') . 'đ' }}</td>
                                     </tr>
                                 </table>
                             </div>

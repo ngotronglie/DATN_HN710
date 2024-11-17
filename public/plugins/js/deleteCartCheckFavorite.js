@@ -3,7 +3,7 @@
     var HT = {};
     var token = $('meta[name="csrf-token"]').attr('content');
 
-    let idcart = null;
+    let idRemove = null;
 
     HT.checkFavorite = () => {
 
@@ -29,7 +29,7 @@
         $('.deleteCart').click(function () {
 
             let id = $(this).attr('data-id');
-            idcart = id;
+            idRemove = id;
 
             let option = {
                 'id': id,
@@ -44,7 +44,7 @@
                     if (res.cartItems && res.cartItems.length > 0) {
                         $('.header-action-num').html(res.uniqueVariantCount);
 
-                        $('#cart-'+ idcart).empty();
+                        $('#cart-'+ idRemove).empty();
 
                         $('span[data-id="' + id + '"]').closest('tr').remove();
 
@@ -73,7 +73,7 @@
                             content: {
                                 element: "span",
                                 attributes: {
-                                    innerHTML: "<h1 style='font-size: 1.3rem;'>Đã xóa sản phẩm khỏi giỏ hàng!</h1>",
+                                    innerHTML: `<h1 style='font-size: 1.3rem;margin-top: 33px'>${res.message}</h1>`,
                                 },
                             },
                             text: "",

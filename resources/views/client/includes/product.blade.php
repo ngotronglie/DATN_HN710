@@ -66,20 +66,22 @@
                                                     </div>
                                                     <div class="content">
                                                         <h5 class="title"><a
-                                                                href="{{ route('shops.show', $item->slug) }}">{{ $item->name }}ss</a>
+                                                                href="{{ route('shops.show', $item->slug) }}">{{ $item->name }}</a>
                                                         </h5>
                                                         <span class="price">
                                                             <span
                                                                 class="new">{{ $item->min_price_sale == $item->max_price_sale
-                                                                    ? number_format($item->min_price_sale) . 'đ'
-                                                                    : number_format($item->min_price_sale) . 'đ' . ' - ' . number_format($item->max_price_sale) . 'đ' }}</span>
+                                                                    ? number_format($item->min_price_sale, 0, ',', '.') . ' đ'
+                                                                    : number_format($item->min_price_sale, 0, ',', '.') . 'đ - ' . number_format($item->max_price_sale, 0, ',', '.') . ' đ' }}
+                                                                </span>
                                                             {{-- <span class="old"></span> --}}
                                                         </span>
-                                                        <button class="btn btn-sm btn-outline-dark btn-hover-primary showProduct"
-                                                        data-slug="{{ $item->slug }}"
-                                                        data-id="{{ $item->id }}" data-bs-toggle="modal"
-                                                        data-bs-target="#exampleModalCenter">Thêm vào giỏ hàng
-                                                    </button>
+                                                        <button
+                                                            class="btn btn-sm btn-outline-dark btn-hover-primary showProduct"
+                                                            data-slug="{{ $item->slug }}"
+                                                            data-id="{{ $item->id }}" data-bs-toggle="modal"
+                                                            data-bs-target="#exampleModalCenter">Thêm vào giỏ hàng
+                                                        </button>
                                                     </div>
                                                 </div>
                                                 <!-- Single Product End -->
@@ -130,7 +132,7 @@
                                                                 alt="Product" />
                                                         </a>
                                                         <span class="badges">
-                                                            <span class="sale">Sold</span>
+                                                            <span class="sale">Hot</span>
                                                         </span>
                                                         <div class="actions">
                                                             <span class="action addFavorite"
@@ -154,16 +156,17 @@
                                                         </h5>
                                                         <span class="price">
                                                             <span
-                                                                class="new">{{ number_format($item->min_price_sale, 0, ',', '.') }}đ
-                                                                -
-                                                                {{ number_format($item->max_price_sale, 0, ',', '.') }}đ</span>
+                                                                class="new">{{ $item->min_price_sale == $item->max_price_sale
+                                                                    ? number_format($item->min_price_sale, 0, ',', '.') . ' đ'
+                                                                    : number_format($item->min_price_sale, 0, ',', '.') . 'đ - ' . number_format($item->max_price_sale, 0, ',', '.') . ' đ' }}</span>
                                                             {{-- <span class="old"></span> --}}
                                                         </span>
-                                                        <button class="btn btn-sm btn-outline-dark btn-hover-primary showProduct"
-                                                        data-slug="{{ $item->slug }}"
-                                                        data-id="{{ $item->id }}" data-bs-toggle="modal"
-                                                        data-bs-target="#exampleModalCenter">Thêm vào giỏ hàng
-                                                    </button>
+                                                        <button
+                                                            class="btn btn-sm btn-outline-dark btn-hover-primary showProduct"
+                                                            data-slug="{{ $item->slug }}"
+                                                            data-id="{{ $item->id }}" data-bs-toggle="modal"
+                                                            data-bs-target="#exampleModalCenter">Thêm vào giỏ hàng
+                                                        </button>
 
                                                     </div>
                                                 </div>
@@ -215,7 +218,7 @@
                                                                 alt="Product" />
                                                         </a>
                                                         <span class="badges">
-                                                            <span class="sale">New</span>
+                                                            <span class="sale">Bán chạy</span>
                                                         </span>
                                                         <div class="actions">
                                                             <span class="action addFavorite"
@@ -227,8 +230,7 @@
                                                                 data-slug="{{ $item->slug }}"
                                                                 data-id="{{ $item->id }}" data-bs-toggle="modal"
                                                                 data-bs-target="#exampleModalCenter">
-                                                                <i
-                                                                    class="pe-7s-search"></i>
+                                                                <i class="pe-7s-search"></i>
                                                             </span>
                                                             <a href="#" class="action compare"><i
                                                                     class="pe-7s-shuffle"></i></a>
@@ -240,9 +242,9 @@
                                                         </h5>
                                                         <span class="price">
                                                             <span
-                                                                class="new">{{ number_format($item->min_price_sale, 0, ',', '.') }}đ
-                                                                -
-                                                                {{ number_format($item->max_price_sale, 0, ',', '.') }}đ</span>
+                                                                class="new">{{ $item->min_price_sale == $item->max_price_sale
+                                                                    ? number_format($item->min_price_sale, 0, ',', '.') . ' đ'
+                                                                    : number_format($item->min_price_sale, 0, ',', '.') . 'đ - ' . number_format($item->max_price_sale, 0, ',', '.') . ' đ' }}</span>
                                                             <span class="old"></span>
                                                         </span>
                                                         <button
@@ -288,5 +290,6 @@
 </div>
 
 @section('script')
-    <script src="{{ asset('plugins/js/addCartAndDetaiPrd.js') }}"></script>
+    <script src="{{ asset('plugins/js/viewDetailProductModal.js') }}"></script>
+    <script src="{{ asset('plugins/js/addCartAddFavorite.js') }}"></script>
 @endsection

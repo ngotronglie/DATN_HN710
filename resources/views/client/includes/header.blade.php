@@ -256,8 +256,7 @@
                                             <br> {{ $item->productVariant->size->name }} /
                                             {{ $item->productVariant->color->name }}</a></h3>
                                     <span class="price">
-                                        <span class="new">{{ number_format($item->productVariant->price_sale) }}
-                                            đ</span>
+                                        <span class="new">{{ number_format($item->productVariant->price_sale, 0, ',', '.') . ' đ' }}</span>
                                     </span>
                                 </div>
                             </div>
