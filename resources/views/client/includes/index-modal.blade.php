@@ -57,7 +57,7 @@
 
                                 <div class="quantity mb-5">
                                     <div class="cart-plus-minus">
-                                        <input class="cart-plus-minus-box" value="1" type="text" min="1">
+                                        <input class="quatity_add_cart cart-plus-minus-box" value="1" type="text" min="1">
                                         <div class="dec qtybutton"></div>
                                         <div class="inc qtybutton"></div>
                                     </div>

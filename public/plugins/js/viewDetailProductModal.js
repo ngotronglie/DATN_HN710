@@ -24,7 +24,7 @@
                     $('.favoritePro').attr('data-id', res.id);
 
                     $('.album_img').empty();
-                    $('#alumProduct').empty(); // Xóa slide cũ
+                    $('#alumProduct').empty();
 
                     if (res.galleries.length == 1) {
                         $('.next_product').empty();
@@ -36,7 +36,7 @@
                         imageUrls.push(imageUrlAlbum);
 
                         $('#alumProduct').append(
-                            '<a class="swiper-slide" href="#">' +
+                            '<a class="swiper-slide" href="' + imageUrlAlbum + '">' +
                             '<img class="w-100" src="' + imageUrlAlbum + '" alt="Product">' +
                             '</a>'
                         );
@@ -59,8 +59,8 @@
                     res.variants.forEach(function (variant, index) {
                         let colorName = variant.color.hex_code;
 
-                        if (!uniqueColors.has(colorName)) { // Kiểm tra nếu màu chưa có trong Set
-                            uniqueColors.add(colorName); // Thêm màu vào Set để tránh trùng lặp
+                        if (!uniqueColors.has(colorName)) {
+                            uniqueColors.add(colorName);
 
                             $('#color_prd').append(
                                 '<li>' +
@@ -78,15 +78,26 @@
                     });
 
 
-                    const firstColorButton = $('.color-btn.selected'); // Chọn nút màu đầu tiên
+                    const firstColorButton = $('.color-btn.selected');
                     if (firstColorButton.length) {
-                        firstColorButton.trigger('click'); // Tự động click màu đầu tiên
+                        firstColorButton.trigger('click');
                     }
 
                     $('#view_prd').text('Lượt xem: ' + res.view);
                 },
                 error: function (error) {
-                    console.log('Error fetching product data:', error);
+                    let hasShownErrorMessage = false;
+                    $(document).ajaxError(function (event, xhr) {
+                        if (!hasShownErrorMessage && xhr.responseJSON && xhr.responseJSON.errors) {
+                            let errorMessages = xhr.responseJSON.errors;
+                            for (let key in errorMessages) {
+                                if (errorMessages.hasOwnProperty(key)) {
+                                    swalError(errorMessages[key][0]);
+                                }
+                            }
+                            hasShownErrorMessage = true;
+                        }
+                    });
                 }
             });
         });
@@ -111,19 +122,15 @@
     };
 
     HT.getSize = (label) => {
-        // $('.size-btn').removeClass('active');
-        // $(label).addClass('active');
-
         $('.size-btn').removeClass('active');
         $('.size-btn').removeClass('disabled');
 
         $(label).addClass('active');
         let quantity = $(label).attr('data-quantity');
+
         if (quantity == 0) {
             let button = $(label);
-            button.addClass('disabled'); // Vô hiệu hóa nút
-            // Lưu tham chiếu đến nút
-
+            button.addClass('disabled');
         }
     };
 
@@ -144,7 +151,7 @@
                 res.variants.forEach(function (variant, index) {
                     $('#sizes-prices').append(
                         '<li>' +
-                        '<label class="size_detail size-btn ' + (index === 0 ? 'selected' : '') + '" ' +
+                        '<label class="remove_at size-btn ' + (index === 0 ? 'selected' : '') + '" ' +
                         'data-quantity="' + variant.quantity + '" ' +
                         'data-id="' + variant.id + '" ' +
                         'data-price="' + variant.price_sale + '" ' +
@@ -184,15 +191,26 @@
 
                         $('#old-price-modal').text(formattedPrice + ' đ');
 
-                        let quantity = selectedVariant.quantity; // Lấy số lượng từ biến thể đã chọn
-                        $('.quantity_prd_modal').text('Số lượng: ' + quantity); // Hiển thị số lượng
+                        let quantity = selectedVariant.quantity;
+                        $('.quantity_prd_modal').text('Số lượng: ' + quantity);
                         let input = $(this).closest('.product').find('input.cart-plus-minus-box');
                         input.val(1);
                     }
                 });
             },
             error: function (xhr, status, error) {
-                console.log('Error: ' + error);
+                let hasShownErrorMessage = false;
+                $(document).ajaxError(function (event, xhr) {
+                    if (!hasShownErrorMessage && xhr.responseJSON && xhr.responseJSON.errors) {
+                        let errorMessages = xhr.responseJSON.errors;
+                        for (let key in errorMessages) {
+                            if (errorMessages.hasOwnProperty(key)) {
+                                swalError(errorMessages[key][0]);
+                            }
+                        }
+                        hasShownErrorMessage = true;
+                    }
+                });
             }
         });
     };

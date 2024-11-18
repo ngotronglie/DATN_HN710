@@ -21,7 +21,6 @@
                 data: option,
                 dataType: 'json',
                 success: function (res) {
-                    console.log(res);
 
                     if (res.favoriteItems && res.favoriteItems.length > 0) {
                         $('#cart-' + idFavorite).empty();
@@ -48,10 +47,20 @@
 
                 },
                 error: function (xhr, status, error) {
-                    console.log(error);
+                    let hasShownErrorMessage = false;
+                    $(document).ajaxError(function (event, xhr) {
+                        if (!hasShownErrorMessage && xhr.responseJSON && xhr.responseJSON.errors) {
+                            let errorMessages = xhr.responseJSON.errors;
+                            for (let key in errorMessages) {
+                                if (errorMessages.hasOwnProperty(key)) {
+                                    swalError(errorMessages[key][0]);
+                                }
+                            }
+                            hasShownErrorMessage = true;
+                        }
+                    });
                 }
             });
-
         })
     }
 

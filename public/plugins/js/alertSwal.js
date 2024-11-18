@@ -1,27 +1,15 @@
 function swalSuccess(mes) {
-    swal({
-        content: {
-            element: "span",
-            attributes: {
-                innerHTML: `<h1 style='font-size: 1.3rem;margin-top: 33px'>${mes}`,
-            },
-        },
-        text: "",
+    Swal.fire({
+        html: `<h1 style='font-size: 1.3rem;'>${mes}</h1>`,
         icon: "success",
-        button: "Đóng",
+        confirmButtonText: "Đóng",
     });
 }
 
 function swalError(mes) {
-    swal({
-        content: {
-            element: "span",
-            attributes: {
-                innerHTML: `<h1 style='font-size: 1.3rem;margin-top: 33px'>${mes}`,
-            },
-        },
-        text: "",
+    Swal.fire({
+        html: `<h1 style='font-size: 1.3rem;'>${mes}</h1>`,
         icon: "error",
-        button: "Đóng",
+        confirmButtonText: "Đóng",
     });
 }

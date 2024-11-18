@@ -25,29 +25,29 @@ class FavoriteController extends Controller
             return response()->json([
                 'status' => false,
                 'script' => "
-                swal({
-                    title: 'Bạn muốn vào mục yêu thích',
-                    text: 'Bạn cần phải đăng nhập để sử dụng chức năng này',
-                    icon: 'warning',
-                    buttons: {
-                        cancel: 'Hủy',
-                        confirm: {
-                            text: 'Đăng nhập',
-                            value: true,
-                            visible: true,
-                            className: 'swal-link-button',
-                            closeModal: false
+                    isSwalOpen = true;
+                    Swal.fire({
+                        title: 'Bạn cần phải đăng nhập',
+                        text: 'Vui lòng đăng nhập để vào mục yêu thích',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Đăng nhập',
+                        cancelButtonText: 'Hủy',
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/login';  // Điều hướng đến trang đăng nhập
+                        } else if (result.dismiss === Swal.DismissReason.cancel) {
+                            // Nếu người dùng nhấn nút Hủy
+                            console.log('Hủy bỏ đăng nhập');
                         }
-                    },
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        window.location.href = '/login';
-                    }
-                });
-            "
+                    }).finally(() => {
+                        isSwalOpen = false;
+                    });
+                "
             ]);
+
         }
     }
 

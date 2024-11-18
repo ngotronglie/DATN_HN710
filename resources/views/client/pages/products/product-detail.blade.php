@@ -123,7 +123,7 @@
 
                                 <div class="quantity mb-5">
                                     <div class="cart-plus-minus">
-                                        <input class="cart-plus-minus-box" value="1" type="text" min="1">
+                                        <input class="cart-plus-minus-box quatity_detail_shop" value="1" type="text" min="1">
                                         <div class="dec qtybutton"></div>
                                         <div class="inc qtybutton"></div>
                                     </div>
@@ -132,7 +132,7 @@
 
 
                                 <div class="cart-wishlist-btn mb-4">
-                                    <div class="add-to_cart">
+                                    <div class="addDeatil" style="margin-right: 0.8rem">
                                         <button class="btn btn-outline-dark btn-hover-primary">
                                             Thêm vào giỏ hàng
                                         </button>
@@ -561,6 +561,4 @@
 
 @section('script')
 <script src="{{ asset('plugins/js/getsizedetail.js') }}"></script>
-<script src="{{ asset('plugins/js/addCartAddFavorite.js') }}"></script>
-
 @endsection

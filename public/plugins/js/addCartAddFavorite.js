@@ -33,7 +33,6 @@
 
             let quantityProduct = parseFloat(selectedVariant.attr('data-quantity'));
 
-
             function validateInput(value) {
                 if (!/^\d*$/.test(value)) {
                     mes = "Vui lòng chỉ nhập số";
@@ -94,9 +93,6 @@
             }
 
             let quantityProduct = parseFloat(selectedVariant.attr('data-quantity'));
-            console.log(quantityProduct);
-
-
 
             if (e.which === 13) {
                 function validateInput(value) {
@@ -133,24 +129,20 @@
         $('.add-to_cart').click(function () {
             if ($('.remove_at').hasClass('disabled')) {
                 mes = "Sản phẩm đã tạm hết hàng";
-
-                swalError(mes); return
+                swalError(mes);
+                let input = $('.cart-plus-minus-box');
+                input.val(1);
+                return
             }
-
-            else if ($('.size_detail').hasClass('disabled')) {
-                mes = "Sản phẩm đã tạm hết hàng";
-
-                swalError(mes); return
-            };
 
 
             let id = $('.size-btn.active').attr('data-id');
             let button = $(this);
-            if (button.hasClass('disabled')) return;
+            if (button.hasClass('disabled')) {
+                return;
+            }
 
             button.addClass('disabled');
-
-
 
             let input = $('.qtybutton').siblings('input.cart-plus-minus-box');
             let selectedVariant = input.closest('.product').find('.size-btn.active');
@@ -160,6 +152,9 @@
             if (quantity > quantityProduct) {
                 mes = "Số lượng phải nhỏ hơn số lượng có sẵn";
                 swalError(mes)
+                button.removeClass('disabled');
+                let input = $('.cart-plus-minus-box');
+                input.val(1);
                 return false;
             }
 
@@ -170,8 +165,6 @@
                 '_token': token
             }
 
-            console.log(option);
-
 
             $.ajax({
                 type: 'POST',
@@ -179,12 +172,12 @@
                 data: option,
                 dataType: 'json',
                 success: function (res) {
-
                     mes = res.message;
 
                     if (res.success == false) {
                         swalError(mes);
                     } else {
+
                         swalSuccess(mes);
                         $('.header-action-num').html(res.uniqueVariantCount);
 
@@ -249,9 +242,7 @@
                                 data: option,
                                 dataType: 'json',
                                 success: function (res) {
-                                    console.log(res);
                                     mes = res.message;
-
 
                                     if (res.cartItems && res.cartItems.length > 0) {
                                         $('.header-action-num').html(res.uniqueVariantCount);
@@ -264,7 +255,18 @@
                                     swalSuccess(mes);
                                 },
                                 error: function (xhr, status, error) {
-                                    console.log(error);
+                                    let hasShownErrorMessage = false;
+                                    $(document).ajaxError(function (event, xhr) {
+                                        if (!hasShownErrorMessage && xhr.responseJSON && xhr.responseJSON.errors) {
+                                            let errorMessages = xhr.responseJSON.errors;
+                                            for (let key in errorMessages) {
+                                                if (errorMessages.hasOwnProperty(key)) {
+                                                    swalError(errorMessages[key][0]);
+                                                }
+                                            }
+                                            hasShownErrorMessage = true;
+                                        }
+                                    });
                                 }
                             });
 
@@ -273,17 +275,15 @@
                 },
                 error: function (xhr) {
                     let hasShownErrorMessage = false;
-
                     $(document).ajaxError(function (event, xhr) {
                         if (!hasShownErrorMessage && xhr.responseJSON && xhr.responseJSON.errors) {
-                            // Lấy tất cả các thông báo lỗi và in ra từng cái
                             let errorMessages = xhr.responseJSON.errors;
                             for (let key in errorMessages) {
                                 if (errorMessages.hasOwnProperty(key)) {
                                     swalError(errorMessages[key][0]);
                                 }
                             }
-                            hasShownErrorMessage = true; // Đặt cờ để không in lại
+                            hasShownErrorMessage = true;
                         }
                     });
                     let input = $('.cart-plus-minus-box');
@@ -321,41 +321,54 @@
                 data: option,
                 dataType: 'json',
                 success: function (res) {
-                    console.log(res);
                     let mes = res.message;
 
                     if (res.success === false) {
                         swalError(mes);
                     } else if (res.status === false) {
                         isSwalOpen = true;
-                        swal({
-                            title: "Bạn muốn thêm vào mục yêu thích",
-                            text: "Bạn cần phải đăng nhập để sử dụng chức năng này",
+                        Swal.fire({
+                            title: "<h1 style='font-size:1.5rem;'>Bạn cần phải đăng nhập</h1>",
+                            text: "Vui lòng đăng nhập để vào mục yêu thích",
                             icon: "warning",
-                            buttons: {
-                                cancel: "Hủy",
-                                confirm: {
-                                    text: "Đăng nhập",
-                                    value: true,
-                                    visible: true,
-                                    className: "swal-link-button",
-                                    closeModal: false
-                                }
+                            showCancelButton: true,
+                            confirmButtonText: "Đăng nhập",
+                            cancelButtonText: "Hủy",
+                            customClass: {
+                                confirmButton: 'swal-link-button',
+                                cancelButton: 'swal-link-button',
                             },
-                            dangerMode: true,
-                        }).then((willLogin) => {
-                            if (willLogin) {
+                            buttonsStyling: true,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
                                 window.location.href = "/login";
                             }
                         }).finally(() => {
                             isSwalOpen = false;
                         });
+
+                        Swal.getConfirmButton().style.backgroundColor = '#3085d6';
+                        Swal.getConfirmButton().style.color = '#fff';
+                        Swal.getCancelButton().style.backgroundColor = '#d33';
+                        Swal.getCancelButton().style.color = '#fff';
+
                     } else {
                         swalSuccess(mes);
                     }
                 },
                 error: function (xhr, status, error) {
-                    console.log(error);
+                    let hasShownErrorMessage = false;
+                    $(document).ajaxError(function (event, xhr) {
+                        if (!hasShownErrorMessage && xhr.responseJSON && xhr.responseJSON.errors) {
+                            let errorMessages = xhr.responseJSON.errors;
+                            for (let key in errorMessages) {
+                                if (errorMessages.hasOwnProperty(key)) {
+                                    swalError(errorMessages[key][0]);
+                                }
+                            }
+                            hasShownErrorMessage = true;
+                        }
+                    });
                 },
                 complete: function () {
                     isProcessing = false;
