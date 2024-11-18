@@ -1,5 +1,8 @@
 @extends('client.index')
 @section('style')
+<!-- Thêm SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.0/dist/sweetalert2.min.css">
+
 <style>
 .size-buttons {
     display: flex;
@@ -78,16 +81,6 @@
     display: flex;
     align-items: center;
     gap: 6px;
-}
-
-.custom-link {
-    color: #007bff; /* Màu xanh Bootstrap */
-    text-decoration: underline; /* Gạch chân */
-}
-
-.custom-link:hover {
-    color: #0056b3; /* Màu xanh đậm hơn khi hover */
-    text-decoration: underline; /* Gạch chân khi hover */
 }
 
 </style>
@@ -205,7 +198,7 @@
 
                             <div class="quantity mb-5">
                                 <div class="cart-plus-minus">
-                                    <input class="cart-plus-minus-box" value="1" type="text" min="1">
+                                            <input class="cart-plus-minus-box" value="1" type="text" min="1">
                                     <div class="dec qtybutton"></div>
                                     <div class="inc qtybutton"></div>
                                 </div>
@@ -274,7 +267,7 @@
                     <div class="tab-content mb-text" id="myTabContent">
                         <div class="tab-pane fade show active" id="connect-1" role="tabpanel" aria-labelledby="home-tab">
                             <div class="comment-area-wrapper mt-5 aos-init" data-aos="fade-up" data-aos-delay="400">
-                                <h3 class="title mb-6">{{ $totalComments }} bình luận</h3>
+                                <h3 id="comment-title" class="title mb-6">{{ $totalComments }} bình luận</h3>
                                 @foreach ($comments as $item)
                                 <div class="single-comment-wrap">
                                     <a class="author-thumb" href="#">
@@ -290,7 +283,7 @@
                                     </div>
                                 </div>
                                 <div id="reply-form-{{ $item->id }}" class="reply-form d-none comment-box mb-2">
-                                    <form action="{{ route('comments.store') }}" method="POST">
+                                    <form class="reply-comment-form">
                                         @csrf
                                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                                         <input type="hidden" name="parent_id" value="{{ $item->id }}">
@@ -323,18 +316,14 @@
                                 <div class="blog-comment-form-title">
                                     <h2 class="title">Để lại 1 bình luận</h2>
                                 </div>
-                                @if (auth()->check())
                                 <div class="comment-box">
-                                    <form action="{{ route('comments.store') }}" method="POST">
+                                    <form id="main-comment-form">
                                         @csrf
                                         <div class="row">
                                             <input type="hidden" value="{{ $product->id }}" name="product_id">
                                             <div class="col-12 col-custom">
                                                 <div class="input-item mt-4">
                                                     <textarea cols="30" rows="5" name="content" class="rounded-0 w-100 custom-textarea input-area" placeholder="Bạn muốn viết gì?">{{ old('content') }}</textarea>
-                                                    @error('content')
-                                                        <small class="form-text text-danger">{{ $message }}</small>
-                                                    @enderror
                                                 </div>
                                             </div>
                                             <div class="col-12 col-custom">
@@ -344,13 +333,6 @@
                                         </div>
                                     </form>
                                 </div>
-                                @else
-                                <div class="alert alert-warning text-center">
-                                    Bạn cần 
-                                    <a href="{{ route('login') }}" class="custom-link">Đăng nhập</a> 
-                                    để có thể bình luận!
-                                </div>
-                                @endif
                             </div>
                         </div>
 
@@ -596,13 +578,232 @@
 
 @section('script')
 <script src="{{ asset('plugins/js/getsizedetail.js') }}"></script>
+
+<!-- Thêm SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.0/dist/sweetalert2.all.min.js"></script>
+
 <script>
+const userLoggedIn = {{ Auth::check() ? 'true' : 'false' }}; // Laravel kiểm tra người dùng
+
 function showReplyForm(commentId) {
+    // Kiểm tra người dùng đã đăng nhập chưa
+    if (!userLoggedIn) {
+        // Nếu chưa đăng nhập, hiển thị thông báo yêu cầu đăng nhập
+        swal.fire({
+            title: "Vui lòng đăng nhập!",
+            text: "Vui lòng đăng nhập để có thể trả lời bình luận.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Đăng nhập",
+            cancelButtonText: "Hủy",
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Nếu người dùng nhấn "Đăng nhập", điều hướng họ đến trang đăng nhập
+                window.location.href = '{{ route('login') }}'; // Chuyển đến trang đăng nhập
+            }
+        });
+        return; // Dừng lại nếu người dùng chưa đăng nhập
+    }
+
+    document.querySelectorAll('.reply-form').forEach(form => {
+        form.classList.add('d-none');
+        
+        const textarea = form.querySelector('textarea');
+        if (textarea) {
+            textarea.value = '';
+        }
+    });
+
     document.getElementById(`reply-form-${commentId}`).classList.remove('d-none');
 }
 
 function hideReplyForm(commentId) {
-    document.getElementById(`reply-form-${commentId}`).classList.add('d-none');
+    const form = document.getElementById(`reply-form-${commentId}`);
+    
+    // Ẩn form
+    form.classList.add('d-none');
+
+    // Xóa nội dung trong textarea
+    form.querySelector('textarea').value = '';
 }
+
+    // Xử lý bình luận chính
+    document.getElementById('main-comment-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        if (!userLoggedIn) {
+        // Nếu chưa đăng nhập, hiển thị thông báo SweetAlert
+        Swal.fire({
+            title: 'Vui lòng đăng nhập!',
+            text: 'Bạn cần đăng nhập để có thể bình luận.',
+            icon: 'warning',
+            confirmButtonText: 'Đăng nhập',
+            showCancelButton: true,
+            cancelButtonText: 'Hủy',
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Chuyển hướng đến trang đăng nhập
+                window.location.href = '/login'; // Thay đổi theo đường dẫn đăng nhập của bạn
+            }
+        });
+        return; // Dừng việc gửi form nếu người dùng chưa đăng nhập
+    }
+
+        const formData = new FormData(this);
+
+        fetch('{{ route("comments.store") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Thêm bình luận mới vào danh sách
+                const commentHtml = `
+                    <div class="single-comment-wrap">
+                        <a class="author-thumb" href="#">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmhF7UB6jv1t_oyGDzqSb_h0JPspDnfqohVA&sr">
+                        </a>
+                        <div class="comments-info">
+                            <div class="comment-footer d-flex justify-content-between">
+                                <span class="author">
+                                    <a href="#"><strong>${data.comment.user.name}</strong></a> - ${data.time}
+                                </span>
+                                <a href="javascript:void(0);" class="btn-reply" onclick="showReplyForm(${data.comment.id})">
+                                    <i class="fa fa-reply"></i> Trả lời
+                                </a>
+                            </div>
+                           <p class="mb-1">${data.comment.content}</p>
+                        </div>
+                    </div>
+                    <div id="reply-form-${data.comment.id}" class="reply-form d-none comment-box mb-2">
+                        <form class="reply-comment-form">
+                            @csrf
+                            <input type="hidden" name="product_id" value="${data.product_id}">
+                            <input type="hidden" name="parent_id" value="${data.comment.id}">
+                            <textarea name="content" class="form-control mb-2" placeholder="Viết câu trả lời..."></textarea>
+                            <button type="submit" class="btn btn-sm btn-primary">Gửi</button>
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="hideReplyForm(${data.comment.id})">Hủy</button>
+                        </form>
+                    </div>
+                `;
+                // Chèn bình luận mới dưới tiêu đề bằng ID
+                document.getElementById('comment-title').insertAdjacentHTML('afterend', commentHtml);
+
+                // Cập nhật số lượng bình luận nếu cần
+                const totalCommentsElement = document.getElementById('comment-title');
+                totalCommentsElement.textContent = `${data.total} bình luận`;
+
+                // Xóa nội dung trong form
+                this.reset();
+            } else {
+                if (data.errors) {
+                    let errorMessages = '';
+                    for (let key in data.errors) {
+                        if (data.errors.hasOwnProperty(key)) {
+                            errorMessages += `${data.errors[key].join(', ')}\n`;
+                        } 
+                    }
+                    swal.fire({
+                        title: "Cảnh báo!",
+                        text: errorMessages,
+                        icon: "warning",
+                        confirmButtonText: 'Đóng'
+                    });
+                } else if (data.message) {
+                    swal.fire({
+                        title: "Cảnh báo!",
+                        text: data.message,
+                        icon: "warning",
+                        confirmButtonText: 'Đóng'
+                    });
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Có lỗi xảy ra khi kết nối với máy chủ!');
+        });
+    });
+
+    // Xử lý trả lời bình luận
+    document.addEventListener('submit', function (e) {
+        if (e.target.classList.contains('reply-comment-form')) {
+            e.preventDefault(); // Ngăn tải lại trang
+            const form = e.target;
+            const formData = new FormData(form);
+            const parentId = formData.get('parent_id');
+
+            fetch('{{ route("comments.store") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Thêm trả lời vào dưới bình luận cha
+                    const replyHtml = `
+                        <div class="single-comment-wrap mb-4 comment-reply">
+                            <a class="author-thumb" href="#">
+                                <img src="https://tse1.mm.bing.net/th?id=OIP.KdRE7KHqL-46M8nrvOX2CgHaHa&pid=Api&P=0&h=220">
+                            </a>
+                            <div class="comments-info">
+                                <div class="comment-footer d-flex justify-content-between">
+                                    <span class="author">
+                                        <a href="#"><strong>${data.comment.user.name}</strong></a> - ${data.time}
+                                    </span>
+                                </div>
+                                <p class="mb-1">${data.comment.content}</p>
+                            </div>
+                        </div>
+                    `;
+                    document.querySelector(`#reply-form-${parentId}`).insertAdjacentHTML('afterend', replyHtml);
+
+                    const totalCommentsElement = document.getElementById('comment-title');
+                    totalCommentsElement.textContent = `${data.total} bình luận`;
+
+                    // Ẩn form trả lời
+                    hideReplyForm(parentId);
+                    form.reset();
+                } else {
+                    if (data.errors) {
+                        let errorMessages = '';
+                        for (let key in data.errors) {
+                            if (data.errors.hasOwnProperty(key)) {
+                                errorMessages += `${data.errors[key].join(', ')}\n`;
+                            } 
+                        }
+                        swal.fire({
+                            title: "Cảnh báo!",
+                            text: errorMessages,
+                            icon: "warning",
+                            confirmButtonText: 'Đóng'
+                        });
+                    } else if (data.message) {
+                        swal.fire({
+                            title: "Cảnh báo!",
+                            text: data.message,
+                            icon: "warning",
+                            confirmButtonText: 'Đóng'
+                        });
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Có lỗi xảy ra khi kết nối với máy chủ!');
+            });
+        };
+    });
 </script>
 @endsection

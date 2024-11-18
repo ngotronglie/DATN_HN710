@@ -7,34 +7,84 @@ use App\Models\Comment;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class CommentController extends Controller
 {
     public function store(Request $request)
     {
-        $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'parent_id' => 'nullable|exists:products,id',
-            'content' => 'required|string|max:255',
-        ], 
-        [
-            'content.required' => 'Nội dung không được bỏ trống',
-            'content.max' => 'Nội dung tối đa 255 kí tự',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'product_id' => 'required|exists:products,id',
+                'parent_id' => 'nullable|exists:comments,id',
+                'content' => 'required|string|max:255',
+            ],
+            [
+                'content.required' => 'Nội dung không được bỏ trống',
+                'content.max' => 'Nội dung tối đa 255 kí tự',
+            ]
+        );
 
-        $product = Product::find($request->product_id);
+        // Kiểm tra xem validate có lỗi không
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 400);
+        }
 
         // Kiểm tra từ ngữ thô tục
         if ($this->containsProfanity($request->content)) {
-            $error = 'Bình luận của bạn chứa từ ngữ không phù hợp. Vui lòng chỉnh sửa.';
-            return redirect()->route('shops.show', ['slug' => $product->slug])->with(['error' => $error]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Bình luận của bạn chứa từ ngữ không phù hợp. Vui lòng chỉnh sửa!',
+            ], 400);
         }
 
         $data = $request->all();
         $data['user_id'] = Auth::user()->id;
-        Comment::create($data);
+        $comment = Comment::create($data);
 
-        return redirect()->route('shops.show', ['slug' => $product->slug])->with('success', 'Bình luận của bạn đã được đăng.');
+        $totalComments = Comment::where('product_id', $request->product_id)
+            ->where('is_active', 1)
+            ->count();
+
+        // Lấy danh sách bình luận mới nhất
+        $comments = Comment::where('product_id', $request->product_id)
+            ->where('is_active', 1)
+            ->whereNull('parent_id')
+            ->with(['children' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            }])
+            ->orderBy('created_at', 'desc')
+            ->paginate(2);
+
+        // Trả về danh sách bình luận dưới dạng HTML để cập nhật trên giao diện
+        $paginationHtml = view('pagination::bootstrap-5', ['paginator' => $comments])->render();
+
+        return response()->json([
+            'success' => true,
+            'comment' => $comment->load('user'),
+            'time' => $comment->created_at->diffForHumans(),
+            'total' => $totalComments,
+            'product_id' => $request->product_id,
+            'paginationHtml' => $paginationHtml,
+        ], 201);
+    }
+
+    public function getComments(Product $product)
+    {
+        $comments = Comment::where('product_id', $product->id)
+            ->where('is_active', 1)
+            ->whereNull('parent_id')
+            ->with(['children' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            }])
+            ->orderBy('created_at', 'desc')
+            ->paginate(2);
+
+        return view('client.pages.comments', compact('comments'));
     }
 
     // Hàm kiểm tra từ ngữ thô tục
