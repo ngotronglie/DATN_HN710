@@ -131,7 +131,10 @@
                         </div>
                         <!-- Cart Calculate Items End -->
                         <!-- Cart Checktout Button Start -->
-                        <a href="checkout.html" class="btn btn-dark btn-hover-primary rounded-0 w-100">Thanh toán</a>
+                        <div class="checkout-button-container text-center mt-4">
+                            <a href="{{route('checkout')}}" class="btn btn-dark btn-hover-primary rounded-0 w-100">Thanh toán</a>
+                        </div>
+                        {{-- <a href="checkout.html" class="btn btn-dark btn-hover-primary rounded-0 w-100">Thanh toán</a> --}}
                         <!-- Cart Checktout Button End -->
 
                     </div>

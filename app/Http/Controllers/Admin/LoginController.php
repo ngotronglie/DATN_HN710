@@ -41,7 +41,11 @@ class LoginController extends Controller{
             'password.required'=>'Password không được bỏ trống'
         ]);
         $user = User::withTrashed()->where('email', $login['email'])->first();
-
+        if($user && $user->email_verified_at==null){
+            return back()->withErrors([
+                'err' => 'Email chưa được xác thực!',
+            ])->onlyInput('email');
+        }
         if ($user && $user->trashed()) {
             return back()->withErrors([
                 'err' => 'Tài khoản của bạn đã bị xóa. Vui lòng liên hệ với quản trị viên.',
@@ -69,6 +73,7 @@ class LoginController extends Controller{
                     'err' => 'Tài khoản của bạn hiện tại không hoạt động.', 
                 ]);
             }
+
 
         }
         RateLimiter::hit($this->throttleKey($request), $decayMinutes * 60);

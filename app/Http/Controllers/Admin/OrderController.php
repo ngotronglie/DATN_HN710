@@ -76,6 +76,7 @@ class OrderController extends Controller
     
         if ($order->status == 3 && $order->canProceed()) {
             $order->status = 4; // Chuyển sang "Giao hàng thành công"
+            $order->payment_status = 'paid'; 
             $order->save();
             return redirect()->back()->with('success', 'Đơn hàng đã được giao thành công');
         } else {

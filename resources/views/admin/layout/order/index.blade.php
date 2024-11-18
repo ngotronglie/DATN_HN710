@@ -89,11 +89,12 @@
 
                                             </td>
                                             <td>{{ $item->order_code }}</td>
-                                            @if ($item->user)
+                                            @if ($item->user_id)
                                                 <td>{{ $item->user->name }}</td>
                                             @else
-                                                <td>{{ $item->user_name }}</td>
+                                                <td>Khách vãng lai</td>
                                             @endif
+                                            
                                             <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y H:i:s') }}</td>
 
                                             <td>

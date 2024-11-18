@@ -30,9 +30,10 @@
         <div class="animated fadeIn">
             <div class="row">
                 <div class="col-lg-12">
+                    @if($order->user)
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <strong>Thông tin người dùng</strong>
+                            <strong>Thông tin người mua</strong>
                             <a href="{{ route('admin.order.index') }}" class="btn btn-primary">
                                 <i class="fa fa-arrow-left mr-1"></i> Quay lại
                             </a>
@@ -40,7 +41,7 @@
                         <div class="card-body">
                             <table class="table table-bordered">
                                 <tbody>
-                                    @if ($order->user)
+                                   
                                         <tr>
                                             <th>Tên người đặt</th>
                                             <td>{{ $order->user->name }}</td>
@@ -58,7 +59,21 @@
                                             <th>Địa chỉ</th>
                                             <td>{{ $order->user->address }}</td>
                                         </tr>
-                                    @else
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    @endif
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <strong>Thông tin người nhận</strong>
+
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-bordered">
+                                <tbody>
+                                     
                                         <tr>
                                             <th>Tên</th>
                                             <td>{{ $order->user_name }}</td>
@@ -75,7 +90,7 @@
                                             <th>Địa chỉ</th>
                                             <td>{{ $order->user_address }}</td>
                                         </tr>
-                                    @endif
+                                  
                                     <tr>
                                         <th>Đơn hàng</th>
                                         <td>
@@ -123,14 +138,19 @@
                                     </tr>
                                     <tr>
                                         <th>Phương thức thanh toán</th>
-                                        <td>                                       
+                                        <td>
                                             {{ $order->payment_method == 'cod' ? 'Thanh toán khi nhận hàng' : 'Thanh toán online' }}
                                         </td>
                                     </tr>
 
                                     <tr>
                                         <th>Ghi chú</th>
+                                        @if($order->note)
                                         <td>{{ $order->note }}</td>
+
+                                        @else
+                                          <td>Không có ghi chú</td>  
+                                        @endif
                                     </tr>
 
                                     <tr>
@@ -142,7 +162,6 @@
                             </table>
                         </div>
                     </div>
-
                     <div class="card mt-4">
                         <div class="card-header">
                             <strong>Thông tin sản phẩm</strong>
@@ -168,30 +187,25 @@
                                         @foreach ($order->orderDetails as $orderDetail)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                @if ($orderDetail->productVariant)
-                                                    <td><img width="100"
-                                                            src="{{ Storage::url($orderDetail->productVariant->product->img_thumb) }}"
-                                                            alt=""></td>
-                                                    <td>{{ $orderDetail->productVariant->product->name }}</td>
-                                                    <td>{{ $orderDetail->quantity }}</td>
-                                                    <td>{{ number_format($orderDetail->productVariant->price_sale) }} VND
-                                                    </td>
-                                                    <td>{{ $orderDetail->productVariant->size->name }}</td>
-                                                    <td>{{ $orderDetail->productVariant->color->name }}</td>
-                                                    <td>{{ number_format($orderDetail->quantity * $orderDetail->productVariant->price_sale) }}
-                                                        VND</td>
-                                                @else
-                                                    <td>
-                                                        <span>Không tồn tại</span>
-                                                    </td>
+                                                <td>
+                                                    @if($orderDetail->product_variant_id)
+                                                    <img width="100"
+                                                        src="{{ Storage::url($orderDetail->productVariant->product->img_thumb) }}"
+                                                        alt="">
+                                                    @else
+                                                    <span>Sản phẩm không tồn tại</span>
+                                                    @endif
+                                                </td>
+                                               
+                                               
                                                     <td>{{ $orderDetail->product_name }}</td>
                                                     <td>{{ $orderDetail->quantity }}</td>
                                                     <td>{{ number_format($orderDetail->price) }} VND</td>
                                                     <td>{{ $orderDetail->size_name }}</td>
                                                     <td>{{ $orderDetail->color_name }}</td>
-                                                    <td>{{ number_format($orderDetail->quantity * $orderDetail->price) }}
+                                                    <td>{{ number_format($orderDetail->quantity * $orderDetail->price )  }}
                                                         VND</td>
-                                                @endif
+                                               
                                             </tr>
                                         @endforeach
                                         <tr>
@@ -208,27 +222,34 @@
                                                                 $totalPrice += $detail->quantity * $detail->price;
                                                             }
                                                         }
-
-                                                      
                                                     }
                                                 @endphp
                                                 <strong>Tổng tiền:</strong>
                                             </td>
-                                            <td colspan="2"  class="text-center">
+                                            <td colspan="2" class="text-center">
                                                 {{ number_format($totalPrice, 0, ',', '.') }} VND
                                             </td>
 
                                         </tr>
                                         <tr>
+                                            @if ($order->voucher)
                                             <td colspan="6">
-                                                <strong>Mã giảm giá:</strong>
+                                                <strong>Giảm {{ $order->voucher->discount }}%</strong>
                                             </td>
-                                            <td colspan="2"  class="text-center">
-                                                @if ($order->voucher)
-                                                    {{ $order->voucher->code }} (-{{ $order->voucher->discount }}%)
-                                                @else
-                                                    Không có mã giảm giá
-                                                @endif
+                                            <td colspan="2" class="text-center">
+                                               
+                                                {{ '- ' . number_format(($totalPrice * $order->voucher->discount) / 100, 0, ',', '.') }} VND 
+                                               
+                                            </td>
+                                            @endif
+
+                                        </tr>
+                                        <tr>
+                                            <td colspan="6">
+                                                <strong>Phí vận chuyển:</strong>
+                                            </td>
+                                            <td colspan="2" class="text-center">
+                                                {{ '+ '.number_format(30000, 0, ',', '.') }} VND
                                             </td>
 
 
@@ -249,13 +270,14 @@
                                                         }
 
                                                         $totalPrice -= $order->voucher
-                                                            ? ($totalPrice * $order->voucher->discount) / 100
+                                                            ? ($totalPrice * $order->voucher->discount) / 100 
                                                             : 0;
                                                     }
+                                                    $totalPrice += 30000;
                                                 @endphp
                                                 <strong>Tổng tiền cuối cùng:</strong>
                                             </td>
-                                            <td colspan="2"  class="text-center">
+                                            <td colspan="2" class="text-center">
                                                 {{ number_format($totalPrice, 0, ',', '.') }} VND
                                             </td>
 
@@ -268,7 +290,7 @@
                                 <div style="float: right">
 
 
-                                    @if ($order->status != 6 && $order->status !=4)
+                                    @if ($order->status != 6 && $order->status != 4)
                                         Cập nhật đơn hàng:
                                         @if ($order->status == 1)
                                             <a class="btn btn-success"
@@ -289,10 +311,12 @@
                                         @endif
                                     @endif
                                     @if ($order->status == 2 || ($order->payment_status == 'paid' && $order->payment_method == 'cod'))
-                                    <a class="btn btn-hover-d btn-dark ml-2" target="_blank" href="{{route('admin.order.printOrder', $order->order_code)}}" title="In đơn hàng">
-                                        <i class="fa fa-print"></i>
-                                    </a>
-                                @endif
+                                        <a class="btn btn-hover-d btn-dark ml-2" target="_blank"
+                                            href="{{ route('admin.order.printOrder', $order->order_code) }}"
+                                            title="In đơn hàng">
+                                            <i class="fa fa-print"></i>
+                                        </a>
+                                    @endif
                                 </div>
                             @endif
 

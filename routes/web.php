@@ -26,7 +26,7 @@ use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\BlogController as ClientBlogController;
 use App\Http\Controllers\Client\ShopController;
 use App\Http\Controllers\Client\AccountController;
-
+use App\Http\Controllers\Client\CheckoutController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -78,6 +78,13 @@ Route::get('/contact', function () {
     return view('client.pages.contact');
 });
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+// Checkout
+ Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+ Route::post('/place-order', [CheckoutController::class, 'placeOrder'])->name('placeOrder');
+ Route::post('/apply-voucher', [CheckoutController::class, 'applyVoucher'])->name('voucher.apply');
+ Route::get('/billSearch', [CheckoutController::class, 'billSearch'])->name('bill.search');
+
+ Route::get('/vouchers/valid', [CheckoutController::class, 'getValidVouchers'])->name('voucher.getValidVouchers');
 
 // Tài khoản
 Route::middleware('guest')->group(function () {
