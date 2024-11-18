@@ -331,6 +331,9 @@ class ChangeActiveController extends Controller
         $updated = $comment->update(['is_active' => $newActive]);
 
         if ($updated) {
+            if ($comment->parent_id === null) {
+                Comment::where('parent_id', $id)->update(['is_active' => $newActive]);
+            }
             return response()->json([
                 'status' => true,
                 'message' => 'Cập nhật trạng thái comment thành công',
@@ -354,6 +357,8 @@ class ChangeActiveController extends Controller
 
         $updated = Comment::whereIn('id', $id)->update(['is_active' => $newActive]);
 
+        Comment::whereIn('parent_id', $id)->update(['is_active' => $newActive]);
+
         if ($updated) {
             return response()->json([
                 'status' => true,
@@ -366,4 +371,3 @@ class ChangeActiveController extends Controller
         return response()->json(['status' => false, 'message' => 'Không có comment nào được cập nhật'], 404);
     }
 }
-

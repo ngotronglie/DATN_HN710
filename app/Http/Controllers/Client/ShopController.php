@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
@@ -164,7 +165,20 @@ class ShopController extends Controller
             ])
             ->get();
 
-        return view('client.pages.products.product-detail', compact('product', 'relatedProducts'));
+        $comments = Comment::where('product_id', $product->id)
+            ->where('is_active', 1)
+            ->whereNull('parent_id')
+            ->with(['children' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            }])
+            ->orderBy('created_at', 'desc')
+            ->paginate(2);
+
+        $totalComments = Comment::where('product_id', $product->id)
+            ->where('is_active', 1)
+            ->count();
+
+        return view('client.pages.products.product-detail', compact('product', 'relatedProducts', 'comments', 'totalComments'));
     }
 
     public function search(Request $request)

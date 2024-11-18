@@ -20,10 +20,11 @@ class CommentFactory extends Factory
     public function definition(): array
     {
         return [
+
             'user_id' => User::inRandomOrder()->first()->id,
             'product_id' => Product::inRandomOrder()->first()->id,
             'content' => fake()->sentence(),
-            'parent_id' => Comment::inRandomOrder()->first()->id ?? null,
+            'parent_id' => null,
         ];
     }
 }

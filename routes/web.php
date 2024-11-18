@@ -27,6 +27,8 @@ use App\Http\Controllers\Client\BlogController as ClientBlogController;
 use App\Http\Controllers\Client\ShopController;
 use App\Http\Controllers\Client\AccountController;
 use App\Http\Controllers\Client\CheckoutController;
+use App\Http\Controllers\Client\CommentController as ClientCommentController;
+
 use Illuminate\Support\Facades\Route;
 
 
@@ -66,6 +68,9 @@ Route::get('/san-pham-yeu-thich', [FavoriteController::class, 'index'])->name('f
 Route::post('/ajax/addToCart', [CartController::class, 'addToCart']);
 Route::post('/ajax/addToFavorite', [FavoriteController::class, 'addToFavorite']);
 Route::delete('/ajax/deleteToFavorite', [FavoriteController::class, 'deleteToFavorite']);
+
+// Comment
+Route::post('comments/store', [ClientCommentController::class, 'store'])->name('comments.store');
 
 // Blog
 Route::get('/blogs', [ClientBlogController::class, 'index'])->name('blogs.index');
@@ -197,12 +202,16 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::put('banners/restore/{id}', [BannerController::class, 'restore'])->name('banners.restore');
     Route::delete('banners/forceDelete/{id}', [BannerController::class, 'forceDelete'])->name('banners.forceDelete');
 
-    // Quản lý bình luận
+    // Danh sách bình luận
     Route::get('comments', [CommentController::class, 'index'])->name('comments.index');
-    // Route::get('comments/{comment}', [CommentController::class, 'show'])->name('comments.show');
+    
+    // Chi tiết bình luận
+    Route::get('comments/{id}', [CommentController::class, 'show'])->name('comments.show');
+    Route::get('comments/{parent_id}/children', [CommentController::class, 'showChildren'])->name('comments.showChildren');
 
     // Quản lí banner
     Route::resource('banners', BannerController::class);
+
 
     //Quản lý đơn hàng
     Route::get('order', [OrderController::class, 'index'])->name('order.index');

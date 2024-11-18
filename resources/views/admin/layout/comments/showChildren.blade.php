@@ -15,7 +15,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Danh sách bình luận</h1>
+                        <h1>Dashboard</h1>
                     </div>
                 </div>
             </div>
@@ -23,9 +23,9 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Bảng điều khiển</a></li>
+                            <li><a href="#">Dashboard</a></li>
                             <li><a href="#">Quản lí bình luận</a></li>
-                            <li class="active">Danh sách bình luận</li>
+                            <li class="active">Chi tiết bình luận</li>
                         </ol>
                     </div>
                 </div>
@@ -43,23 +43,37 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong class="card-title">Danh sách bình luận</strong>
-                        <div class="d-flex">
-                            <div class="dropdown float-right ml-2">
-                                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-cogs"></i> Tùy chọn
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item activeAll" data-is_active="0" href="#">
-                                        <i class="fa fa-toggle-on text-success"></i> Bật các mục đã chọn
-                                    </a>
-                                    <a class="dropdown-item activeAll" data-is_active="1" href="#">
-                                        <i class="fa fa-toggle-off text-danger"></i> Tắt các mục đã chọn
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fa fa-trash text-danger"></i> Xóa các mục đã chọn
-                                    </a>
-                                </div>
+                        <strong class="card-title">Bình luận cha</strong>
+                        <a href="{{ route('admin.comments.show', $product->id) }}" class="btn btn-primary">
+                            <i class="fa fa-arrow-left mr-1"></i> Quay lại
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <p>Tên sản phẩm: {{ $product->name }}</p>
+                        <p>Người bình luận: {{ $parentComment->user->name }}</p>
+                        <p>Nội dung: {{ $parentComment->content }}</p>
+                        <p>Thời gian: {{ $parentComment->created_at->format('d/m/Y H:i') }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                        <strong class="card-title">Chi tiết trả lời</strong>
+                        </div>
+                        <div class="dropdown float-right ml-2">
+                            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-cogs"></i> Tùy chọn
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item activeAll" data-is_active="0" href="#">
+                                    <i class="fa fa-toggle-on text-success"></i> Bật các mục đã chọn
+                                </a>
+                                <a class="dropdown-item activeAll" data-is_active="1" href="#">
+                                    <i class="fa fa-toggle-off text-danger"></i> Tắt các mục đã chọn
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -72,10 +86,9 @@
                                     </th>
                                     <th>STT</th>
                                     <th>Người dùng</th>
-                                    <th>Sản phẩm</th>
                                     <th>Nội dung</th>
+                                    <th>Thời gian</th>
                                     <th>Trạng thái</th>
-                                    <th>Hành động</th>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -83,31 +96,27 @@
                                     <th></th>
                                     <th>STT</th>
                                     <th>Người dùng</th>
-                                    <th>Sản phẩm</th>
                                     <th>Nội dung</th>
+                                    <th>Thời gian</th>
                                     <th>Trạng thái</th>
-                                    <th>Hành động</th>
                                 </tr>
                             </tfoot>
                             <tbody>
-                                @foreach ($comments as $key => $comment)
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" class="checkBoxItem" data-id="{{ $comment->id }}">
-                                    </td>
-                                    <td>{{ $key+1 }}</td>
-                                    <td>{{ $comment->user->name }}</td>
-                                    <td>{{ $comment->product->name }}</td>
-                                    <td>{{ Str::limit($comment->content, 50) }}</td>
-                                    <td style="width: 12%" class="text-center">
-                                        <input type="checkbox" class="js-switch active" data-model="{{ $comment->is_active }}"
-                                            {{ $comment->is_active == 1 ? 'checked' : '' }} data-switchery="true"
-                                            data-modelId="{{ $comment->id }}" />
-                                    </td>
-                                    <td class="d-flex">
-                                        <a class="btn btn-primary mr-2" href="#" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
-                                    </td>
-                                </tr>
+                                @foreach ($childComments as $key => $comment)
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" class="checkBoxItem" data-id="{{ $comment->id }}">
+                                        </td>
+                                        <td>{{ $key+1 }}</td>
+                                        <td>{{ $comment->user->name }}</td>
+                                        <td>{{ $comment->content }}</td>
+                                        <td>{{ $comment->created_at->format('d/m/Y H:i') }}</td>
+                                        <td style="width: 12%" class="text-center">
+                                            <input type="checkbox" class="js-switch active" data-model="{{ $comment->is_active }}"
+                                                {{ $comment->is_active == 1 ? 'checked' : '' }} data-switchery="true"
+                                                data-modelId="{{ $comment->id }}" />
+                                        </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>

@@ -106,4 +106,9 @@ class Product extends Model
     {
         return $this->galleries()->first()->image ?? null; // Trả về null nếu không có ảnh nào
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

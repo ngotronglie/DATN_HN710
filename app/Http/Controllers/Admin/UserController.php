@@ -61,7 +61,7 @@ class UserController extends Controller
         }
         $data = $request->except('avatar');
         $data['password'] = Hash::make($request->input('password'));
-        
+
         if ($request->hasFile('avatar')) {
             $data['avatar'] = Storage::put('users', $request->file('avatar'));
         } else {
@@ -107,9 +107,9 @@ class UserController extends Controller
             return redirect()->route('admin.accounts.index')->with('warning', 'Bạn không có quyền!');
         }
         $data = $request->all();
-        if($account->email_verified_at ==null){
+        if ($account->email_verified_at == null) {
             $data['email_verified_at'] = now();
-        }else{
+        } else {
             $data['email_verified_at'] = $account->email_verified_at;
         }
         $account->update($data);
@@ -159,67 +159,70 @@ class UserController extends Controller
         return redirect()->route('admin.accounts.trashed')->with('success', 'Tài khoản đã được xóa vĩnh viễn');
     }
 
-    public function myAccount(){
+    public function myAccount()
+    {
         $user = Auth::user();
-        return view('admin.layout.account.my_account',compact('user'));
+        return view('admin.layout.account.my_account', compact('user'));
     }
-    public function updateMyAcount(request $request,$id){
-        $user=User::findOrFail($id);
+
+    public function updateMyAcount(request $request, $id)
+    {
+        $user = User::findOrFail($id);
         $request->validate([
-          'name' => 'nullable|string|max:255',
-          'address' => 'nullable|string|max:255',
-          'phone' => 'nullable|string|regex:/^[0-9]{10}$/',
-          'date_of_birth' => 'nullable|date|before:today',
-          'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-      ], [
-          'date_of_birth.before'=>'Ngày sinh không hợp lệ.',
-          'phone.regex' => 'Số điện thoại không hợp lệ.',
-          'avatar.image' => 'Tệp tải lên phải là hình ảnh.',
-          'avatar.mimes' => 'Ảnh đại diện phải có định dạng: jpeg, png, jpg, gif.',
-          'avatar.max' => 'Ảnh đại diện không được lớn hơn 2MB.',
-      ]);
-      $data = $request->except('avatar');
-      $data['email'] = $user->email;
+            'name' => 'nullable|string|max:255',
+            'address' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|regex:/^[0-9]{10}$/',
+            'date_of_birth' => 'nullable|date|before:today',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ], [
+            'date_of_birth.before' => 'Ngày sinh không hợp lệ.',
+            'phone.regex' => 'Số điện thoại không hợp lệ.',
+            'avatar.image' => 'Tệp tải lên phải là hình ảnh.',
+            'avatar.mimes' => 'Ảnh đại diện phải có định dạng: jpeg, png, jpg, gif.',
+            'avatar.max' => 'Ảnh đại diện không được lớn hơn 2MB.',
+        ]);
         $data = $request->except('avatar');
-        if($request->hasFile('avatar')){
+        $data['email'] = $user->email;
+        $data = $request->except('avatar');
+        if ($request->hasFile('avatar')) {
 
-          $data['avatar'] = Storage::put('users', $request->file('avatar'));
-          if(!empty($user->avatar) && Storage::exists($user->avatar)){
-              Storage::delete($user->avatar);
-          }
-      }else{
-          $data['image'] = $user->avatar;
-      }
-  $user->update($data);
-  return redirect()->route('admin.accounts.myAccount')->with('success', 'Cập nhật thông tin thành công');
- }
- public function updatePassword(Request $request, $id){
-    $user = User::findOrFail($id);
-    if (empty($request->current_password)) {
-        return back()->withErrors(['current_password' => 'Vui lòng nhập mật khẩu hiện tại.']);
+            $data['avatar'] = Storage::put('users', $request->file('avatar'));
+            if (!empty($user->avatar) && Storage::exists($user->avatar)) {
+                Storage::delete($user->avatar);
+            }
+        } else {
+            $data['image'] = $user->avatar;
+        }
+        $user->update($data);
+        return redirect()->route('admin.accounts.myAccount')->with('success', 'Cập nhật thông tin thành công');
     }
-    if (!Hash::check($request->current_password, $user->password)) {
-        return back()->withErrors(['current_password' => 'Mật khẩu hiện tại không đúng']);
-    }
-    $request->validate([
-        'new_password' => ['required', 'string', 'min:8', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'confirmed'],
-        'new_password_confirmation' => 'required|string',
-    ], [
-        'new_password.required' => 'Vui lòng nhập mật khẩu mới.',
-        'new_password.regex' => 'Mật khẩu bao gồm chữ in hoa, chữ cái thường và số.',
-        'new_password.min' => 'Mật khẩu mới phải ít nhất 8 ký tự.',
-        'new_password.confirmed' => 'Mật khẩu mới không trùng khớp.',
-        'new_password_confirmation.required' => 'Vui lòng không bỏ trống.',
-    ]);
-    if (Hash::check($request->new_password, $user->password)) {
-        return back()->withErrors(['new_password' => 'Mật khẩu mới không được giống với mật khẩu hiện tại']);
-    }
-    $user->password = Hash::make($request->new_password);
-    $user->save();
-    Auth::logout();
+    
+    public function updatePassword(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        if (empty($request->current_password)) {
+            return back()->withErrors(['current_password' => 'Vui lòng nhập mật khẩu hiện tại.']);
+        }
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'Mật khẩu hiện tại không đúng']);
+        }
+        $request->validate([
+            'new_password' => ['required', 'string', 'min:8', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'confirmed'],
+            'new_password_confirmation' => 'required|string',
+        ], [
+            'new_password.required' => 'Vui lòng nhập mật khẩu mới.',
+            'new_password.regex' => 'Mật khẩu bao gồm chữ in hoa, chữ cái thường và số.',
+            'new_password.min' => 'Mật khẩu mới phải ít nhất 8 ký tự.',
+            'new_password.confirmed' => 'Mật khẩu mới không trùng khớp.',
+            'new_password_confirmation.required' => 'Vui lòng không bỏ trống.',
+        ]);
+        if (Hash::check($request->new_password, $user->password)) {
+            return back()->withErrors(['new_password' => 'Mật khẩu mới không được giống với mật khẩu hiện tại']);
+        }
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+        Auth::logout();
 
-    return redirect()->route('admin.loginForm')->with('success', 'Cập nhật mật khẩu thành công. Vui lòng đăng nhập lại');
+        return redirect()->route('admin.loginForm')->with('success', 'Cập nhật mật khẩu thành công. Vui lòng đăng nhập lại');
+    }
 }
-
- 
-}   
