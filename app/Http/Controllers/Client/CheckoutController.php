@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\InvoiceMail;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 class CheckoutController extends Controller
 {
@@ -41,7 +42,7 @@ class CheckoutController extends Controller
             return $item->total_price;
         });
 
-        $validVouchers = Voucher::where('end_date', '>=', now())
+        $validVouchers = Voucher::where('end_date', '>=', Carbon::now()->startOfDay())
             ->where('is_active', true)
             ->where('quantity', '>', 0)
             ->whereHas('users', function($query) use ($user) {
@@ -237,13 +238,12 @@ class CheckoutController extends Controller
         
         if ($request->has('voucher_code')) {
             $voucher = Voucher::where('code', $request->voucher_code)->first();
-    
-            if ($voucher && $voucher->is_active && $voucher->quantity > 0 && $voucher->end_date >= now()) {
-                  Order::query()
-                    ->where('user_id', $user->id)
-                    ->where('voucher_id', $voucher->id)
-                    ->exists();
-    
+           
+            
+        
+            if ($voucher && $voucher->is_active && $voucher->quantity > 0 && $voucher->end_date >= Carbon::parse($voucher->end_date)->gte(Carbon::today())) {
+               
+
 
     
                 $cartTotal = $totalAmount; 
@@ -270,8 +270,8 @@ class CheckoutController extends Controller
             'discount' => $discount,
             'totalAmountWithDiscount' => $totalAmountWithDiscount
         ]);
+    
     }
-
     //tra cuu
     public function billSearch(){
         return redirect()->route('home');
