@@ -1,108 +1,4 @@
 @extends('client.index')
-@section('style')
-    <style>
-        .size-buttons {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            padding: 8px 0;
-        }
-
-        .size-buttons li {
-            list-style: none;
-            margin: 0;
-        }
-
-        .size-btn {
-            display: inline-block;
-            padding: 0 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            flex: 1 1 auto;
-        }
-
-        .size-btn:hover {
-            background-color: #f0f0f0;
-        }
-
-        .size-btn.active {
-            background-color: #3498db;
-            color: white;
-            border-color: #2980b9;
-        }
-
-        .color-buttons {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .color-buttons li {
-            display: inline-block;
-        }
-
-        .color-btn {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: border-color 0.3s;
-        }
-
-        .color-btn.active {
-            border-color: #000;
-        }
-
-        .price {
-            color: #333;
-            font-weight: bold;
-        }
-
-        .show-price {
-            color: #dc3545;
-        }
-
-        .price span {
-            padding: 0 2px;
-        }
-
-        #old-price {
-                color: gray;
-                display: inline;
-                margin: 0;
-                margin-left: 5px;
-                font-weight: 500;
-                padding: 0;
-                text-decoration: line-through;
-            }
-
-            #old-pricee {
-                color: gray;
-                display: inline;
-                margin: 0;
-                font-weight: 500;
-                padding: 0;
-            }
-
-        .hidden-category {
-            display: none;
-        }
-
-        #toggleCategories {
-            text-decoration: underline;
-            font-size: 0.8rem;
-        }
-    </style>
-@endsection
 @section('main')
     <!-- Breadcrumb Section Start -->
     <div class="section">
@@ -169,7 +65,7 @@
                         {{-- Product --}}
                         @if ($products->isEmpty())
                             <h1 class="text-center">Hiện không có sản phẩm!</h1>
-                            <span class="show-price maxPrice"data-maxPrice="{{$maxPrice}}">
+                            <span class="show-price maxPrice"data-maxPrice="{{ $maxPrice }}">
                             </span>
                         @else
                             @foreach ($products as $item)
@@ -182,68 +78,70 @@
                                                 <img class="second-image" src="{{ Storage::url($item->first_image) }}"
                                                     alt="Product" />
                                             </a>
+                                            <span class="badges">
+                                                <span class="sale">Mới</span>
+                                            </span>
                                             {{-- lam tu day them san pham vao db san pham yeu thich --}}
                                             <div class="actions">
-                                                <span title="Wishlist" data-id="{{$item->id}}" id="favorite-{{$item->id}}" class="action favorite wishlist">
-                                                    <i class="pe-7s-like"></i></span>
-                                                <a href="#" class="action quickview" data-bs-toggle="modal"
-                                                    data-bs-target="#exampleModalCenter"><i class="pe-7s-search"></i></a>
+                                                <span class="action addFavorite" data-slug="{{ $item->slug }}"
+                                                    data-id="{{ $item->id }}">
+                                                    <i class="pe-7s-like"></i>
+                                                </span>
+                                                <span class="action quickview showProduct" data-slug="{{ $item->slug }}"
+                                                    data-id="{{ $item->id }}" data-bs-toggle="modal"
+                                                    data-bs-target="#exampleModalCenter">
+                                                    <i class="pe-7s-search"></i>
+                                                </span>
                                                 <a href="#" class="action compare"><i class="pe-7s-shuffle"></i></a>
                                             </div>
                                         </div>
+
                                         <div class="content">
                                             <h5 class="title"><a
                                                     href="{{ route('shops.show', $item->slug) }}">{{ $item->name }}</a>
                                             </h5>
 
-                                            {{-- Color --}}
-                                            <div class="color-options">
-                                                <ul class="color-buttons">
-                                                    @foreach ($item->variants->unique('color_id') as $index => $variant)
-                                                        <li>
-                                                            <label class="color-btn colorGetSize"
-                                                                data-id="{{ $variant->color->id }}"
-                                                                data-productId="{{ $item->id }}"
-                                                                style="background-color: {{ $variant->color->hex_code }}"
-                                                                onclick="HT.selectColor(this, '{{ $variant->color->hex_code }}')">
-                                                            </label>
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
-
-                                            {{-- Size --}}
                                             <div class="product" data-product-id="{{ $item->id }}">
                                                 <div class="product-options">
-                                                    <div class="size-options">
-                                                        <ul id="sizes-prices-{{ $item->id }}" class="size-buttons">
-                                                        </ul>
-                                                    </div>
+                                                    <span class="price">
+                                                        <span class="new maxPrice" data-filpro="{{ $item->id ?? 0 }}"
+                                                            data-maxPrice="{{ $maxPrice }}">
+                                                            {{ $item->min_price_sale == $item->max_price_sale
+                                                                ? number_format($item->min_price_sale, 0, ',', '.') . ' đ'
+                                                                : number_format($item->min_price_sale, 0, ',', '.') . 'đ - ' . number_format($item->max_price_sale, 0, ',', '.') . ' đ' }}
+                                                            </span>
+                                                    </span>
 
-                                                    <div class="price price-options">
-                                                        <label style="margin-right:5px"></label>
+                                                    {{-- <div class="price price-options">
                                                         <span id="product-price-sale-{{ $item->id }}"
                                                             class="show-price maxPrice" data-filpro="{{$item->id ?? 0}}" data-maxPrice="{{$maxPrice}}">
                                                             {{ $item->min_price_sale == $item->max_price_sale
-                                                                ? number_format($item->min_price_sale) . 'đ'
-                                                                : number_format($item->min_price_sale).'đ' . ' - ' . number_format($item->max_price_sale) . 'đ' }}
+                                                                ? number_format($item->min_price_sale) . ' đ'
+                                                                : number_format($item->min_price_sale).' đ' . ' - ' . number_format($item->max_price_sale) . ' đ' }}
                                                         </span>
                                                         <span id="old-price" class="old-price-{{ $item->id }}"></span>
 
-                                                    </div>
+                                                    </div> --}}
 
                                                 </div>
                                             </div>
 
                                             <div class="shop-list-btn">
-                                                <a title="Wishlist" href="#"
-                                                    class="btn btn-sm btn-outline-dark btn-hover-primary wishlist"><i
-                                                        class="fa fa-heart"></i></a>
-                                                <button id="addcart-{{$item->id}}"
+                                                <span title="Wishlist"
+                                                    class="btn btn-sm btn-outline-dark btn-hover-primary wishlist addFavorite"
+                                                    data-slug="{{ $item->slug }}" data-id="{{ $item->id }}"><i
+                                                        class="fa fa-heart"></i></span>
+                                                {{-- <button id="addcart-{{$item->id}}"
                                                     data-id="{{$item->id}}"
                                                     class="btn btn-sm btn-outline-dark btn-hover-primary"
                                                     title="Thêm vào giỏ hàng">Thêm vào giỏ hàng
+                                                </button> --}}
+                                                <button class="btn btn-sm btn-outline-dark btn-hover-primary showProduct"
+                                                    data-slug="{{ $item->slug }}" data-bs-toggle="modal"
+                                                    data-bs-target="#exampleModalCenter">Thêm vào giỏ
+                                                    hàng
                                                 </button>
+
                                                 <a title="Compare" href="#"
                                                     class="btn btn-sm btn-outline-dark btn-hover-primary compare">
                                                     <i class="fa fa-random"></i></a>
@@ -271,6 +169,7 @@
                         <div class="shop-top-bar-right">
                             <nav>
                                 <ul class="pagination">
+                                    <!-- Previous Page Link -->
                                     @if ($products->onFirstPage())
                                         <li class="page-item disabled">
                                             <a class="page-link" href="#" aria-label="Previous">
@@ -279,22 +178,29 @@
                                         </li>
                                     @else
                                         <li class="page-item">
-                                            <a class="page-link" href="{{ $products->previousPageUrl() }}"
+                                            <a class="page-link"
+                                                href="{{ $products->previousPageUrl() . '&' . http_build_query(request()->except('page')) }}"
                                                 aria-label="Previous">
                                                 <span aria-hidden="true">&laquo;</span>
                                             </a>
                                         </li>
                                     @endif
 
+                                    <!-- Page Number Links -->
                                     @for ($i = 1; $i <= $products->lastPage(); $i++)
                                         <li class="page-item {{ $products->currentPage() == $i ? 'active' : '' }}">
-                                            <a class="page-link" href="{{ $products->url($i) }}">{{ $i }}</a>
+                                            <a class="page-link"
+                                                href="{{ $products->url($i) . '&' . http_build_query(request()->except('page')) }}">
+                                                {{ $i }}
+                                            </a>
                                         </li>
                                     @endfor
 
+                                    <!-- Next Page Link -->
                                     @if ($products->hasMorePages())
                                         <li class="page-item">
-                                            <a class="page-link" href="{{ $products->nextPageUrl() }}"
+                                            <a class="page-link"
+                                                href="{{ $products->nextPageUrl() . '&' . http_build_query(request()->except('page')) }}"
                                                 aria-label="Next">
                                                 <span aria-hidden="true">&raquo;</span>
                                             </a>
@@ -309,6 +215,7 @@
                                 </ul>
                             </nav>
                         </div>
+
                     </div>
                 </div>
 
@@ -329,20 +236,69 @@
                                 </form>
                             </div>
 
-                            <div class="widget-list mb-10">
+                            {{-- <div class="widget-list mb-10">
                                 <h3 class="widget-title mb-5">Lọc giá</h3>
                                 <form action="{{ route('shop.filter') }}" method="GET">
-                                    <div id="slider-range" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
-                                        <div class="ui-slider-range ui-corner-all ui-widget-header" style="left: 0%; width: 100%;"></div>
-                                        <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 0%;"></span>
-                                        <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 100%;"></span>
+                                    <div id="slider-range"
+                                        class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
+                                        <div class="ui-slider-range ui-corner-all ui-widget-header"
+                                            style="left: 0%; width: 100%;"></div>
+                                        <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"
+                                            style="left: 0%;"></span>
+                                        <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"
+                                            style="left: 100%;"></span>
                                     </div>
-                                    <input class="slider-range-amount" type="text" id="amount" readonly>
-                                    <input type="hidden" name="min_price" id="min-price">
-                                    <input type="hidden" name="max_price" id="max-price">
+                                    <input class="slider-range-amount" type="text" id="amount" readonly
+                                        value="₫{{ request('min_price', 0) }} - ₫{{ request('max_price', $maxPrice) }}">
+                                    <input type="hidden" name="min_price" id="min-price"
+                                        value="{{ request('min_price', 0) }}">
+                                    <input type="hidden" name="max_price" id="max-price"
+                                        value="{{ request('max_price', $maxPrice) }}">
+
                                     <button class="slider-range-submit" type="submit">Lọc</button>
                                 </form>
+                            </div> --}}
+
+                            <div class="widget-list mb-10">
+                                <h3 class="widget-title mb-5">Lọc giá</h3>
+                                {{-- <form action="{{ route('shop.filter') }}" method="GET">
+                                    <div id="slider-range"
+                                        class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
+                                        <div class="ui-slider-range ui-corner-all ui-widget-header"></div>
+                                        <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"
+                                            aria-label="Minimum price handle"></span>
+                                        <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"
+                                            aria-label="Maximum price handle"></span>
+                                    </div>
+                                    <input class="slider-range-amount max_fil" type="text" id="amount" readonly
+                                        value="₫{{ request('min_price', 0) }} - ₫{{ request('max_price', $maxPrice) }}" data-max_fil="{{$maxPrice}}">
+                                    <input type="hidden" name="min_price" id="min-price"
+                                        value="{{ request('min_price', 0) }}">
+                                    <input type="hidden" name="max_price" id="max-price"
+                                        value="{{ request('max_price', $maxPrice) }}">
+                                    <button class="slider-range-submit" type="submit">Lọc</button>
+                                </form> --}}
+                                <form action="{{ route('shop.filter') }}" method="GET">
+                                    <div id="slider-range"
+                                        class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
+                                        <div class="ui-slider-range ui-corner-all ui-widget-header"></div>
+                                        <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"
+                                            aria-label="Minimum price handle"></span>
+                                        <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"
+                                            aria-label="Maximum price handle"></span>
+                                    </div>
+                                    <input class="slider-range-amount" type="text" id="amount" readonly
+                                        value="₫{{ request('min_price', 0) }} - ₫{{ request('max_price', $maxPrice) }}">
+                                    <input type="hidden" name="min_price" id="min-price"
+                                        value="{{ request('min_price', 0) }}">
+                                    <input type="hidden" name="max_price" id="max-price"
+                                        value="{{ request('max_price', $maxPrice) }}">
+                                    <button class="slider-range-submit" type="submit">Lọc</button>
+                                </form>
+
+
                             </div>
+
 
 
                             <div class="widget-list mb-10">
@@ -375,8 +331,8 @@
                                                 <a href="{{ route('shops.show', $item->slug) }}" class="image">
                                                     <img class="first-image" src="{{ Storage::url($item->img_thumb) }}"
                                                         alt="Product">
-                                                    <img class="second-image" src="{{ Storage::url($item->first_image) }}"
-                                                        alt="Product">
+                                                    <img class="second-image"
+                                                        src="{{ Storage::url($item->first_image) }}" alt="Product">
                                                 </a>
                                             </div>
                                             <div class="content">
@@ -384,10 +340,16 @@
                                                     <a
                                                         href="{{ route('shops.show', $item->slug) }}">{{ $item->name }}</a>
                                                 </h5>
-                                                <span style="font-size: 0.9rem" id="product-price-sale-{{ $item->id }}" class="show-price">
+                                                {{-- <span style="font-size: 0.9rem" id="product-price-sale-{{ $item->id }}" class="show-price">
                                                     {{ $item->min_price_sale == $item->max_price_sale
-                                                        ? number_format($item->min_price_sale) . 'đ'
-                                                        : number_format($item->min_price_sale) .'đ' . ' - ' . number_format($item->max_price_sale) . 'đ' }}
+                                                        ? number_format($item->min_price_sale) . ' đ'
+                                                        : number_format($item->min_price_sale) .' đ' . ' - ' . number_format($item->max_price_sale) . ' đ' }}
+                                                </span> --}}
+                                                <span class="price">
+                                                    <span class="new">
+                                                        {{ $item->min_price_sale == $item->max_price_sale
+                                                            ? number_format($item->min_price_sale, 0, ',', '.') . ' đ'
+                                                            : number_format($item->min_price_sale, 0, ',', '.') . 'đ - ' . number_format($item->max_price_sale, 0, ',', '.') . ' đ' }}</span>
                                                 </span>
                                             </div>
                                         </div>
@@ -404,5 +366,7 @@
 @endsection
 
 @section('script')
-    <script src="{{ asset('plugins/js/getsize.js') }}"></script>
+    <script src="{{ asset('plugins/js/shop.js') }}"></script>
+    <script src="{{ asset('plugins/js/viewDetailProductModal.js') }}"></script>
+    <script src="{{ asset('plugins/js/addCartAddFavorite.js') }}"></script>
 @endsection

@@ -16,6 +16,7 @@ class FavoriteController extends Controller
         $user = auth()->user();
 
         if ($user) {
+
             $favoriteProductData = $this->getFavoriteProductItemsData($user->id);
             $favoriteProducts = $favoriteProductData['favoriteProducts'];
 
@@ -24,44 +25,45 @@ class FavoriteController extends Controller
             return response()->json([
                 'status' => false,
                 'script' => "
-                swal({
-                    title: 'Bạn muốn vào mục yêu thích?',
-                    text: 'Bạn cần phải đăng nhập để sử dụng chức năng này!',
-                    icon: 'warning',
-                    buttons: {
-                        cancel: 'Hủy',
-                        confirm: {
-                            text: 'Đăng nhập',
-                            value: true,
-                            visible: true,
-                            className: 'swal-link-button',
-                            closeModal: false
+                    isSwalOpen = true;
+                    Swal.fire({
+                        title: 'Bạn cần phải đăng nhập',
+                        text: 'Vui lòng đăng nhập để vào mục yêu thích',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Đăng nhập',
+                        cancelButtonText: 'Hủy',
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/login';  // Điều hướng đến trang đăng nhập
+                        } else if (result.dismiss === Swal.DismissReason.cancel) {
+                            // Nếu người dùng nhấn nút Hủy
+                            console.log('Hủy bỏ đăng nhập');
                         }
-                    },
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        window.location.href = '/login'; // Chuyển đến trang đăng nhập
-                    }
-                });
-            "
+                    }).finally(() => {
+                        isSwalOpen = false;
+                    });
+                "
             ]);
+
         }
     }
 
 
     public function addToFavorite(Request $request)
     {
+        //dd($request);
         $user = auth()->user();
 
-        $productVariantId = $request->input('product_variant_id');
+        $productId = $request->input('product_id');
 
         if ($user) {
             $favorite = Favorite::firstOrCreate(['user_id' => $user->id]);
 
             $favoriteItem = FavoriteItem::where('favorite_id', $favorite->id)
-                ->where('product_variant_id', $productVariantId)
+                ->where('product_id', $productId)
                 ->first();
 
             if ($favoriteItem) {
@@ -72,20 +74,18 @@ class FavoriteController extends Controller
             } else {
                 FavoriteItem::create([
                     'favorite_id' => $favorite->id,
-                    'product_variant_id' => $productVariantId,
+                    'product_id' => $productId,
                 ]);
             }
 
-            $favoriteProductsData = $this->getFavoriteProductItemsData($user->id);
-
             return response()->json([
-                'message' => 'Thêm sản phẩm vào yêu thích thành công!',
-                'favoriteItems' => $favoriteProductsData['favoriteProducts'],
+                'success' => true,
+                'message' => 'Đã thêm vào mục yêu thích',
             ]);
         } else {
             return response()->json([
                 'status' => false,
-                'message' => 'Bạn cần đăng nhập để dùng chức năng này!'
+                'message' => 'Bạn cần đăng nhập để dùng chức năng này'
             ]);
         }
     }
@@ -109,50 +109,54 @@ class FavoriteController extends Controller
                 $favoriteProductsData = $this->getFavoriteProductItemsData($user->id);
 
                 return response()->json([
-                    'message' => 'Item deleted successfully',
+                    'success' => false,
+                    'message' => 'Đã xóa sản phẩm khỏi yêu thích',
                     'favoriteItems' => $favoriteProductsData['favoriteProducts']
                 ]);
             }
 
-            return response()->json(['message' => 'Item not found'], 404);
+            return response()->json(['success' => false, 'message' => 'Không có sản phẩm này'], 404);
         }
     }
+
 
     public function getFavoriteProductItemsData($id)
     {
         if ($id) {
+
             $favoriteProductItems = FavoriteItem::whereHas('favorite', function ($query) use ($id) {
                 $query->where('user_id', $id);
             })
-                ->whereHas('productVariant.product', function ($query) {
+                ->whereHas('product', function ($query) {
                     $query->where('is_active', 1)
                         ->whereHas('category', function ($query) {
                             $query->where('is_active', 1);
                         });
                 })
-                ->with('productVariant.product', 'productVariant.size', 'productVariant.color')  // Thêm eager loading cho size và color
+                ->with('product.variants')
                 ->get();
-
-            $groupedItems = $favoriteProductItems->groupBy('product_variant_id');
 
             $favoriteProducts = [];
 
-            foreach ($groupedItems as $variantId => $items) {
-                $id = $items->first()->id;
-                $productVariant = $items->first()->productVariant;
-                $price = $productVariant->price_sale;
-                $product = $productVariant->product;
-                $sizeName = $productVariant->size->name ?? '';
-                $colorName = $productVariant->color->name ?? '';
+            foreach ($favoriteProductItems as $item) {
+                $id = $item->id;
+                $product = $item->product;
+
+                $minPrice = $product->variants->min('price_sale');
+                $maxPrice = $product->variants->max('price_sale');
+                $quantity = $product->variants->sum('quantity');
+
 
                 $favoriteProducts[] = (object) [
-                    'id' => $id,
-                    'productVariant' => $productVariant,
-                    'price_sale' => $price,
+                    'id' => $product->id,
+                    'idFavorite' => $id,
+                    'name' => $product->name,
                     'slug' => $product->slug,
                     'img_thumb' => $product->img_thumb,
-                    'size_name' => $sizeName,
-                    'color_name' => $colorName,
+                    'quantity' => $quantity,
+                    'is_active' => $product->is_active,
+                    'min_price' => $minPrice,
+                    'max_price' => $maxPrice,
                 ];
             }
 

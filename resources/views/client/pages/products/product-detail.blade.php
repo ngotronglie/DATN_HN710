@@ -1,89 +1,6 @@
 @extends('client.index')
 @section('style')
-
-<!-- Thêm SweetAlert2 CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.0/dist/sweetalert2.min.css">
-
 <style>
-    .size-buttons {
-        display: flex;
-
-        flex-wrap: wrap;
-        gap: 8px;
-        padding: 8px 0;
-    }
-
-    .size-buttons li {
-        list-style: none;
-        margin: 0;
-    }
-
-    .size-btn {
-        display: inline-block;
-        padding: 0 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-        flex: 1 1 auto;
-    }
-
-    .size-btn:hover {
-        background-color: #f0f0f0;
-    }
-
-    .size-btn.active {
-        background-color: #3498db;
-        color: white;
-        border-color: #2980b9;
-    }
-
-    .color-buttons {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        gap: 10px;
-    }
-
-    .color-buttons li {
-        display: inline-block;
-    }
-
-    .color-btn {
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        cursor: pointer;
-        border: 2px solid transparent;
-        transition: border-color 0.3s;
-    }
-
-    .color-btn.active {
-        border-color: #000;
-    }
-
-    .price {
-        color: #333;
-        font-weight: bold;
-    }
-
-    .show-price {
-        color: #dc3545;
-        font-size: 1.4rem;
-        font-weight: 700;
-    }
-
-    .price span {
-        padding: 0 2px;
-    }
-
-    .price {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-
     .desc-content img {
         max-width: 100%;
         height: auto;
@@ -206,7 +123,7 @@
 
                                 <div class="quantity mb-5">
                                     <div class="cart-plus-minus">
-                                        <input class="cart-plus-minus-box" value="1" type="text" min="1">
+                                        <input class="cart-plus-minus-box quatity_detail_shop" value="1" type="text" min="1">
                                         <div class="dec qtybutton"></div>
                                         <div class="inc qtybutton"></div>
                                     </div>
@@ -215,13 +132,13 @@
 
 
                                 <div class="cart-wishlist-btn mb-4">
-                                    <div class="add-to_cart">
+                                    <div class="addDeatil" style="margin-right: 0.8rem">
                                         <button class="btn btn-outline-dark btn-hover-primary">
                                             Thêm vào giỏ hàng
                                         </button>
                                     </div>
                                     <div class="add-to-wishlist">
-                                        <button class="btn btn-outline-dark btn-hover-primary favorite">
+                                        <button class="btn btn-outline-dark btn-hover-primary favorite addFavorite" data-slug="{{$product->slug}}" data-id="{{$product->id}}">
                                             Thêm vào sản phẩm yêu thích
                                         </button>
                                     </div>
@@ -484,19 +401,35 @@
                                                     <span class="sale">New</span>
                                             </span>
                                             <div class="actions">
-                                                <a href="#" class="action wishlist"><i class="pe-7s-like"></i></a>
-                                                <a href="#" class="action quickview" data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><i class="pe-7s-search"></i></a>
-                                                <a href="#" class="action compare"><i class="pe-7s-shuffle"></i></a>
+                                                <span class="action addFavorite"
+                                                data-slug="{{ $item->slug }}"
+                                                data-id="{{ $item->id }}">
+                                                <i class="pe-7s-like"></i>
+                                            </span>
+                                            <span class="action quickview showProduct"
+                                            data-slug="{{ $item->slug }}"
+                                            data-id="{{ $item->id }}" data-bs-toggle="modal"
+                                            data-bs-target="#exampleModalCenter">
+                                            <i class="pe-7s-search"></i>
+                                        </span>
+                                                        <a href="#" class="action compare"><i class="pe-7s-shuffle"></i></a>
                                             </div>
                                         </div>
                                         <div class="content">
                                             <h5 class="title"><a href="{{ route('shops.show', $item->slug) }}">{{ $item->name }}</a></h5>
                                             <span class="price">
-                                                    <span class="new">{{ number_format($item->min_price_sale, 0, ',', '.') }}đ - {{ number_format($item->max_price_sale, 0, ',', '.') }}đ</span>
+                                                    <span class="new">{{ $item->min_price_sale == $item->max_price_sale
+                                                        ? number_format($item->min_price_sale, 0, ',', '.') . ' đ'
+                                                        : number_format($item->min_price_sale, 0, ',', '.') . 'đ - ' . number_format($item->max_price_sale, 0, ',', '.') . ' đ' }}</span>
                                             {{-- <span class="old"></span> --}}
                                             </span>
-                                            <button class="btn btn-sm btn-outline-dark btn-hover-primary">Add To Cart</button>
-                                        </div>
+                                            <button
+                                            class="btn btn-sm btn-outline-dark btn-hover-primary showProduct"
+                                            data-slug="{{ $item->slug }}"
+                                            data-id="{{ $item->id }}" data-bs-toggle="modal"
+                                            data-bs-target="#exampleModalCenter">Thêm vào giỏ hàng
+                                        </button>
+                                                </div>
                                     </div>
                                     <!-- Single Product End -->
 
@@ -529,9 +462,6 @@
 
 @section('script')
 <script src="{{ asset('plugins/js/getsizedetail.js') }}"></script>
-
-<!-- Thêm SweetAlert2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.0/dist/sweetalert2.all.min.js"></script>
 
 <script>
 const userLoggedIn = {{ Auth::check() ? 'true' : 'false' }}; // Laravel kiểm tra người dùng

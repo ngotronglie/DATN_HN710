@@ -10,23 +10,23 @@ class FavoriteItem extends Model
     use HasFactory;
 
     protected $fillable = [
-        'favorite_id',  // Khóa ngoại đến bảng `favorites`
-        'product_variant_id',  // Khóa ngoại đến bảng `product_variants`
+        'favorite_id',
+        'product_id',
     ];
 
     /**
-     * Mối quan hệ: Một sản phẩm yêu thích thuộc về một mục yêu thích.
+     * Mối quan hệ với model Favorite.
      */
     public function favorite()
     {
-        return $this->belongsTo(Favorite::class);  // Mối quan hệ belongsTo với bảng `favorites`
+        return $this->belongsTo(Favorite::class);
     }
 
     /**
-     * Mối quan hệ: Một sản phẩm yêu thích thuộc về một biến thể sản phẩm.
+     * Mối quan hệ với model Product.
      */
-    public function productVariant()
+    public function product()
     {
-        return $this->belongsTo(ProductVariant::class);  // Mối quan hệ belongsTo với bảng `product_variants`
+        return $this->belongsTo(Product::class);
     }
 }

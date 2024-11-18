@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Product;
-use App\Models\ProductVariant;
 use Illuminate\Http\Request;
+
 
 class ShopController extends Controller
 {
@@ -32,7 +32,10 @@ class ShopController extends Controller
                         $query->whereNull('deleted_at');
                     });
                 }
-            ])->paginate(6);
+
+            ])
+            ->orderBy('id', 'desc')
+            ->paginate(6);
 
         $producthot = $this->productHot();
 
@@ -50,6 +53,7 @@ class ShopController extends Controller
             $query->where('is_active', 1)
                 ->whereNull('deleted_at');
         };
+
         $calculatePriceRange = $this->getPriceProduct();
 
         $products = Product::where('is_active', 1)
@@ -64,13 +68,14 @@ class ShopController extends Controller
                 }
             ])
             ->orderBy('id', 'desc')
-            ->paginate(6);
-        $products->getCollection()->transform($calculatePriceRange);
-        $maxPrice = $products->getCollection()->pluck('max_price_sale')->max();
+            ->get();
+
+        $products->transform($calculatePriceRange);
+
+        $maxPrice = $products->pluck('max_price_sale')->max();
 
         return $maxPrice;
     }
-
 
     public function showByCategory($id)
     {
@@ -145,7 +150,7 @@ class ShopController extends Controller
         $product->max_price_sale = $price_sales->max();
         $product->min_price_sale = $price_sales->min();
 
-        // Lấy sản phẩm liên quan
+
         $relatedProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->where('is_active', 1)
@@ -194,7 +199,6 @@ class ShopController extends Controller
         $calculatePriceRange = $this->getPriceProduct();
         $producthot = $this->productHot();
 
-        // Lấy sản phẩm tìm kiếm
         $products = Product::where('is_active', 1)
             ->whereHas('category', $condition)
             ->where(function ($query) use ($input) {
@@ -215,12 +219,10 @@ class ShopController extends Controller
         $products->getCollection()->transform($calculatePriceRange);
         $producthot->transform($calculatePriceRange);
 
-
         $maxPrice = $this->getMaxPrice();
 
         return view('client.pages.products.shop', compact('products', 'categories', 'producthot', 'input', 'maxPrice'));
     }
-
 
 
     public function filter(Request $request)
@@ -231,8 +233,11 @@ class ShopController extends Controller
         };
 
         $categories = $this->getCategori();
-
         $calculatePriceRange = $this->getPriceProduct();
+        $maxPrice = $this->getMaxPrice();
+
+        $min_price = $request->get('min_price', 0);
+        $max_price = $request->get('max_price', $maxPrice);
 
         $productsQuery = Product::where('is_active', 1)
             ->whereHas('category', $condition)
@@ -246,21 +251,28 @@ class ShopController extends Controller
                 }
             ]);
 
-        $min_price = $request->min_price;
-        $max_price = $request->max_price;
-
         if ($request->filled('min_price') && $request->filled('max_price')) {
             $productsQuery->whereHas('variants', function ($query) use ($min_price, $max_price) {
                 $query->whereBetween('price_sale', [$min_price, $max_price]);
             });
         }
 
-        $products = $productsQuery->paginate(6);
+        // Phân trang và bảo toàn giá trị lọc
+        $products = $productsQuery->paginate(6)->appends($request->all());
+
         $products->getCollection()->transform($calculatePriceRange);
+
         $producthot = $this->productHot();
         $producthot->transform($calculatePriceRange);
-        $maxPrice = $this->getMaxPrice();
-        return view('client.pages.products.shop', compact('products', 'categories', 'producthot', 'min_price', 'max_price', 'maxPrice'));
+
+        return view('client.pages.products.shop', compact(
+            'products',
+            'categories',
+            'producthot',
+            'min_price',
+            'max_price',
+            'maxPrice'
+        ));
     }
 
 
@@ -314,74 +326,82 @@ class ShopController extends Controller
 
 
 
-    public function getSizePrice(Request $request)
-    {
-        $productId = $request->input('idProduct');
-        $colorId = $request->input('idColor');
+    // public function getSizePrice(Request $request)
+    // {
+    //     $productId = $request->input('idProduct');
+    //     $colorId = $request->input('idColor');
 
-        $variants = ProductVariant::where('product_id', $productId)
-            ->where('color_id', $colorId)
-            ->with('size')
-            ->get();
+    //     $variants = ProductVariant::where('product_id', $productId)
+    //         ->where('color_id', $colorId)
+    //         ->with('size')
+    //         ->get();
 
-        $minPrice = $variants->min('price_sale');
-        $maxPrice = $variants->max('price_sale');
+    //     $minPrice = $variants->min('price_sale');
+    //     $maxPrice = $variants->max('price_sale');
 
-        $response = [];
-        $sizesSeen = [];
+    //     $response = [];
+    //     $sizesSeen = [];
 
-        foreach ($variants as $variant) {
+    //     foreach ($variants as $variant) {
 
-            if (!in_array($variant->size->name, $sizesSeen)) {
-                $response[] = [
-                    'id' => $variant->id,
-                    'size' => $variant->size->name,
-                    'price' => $variant->price,
-                    'price_sale' => $variant->price_sale,
-                    'product_id' => $variant->product_id,
-                    'quantity' => $variant->quantity
-                ];
+    //         if (!in_array($variant->size->name, $sizesSeen)) {
+    //             $response[] = [
+    //                 'id' => $variant->id,
+    //                 'size' => $variant->size->name,
+    //                 'price' => $variant->price,
+    //                 'price_sale' => $variant->price_sale,
+    //                 'product_id' => $variant->product_id,
+    //                 'quantity' => $variant->quantity
+    //             ];
 
-                $sizesSeen[] = $variant->size->name;
-            }
-        }
+    //             $sizesSeen[] = $variant->size->name;
+    //         }
+    //     }
 
-        return response()->json([
-            'variants' => $response,
-            'min_price' => $minPrice,
-            'max_price' => $maxPrice
-        ]);
-    }
+    //     return response()->json([
+    //         'variants' => $response,
+    //         'min_price' => $minPrice,
+    //         'max_price' => $maxPrice
+    //     ]);
+    // }
 
 
-    public function getSizePriceDetail(Request $request)
-    {
-        $productId = $request->input('idProduct');
-        $colorId = $request->input('idColor');
+    // public function getSizePriceDetail(Request $request)
+    // {
+    //     Route::get('/check-db', function () {
+    //         try {
+    //             DB::connection()->getPdo();
+    //             return 'Kết nối thành công!';
+    //         } catch (\Exception $e) {
+    //             return 'Không thể kết nối: ' . $e->getMessage();
+    //         }
+    //     });
+    //     $productId = $request->input('idProduct');
+    //     $colorId = $request->input('idColor');
 
-        $variants = ProductVariant::where('product_id', $productId)
-            ->where('color_id', $colorId)
-            ->with('size')
-            ->get();
+    //     $variants = ProductVariant::where('product_id', $productId)
+    //         ->where('color_id', $colorId)
+    //         ->with('size')
+    //         ->get();
 
-        $minPrice = $variants->min('price_sale');
-        $maxPrice = $variants->max('price_sale');
+    //     $minPrice = $variants->min('price_sale');
+    //     $maxPrice = $variants->max('price_sale');
 
-        $response = [];
-        foreach ($variants as $variant) {
-            $response[] = [
-                'id' => $variant->id,
-                'size' => $variant->size->name,
-                'price' => $variant->price,
-                'price_sale' => $variant->price_sale,
-                'quantity' => $variant->quantity
-            ];
-        }
+    //     $response = [];
+    //     foreach ($variants as $variant) {
+    //         $response[] = [
+    //             'id' => $variant->id,
+    //             'size' => $variant->size->name,
+    //             'price' => $variant->price,
+    //             'price_sale' => $variant->price_sale,
+    //             'quantity' => $variant->quantity
+    //         ];
+    //     }
 
-        return response()->json([
-            'variants' => $response,
-            'min_price' => $minPrice,
-            'max_price' => $maxPrice
-        ]);
-    }
+    //     return response()->json([
+    //         'variants' => $response,
+    //         'min_price' => $minPrice,
+    //         'max_price' => $maxPrice
+    //     ]);
+    // }
 }

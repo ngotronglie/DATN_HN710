@@ -25,56 +25,66 @@
                         <div class="product-carousel">
                             <div class="swiper-container">
                                 <div class="swiper-wrapper mb-n10">
-
-                                    @php
-                                        $delay = 300;
-                                    @endphp
-
                                     @foreach ($newProducts->chunk(2) as $chunk)
                                         <!-- Product Start -->
                                         <div class="swiper-slide product-wrapper">
                                             @foreach ($chunk as $item)
-                                            <!-- Single Product Start -->
-                                            <div class="product product-border-left mb-10" data-aos="fade-up"
-                                                data-aos-delay="{{ $delay }}">
-                                                <div class="thumb">
-                                                    <a href="{{ route('shops.show', $item->slug) }}" class="image">
-                                                        <img class="first-image"
-                                                            src="{{ Storage::url($item->img_thumb) }}"
-                                                            alt="Product" />
-                                                        <img class="second-image"
-                                                            src="{{ Storage::url($item->first_image) }}"
-                                                            alt="Product" />
-                                                    </a>
-                                                    <span class="badges">
-                                                        <span class="sale">New</span>
-                                                    </span>
-                                                    <div class="actions">
-                                                        <a href="#" class="action wishlist"><i
-                                                                class="pe-7s-like"></i></a>
-                                                        <a href="#" class="action quickview" data-bs-toggle="modal"
-                                                            data-bs-target="#exampleModalCenter"><i
-                                                                class="pe-7s-search"></i></a>
-                                                        <a href="#" class="action compare"><i
-                                                                class="pe-7s-shuffle"></i></a>
+                                                <!-- Single Product Start -->
+                                                <div class="product product-border-left mb-10" data-aos="fade-up"
+                                                    data-aos-delay="300">
+                                                    <div class="thumb">
+                                                        <a href="{{ route('shops.show', $item->slug) }}" class="image">
+                                                            <img class="first-image"
+                                                                src="{{ Storage::url($item->img_thumb) }}"
+                                                                alt="Product" />
+                                                            <img class="second-image"
+                                                                src="{{ Storage::url($item->first_image) }}"
+                                                                alt="Product" />
+                                                        </a>
+                                                        <span class="badges">
+                                                            <span class="sale">Mới</span>
+                                                        </span>
+                                                        <div class="actions">
+                                                            <span class="action addFavorite"
+                                                                data-slug="{{ $item->slug }}"
+                                                                data-id="{{ $item->id }}">
+                                                                <i class="pe-7s-like"></i>
+                                                            </span>
+                                                            {{-- <span title="Wishlist addFavorite" data-id="{{ $item->id }}"
+                                                                id="favorite-{{ $item->id }}"
+                                                                class="action favorite wishlist">
+                                                                <i class="pe-7s-like"></i></span> --}}
+                                                            <span class="action quickview showProduct"
+                                                                data-slug="{{ $item->slug }}"
+                                                                data-id="{{ $item->id }}" data-bs-toggle="modal"
+                                                                data-bs-target="#exampleModalCenter">
+                                                                <i class="pe-7s-search"></i>
+                                                            </span>
+                                                            <a href="#" class="action compare"><i
+                                                                    class="pe-7s-shuffle"></i></a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="content">
+                                                        <h5 class="title"><a
+                                                                href="{{ route('shops.show', $item->slug) }}">{{ $item->name }}</a>
+                                                        </h5>
+                                                        <span class="price">
+                                                            <span
+                                                                class="new">{{ $item->min_price_sale == $item->max_price_sale
+                                                                    ? number_format($item->min_price_sale, 0, ',', '.') . ' đ'
+                                                                    : number_format($item->min_price_sale, 0, ',', '.') . 'đ - ' . number_format($item->max_price_sale, 0, ',', '.') . ' đ' }}
+                                                                </span>
+                                                            {{-- <span class="old"></span> --}}
+                                                        </span>
+                                                        <button
+                                                            class="btn btn-sm btn-outline-dark btn-hover-primary showProduct"
+                                                            data-slug="{{ $item->slug }}"
+                                                            data-id="{{ $item->id }}" data-bs-toggle="modal"
+                                                            data-bs-target="#exampleModalCenter">Thêm vào giỏ hàng
+                                                        </button>
                                                     </div>
                                                 </div>
-                                                <div class="content">
-                                                    <h5 class="title"><a href="{{ route('shops.show', $item->slug) }}">{{ $item->name }}</a></h5>
-                                                    <span class="price">
-                                                        <span class="new">{{ number_format($item->min_price_sale, 0, ',', '.') }}đ - {{ number_format($item->max_price_sale, 0, ',', '.') }}đ</span>
-                                                        {{-- <span class="old"></span> --}}
-                                                    </span>
-                                                    <button class="btn btn-sm btn-outline-dark btn-hover-primary">Add To
-                                                        Cart</button>
-                                                </div>
-                                            </div>
-                                            <!-- Single Product End -->
-
-                                            @php
-                                                $delay += 100;
-                                            @endphp
-
+                                                <!-- Single Product End -->
                                             @endforeach
 
                                         </div>
@@ -109,41 +119,58 @@
                                         <!-- Product Start -->
                                         <div class="swiper-slide product-wrapper">
                                             @foreach ($chunk as $item)
-                                            <!-- Single Product Start -->
-                                            <div class="product product-border-left mb-10">
-                                                <div class="thumb">
-                                                    <a href="{{ route('shops.show', $item->slug) }}" class="image">
-                                                        <img class="first-image"
-                                                            src="{{ Storage::url($item->img_thumb) }}"
-                                                            alt="Product" />
-                                                        <img class="second-image"
-                                                            src="{{ Storage::url($item->first_image) }}"
-                                                            alt="Product" />
-                                                    </a>
-                                                    <span class="badges">
-                                                        <span class="sale">Sold</span>
-                                                    </span>
-                                                    <div class="actions">
-                                                        <a href="#" class="action wishlist"><i
-                                                                class="pe-7s-like"></i></a>
-                                                        <a href="#" class="action quickview" data-bs-toggle="modal"
-                                                            data-bs-target="#exampleModalCenter"><i
-                                                                class="pe-7s-search"></i></a>
-                                                        <a href="#" class="action compare"><i
-                                                                class="pe-7s-shuffle"></i></a>
+                                                <!-- Single Product Start -->
+                                                <div class="product product-border-left mb-10">
+                                                    <div class="thumb">
+                                                        <a href="{{ route('shops.show', $item->slug) }}"
+                                                            class="image">
+                                                            <img class="first-image"
+                                                                src="{{ Storage::url($item->img_thumb) }}"
+                                                                alt="Product" />
+                                                            <img class="second-image"
+                                                                src="{{ Storage::url($item->first_image) }}"
+                                                                alt="Product" />
+                                                        </a>
+                                                        <span class="badges">
+                                                            <span class="sale">Hot</span>
+                                                        </span>
+                                                        <div class="actions">
+                                                            <span class="action addFavorite"
+                                                                data-slug="{{ $item->slug }}"
+                                                                data-id="{{ $item->id }}">
+                                                                <i class="pe-7s-like"></i>
+                                                            </span>
+                                                            <span class="action quickview showProduct"
+                                                                data-slug="{{ $item->slug }}"
+                                                                data-id="{{ $item->id }}" data-bs-toggle="modal"
+                                                                data-bs-target="#exampleModalCenter">
+                                                                <i class="pe-7s-search"></i>
+                                                            </span>
+                                                            <a href="#" class="action compare"><i
+                                                                    class="pe-7s-shuffle"></i></a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="content">
+                                                        <h5 class="title"><a
+                                                                href="{{ route('shops.show', $item->slug) }}">{{ $item->name }}</a>
+                                                        </h5>
+                                                        <span class="price">
+                                                            <span
+                                                                class="new">{{ $item->min_price_sale == $item->max_price_sale
+                                                                    ? number_format($item->min_price_sale, 0, ',', '.') . ' đ'
+                                                                    : number_format($item->min_price_sale, 0, ',', '.') . 'đ - ' . number_format($item->max_price_sale, 0, ',', '.') . ' đ' }}</span>
+                                                            {{-- <span class="old"></span> --}}
+                                                        </span>
+                                                        <button
+                                                            class="btn btn-sm btn-outline-dark btn-hover-primary showProduct"
+                                                            data-slug="{{ $item->slug }}"
+                                                            data-id="{{ $item->id }}" data-bs-toggle="modal"
+                                                            data-bs-target="#exampleModalCenter">Thêm vào giỏ hàng
+                                                        </button>
+
                                                     </div>
                                                 </div>
-                                                <div class="content">
-                                                    <h5 class="title"><a href="{{ route('shops.show', $item->slug) }}">{{ $item->name }}</a></h5>
-                                                    <span class="price">
-                                                        <span class="new">{{ number_format($item->min_price_sale, 0, ',', '.') }}đ - {{ number_format($item->max_price_sale, 0, ',', '.') }}đ</span>
-                                                        {{-- <span class="old"></span> --}}
-                                                    </span>
-                                                    <button class="btn btn-sm btn-outline-dark btn-hover-primary">Add To
-                                                        Cart</button>
-                                                </div>
-                                            </div>
-                                            <!-- Single Product End -->
+                                                <!-- Single Product End -->
                                             @endforeach
 
                                         </div>
@@ -178,41 +205,58 @@
                                         <!-- Product Start -->
                                         <div class="swiper-slide product-wrapper">
                                             @foreach ($chunk as $item)
-                                            <!-- Single Product Start -->
-                                            <div class="product product-border-left mb-10">
-                                                <div class="thumb">
-                                                    <a href="{{ route('shops.show', $item->slug) }}" class="image">
-                                                        <img class="first-image"
-                                                            src="{{ Storage::url($item->img_thumb) }}"
-                                                            alt="Product" />
-                                                        <img class="second-image"
-                                                            src="{{ Storage::url($item->first_image) }}"
-                                                            alt="Product" />
-                                                    </a>
-                                                    <span class="badges">
-                                                        <span class="sale">New</span>
-                                                    </span>
-                                                    <div class="actions">
-                                                        <a href="#" class="action wishlist"><i
-                                                                class="pe-7s-like"></i></a>
-                                                        <a href="#" class="action quickview" data-bs-toggle="modal"
-                                                            data-bs-target="#exampleModalCenter"><i
-                                                                class="pe-7s-search"></i></a>
-                                                        <a href="#" class="action compare"><i
-                                                                class="pe-7s-shuffle"></i></a>
+                                                <!-- Single Product Start -->
+                                                <div class="product product-border-left mb-10">
+                                                    <div class="thumb">
+                                                        <a href="{{ route('shops.show', $item->slug) }}"
+                                                            class="image">
+                                                            <img class="first-image"
+                                                                src="{{ Storage::url($item->img_thumb) }}"
+                                                                alt="Product" />
+                                                            <img class="second-image"
+                                                                src="{{ Storage::url($item->first_image) }}"
+                                                                alt="Product" />
+                                                        </a>
+                                                        <span class="badges">
+                                                            <span class="sale">Bán chạy</span>
+                                                        </span>
+                                                        <div class="actions">
+                                                            <span class="action addFavorite"
+                                                                data-slug="{{ $item->slug }}"
+                                                                data-id="{{ $item->id }}">
+                                                                <i class="pe-7s-like"></i>
+                                                            </span>
+                                                            <span class="action quickview showProduct"
+                                                                data-slug="{{ $item->slug }}"
+                                                                data-id="{{ $item->id }}" data-bs-toggle="modal"
+                                                                data-bs-target="#exampleModalCenter">
+                                                                <i class="pe-7s-search"></i>
+                                                            </span>
+                                                            <a href="#" class="action compare"><i
+                                                                    class="pe-7s-shuffle"></i></a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="content">
+                                                        <h5 class="title"><a
+                                                                href="{{ route('shops.show', $item->slug) }}">{{ $item->name }}</a>
+                                                        </h5>
+                                                        <span class="price">
+                                                            <span
+                                                                class="new">{{ $item->min_price_sale == $item->max_price_sale
+                                                                    ? number_format($item->min_price_sale, 0, ',', '.') . ' đ'
+                                                                    : number_format($item->min_price_sale, 0, ',', '.') . 'đ - ' . number_format($item->max_price_sale, 0, ',', '.') . ' đ' }}</span>
+                                                            <span class="old"></span>
+                                                        </span>
+                                                        <button
+                                                            class="btn btn-sm btn-outline-dark addCartPro btn-hover-primary"
+                                                            data-slug="{{ $item->slug }}"
+                                                            data-id="{{ $item->id }}" data-bs-toggle="modal"
+                                                            data-bs-target="#exampleModalCenter">Thêm vào giỏ
+                                                            hàng</button>
+
                                                     </div>
                                                 </div>
-                                                <div class="content">
-                                                    <h5 class="title"><a href="{{ route('shops.show', $item->slug) }}">{{ $item->name }}</a></h5>
-                                                    <span class="price">
-                                                        <span class="new">{{ number_format($item->min_price_sale, 0, ',', '.') }}đ - {{ number_format($item->max_price_sale, 0, ',', '.') }}đ</span>
-                                                        <span class="old"></span>
-                                                    </span>
-                                                    <button class="btn btn-sm btn-outline-dark btn-hover-primary">Add To
-                                                        Cart</button>
-                                                </div>
-                                            </div>
-                                            <!-- Single Product End -->
+                                                <!-- Single Product End -->
                                             @endforeach
 
                                         </div>
@@ -244,3 +288,8 @@
         <!-- Products Tab End -->
     </div>
 </div>
+
+@section('script')
+    <script src="{{ asset('plugins/js/viewDetailProductModal.js') }}"></script>
+    <script src="{{ asset('plugins/js/addCartAddFavorite.js') }}"></script>
+@endsection

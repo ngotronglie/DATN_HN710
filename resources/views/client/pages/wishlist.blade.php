@@ -1,6 +1,14 @@
 @extends('client.index')
 
+@section('style')
+<style>
+    .disabled-btn {
+    pointer-events: none; /* Ngừng việc bấm vào nút */
+    opacity: 0.5; /* Thêm độ mờ để biểu thị nút không thể thao tác */
+}
 
+</style>
+@endsection
 @section('main')
     <div class="section">
 
@@ -47,26 +55,26 @@
                                         <tr class="remove-favorite">
                                             <td class="pro-thumbnail"><a href="#"><img class="img-fluid"
                                                         style="width: 45%"
-                                                        src="{{ Storage::url($item->productVariant->product->img_thumb) }}"
+                                                        src="{{ Storage::url($item->img_thumb) }}"
                                                         alt="Product" /></a></td>
                                             <td class="pro-title"><a
-                                                    href="{{ route('shops.show', $item->productVariant->product->slug) }}">{{ $item->productVariant->product->name }}
-                                                    <br> {{ $item->productVariant->size->name }} /
-                                                    {{ $item->productVariant->color->name }}</a></td>
-                                            <td class="pro-price">
-                                                <span>{{ number_format($item->productVariant->price_sale) }}</span>
-                                            </td>
+                                                    href="{{ route('shops.show', $item->slug) }}">{{ $item->name }}</a></td>
+                                            <td class="pro-price" style="color: red;font-weight: 500">
+                                                {{ $item->min_price == $item->max_price
+                                                    ? number_format($item->min_price, 0, ',', '.') . ' đ'
+                                                    : number_format($item->min_price, 0, ',', '.') . 'đ' . ' - ' . number_format($item->max_price, 0, ',', '.') . 'đ' }}                                            </td>
                                             <td class="pro-stock">
-                                                <span>{{ $item->productVariant->quantity > 0 ? 'Còn hàng' : 'Hết hàng' }}</span>
+                                                <span>{{ $item->quantity > 0 ? 'Còn hàng' : 'Hết hàng' }}</span>
                                             </td>
-                                            <td class="pro-cart"><span id="addcart-{{$item->id}}"
-                                                    class="btn btn-dark btn-hover-primary rounded-0"
-                                                    data-idpro="{{$item->productVariant->id}}"
+                                            <td class="pro-cart">
+                                                <span class="btn btn-dark btn-hover-primary showProduct rounded-0 @if($item->quantity == 0) disabled-btn @endif"
                                                     data-id="{{$item->id}}"
-                                                    data-quantity="{{$item->productVariant->quantity}}"
+                                                    data-slug="{{$item->slug}}"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#exampleModalCenter"
                                                     >Thêm vào giỏ hàng</span>
                                             </td>
-                                            <td class="pro-remove"><span data-id="{{ $item->id }}"
+                                            <td class="pro-remove"><span data-id="{{ $item->idFavorite }}"
                                                     class="deleteFavorite"><i class="pe-7s-trash"
                                                         style="font-size: 1.5rem;"></i></span></td>
                                         </tr>
@@ -74,7 +82,7 @@
                                 @else
                                     <tr>
                                         <td id="favoriteNull" colspan="6">
-                                            <p>Mục yêu thích của bạn hiện đang trống.</p>
+                                            <p>Mục yêu thích của bạn hiện  đang trống.</p>
                                         </td>
                                     </tr>
                                 @endif
@@ -90,5 +98,7 @@
     </div>
 @endsection
 @section('script')
-    <script src="{{ asset('plugins/js/favorite.js') }}"></script>
+    <script src="{{ asset('plugins/js/deleteFavorite.js') }}"></script>
+    <script src="{{ asset('plugins/js/viewDetailProductModal.js') }}"></script>
+    <script src="{{ asset('plugins/js/addCartAddFavorite.js') }}"></script>
 @endsection

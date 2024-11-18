@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AddToCartRequest;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\ProductVariant;
@@ -28,7 +29,7 @@ class CartController extends Controller
         return view('client.pages.cart', compact('processedItems', 'total'));
     }
 
-    public function addToCart(Request $request)
+    public function addToCart(AddToCartRequest $request)
     {
         $user = auth()->user();
 
@@ -49,7 +50,7 @@ class CartController extends Controller
             if ($currentQuantity + $quantity > $quantityProduct) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Số lượng sản phẩm trong giỏ hàng vượt quá giới hạn cho phép!']);
+                    'message' => 'Số lượng sản phẩm trong giỏ hàng vượt quá giới hạn cho phép']);
             }
 
             if ($cartItem) {
@@ -66,24 +67,22 @@ class CartController extends Controller
             $processedItemsData = $this->getCartItemsData($user->id);
 
             return response()->json([
-                'message' => 'Thêm sản phẩm vào giỏ hàng thành công!',
+                'success' => true,
+                'message' => 'Đã thêm sản phẩm vào giỏ hàng',
                 'cartItems' => $processedItemsData['processedItems'],
                 'uniqueVariantCount' => $processedItemsData['uniqueVariantCount'],
             ]);
         } else {
 
             $cart = session()->get('cart', ['items' => []]);
-
-
             $cartItem = collect($cart['items'])->firstWhere('product_variant_id', $productVariantId);
             $currentQuantity = $cartItem ? $cartItem['quantity'] : 0;
-
-
             $coutQuantity = $currentQuantity + $quantity;
 
             if ($coutQuantity > $quantityProduct) {
-                session()->put('cart', $cart);
-                return response()->json(['message' => 'Số lượng sản phẩm trong giỏ hàng vượt quá giới hạn cho phép!'], 400);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Số lượng sản phẩm trong giỏ hàng vượt quá giới hạn cho phép']);
             }
 
             if ($cartItem) {
@@ -104,7 +103,8 @@ class CartController extends Controller
             $processedItemsData = $this->getCartItemsData(null);
 
             return response()->json([
-                'message' => 'Thêm sản phẩm vào giỏ hàng thành công!',
+                'success' => true,
+                'message' => 'Đã thêm sản phẩm vào giỏ hàng',
                 'cartItems' => $processedItemsData['processedItems'],
                 'uniqueVariantCount' => $processedItemsData['uniqueVariantCount'],
             ]);
@@ -115,7 +115,6 @@ class CartController extends Controller
 
     public function updateQuantity(Request $request)
     {
-
         $id = $request->input('id');
         $quantity = $request->input('quantity');
 
@@ -139,7 +138,7 @@ class CartController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'Cập nhật số lượng thành công!',
+                    'message' => 'Cập nhật số lượng',
                     'new_quantity' => $cartItem->quantity,
                     'price_sale' => $cartItem->productVariant->price_sale,
                     'total_price' => $totalPrice,
@@ -165,7 +164,7 @@ class CartController extends Controller
             if (!$itemFound) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Sản phẩm không tồn tại trong giỏ hàng!',
+                    'message' => 'Sản phẩm không tồn tại trong giỏ hàng',
                 ]);
             }
 
@@ -181,7 +180,7 @@ class CartController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Cập nhật số lượng trong giỏ hàng thành công!',
+                'message' => 'Cập nhật số lượng trong giỏ hàng',
                 'new_quantity' => $quantity,
                 'total_price' => $totalPrice,
                 'total_cart_price' => $totalCartPrice,
@@ -193,7 +192,6 @@ class CartController extends Controller
     public function deleteToCart(Request $request)
     {
         $id = $request->input('id');
-
         $user = auth()->user();
 
         if ($user) {
@@ -207,14 +205,15 @@ class CartController extends Controller
                 $processedItemsData = $this->getCartItemsData($user->id);
 
                 return response()->json([
-                    'message' => 'Item deleted successfully',
+                    'success' => true,
+                    'message' => 'Đã xóa sản phẩm khỏi giỏ hàng',
                     'cartItems' => $processedItemsData['processedItems'],
                     'uniqueVariantCount' => $processedItemsData['uniqueVariantCount'],
                     'totalCartAmount' => $processedItemsData['totalCartAmount'],
                 ]);
             }
 
-            return response()->json(['message' => 'Item not found'], 404);
+            return response()->json(['message' => 'Không có sản phẩm này'], 404);
         } else {
             $sessionCart = session()->get('cart', ['items' => []]);
 
@@ -234,13 +233,13 @@ class CartController extends Controller
                 $processedItemsData = $this->getCartItemsData(null);
 
                 return response()->json([
-                    'message' => 'Item deleted from session cart successfully',
+                    'message' => 'Đã xóa sản phẩm khỏi giỏ hàng',
                     'cartItems' => $processedItemsData['processedItems'],
                     'uniqueVariantCount' => $processedItemsData['uniqueVariantCount'],
                     'totalCartAmount' => $processedItemsData['totalCartAmount'],
                 ]);
             } else {
-                return response()->json(['message' => 'Item not found in session cart'], 404);
+                return response()->json(['message' => 'Không có sản phẩm này'], 404);
             }
         }
     }
@@ -268,17 +267,13 @@ class CartController extends Controller
             $totalCartAmount = 0;
 
             foreach ($groupedItems as $variantId => $items) {
+
                 $id = $items->first()->id;
-
                 $productVariant = $items->first()->productVariant;
-
                 $totalQuantity = $items->sum('quantity');
-
                 $price = $productVariant->price_sale;
-
                 $totalPriceForItem = $price * $totalQuantity;
                 $totalCartAmount += $totalPriceForItem;
-
                 $product = $productVariant->product;
                 $sizeName = $productVariant->size->name ?? '';
                 $colorName = $productVariant->color->name ?? '';

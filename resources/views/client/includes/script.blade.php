@@ -18,14 +18,17 @@
 <script src="{{ asset('theme/client/assets/js/plugins/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('theme/client/assets/js/plugins/lightgallery-all.min.js') }}"></script>
 <script src="{{ asset('theme/client/assets/js/plugins/thia-sticky-sidebar.min.js') }}"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
+<!-- Thêm SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.0/dist/sweetalert2.all.min.js"></script>
 
 
 
 <!--Main JS-->
+<script src="{{ asset('plugins/js/alertSwal.js') }}"></script>
 <script src="{{ asset('theme/client/assets/js/main.js') }}"></script>
-<script src="{{ asset('plugins/js/deleteCart.js') }}"></script>
+<script src="{{ asset('plugins/js/deleteCartCheckFavorite.js') }}"></script>
+
 
 
 @yield('script')
