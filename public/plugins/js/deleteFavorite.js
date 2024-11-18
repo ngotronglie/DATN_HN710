@@ -2,7 +2,7 @@
     "use strict";
     var HT = {};
     var token = $('meta[name="csrf-token"]').attr('content');
-
+    let mes ='';
     let idFavorite = null;
 
     HT.deleleFavorite = () => {
@@ -33,18 +33,8 @@
 
                         $('#favoriteNull').append('<td colspan="6"><p>Mục yêu thích của bạn hiện đang trống.</p></td>');
                     }
-                    swal({
-                        content: {
-                            element: "span",
-                            attributes: {
-                                innerHTML: `<h1 style='font-size: 1.3rem;margin-top: 33px'>${res.message}</h1>`,
-                            },
-                        },
-                        text: "",
-                        icon: "success",
-                        button: "Đóng",
-                    });
-
+                    mes = res.message;
+                    swalSuccess(mes);
                 },
                 error: function (xhr, status, error) {
                     let hasShownErrorMessage = false;
