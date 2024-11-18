@@ -11,13 +11,13 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::create('favorites', function (Blueprint $table) {
-        $table->id();
-        $table->foreignIdFor(User::class)->constrained()->onDelete('cascade'); // Mối quan hệ với người dùng
-        $table->timestamps();
-    });
-}
+    {
+        Schema::create('favorites', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(User::class)->constrained()->onDelete('cascade'); // Mối quan hệ với người dùng
+            $table->timestamps();
+        });
+    }
 
 
     /**

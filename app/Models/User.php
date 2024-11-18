@@ -59,6 +59,6 @@ class User extends Authenticatable
 
     public function vouchers()
     {
-        return $this->belongsToMany(Voucher::class, 'user_voucher')->withPivot('status')->withTimestamps();
+        return $this->belongsToMany(Voucher::class, 'user_vouchers')->withPivot('status')->withTimestamps();
     }
 }

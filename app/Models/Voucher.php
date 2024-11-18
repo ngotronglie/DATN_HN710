@@ -19,6 +19,6 @@ class Voucher extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'user_voucher')->withPivot('status')->withTimestamps();
+        return $this->belongsToMany(User::class, 'user_vouchers')->withPivot('status')->withTimestamps();
     }
 }
