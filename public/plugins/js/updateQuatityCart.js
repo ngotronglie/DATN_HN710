@@ -40,18 +40,11 @@
                 data: option,
                 dataType: 'json',
                 success: function (res) {
-                    console.log(res);
-
                     $('#checked-' + id).attr('data-quantity',res.new_quantity);
                     $('#checked-' + id).attr('data-total', res.total_price)
                     let formatTotalItem = new Intl.NumberFormat('vi-VN').format(res.total_price) + ' đ';
-                    let formatTotal = new Intl.NumberFormat('vi-VN').format(res.total_cart_price) + ' đ';
-                    let formatTotalShip = new Intl.NumberFormat('vi-VN').format(res.total_cart_price + 30000) + ' đ';
 
                     $('#total-' + id).empty().html(formatTotalItem);
-                    // $('.totalAll').empty().html(formatTotal);
-                    // $('.total-amount').empty().html(formatTotalShip);
-
 
                 },
                 error: function (xhr, status, error) {
@@ -183,9 +176,6 @@
         }
         $('#item').val(JSON.stringify(items));
         $('#totalMyprd').val(total);
-
-        console.log('Items:', items);
-        console.log('Total:', total);
     }
 
     $(document).ready(function () {

@@ -220,34 +220,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- @if (Auth::check())
-                                            @foreach ($cartItems as $cart)
-                                                @foreach ($cart->items as $item)
-                                                    <tr>
-                                                        <td>{{ $item->productVariant->product->name }}
-                                                            <span>({{ $item->productVariant->size->name }} /
-                                                                {{ $item->productVariant->color->name }}) x
-                                                                {{ $item->quantity }}</span>
-                                                        </td>
-                                                        <td class="text-end">{{ number_format($item->total_price) }} đ</td>
-                                                    </tr>
-                                                @endforeach
-                                            @endforeach
-                                        @else
-                                            @foreach ($cartItems as $item)
-                                                <tr>
-                                                    <td>
-                                                        {{ $item['name'] }}
-                                                        <span>({{ $item['size'] }} / {{ $item['color'] }}) x
-                                                            {{ $item['quantity'] }}</span>
-                                                    </td>
-                                                    <td class="text-end">{{ number_format($item['total_price']) }} đ</td>
-                                                </tr>
-                                            @endforeach
-                                        @endif --}}
-
-
-
                                         @foreach ($products as $product)
                                             <tr>
                                                 <td>
@@ -263,14 +235,12 @@
                                                 </td>
                                             </tr>
 
-                                            <!-- Các input ẩn để truyền dữ liệu vào controller -->
                                             <input type="hidden" name="product_name[]" value="{{ $product->name }}">
                                             <input type="hidden" name="size_name[]" value="{{ $product->size->name }}">
                                             <input type="hidden" name="color_name[]" value="{{ $product->color->name }}">
                                             <input type="hidden" name="quantity[]" value="{{ $product->quantity }}">
                                             <input type="hidden" name="price[]" value="{{ $product->price }}">
-                                            <input type="hidden" name="product_variant_ids[]"
-                                                value="{{ $product->id }}">
+                                            <input type="hidden" name="product_variant_ids[]" value="{{ $product->id }}">
                                         @endforeach
 
                                         <input type="hidden" name="total_amount" value="{{ $total }}">
@@ -393,6 +363,7 @@
                         voucher_code: voucherCode
                     },
                     success: function(response) {
+                        console.log(response);
                         if (response.success) {
                             Swal.fire({
                                 icon: 'success',
@@ -441,6 +412,10 @@
                     type: 'POST',
                     data: formData,
                     success: function(response) {
+                        console.log(response);
+
+                        $('.header-action-num').html(response.count);
+
                         if (response.success) {
                             Swal.fire({
                                 icon: 'success',
