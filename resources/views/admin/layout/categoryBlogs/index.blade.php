@@ -77,6 +77,7 @@
                                     </th>
                                     <th>STT</th>
                                     <th>Tên danh mục bài viết</th>
+                                    <th>Số lượng bài viết</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
@@ -86,6 +87,7 @@
                                     <th></th>
                                     <th>STT</th>
                                     <th>Tên danh mục bài viết</th>
+                                    <th>Số lượng bài viết</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
@@ -98,6 +100,7 @@
                                     </td>
                                 <td>{{ $key+1 }}</td>
                                 <td>{{ $item->name }}</td>
+                                <td>{{ $item->blogs_count }}</td>
                                 <td style="width: 12%" class="text-center">
                                     <input type="checkbox" class="js-switch active" data-model="{{ $item->is_active }}"
                                         {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"

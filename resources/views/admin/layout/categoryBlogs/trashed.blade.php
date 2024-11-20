@@ -49,14 +49,14 @@
                             <thead>
                                 <tr>
                                     <th>STT</th></th>
-                                    <th>Tên danh mục</th>
+                                    <th>Tên danh mục bài viết</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
                                     <th>STT</th></th>
-                                    <th>Tên danh mục</th>
+                                    <th>Tên danh mục bài viết</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>

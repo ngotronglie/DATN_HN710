@@ -15,10 +15,11 @@ class StatisticsController extends Controller
         // Khởi tạo biến
         $monthlyRevenue = session('monthlyRevenue', collect());
         $growthRates = session('growthRates', []);
+        $orderStatistics = session('orderStatistics', collect());
         $bestSellingProducts = session('bestSellingProducts', collect());
         $leastSellingProducts = session('leastSellingProducts', collect());
 
-        return view('admin.layout.statistics.index', compact('monthlyRevenue', 'growthRates', 'bestSellingProducts', 'leastSellingProducts'));
+        return view('admin.layout.statistics.index', compact('monthlyRevenue', 'growthRates',  'orderStatistics', 'bestSellingProducts', 'leastSellingProducts'));
     }
 
     public function showStatistics(Request $request)
@@ -66,33 +67,53 @@ class StatisticsController extends Controller
             }
         }
 
+        // Truy vấn thống kê đơn hàng
+        $orderStatistics = DB::table('orders')
+            ->select(
+                DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
+                DB::raw('COUNT(*) as total_orders'), // Đếm tổng số đơn hàng
+                DB::raw('SUM(CASE WHEN status = 4 THEN 1 ELSE 0 END) as completed_orders'), // Đếm số đơn hàng hoàn thành
+                DB::raw('SUM(CASE WHEN status = 6 THEN 1 ELSE 0 END) as canceled_orders') // Đếm số đơn hàng bị hủy
+            )
+            ->whereBetween('created_at', [$startDate, $endDate]) // Lọc theo khoảng thời gian
+            ->groupBy('month') // Nhóm theo tháng
+            ->orderByDesc('month') // Sắp xếp theo tháng giảm dần
+            ->get();
+
         // Tổng doanh thu của tất cả các đơn hàng hoàn tất trong khoảng thời gian
         $totalRevenue = Order::where('status', 4)
             ->whereBetween('created_at', [$startDate, $endDate]) // Lọc theo ngày
             ->sum('total_amount');
 
         // Thống kê sản phẩm bán chạy nhất với phần trăm đóng góp doanh thu trong khoảng thời gian
-        $bestSellingProducts = OrderDetail::select('product_name', DB::raw('SUM(quantity) as total_sold'), DB::raw('SUM(quantity * price) as total_revenue'), DB::raw('ROUND(SUM(quantity * price) / ' . ($totalRevenue > 0 ? $totalRevenue : 1) . ' * 100, 2) as revenue_percentage'))
+        $bestSellingProducts = OrderDetail::select('products.name as product_name', DB::raw('SUM(order_details.quantity) as total_sold'), DB::raw('SUM(order_details.quantity * order_details.price) as total_revenue'), DB::raw('ROUND(SUM(order_details.quantity * order_details.price) / ' . ($totalRevenue > 0 ? $totalRevenue : 1) . ' * 100, 2) as revenue_percentage'))
+            ->join('product_variants', 'order_details.product_variant_id', '=', 'product_variants.id') // Kết nối với bảng product_variants
+            ->join('products', 'product_variants.product_id', '=', 'products.id') // Kết nối với bảng products
             ->join('orders', 'order_details.order_id', '=', 'orders.id')
             ->where('orders.status', 4) // Chỉ lấy đơn hàng đã hoàn tất
+            ->whereNotNull('order_details.product_variant_id')
             ->whereBetween('orders.created_at', [$startDate, $endDate]) // Lọc theo ngày
-            ->groupBy('product_name')
+            ->groupBy('products.name')
             ->orderBy('total_sold', 'desc')
             ->limit(5) // Giới hạn 5 sản phẩm bán chạy nhất
             ->get();
 
         // Thống kê sản phẩm không bán chạy nhất với phần trăm đóng góp doanh thu trong khoảng thời gian
-        $leastSellingProducts = OrderDetail::select('product_name', DB::raw('SUM(quantity) as total_sold'), DB::raw('SUM(quantity * price) as total_revenue'), DB::raw('ROUND(SUM(quantity * price) / ' . ($totalRevenue > 0 ? $totalRevenue : 1) . ' * 100, 2) as revenue_percentage'))
+        $leastSellingProducts = OrderDetail::select('products.name as product_name', DB::raw('SUM(order_details.quantity) as total_sold'), DB::raw('SUM(order_details.quantity * order_details.price) as total_revenue'), DB::raw('ROUND(SUM(order_details.quantity * order_details.price) / ' . ($totalRevenue > 0 ? $totalRevenue : 1) . ' * 100, 2) as revenue_percentage'))
+            ->join('product_variants', 'order_details.product_variant_id', '=', 'product_variants.id') // Kết nối với bảng product_variants
+            ->join('products', 'product_variants.product_id', '=', 'products.id') // Kết nối với bảng products
             ->join('orders', 'order_details.order_id', '=', 'orders.id')
             ->where('orders.status', 4) // Chỉ lấy đơn hàng đã hoàn tất
+            ->whereNotNull('order_details.product_variant_id')
             ->whereBetween('orders.created_at', [$startDate, $endDate]) // Lọc theo ngày
-            ->groupBy('product_name')
-            ->orderBy('total_sold', 'desc') // Sắp xếp theo số lượng bán giảm dần
+            ->groupBy('products.name')
+            ->orderBy('total_sold', 'asc') // Sắp xếp theo số lượng bán giảm dần
             ->limit(5) // Giới hạn 5 sản phẩm bán ít nhất
             ->get();
 
         session()->flash('monthlyRevenue', $monthlyRevenue);
         session()->flash('growthRates', $growthRates);
+        session()->flash('orderStatistics', $orderStatistics);
         session()->flash('bestSellingProducts', $bestSellingProducts);
         session()->flash('leastSellingProducts', $leastSellingProducts);
         session()->flash('startDate', $startDate);

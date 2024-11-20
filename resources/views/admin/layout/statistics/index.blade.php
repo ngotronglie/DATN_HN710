@@ -64,7 +64,7 @@
             </div>
             
 
-            <!-- Doanh thu 4 tháng gần nhất -->
+            <!-- Doanh thu theo khoảng thời gian -->
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
@@ -101,6 +101,50 @@
                                     @else
                                     <td>N/A</td>
                                     @endif
+                                </tr>
+                                @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Số lượng của từng trạng thái đơn hàng -->
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <strong class="card-title">Số lượng đơn hàng</strong>
+                        <div>
+                            <a class="btn btn-primary mr-1" href="#" data-toggle="modal" data-target="{{$orderStatistics->isEmpty() ? '' : '#chartModal'}}" onclick="showChart('orderStatistics')">
+                                <i class="fa fa-signal"></i> Xem biểu đồ
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table id="" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tháng</th>
+                                    <th>Số đơn hàng đã đặt</th>
+                                    <th>Số đơn hàng hoàn thành</th>
+                                    <th>Số đơn hàng bị hủy</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if($orderStatistics->isEmpty())
+                                <tr>
+                                    <td colspan="5" class="text-center"><strong>Không có dữ liệu</strong></td>
+                                </tr>
+                                @else
+                                @foreach($orderStatistics as $key => $stat)
+                                <tr>
+                                    <td>{{ $key+1 }}</td>
+                                    <td>{{ \Carbon\Carbon::createFromFormat('Y-m', $stat->month)->format('m/Y') }}</td>
+                                    <td>{{ $stat->total_orders }}</td> <!-- Hiển thị số đơn hàng đã đặt -->
+                                    <td>{{ $stat->completed_orders }}</td>
+                                    <td>{{ $stat->canceled_orders }}</td>
                                 </tr>
                                 @endforeach
                                 @endif
@@ -237,7 +281,7 @@
         // Dữ liệu cho từng loại biểu đồ
         if (type === 'monthlyRevenue') {
             if ({!! json_encode($monthlyRevenue->isEmpty()) !!}) {
-                alert('Không có dữ liệu để hiển thị biểu đồ doanh thu hàng tháng');
+                alert('Không có dữ liệu để hiển thị biểu đồ doanh thu!');
                 return;
             }
             chartData = {
@@ -293,7 +337,7 @@
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Biểu đồ Doanh thu và Tăng trưởng theo tháng',
+                            text: 'Biểu đồ Doanh thu và Tăng trưởng',
                             font: {
                                 size: 16
                             }
@@ -301,113 +345,195 @@
                     }
                 }
             };
-        } else if (type === 'bestSellingProducts') {
-            if ({!! json_encode($bestSellingProducts->isEmpty()) !!}) {
-                alert('Không có dữ liệu để hiển thị biểu đồ sản phẩm bán chạy');
+        } else if (type === 'orderStatistics') {
+            if ({!! json_encode($orderStatistics->isEmpty()) !!}) {
+                alert('Không có dữ liệu để hiển thị biểu đồ số lượng đơn hàng!');
                 return;
             }
             chartData = {
-                type: 'pie',
+    type: 'line', // Chọn loại biểu đồ là line (đường)
+    data: {
+        labels: {!! json_encode($orderStatistics->pluck('month')->map(function($month) {
+            return \Carbon\Carbon::createFromFormat('Y-m', $month)->format('m/Y');
+        })) !!},
+        datasets: [
+            {
+                label: 'Hoàn thành',
+                data: {!! json_encode($orderStatistics->pluck('completed_orders')) !!}, // Dữ liệu số đơn hàng hoàn thành
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                fill: false,
+                tension: 0.1,
+                borderWidth: 2
+            },
+            {
+                label: 'Bị hủy',
+                data: {!! json_encode($orderStatistics->pluck('canceled_orders')) !!}, // Dữ liệu số đơn hàng bị hủy
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                fill: false,
+                tension: 0.1,
+                borderWidth: 2
+            },
+            {
+                label: 'Đơn hàng đã đặt',
+                data: {!! json_encode($orderStatistics->pluck('total_orders')) !!}, // Dữ liệu tổng số đơn hàng đã đặt
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                fill: false,
+                tension: 0.1,
+                borderWidth: 2
+            }
+        ]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Số lượng đơn hàng'
+                }
+            },
+            x: {
+                title: {
+                    display: true,
+                    text: 'Tháng'
+                }
+            }
+        },
+        plugins: {
+            title: {
+                display: true,
+                text: 'Biểu đồ Số lượng Đơn hàng',
+                font: {
+                    size: 16
+                }
+            },
+            legend: {
+                display: true,
+                position: 'top'
+            }
+        }
+    }
+};
+        } else if (type === 'bestSellingProducts') {
+            if ({!! json_encode($bestSellingProducts->isEmpty()) !!}) {
+                alert('Không có dữ liệu để hiển thị biểu đồ sản phẩm bán chạy!');
+                return;
+            }
+            chartData = {
+                type: 'bar',
                 data: {
                     labels: {!! json_encode($bestSellingProducts->pluck('product_name')) !!},
                     datasets: [
                         {
-                            label: 'Phần trăm đóng góp doanh thu (%)',
+                            label: 'Số lượng bán',
+                            data: {!! json_encode($bestSellingProducts->pluck('total_sold')) !!},
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Doanh thu (VNĐ)',
+                            data: {!! json_encode($bestSellingProducts->pluck('total_revenue')) !!},
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1,
+                            yAxisID: 'y-axis-revenue'
+                        },
+                        {
+                            label: 'Phần trăm đóng góp doanh thu',
                             data: {!! json_encode($bestSellingProducts->pluck('revenue_percentage')) !!},
-                            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
-                            hoverOffset: 4
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1,
+                            yAxisID: 'y-axis-percentage'
                         }
                     ]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    aspectRatio: 1.5,
+                    scales: {
+                        y: { beginAtZero: true, position: 'left', title: { display: true, text: 'Số lượng bán' } },
+                        'y-axis-revenue': {
+                            beginAtZero: true,
+                            position: 'right',
+                            title: { display: true, text: 'Doanh thu (VNĐ)' },
+                            ticks: { callback: function(value) { return value.toLocaleString() + ' VNĐ'; } }
+                        },
+                        'y-axis-percentage': {
+                            beginAtZero: true,
+                            position: 'right',
+                            title: { display: true, text: 'Phần trăm đóng góp' },
+                            ticks: { callback: function(value) { return value + '%'; } }
+                        }
+                    },
                     plugins: {
-                        legend: {
-                            position: 'right'
-                        },
-                        tooltip: {
-                            enabled: true,
-                            callbacks: {
-                                label: function(context) {
-                                    var dataset = context.chart.data.datasets[context.datasetIndex];
-                                    var index = context.dataIndex;
-                                    var productName = context.chart.data.labels[index];
-                                    var percentage = dataset.data[index];
-                                    var revenue = {!! json_encode($bestSellingProducts->pluck('total_revenue')) !!}[index];
-                                    var quantity = {!! json_encode($bestSellingProducts->pluck('total_sold')) !!}[index];
-                                    var roundedRevenue = Math.round(revenue);
-                                    var formattedRevenue = new Intl.NumberFormat('vi-VN').format(roundedRevenue);
-                                    return productName + ': ' +
-                                        'Doanh thu: ' + formattedRevenue + ' VND, ' +
-                                        'Số lượng: ' + quantity + ', ' +
-                                        'Phần trăm: ' + percentage + '%';
-                                }
-                            }
-                        },
                         title: {
-                display: true, // Hiển thị tiêu đề
-                text: 'Biểu đồ sản phẩm bán chạy', // Nội dung tiêu đề
-                font: {
-                    size: 16 // Kích thước font của tiêu đề
-                }
-            }
+                            display: true,
+                            text: 'Biểu đồ Sản phẩm bán chạy',
+                            font: { size: 16 }
+                        }
                     }
                 }
             };
         } else if (type === 'leastSellingProducts') {
             if ({!! json_encode($leastSellingProducts->isEmpty()) !!}) {
-                alert('Không có dữ liệu để hiển thị biểu đồ sản phẩm không bán chạy');
+                alert('Không có dữ liệu để hiển thị biểu đồ sản phẩm không bán chạy!');
                 return;
             }
             chartData = {
-                type: 'pie',
+                type: 'bar',
                 data: {
                     labels: {!! json_encode($leastSellingProducts->pluck('product_name')) !!},
                     datasets: [
                         {
-                            label: 'Phần trăm đóng góp doanh thu (%)',
+                            label: 'Số lượng bán',
+                            data: {!! json_encode($leastSellingProducts->pluck('total_sold')) !!},
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Doanh thu (VNĐ)',
+                            data: {!! json_encode($leastSellingProducts->pluck('total_revenue')) !!},
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1,
+                            yAxisID: 'y-axis-revenue'
+                        },
+                        {
+                            label: 'Phần trăm đóng góp doanh thu',
                             data: {!! json_encode($leastSellingProducts->pluck('revenue_percentage')) !!},
-                            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
-                            hoverOffset: 4
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1,
+                            yAxisID: 'y-axis-percentage'
                         }
                     ]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    aspectRatio: 1.5,
+                    scales: {
+                        y: { beginAtZero: true, position: 'left', title: { display: true, text: 'Số lượng bán' } },
+                        'y-axis-revenue': {
+                            beginAtZero: true,
+                            position: 'right',
+                            title: { display: true, text: 'Doanh thu (VNĐ)' },
+                            ticks: { callback: function(value) { return value.toLocaleString() + ' VNĐ'; } }
+                        },
+                        'y-axis-percentage': {
+                            beginAtZero: true,
+                            position: 'right',
+                            title: { display: true, text: 'Phần trăm đóng góp' },
+                            ticks: { callback: function(value) { return value + '%'; } }
+                        }
+                    },
                     plugins: {
-                        legend: {
-                            position: 'right'
-                        },
-                        tooltip: {
-                            enabled: true,
-                            callbacks: {
-                                label: function(context) {
-                                    var dataset = context.chart.data.datasets[context.datasetIndex];
-                                    var index = context.dataIndex;
-                                    var productName = context.chart.data.labels[index];
-                                    var percentage = dataset.data[index];
-                                    var revenue = {!! json_encode($leastSellingProducts->pluck('total_revenue')) !!}[index];
-                                    var quantity = {!! json_encode($leastSellingProducts->pluck('total_sold')) !!}[index];
-                                    var roundedRevenue = Math.round(revenue);
-                                    var formattedRevenue = new Intl.NumberFormat('vi-VN').format(roundedRevenue);
-                                    return productName + ': ' +
-                                        'Doanh thu: ' + formattedRevenue + ' VND, ' +
-                                        'Số lượng: ' + quantity + ', ' +
-                                        'Phần trăm: ' + percentage + '%';
-                                }
-                            }
-                        },
                         title: {
-                display: true, // Hiển thị tiêu đề
-                text: 'Biểu đồ sản phẩm không bán chạy', // Nội dung tiêu đề
-                font: {
-                    size: 16 // Kích thước font của tiêu đề
-                }
-            }
+                            display: true,
+                            text: 'Biểu đồ Sản phẩm không bán chạy',
+                            font: { size: 16 }
+                        }
                     }
                 }
             };

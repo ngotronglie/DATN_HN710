@@ -76,7 +76,7 @@
                                     <th>STT</th>
                                     <th>Người dùng</th>
                                     <th>Nội dung</th>
-                                    <th>SL</th>
+                                    <th>TL</th>
                                     <th>Thời gian</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
@@ -88,7 +88,7 @@
                                     <th>STT</th>
                                     <th>Người dùng</th>
                                     <th>Nội dung</th>
-                                    <th>SL</th>
+                                    <th>TL</th>
                                     <th>Thời gian</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>

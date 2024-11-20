@@ -30,13 +30,13 @@
 
     <!-- Vendor CSS (Icon Font) -->
 
-    <link rel="stylesheet" href="{{ asset('theme/client/css/vendor/fontawesome.min.cs') }}">
-    <link rel="stylesheet" href="{{ asset('theme/client/css/vendor/pe-icon-7-stroke.min.cs') }}">
+    <link rel="stylesheet" href="{{ asset('theme/client/assets/css/vendor/fontawesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('theme/client/assets/css/vendor/pe-icon-7-stroke.min.css') }}">
 
 
     <!-- Plugins CSS (All Plugins Files) -->
 
-    <link rel="stylesheet" href="{{ asset('theme/client/css/plugins/lightgallery.min.css ') }}" />
+    <link rel="stylesheet" href="{{ asset('theme/client/assets/css/plugins/lightgallery.min.css ') }}" />
 
     <!-- Thêm SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.0/dist/sweetalert2.min.css">

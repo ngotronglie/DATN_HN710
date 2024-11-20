@@ -230,6 +230,7 @@ class CheckoutController extends Controller
 
         ]);
     }
+
     public function applyVoucher(Request $request)
     {
         $user = auth()->user();
@@ -272,6 +273,7 @@ class CheckoutController extends Controller
             'totalAmountWithDiscount' => $totalAmountWithDiscount
         ]);
     }
+    
     //tra cuu
     public function billSearch()
     {

@@ -19,7 +19,11 @@ class CategoryBlogController extends Controller
         if (Gate::denies('viewAny', CategoryBlog::class)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
-        $data = CategoryBlog::orderBy('id', 'DESC')->get();
+        $data = CategoryBlog::withCount([
+            'blogs' => function ($query) {
+                $query->whereNull('deleted_at');
+            }
+        ])->orderBy('id', 'DESC')->get();
         $trashedCount = CategoryBlog::onlyTrashed()->count();
         return view(self::PATH_VIEW.__FUNCTION__, compact('data', 'trashedCount'));
     }
