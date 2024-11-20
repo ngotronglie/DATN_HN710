@@ -247,6 +247,7 @@
                                         @endif --}}
 
 
+
                                         @foreach ($products as $product)
                                             <tr>
                                                 <td>
@@ -261,7 +262,19 @@
                                                     {{ number_format($product->sumtotal, 0, ',', '.') }} đ
                                                 </td>
                                             </tr>
+
+                                            <!-- Các input ẩn để truyền dữ liệu vào controller -->
+                                            <input type="hidden" name="product_name[]" value="{{ $product->name }}">
+                                            <input type="hidden" name="size_name[]" value="{{ $product->size->name }}">
+                                            <input type="hidden" name="color_name[]" value="{{ $product->color->name }}">
+                                            <input type="hidden" name="quantity[]" value="{{ $product->quantity }}">
+                                            <input type="hidden" name="price[]" value="{{ $product->price }}">
+                                            <input type="hidden" name="product_variant_ids[]"
+                                                value="{{ $product->id }}">
                                         @endforeach
+
+                                        <input type="hidden" name="total_amount" value="{{ $total }}">
+
 
                                     </tbody>
                                     <tfoot>
@@ -296,7 +309,7 @@
                                             <td class="text-end pe-0">
                                                 <strong>
                                                     <span class="amount" id="total-amount">
-                                                        {{ session('voucher_id') ? number_format(session('totalAmountWithDiscount')) : number_format($total+30000, 0, ',', '.') }}
+                                                        {{ session('voucher_id') ? number_format(session('totalAmountWithDiscount')) : number_format($total + 30000, 0, ',', '.') }}
                                                         đ
                                                     </span>
                                                 </strong>
@@ -433,20 +446,20 @@
                                 icon: 'success',
                                 title: 'Đặt hàng thành công!',
                                 html: `<p style="font-size: 16px; font-weight: bold;">Mã đơn hàng #<span id="orderCode">${response.order.order_code}</span>
-                                       <i id="copyIcon" title="Sao chép" class="fa fa-copy" style="cursor: pointer; color: blue; margin-left: 10px;" onclick="copyToClipboard('${response.order.order_code}')"></i>
-                                   </p>
-                                   <hr style="border-top: 1px solid #ddd;">
-                                   <p style="font-size: 14px; color: #333;">
-                                       <strong>Thông tin giao hàng:</strong><br>
-                                       Tên: ${response.order.user_name}<br>
-                                       Điện thoại: ${response.order.user_phone}<br>
-                                       Địa chỉ: ${response.order.user_address}
-                                   </p>
-                                   <hr style="border-top: 1px solid #ddd;">
-                                   <p style="font-size: 14px; color: #333;">
-                                       <strong>Phương thức thanh toán:</strong><br>
-                                       ${response.order.payment_method === 'cod' ? 'Thanh toán khi nhận hàng (COD)' : 'Thanh toán trực tuyến'}
-                                   </p>`,
+                                   <i id="copyIcon" title="Sao chép" class="fa fa-copy" style="cursor: pointer; color: blue; margin-left: 10px;" onclick="copyToClipboard('${response.order.order_code}')"></i>
+                               </p>
+                               <hr style="border-top: 1px solid #ddd;">
+                               <p style="font-size: 14px; color: #333;">
+                                   <strong>Thông tin giao hàng:</strong><br>
+                                   Tên: ${response.order.user_name}<br>
+                                   Điện thoại: ${response.order.user_phone}<br>
+                                   Địa chỉ: ${response.order.user_address}
+                               </p>
+                               <hr style="border-top: 1px solid #ddd;">
+                               <p style="font-size: 14px; color: #333;">
+                                   <strong>Phương thức thanh toán:</strong><br>
+                                   ${response.order.payment_method === 'cod' ? 'Thanh toán khi nhận hàng (COD)' : 'Thanh toán trực tuyến'}
+                               </p>`,
                                 showCancelButton: true,
                                 cancelButtonText: 'Tiếp tục mua hàng',
                                 confirmButtonText: !response.is_logged_in ?
