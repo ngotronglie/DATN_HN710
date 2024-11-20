@@ -87,7 +87,9 @@ Route::get('/contact', function () {
 });
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 // Checkout
- Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+ //Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+ Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+
  Route::post('/place-order', [CheckoutController::class, 'placeOrder'])->name('placeOrder');
  Route::post('/apply-voucher', [CheckoutController::class, 'applyVoucher'])->name('voucher.apply');
  Route::get('/billSearch', [CheckoutController::class, 'billSearch'])->name('bill.search');
@@ -207,7 +209,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
     // Danh sách bình luận
     Route::get('comments', [CommentController::class, 'index'])->name('comments.index');
-    
+
     // Chi tiết bình luận
     Route::get('comments/{id}', [CommentController::class, 'show'])->name('comments.show');
     Route::get('comments/{parent_id}/children', [CommentController::class, 'showChildren'])->name('comments.showChildren');

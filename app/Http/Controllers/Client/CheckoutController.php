@@ -19,30 +19,110 @@ use Illuminate\Support\Facades\Mail;
 
 class CheckoutController extends Controller
 {
-    public function index()
+    // public function index()
+    // {
+    //     $user = auth()->user();
+    //     $validVouchers = collect();
+    //     session()->forget(['discount', 'totalAmountWithDiscount', 'voucher_id']);
+    //     if ($user) {
+    //         $cartItems = Cart::where('user_id', $user->id)
+    //             ->with('items.productVariant.product', 'items.productVariant.size', 'items.productVariant.color') // Tải các mối quan hệ cần thiết
+    //             ->get();
+
+    //         foreach ($cartItems as $cart) {
+    //             foreach ($cart->items as $item) {
+    //                 $productVariant = $item->productVariant;
+    //                 // Tính tổng tiền cho mỗi sản phẩm
+    //                 $item->total_price = $productVariant->price_sale * $item->quantity;
+    //             }
+    //         }
+
+    //         $totalAmount = $cartItems->flatMap(function ($cart) {
+    //             return $cart->items;
+    //         })->sum(function ($item) {
+    //             return $item->total_price;
+    //         });
+
+    //         $validVouchers = Voucher::where('end_date', '>=', Carbon::now()->startOfDay())
+    //             ->where('is_active', true)
+    //             ->where('quantity', '>', 0)
+    //             ->whereHas('users', function ($query) use ($user) {
+    //                 $query->where('user_id', $user->id)
+    //                     ->where('status', 'not_used');
+    //             })
+    //             ->where(function ($query) use ($totalAmount) {
+    //                 $query->where('min_money', '<=', $totalAmount)
+    //                     ->where('max_money', '>=', $totalAmount);
+    //             })
+    //             ->get();
+    //     } else {
+    //         $cartItems = session('cart.items', []);
+    //         $totalAmount = 0;
+
+    //         foreach ($cartItems as &$item) {
+    //             $productVariant = ProductVariant::find($item['product_variant_id']);
+
+    //             if ($productVariant) {
+    //                 $item['name'] = $productVariant->product->name;
+    //                 $item['price_sale'] = $productVariant->price_sale;
+    //                 $item['size'] = $productVariant->size->name;
+    //                 $item['color'] = $productVariant->color->name;
+    //                 $item['total_price'] = $productVariant->price_sale * $item['quantity'];
+    //                 $totalAmount += $item['total_price'];
+    //             }
+    //         }
+    //     }
+
+    //     if (!$cartItems) {
+    //         return redirect()->back()->with('warning', 'Không tìm thấy sản phẩm nào');
+    //     }
+
+    //     session(['totalAmount' => $totalAmount]);
+    //     //dd($validVouchers);
+
+    //     return view('client.pages.checkouts.show_checkout', [
+    //         'cartItems' => $cartItems,
+    //         'totalAmount' => $totalAmount,
+    //         'validVouchers' => $validVouchers
+    //     ]);
+    // }
+
+    public function index(Request $request)
     {
+
         $user = auth()->user();
         $validVouchers = collect();
         session()->forget(['discount', 'totalAmountWithDiscount', 'voucher_id']);
-        if ($user) {
-            $cartItems = Cart::where('user_id', $user->id)
-                ->with('items.productVariant.product', 'items.productVariant.size', 'items.productVariant.color') // Tải các mối quan hệ cần thiết
-                ->get();
+        $items = json_decode($request->input('item'), true);
 
-            foreach ($cartItems as $cart) {
-                foreach ($cart->items as $item) {
-                    $productVariant = $item->productVariant;
-                    // Tính tổng tiền cho mỗi sản phẩm
-                    $item->total_price = $productVariant->price_sale * $item->quantity;
+        if (empty($items)) {
+            return redirect()->back()->with('error', 'Không có sản phẩm nào được chọn.');
+        }
+
+        $total = $request->input('totalMyprd');  // Tổng tiền từ frontend
+        $ids = array_column($items, 'id');  // Lấy mảng các id từ items
+        $productVariants = ProductVariant::whereIn('id', $ids)->get();
+
+        if ($productVariants->isEmpty()) {
+            return redirect()->back()->with('error', 'Không tìm thấy sản phẩm nào.');
+        }
+
+        $products = $productVariants->map(function ($variant) use ($items) {
+
+            foreach ($items as $item) {
+                if ($variant->id == $item['id']) {
+                    $variant->name = $variant->product->name;
+                    $variant->price = $variant->price_sale;
+                    $variant->quantity = $item['quantity'];
+                    $variant->sumtotal = $variant->quantity * $variant->price_sale;
+                    break;
                 }
             }
+            return $variant;
 
-            $totalAmount = $cartItems->flatMap(function ($cart) {
-                return $cart->items;
-            })->sum(function ($item) {
-                return $item->total_price;
-            });
+        });
 
+        if ($user) {
             $validVouchers = Voucher::where('end_date', '>=', Carbon::now()->startOfDay())
                 ->where('is_active', true)
                 ->where('quantity', '>', 0)
@@ -50,41 +130,19 @@ class CheckoutController extends Controller
                     $query->where('user_id', $user->id)
                         ->where('status', 'not_used');
                 })
-                ->where(function ($query) use ($totalAmount) {
-                    $query->where('min_money', '<=', $totalAmount)
-                        ->where('max_money', '>=', $totalAmount);
+                ->where(function ($query) use ($total) {
+                    $query->where('min_money', '<=', $total)
+                        ->where('max_money', '>=', $total);
                 })
                 ->get();
-        } else {
-            $cartItems = session('cart.items', []);
-            $totalAmount = 0;
-
-            foreach ($cartItems as &$item) {
-                $productVariant = ProductVariant::find($item['product_variant_id']);
-
-                if ($productVariant) {
-                    $item['name'] = $productVariant->product->name;
-                    $item['price_sale'] = $productVariant->price_sale;
-                    $item['size'] = $productVariant->size->name;
-                    $item['color'] = $productVariant->color->name;
-                    $item['total_price'] = $productVariant->price_sale * $item['quantity'];
-                    $totalAmount += $item['total_price'];
-                }
-            }
+            session(['totalAmount' => $total]);
         }
 
-        if (!$cartItems) {
-            return redirect()->back()->with('warning', 'Không tìm thấy sản phẩm nào');
-        }
+        return view('client.pages.checkouts.show_checkout', ['products' => $products, 'total' => $total, 'validVouchers' => $validVouchers]);
 
-        session(['totalAmount' => $totalAmount]);
-
-        return view('client.pages.checkouts.show_checkout', [
-            'cartItems' => $cartItems,
-            'totalAmount' => $totalAmount,
-            'validVouchers' => $validVouchers
-        ]);
     }
+
+
 
 
     function generateUniqueOrderCode()
@@ -99,6 +157,7 @@ class CheckoutController extends Controller
 
     public function placeOrder(Request $request)
     {
+        //dd($request);
         $user = auth()->user();
         $shippingFee = 30000;
         $totalAmount = session('totalAmount', 0);

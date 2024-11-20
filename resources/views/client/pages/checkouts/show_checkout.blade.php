@@ -220,7 +220,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if (Auth::check())
+                                        {{-- @if (Auth::check())
                                             @foreach ($cartItems as $cart)
                                                 @foreach ($cart->items as $item)
                                                     <tr>
@@ -244,14 +244,32 @@
                                                     <td class="text-end">{{ number_format($item['total_price']) }} đ</td>
                                                 </tr>
                                             @endforeach
-                                        @endif
+                                        @endif --}}
+
+
+                                        @foreach ($products as $product)
+                                            <tr>
+                                                <td>
+                                                    {{ $product->name }} /
+                                                    <span>
+                                                        {{ $product->size->name }} /
+                                                        {{ $product->color->name }} /
+                                                        x{{ $product->quantity }}
+                                                    </span>
+                                                </td>
+                                                <td class="text-end">
+                                                    {{ number_format($product->sumtotal, 0, ',', '.') }} đ
+                                                </td>
+                                            </tr>
+                                        @endforeach
+
                                     </tbody>
                                     <tfoot>
 
                                         <tr class="cart-subtotal">
                                             <th class="text-start ps-0">Tổng Cộng</th>
                                             <td class="text-end pe-0">
-                                                <span class="amount">{{ number_format($totalAmount) }} đ</span>
+                                                <span class="amount">{{ number_format($total, 0, ',', '.') }} đ</span>
                                             </td>
                                         </tr>
                                         <tr class="cart-subtotal">
@@ -278,7 +296,7 @@
                                             <td class="text-end pe-0">
                                                 <strong>
                                                     <span class="amount" id="total-amount">
-                                                        {{ session('voucher_id') ? number_format(session('totalAmountWithDiscount')) : number_format($totalAmount + 30000) }}
+                                                        {{ session('voucher_id') ? number_format(session('totalAmountWithDiscount')) : number_format($total+30000, 0, ',', '.') }}
                                                         đ
                                                     </span>
                                                 </strong>
@@ -380,7 +398,7 @@
                             $('#total-amount').text(response.totalAmountWithDiscount
                                 .toLocaleString() + ' đ');
                             $('#discount-amount').text('-' + response.discount
-                            .toLocaleString() + ' đ');
+                                .toLocaleString() + ' đ');
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -414,7 +432,7 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Đặt hàng thành công!',
-                                html: `<p style="font-size: 16px; font-weight: bold;">Mã đơn hàng #<span id="orderCode">${response.order.order_code}</span> 
+                                html: `<p style="font-size: 16px; font-weight: bold;">Mã đơn hàng #<span id="orderCode">${response.order.order_code}</span>
                                        <i id="copyIcon" title="Sao chép" class="fa fa-copy" style="cursor: pointer; color: blue; margin-left: 10px;" onclick="copyToClipboard('${response.order.order_code}')"></i>
                                    </p>
                                    <hr style="border-top: 1px solid #ddd;">
@@ -474,7 +492,7 @@
                 });
             });
 
-            // Chức năng sao chép mã đơn hàng 
+            // Chức năng sao chép mã đơn hàng
             function copyToClipboard(text) {
                 var tempInput = document.createElement("input");
                 tempInput.value = text;
@@ -484,7 +502,7 @@
                 document.body.removeChild(tempInput);
             }
 
-            //  mô tả phương thức thanh toán 
+            //  mô tả phương thức thanh toán
             document.querySelectorAll('input[name="payment_method"]').forEach((elem) => {
                 elem.addEventListener('change', function() {
                     document.querySelectorAll('.payment-description').forEach((desc) => {
