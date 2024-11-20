@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Notifications\OrderPlacedNotification;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
@@ -222,6 +224,12 @@ class CheckoutController extends Controller
         } else {
             session()->forget('cart');
         }
+
+        $admin = User::where('role', '2')->get();
+        if($admin){
+        Notification::send($admin, new OrderPlacedNotification($order));
+        }
+
 
 
         return response()->json([

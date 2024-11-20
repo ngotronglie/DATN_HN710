@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ForgotPasswordController;
 use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SizeController;
 use App\Http\Controllers\Admin\VoucherController;
@@ -207,7 +208,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
     // Danh sách bình luận
     Route::get('comments', [CommentController::class, 'index'])->name('comments.index');
-    
+
     // Chi tiết bình luận
     Route::get('comments/{id}', [CommentController::class, 'show'])->name('comments.show');
     Route::get('comments/{parent_id}/children', [CommentController::class, 'showChildren'])->name('comments.showChildren');
@@ -218,13 +219,15 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
     //Quản lý đơn hàng
     Route::get('order', [OrderController::class, 'index'])->name('order.index');
-    Route::get('order/{order_id}/order-detail', [OrderController::class, 'detail'])->name('order.detail');
     Route::get('order/confirm/{order_id}', [OrderController::class, 'confirmOrder'])->name('order.confirmOrder');
     Route::get('order/ship/{order_id}', [OrderController::class, 'shipOrder'])->name('order.shipOrder');
     Route::get('order/confirm-shipping/{order_id}', [OrderController::class, 'confirmShipping'])->name('order.confirmShipping');
     Route::get('order/cancel/{order_id}', [OrderController::class, 'cancelOrder'])->name('order.cancelOrder');
-
     Route::get('order-print/{checkout_code}', [OrderController::class, 'print_order'])->name('order.printOrder');
+
+    //Thông báo
+    Route::get('notification', [NotificationController::class, 'notification'])->name('notification');
+    Route::get('order/{order_id}/order-detail-notication/{noti_id}', [NotificationController::class, 'detailNotication'])->name('order.detailNotication');
 
     // Thống kê
     Route::get('statistics', [StatisticsController::class, 'index'])->name('statistics.index');
