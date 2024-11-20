@@ -95,7 +95,7 @@
                                     <span style="font-weight: 600;color: black" class="meta-item author mr-1">{{ $blog->user->name }},</span>
                                 </span>
                                 <span class="meta-item date">{{ \Carbon\Carbon::parse($blog->created_at)->format('d/m/Y') }}</span>
-                                <span class="meta-item comment"><a href="#">{{$blog->view}} Lượt xem</a></span>
+                                <span class="meta-item comment"><a href="#">{{ $blog->view }} Lượt xem</a></span>
                                 <span class="meta-item comment"><a href="#">03 Bình luận</a></span>
                             </div>
                             <div class="desc content aos-init aos-animate" data-aos="fade-right" data-aos-delay="300">
@@ -103,7 +103,27 @@
                             </div>
                         </div>
                         <hr>
+
+                      
+                    
+                    
+                        <!-- Hiển thị Voucher nếu có -->
+                        @if($voucher)
+                        <div class="voucher-banner" style="margin-top: 30px; background-color: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
+                            <h4 style="font-weight: 600;">Khuyến mãi đặc biệt cho bạn!</h4>
+                            <div class="voucher-item" style="border: 1px solid #ddd; padding: 10px; border-radius: 8px; background-color: #fff; width: 200px; margin: 0 auto;">
+                                <h5 style="font-weight: bold;">Mã: {{ $voucher->code }}</h5>
+                                <p>Giảm: {{ $voucher->discount }}%</p>
+                                <p>Hạn sử dụng: {{ \Carbon\Carbon::parse($voucher->end_date)->format('d/m/Y') }}</p>
+                                <button class="btn btn-primary apply-voucher-btn" style="margin-top: 10px; display: inline-block;" data-voucher-code="{{ $voucher->code }}">Sử dụng ngay</button>
+                            </div>
+                        </div>
+                    @endif
+                    
+                   
+                    
                     </div>
+                    
 
 
 
@@ -190,5 +210,39 @@
                 }
             });
         });
+        $(document).ready(function() {
+             // Lắng nghe sự kiện click vào nút "Sử dụng ngay"
+             $('.apply-voucher-btn').on('click', function() {
+                 var voucherCode = $(this).data('voucher-code');
+     
+                 $.ajax({
+                     url: '{{ route('voucher.apply_code') }}', // Gọi route apply voucher
+                     method: 'POST',
+                     data: {
+                         _token: '{{ csrf_token() }}', // CSRF token
+                         voucher_code: voucherCode // Mã voucher
+                     },
+                     success: function(response) {
+                         Swal.fire({
+                             icon: 'success',
+                             title: 'Thành công!',
+                             text: response.message // Thông báo thành công
+                         });
+                     },
+                     error: function(xhr) {
+                         Swal.fire({
+                             icon: 'error',
+                             title: 'Lỗi!',
+                             text: xhr.responseJSON.message // Thông báo lỗi
+                         });
+                     }
+                 });
+             });
+         });
+
     </script>
+  
+     
+     
+    
 @endsection

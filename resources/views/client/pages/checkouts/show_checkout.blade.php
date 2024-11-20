@@ -380,7 +380,7 @@
                             $('#total-amount').text(response.totalAmountWithDiscount
                                 .toLocaleString() + ' đ');
                             $('#discount-amount').text('-' + response.discount
-                            .toLocaleString() + ' đ');
+                                .toLocaleString() + ' đ');
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -399,7 +399,31 @@
                 });
             });
 
-            // Bắt sự kiện submit của form checkout
+            // sao chép mã đơn hàng
+            function copyToClipboard(text) {
+                var tempInput = document.createElement("input");
+                tempInput.value = text;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand("copy");
+                document.body.removeChild(tempInput);
+
+                var copyIcon = document.getElementById("copyIcon");
+                if (copyIcon) {
+                    copyIcon.className = "fa fa-check";
+                    copyIcon.style.color = "green";
+                    copyIcon.title = "Đã sao chép!";
+
+                    // Reset lại biểu tượng 
+                    setTimeout(() => {
+                        copyIcon.className = "fa fa-copy";
+                        copyIcon.style.color = "blue";
+                        copyIcon.title = "Sao chép";
+                    }, 3000);
+                }
+            }
+
+            // checkout
             $('#checkoutForm').on('submit', function(e) {
                 e.preventDefault();
 
@@ -415,27 +439,35 @@
                                 icon: 'success',
                                 title: 'Đặt hàng thành công!',
                                 html: `<p style="font-size: 16px; font-weight: bold;">Mã đơn hàng #<span id="orderCode">${response.order.order_code}</span> 
-                                       <i id="copyIcon" title="Sao chép" class="fa fa-copy" style="cursor: pointer; color: blue; margin-left: 10px;" onclick="copyToClipboard('${response.order.order_code}')"></i>
-                                   </p>
-                                   <hr style="border-top: 1px solid #ddd;">
-                                   <p style="font-size: 14px; color: #333;">
-                                       <strong>Thông tin giao hàng:</strong><br>
-                                       Tên: ${response.order.user_name}<br>
-                                       Điện thoại: ${response.order.user_phone}<br>
-                                       Địa chỉ: ${response.order.user_address}
-                                   </p>
-                                   <hr style="border-top: 1px solid #ddd;">
-                                   <p style="font-size: 14px; color: #333;">
-                                       <strong>Phương thức thanh toán:</strong><br>
-                                       ${response.order.payment_method === 'cod' ? 'Thanh toán khi nhận hàng (COD)' : 'Thanh toán trực tuyến'}
-                                   </p>`,
+                           <i id="copyIcon" title="Sao chép" class="fa fa-copy" 
+                           style="cursor: pointer; color: blue; margin-left: 10px;"></i>
+                       </p>
+                       <hr style="border-top: 1px solid #ddd;">
+                       <p style="font-size: 14px; color: #333;">
+                           <strong>Thông tin giao hàng:</strong><br>
+                           Tên: ${response.order.user_name}<br>
+                           Điện thoại: ${response.order.user_phone}<br>
+                           Địa chỉ: ${response.order.user_address}
+                       </p>
+                       <hr style="border-top: 1px solid #ddd;">
+                       <p style="font-size: 14px; color: #333;">
+                           <strong>Phương thức thanh toán:</strong><br>
+                           ${response.order.payment_method === 'cod' ? 'Thanh toán khi nhận hàng (COD)' : 'Thanh toán trực tuyến'}
+                       </p>`,
                                 showCancelButton: true,
                                 cancelButtonText: 'Tiếp tục mua hàng',
-                                confirmButtonText: !response.is_logged_in ?
-                                    'Tra cứu đơn hàng' : null,
-                                showConfirmButton: !response.is_logged_in,
+                                confirmButtonText: 'Tra cứu đơn hàng',
+                                showConfirmButton: true,
                                 allowOutsideClick: false,
-                                allowEscapeKey: false
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    // Gán sự kiện cho nút sao chép sau khi SweetAlert được mở
+                                    document.getElementById('copyIcon')
+                                        .addEventListener('click', function() {
+                                            copyToClipboard(response.order
+                                                .order_code);
+                                        });
+                                }
                             }).then((result) => {
                                 if (result.dismiss === Swal.DismissReason.cancel) {
                                     const redirectRoute = '{{ route('home') }}';
@@ -474,15 +506,7 @@
                 });
             });
 
-            // Chức năng sao chép mã đơn hàng 
-            function copyToClipboard(text) {
-                var tempInput = document.createElement("input");
-                tempInput.value = text;
-                document.body.appendChild(tempInput);
-                tempInput.select();
-                document.execCommand("copy");
-                document.body.removeChild(tempInput);
-            }
+
 
             //  mô tả phương thức thanh toán 
             document.querySelectorAll('input[name="payment_method"]').forEach((elem) => {

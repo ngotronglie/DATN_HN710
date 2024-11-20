@@ -4,11 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <title>{{$title}}</title>
+    <title>{{ $title }}</title>
     
     <style>
         body {
@@ -24,6 +20,7 @@
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             padding: 20px;
+            box-sizing: border-box;
         }
         .header, .footer {
             text-align: center;
@@ -80,11 +77,10 @@
             <h1>HÓA ĐƠN</h1>
             <p><strong>Website:</strong> www.example.com</p>
             <p><strong>Email:</strong> support@example.com | <strong>Điện thoại:</strong> 0123456789</p>
-            <p><strong>Ngày tạo:</strong> {{$date }}</p>
+            <p><strong>Ngày tạo:</strong> {{ $date }}</p>
         </div>
 
         <div class="info">
-
             <h2>Thông Tin Khách Hàng</h2>
             <table>
                 <tr>
@@ -157,21 +153,3 @@
 
         <div class="summary">
             <h3>Cảm ơn bạn đã đặt hàng!</h3>
-        </div>
-
-        {{-- <div style="text-align: right;">
-            <p>Chữ Ký Người Lập Hóa Đơn</p>
-            <p>(Ký, ghi rõ họ tên)</p>
-        </div> --}}
-    </div>
-</body>
-</html>
-
-
-<script>
-    $(document).ready(function() {
-        @if(session('error'))
-            toastr.error("{{ session('error') }}");
-        @endif
-    });
-</script>

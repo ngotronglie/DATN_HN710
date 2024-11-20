@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\VerifyEmailPassword;
+use App\Models\Order;
+use App\Models\OrderDetail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\RateLimiter;
@@ -249,8 +251,51 @@ class AccountController extends Controller
     if(!$user) {
         return redirect()->route('login');
     }
-    return view('client.pages.account.my_account.my-account', compact('user'));
+    $bills = Order::query()->where('user_id',$user->id)->with('voucher')->get();
+    return view('client.pages.account.my_account.my-account', compact('user','bills'));
    }
+
+public function orderBillDetail($id)
+{
+    if (Auth::check()) {
+        $user = Auth::user();
+    }
+
+    $order = Order::with(['orderDetails.productVariant.product', 'voucher'])
+                    ->where('id', $id)
+                    ->where('user_id', $user->id)
+                    ->firstOrFail();
+    
+    return view('client.pages.account.my_account.bill-detail', compact('user', 'order'));
+}
+public function cancelOrder($id){
+    $order = Order::find($id);
+
+   
+    if ($order && $order->status == 1) { 
+        $order->status = 5; 
+        $order->save();
+
+        return redirect()->back()->with('success', 'Đơn hàng đã được hủy thành công.');
+    } else {
+        return redirect()->back()->with('error', 'Đơn hàng không thể hủy.');
+    }
+}
+//loc trang thái
+public function getOrdersByStatus($status = null)
+{
+    $user = Auth::user();
+
+    $query = Order::query();
+
+    if ($status) {
+        $query->where('status', $status);
+    }
+
+    $bills = $query->orderBy('created_at', 'desc')->get();
+
+    return view('client.pages.account.my_account.my-account', compact('user','bills', 'status'));
+}
    public function updateMyAcount(request $request,$id){
           $user=User::findOrFail($id);
           $request->validate([
@@ -307,7 +352,8 @@ class AccountController extends Controller
 
          $user->password = Hash::make($request->new_password);
        $user->save();
-       return redirect()->route('login')->with('success', 'Cập nhật mật khẩu thành công. Vui lòng đăng nhập lại');
+       Auth::logout();
+       return redirect()->route('login')->with('success',  'Vui lòng đăng nhập lại');
    }
    
 }
