@@ -16,7 +16,7 @@ class Voucher extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
-
+   
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_vouchers')->withPivot('status')->withTimestamps();

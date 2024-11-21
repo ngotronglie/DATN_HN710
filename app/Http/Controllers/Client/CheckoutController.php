@@ -13,9 +13,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\InvoiceMail;
+use App\Models\OrderDetail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
-use Session;
+use Illuminate\Support\Facades\Session;
 
 class CheckoutController extends Controller
 {
@@ -52,7 +53,6 @@ class CheckoutController extends Controller
                 }
             }
             return $variant;
-
         });
 
         if ($user) {
@@ -72,11 +72,7 @@ class CheckoutController extends Controller
         }
 
         return view('client.pages.checkouts.show_checkout', ['products' => $products, 'total' => $total, 'validVouchers' => $validVouchers]);
-
     }
-
-
-
 
     function generateUniqueOrderCode()
     {
@@ -87,7 +83,6 @@ class CheckoutController extends Controller
 
         return $orderCode;
     }
-
 
     public function placeOrder(Request $request)
     {
@@ -221,7 +216,6 @@ class CheckoutController extends Controller
                 session()->put('cart', $cart);
 
                 $count = count($updatedItems);
-
             }
         }
 
@@ -276,10 +270,35 @@ class CheckoutController extends Controller
             'totalAmountWithDiscount' => $totalAmountWithDiscount
         ]);
     }
-    
+
     //tra cuu
-    public function billSearch()
+
+    public function billSearch(Request $request)
     {
-        return redirect()->route('home');
+        $orderCode = $request->input('order_code');
+
+        // Nếu không có mã đơn hàng (lần đầu vào trang), chỉ trả về view mà không có thông báo
+        if (!$orderCode) {
+            return view('client.pages.checkouts.order_tracking');
+        }
+
+        $bills = Order::with('voucher')
+            ->where('order_code', $orderCode)
+            ->get();
+
+        // Nếu không tìm thấy đơn hàng
+        if ($bills->isEmpty()) {
+            return view('client.pages.checkouts.order_tracking', [
+                'message' => 'Không tìm thấy đơn hàng nào với mã đơn hàng này.'
+            ]);
+        }
+
+        $billIds = $bills->pluck('id');
+
+        $billDetails = OrderDetail::whereIn('order_id', $billIds)
+            ->with('productVariant')
+            ->get();
+
+        return view('client.pages.checkouts.order_tracking', compact('bills', 'billDetails'));
     }
 }

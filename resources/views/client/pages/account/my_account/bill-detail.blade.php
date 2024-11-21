@@ -36,14 +36,14 @@
                         <div class="row">
                             <div class="col-lg-3 col-md-4">
                                 <div class="myaccount-tab-menu nav" role="tablist">
-                                    <a href="#dashboad" data-bs-toggle="tab" data-bs-target="#dashboad"><i
+                                    <a href="#dashboad" class="active" data-bs-toggle="tab" data-bs-target="#dashboad"><i
                                             class="fa fa-dashboard"></i> Thông tin chung</a>
                                     <a href="#orders" data-bs-toggle="tab" data-bs-target="#orders"><i
                                             class="fa fa-cart-arrow-down"></i>Đơn hàng</a>
                                     <a href="#download" data-bs-toggle="tab" data-bs-target="#download"><i
                                             class="fa fa-solid fa-lock"></i> Đổi mật khẩu</a>
                                     <a href="#payment-method" data-bs-toggle="tab" data-bs-target="#payment-method"><i
-                                            class="fa fa-credit-card"></i> Vourcher của tôi</a>
+                                            class="fa fa-credit-card"></i> Payment Method</a>
                                     <a href="#address-edit" data-bs-toggle="tab" data-bs-target="#address-edit"><i
                                             class="fa fa-map-marker"></i> address</a>
                                     <a href="#account-info" data-bs-toggle="tab" data-bs-target="#account-info"><i
@@ -57,7 +57,7 @@
                             <div class="col-lg-9 col-md-8">
                                 <div class="tab-content" id="myaccountContent">
                                     <!-- Single Tab Content Start -->
-                                    <div class="tab-pane fade" id="dashboad" role="tabpanel">
+                                    <div class="tab-pane fade show active" id="dashboad" role="tabpanel">
                                         <div class="myaccount-content">
                                             <h3 class="title">Thông tin cá nhân</h3>
                                             <div class="account-details-form">
@@ -148,86 +148,107 @@
                                     <!-- Single Tab Content End -->
 
                                     <!-- Single Tab Content Start -->
-                                    <div class="tab-pane fade" id="orders" role="tabpanel">
-                                        <div class="myaccount-content">
-                                            <h3 class="title">Đơn hàng của tôi</h3>
-                                    
-                                            <!-- Bộ lọc trạng thái -->
-                                            <div class="order-status-filter mb-4">
-                                                <button class="btn btn-sm filter-btn" data-status="all">Tất cả</button>
-                                                <button class="btn btn-sm filter-btn" data-status="1">Chờ xác nhận</button>
-                                                <button class="btn btn-sm filter-btn" data-status="2">Chờ lấy hàng</button>
-                                                <button class="btn btn-sm filter-btn" data-status="3">Đang giao hàng</button>
-                                                <button class="btn btn-sm filter-btn" data-status="4">Giao thành công</button>
-                                                <button class="btn btn-sm filter-btn" data-status="5">Chờ hủy</button>
-                                                <button class="btn btn-sm filter-btn" data-status="6">Đã hủy</button>
+                                    <div class="tab-pane fade show active" id="orders" role="tabpanel">
+                                        <div class="myaccount-content" style="padding: 20px;">
+                                            <!-- Title and Back Link -->
+                                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                                <h3 style="font-size: 24px; font-weight: bold;">Chi tiết đơn hàng #{{ $order->order_code }}</h3>
+                                                <a href="{{ route('my_account') }}" style="text-decoration: none; color: #8ed4f7; font-weight: 500;">Quay lại</a>
                                             </div>
                                     
-                                            <!-- Bảng hiển thị đơn hàng -->
-                                            <div class="myaccount-table table-responsive text-center">
-                                                <table class="table table-bordered">
-                                                    <thead class="thead-light">
-                                                        <tr>
-                                                            <th>STT</th>
-                                                            <th>Mã đơn hàng</th>
-                                                            <th>Ngày mua</th>
-                                                            <th>Trạng thái</th>
-                                                            <th>Tổng tiền</th>
-                                                            <th>Hành động</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="order-list">
-                                                        @if ($bills->count() > 0)
-                                                            @foreach ($bills as $key => $item)
-                                                                <tr class="order-card" data-status="{{ $item->status }}">
-                                                                    <td>{{ $key + 1 }}</td>
-                                                                    <td>{{ $item->order_code }}</td>
-                                                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
-                                                                    <td>
-                                                                        @switch($item->status)
-                                                                            @case(1)
-                                                                                Chờ xác nhận
-                                                                            @break
-                                                                            @case(2)
-                                                                                Chờ lấy hàng
-                                                                            @break
-                                                                            @case(3)
-                                                                                Đang giao hàng
-                                                                            @break
-                                                                            @case(4)
-                                                                                Giao thành công
-                                                                            @break
-                                                                            @case(5)
-                                                                                Chờ hủy
-                                                                            @break
-                                                                            @case(6)
-                                                                                Đã hủy
-                                                                            @break
-                                                                            @default
-                                                                                Không xác định
-                                                                        @endswitch
-                                                                    </td>
-                                                                    <td>{{ number_format($item->total_amount, 0, ',', '.') }} VND</td>
-                                                                    <td>
-                                                                        <a href="{{ route('viewBillDetail', $item->id) }}">Xem</a>
-                                                                        @if ($item->status == 1)
-                                                                            | <a href="{{ route('cancelOrder', $item->id) }}" onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?')">Hủy</a>
-                                                                        @endif
-                                                                    </td>
-                                                                </tr>
-                                                            @endforeach
-                                                        @else
-                                                            <tr>
-                                                                <td colspan="6">Không có đơn hàng nào trong trạng thái này.</td>
-                                                            </tr>
-                                                        @endif
-                                                    </tbody>
-                                                </table>
+                                            <!-- Receiver Info -->
+                                            <div class="bill-card-body">
+                                                <div class="bill-info" style="display: flex; flex-direction: column; gap: 12px;">
+                                                    <div class="info-row" style="display: flex; justify-content: space-between;">
+                                                        <strong style="font-weight: 600;">Người nhận:</strong> <span>{{ $order->user_name }}</span>
+                                                    </div>
+                                                    <div class="info-row" style="display: flex; justify-content: space-between;">
+                                                        <strong style="font-weight: 600;">Email:</strong> <span>{{ $order->user_email }}</span>
+                                                    </div>
+                                                    <div class="info-row" style="display: flex; justify-content: space-between;">
+                                                        <strong style="font-weight: 600;">Điện thoại:</strong> <span>{{ $order->user_phone }}</span>
+                                                    </div>
+                                                    <div class="info-row" style="display: flex; justify-content: space-between;">
+                                                        <strong style="font-weight: 600;">Địa chỉ:</strong> <span>{{ $order->user_address }}</span>
+                                                    </div>
+                                                    <!-- Total Amount Before Discount -->
+                                                    <div class="info-row" style="display: flex; justify-content: space-between;">
+                                                        <strong style="font-weight: 600;">Tổng tiền trước khi giảm:</strong> 
+                                                        <span>
+                                                            @php
+                                                                $totalBeforeDiscount = $order->orderDetails->sum(function($detail) {
+                                                                    return $detail->quantity * $detail->price;
+                                                                });
+                                                            @endphp
+                                                            {{ number_format($totalBeforeDiscount, 0, ',', '.') }} VND
+                                                        </span>
+                                                    </div>
+                                                    <!-- Voucher Discount -->
+                                                    <div class="info-row" style="display: flex; justify-content: space-between;">
+                                                        <strong style="font-weight: 600;">Giảm:</strong> 
+                                                        <span>
+                                                            @if ($order->voucher)
+                                                                {{ $order->voucher->discount }}%
+                                                            @else
+                                                                Không áp dụng
+                                                            @endif
+                                                        </span>
+                                                    </div>
+                                                    <div class="info-row" style="display: flex; justify-content: space-between;">
+                                                        <strong style="font-weight: 600;">Phí vận chuyển:</strong> <span>{{ number_format(30000, 0, ',','.') }} VNĐ</span>
+                                                    </div>
+                                                    <!-- Total Amount -->
+                                                    <div class="info-row" style="display: flex; justify-content: space-between;">
+                                                        <strong style="font-weight: 600;">Tổng tiền:</strong> <span>{{ number_format($order->total_amount, 0, ',', '.') }} VND</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    
+                                            <!-- Horizontal Divider -->
+                                            <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+                                    
+                                            <!-- Order Details -->
+                                            <div class="myaccount-table"
+                                                 style="display: grid; grid-template-columns: {{ $order->orderDetails->count() === 1 ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))' }}; gap: 20px;">
+                                                @foreach ($order->orderDetails as $detail)
+                                                    <div class="bill-card"
+                                                         style="background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                                                        <!-- Product Name -->
+                                                        <div class="info-row"
+                                                             style="display: flex; justify-content: space-between;">
+                                                            <strong style="font-weight: 600;">Tên Sản Phẩm:</strong>
+                                                            <span
+                                                                style="max-width: 300px; word-wrap: break-word; white-space: normal;">{{ $detail->product_name }}</span>
+                                                        </div>
+                                                        <!-- Size -->
+                                                        <div class="info-row"
+                                                             style="display: flex; justify-content: space-between;">
+                                                            <strong style="font-weight: 600;">Kích cỡ:</strong>
+                                                            <span>{{ $detail->size_name }}</span>
+                                                        </div>
+                                                        <!-- Color -->
+                                                        <div class="info-row"
+                                                             style="display: flex; justify-content: space-between;">
+                                                            <strong style="font-weight: 600;">Màu sắc:</strong>
+                                                            <span>{{ $detail->color_name }}</span>
+                                                        </div>
+                                                        <!-- Quantity -->
+                                                        <div class="info-row"
+                                                             style="display: flex; justify-content: space-between;">
+                                                            <strong style="font-weight: 600;">Số Lượng:</strong>
+                                                            <span>{{ $detail->quantity }}</span>
+                                                        </div>
+                                                        <!-- Price -->
+                                                        <div class="info-row"
+                                                             style="display: flex; justify-content: space-between;">
+                                                            <strong style="font-weight: 600;">Giá:</strong>
+                                                            <span>{{ number_format($detail->price, 0, ',', '.') }} VND</span>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
                                             </div>
                                         </div>
                                     </div>
-                                    
-
                                     <!-- Single Tab Content End -->
 
                                     <!-- Single Tab Content Start -->
@@ -332,58 +353,8 @@
                                     <!-- Single Tab Content Start -->
                                     <div class="tab-pane fade" id="payment-method" role="tabpanel">
                                         <div class="myaccount-content">
-                                            <h3 class="title">Tất cả vourcher</h3>
-                                            <div class="btn-group mb-3">
-                                                <button class="btn btn-sm btn-primary filter-btn" data-status="all">Tất cả</button>
-                                                <button class="btn btn-sm btn-outline-primary filter-btn" data-status="used">Đã dùng</button>
-                                                <button class="btn btn-sm btn-outline-primary filter-btn" data-status="not_used">Chưa dùng</button>
-                                                <button class="btn btn-sm btn-outline-primary filter-btn" data-status="expired">Hết hạn</button>
-                                            </div>
-                                            
-                                            <div class="row" id="voucher-container">
-                                                @foreach ($vouchers as $uservoucher)
-                                                    <div class="col-md-4 mb-3 voucher-card" data-status="{{ $uservoucher->status }}">
-                                                        <div class="card shadow-sm border-0">
-                                                            <div class="card-body d-flex align-items-center">
-                                                                <div class="voucher-icon text-primary me-3" style="font-size: 24px;">
-                                                                    <i class="fa fa-tags"></i>
-                                                                </div>
-                                                                <div class="voucher-details flex-grow-1">
-                                                                    <h6 class="mb-1 text-dark fw-bold">{{ $uservoucher->voucher->code }}</h6>
-                                                                    <small class="text-muted">Giảm giá: {{ $uservoucher->voucher->discount ?? 0 }}%</small>
-                                                                    <br>
-                                                                    @php
-                                                                        $minMoney = $uservoucher->voucher->min_money;
-                                                                        $maxMoney = $uservoucher->voucher->max_money;
-                                                                        $formattedMinMoney = $minMoney >= 1_000_000 
-                                                                            ? number_format($minMoney / 1_000_000, 0, ',', '') . 'tr' 
-                                                                            : number_format($minMoney / 1_000, 0, ',', '') . 'k';        
-                                                                        $formattedMaxMoney = $maxMoney >= 1_000_000 
-                                                                            ? number_format($maxMoney / 1_000_000, 0, ',', '') . 'tr' 
-                                                                            : number_format($maxMoney / 1_000, 0, ',', '') . 'k';                    
-                                                                    @endphp
-                                                                    <small>Áp dụng: {{ $formattedMinMoney }} - {{ $formattedMaxMoney }}</small>
-                                                                    <br>
-                                                                    <small>HSD: {{ \Carbon\Carbon::parse($uservoucher->voucher->end_date)->format('d/m/Y') }}</small>
-                                                                    <br>
-                                                                    <span class="badge 
-                                                                        @if ($uservoucher->status === 'used') bg-success 
-                                                                        @elseif ($uservoucher->status === 'not_used') bg-primary 
-                                                                        @elseif ($uservoucher->status === 'expired') bg-danger 
-                                                                        @endif">
-                                                                        @if ($uservoucher->status === 'used') Đã dùng 
-                                                                        @elseif ($uservoucher->status === 'not_used') Chưa dùng 
-                                                                        @elseif ($uservoucher->status === 'expired') Hết hạn 
-                                                                        @endif
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                            
-                                            
+                                            <h3 class="title">Payment Method</h3>
+                                            <p class="saved-message">You Can't Saved Your Payment Method yet.</p>
                                         </div>
                                     </div>
                                     <!-- Single Tab Content End -->
@@ -517,63 +488,4 @@
             });
         });
     </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            const voucherCards = document.querySelectorAll('.voucher-card');
-    
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    // Lấy trạng thái cần lọc
-                    const status = this.getAttribute('data-status');
-    
-                    // Thay đổi trạng thái nút
-                    filterButtons.forEach(btn => btn.classList.remove('btn-primary'));
-                    filterButtons.forEach(btn => btn.classList.add('btn-outline-primary'));
-                    this.classList.remove('btn-outline-primary');
-                    this.classList.add('btn-primary');
-    
-                    // Hiển thị/hide các voucher dựa trên trạng thái
-                    voucherCards.forEach(card => {
-                        if (status === 'all' || card.getAttribute('data-status') === status) {
-                            card.style.display = 'block';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    });
-                });
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            const orderCards = document.querySelectorAll('.order-card');
-            
-            // Xử lý sự kiện khi nhấn vào nút bộ lọc
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Lấy trạng thái của nút vừa được nhấn
-                    const status = this.getAttribute('data-status');
-                    
-                    // Thay đổi kiểu nút đã chọn
-                    filterButtons.forEach(btn => {
-                        btn.classList.remove('btn-primary');
-                        btn.classList.add('btn-outline-primary');
-                    });
-                    this.classList.remove('btn-outline-primary');
-                    this.classList.add('btn-primary');
-                    
-                    orderCards.forEach(card => {
-                        if (status === 'all' || card.getAttribute('data-status') === status) {
-                            card.style.display = 'table-row';  
-                        } else {
-                            card.style.display = 'none';  
-                        }
-                    });
-                });
-            });
-        });
-    </script>
-    
 @endsection

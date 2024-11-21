@@ -19,7 +19,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $query = Order::with(['user', 'voucher', 'orderDetails.productVariant.product'])
-            ->orderBy('status', 'asc');
+            ->orderBy('id', 'desc');
 
         if ($request->has('status') && $request->status != '') {
             $query->where('status', $request->status);
@@ -92,6 +92,13 @@ class OrderController extends Controller
         if ($order->status == 5 && $order->canProceed()) {
             $order->status = 6;
             $order->save();
+            foreach ($order->orderDetails as $detail) {
+                $productVariant = $detail->productVariant;
+                if ($productVariant) {
+                    $productVariant->quantity += $detail->quantity;
+                    $productVariant->save();
+                }
+            }
             return redirect()->back()->with('success', 'Đơn hàng đã bị hủy');
         } else {
             return redirect()->back()->with('error', 'Không thể hủy đơn hàng với trạng thái hiện tại');

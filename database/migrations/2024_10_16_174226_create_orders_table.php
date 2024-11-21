@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
         $table->id();
-        $table->foreignIdFor(User::class)->nullable()->constrained()->onDelete('set null'); 
+        $table->foreignIdFor(User::class)->nullable()->constrained(); 
         $table->string('user_name'); 
         $table->string('user_email');
         $table->string('user_phone');

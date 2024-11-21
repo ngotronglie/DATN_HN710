@@ -80,6 +80,7 @@ Route::get('/blogs', [ClientBlogController::class, 'index'])->name('blogs.index'
 Route::get('/blogs/category/{id}', [ClientBlogController::class, 'getBlogCategory'])->name('blogs.category');
 Route::get('/blogs/{id}', [ClientBlogController::class, 'show'])->name('blogs.show');
 Route::get('/blogs-search', [ClientBlogController::class, 'search'])->name('blogs.search');
+Route::post('/voucher/apply-code', [ClientBlogController::class, 'applyVoucher'])->name('voucher.apply_code');
 
 // Contact
 Route::get('/contact', function () {
@@ -92,9 +93,6 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
  Route::post('/place-order', [CheckoutController::class, 'placeOrder'])->name('placeOrder');
  Route::post('/apply-voucher', [CheckoutController::class, 'applyVoucher'])->name('voucher.apply');
  Route::get('/billSearch', [CheckoutController::class, 'billSearch'])->name('bill.search');
-
- Route::get('/vouchers/valid', [CheckoutController::class, 'getValidVouchers'])->name('voucher.getValidVouchers');
-
 // Tài khoản
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AccountController::class, 'loginForm'])->name('login');
@@ -113,8 +111,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/my_account', [AccountController::class, 'myAccount'])->name('my_account');
     Route::post('/my_acount/update/{id}', [AccountController::class, 'updateMyAcount'])->name('updateMyAcount');
     Route::post('/my_acount/update-password/{id}', [AccountController::class, 'updatePassword'])->name('user.updatePassword');
-});
+    Route::get('/my_acount/{id}/bill_detail', [AccountController::class, 'orderBillDetail'])->name('viewBillDetail');
+    Route::get('my_acount/orders/cancel/{id}', [AccountController::class, 'cancelOrder'])->name('cancelOrder');
+    // Route::get('/orders/status/{status?}', [AccountController::class, 'getOrdersByStatus'])->name('orders.byStatus');
+    // Route::get('/voucher/status/{status?}', [AccountController::class, 'getVouchersByStatus'])->name('voucher.byStatus');
 
+});
 Route::get('/verify/{token}', [AccountController::class, 'verify'])->name('verify');
 
 

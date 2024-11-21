@@ -95,7 +95,7 @@
                                     <span style="font-weight: 600;color: black" class="meta-item author mr-1">{{ $blog->user->name }},</span>
                                 </span>
                                 <span class="meta-item date">{{ \Carbon\Carbon::parse($blog->created_at)->format('d/m/Y') }}</span>
-                                <span class="meta-item comment"><a href="#">{{$blog->view}} Lượt xem</a></span>
+                                <span class="meta-item comment"><a href="#">{{ $blog->view }} Lượt xem</a></span>
                                 <span class="meta-item comment"><a href="#">03 Bình luận</a></span>
                             </div>
                             <div class="desc content aos-init aos-animate" data-aos="fade-right" data-aos-delay="300">
@@ -103,7 +103,33 @@
                             </div>
                         </div>
                         <hr>
+
+                      
+                    
+                    
+                        @if($voucher)
+                        <div class="voucher-banner" style="margin-top: 30px; background-color: #f1f8e9; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                            <h4 style="font-weight: bold; color: #2e7d32;">🎉 Khuyến mãi đặc biệt dành cho bạn! 🎉</h4>
+                            <div class="voucher-item" style="border: 2px dashed #4caf50; padding: 15px; border-radius: 12px; background-color: #ffffff; width: 280px; margin: 20px auto; text-align: left;">
+                                <h5 style="font-weight: bold; text-align: center; color: #2e7d32;">Mã: <span style="color: #d32f2f;">{{ $voucher->code }}</span></h5>
+                                <ul style="list-style: none; padding: 0; margin-top: 10px;">
+                                    <li style="margin-bottom: 5px;"><strong>Giảm:</strong> {{ $voucher->discount }}%</li>
+                                    <li style="margin-bottom: 5px;"><strong>Từ:</strong> {{ number_format($voucher->min_money, 0, ',', '.') }} VNĐ</li>
+                                    <li style="margin-bottom: 5px;"><strong>Đến:</strong> {{ number_format($voucher->max_money, 0, ',', '.') }} VNĐ</li>
+                                    <li style="margin-bottom: 5px;"><strong>Hạn sử dụng:</strong> {{ \Carbon\Carbon::parse($voucher->end_date)->format('d/m/Y') }}</li>
+                                </ul>
+                                <button class="btn btn-success apply-voucher-btn" style="margin-top: 15px; display: block; width: 100%; font-weight: bold;" data-voucher-code="{{ $voucher->code }}">
+                                   Lưu
+                                </button>
+                            </div>
+                        </div>
+                    @endif
+                                          
+                    
+                   
+                    
                     </div>
+                    
 
 
 
@@ -190,5 +216,39 @@
                 }
             });
         });
+        $(document).ready(function() {
+             // Lắng nghe sự kiện click vào nút "Sử dụng ngay"
+             $('.apply-voucher-btn').on('click', function() {
+                 var voucherCode = $(this).data('voucher-code');
+     
+                 $.ajax({
+                     url: '{{ route('voucher.apply_code') }}', // Gọi route apply voucher
+                     method: 'POST',
+                     data: {
+                         _token: '{{ csrf_token() }}', // CSRF token
+                         voucher_code: voucherCode // Mã voucher
+                     },
+                     success: function(response) {
+                         Swal.fire({
+                             icon: 'success',
+                             title: 'Thành công!',
+                             text: response.message // Thông báo thành công
+                         });
+                     },
+                     error: function(xhr) {
+                         Swal.fire({
+                             icon: 'error',
+                             title: 'Lỗi!',
+                             text: xhr.responseJSON.message // Thông báo lỗi
+                         });
+                     }
+                 });
+             });
+         });
+
     </script>
+  
+     
+     
+    
 @endsection
