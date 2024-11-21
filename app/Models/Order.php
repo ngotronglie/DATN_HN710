@@ -15,6 +15,7 @@ class Order extends Model
         'user_phone',
         'user_address',
         'voucher_id',
+        'discount',
         'total_amount',
         'payment_method',
         'payment_status',

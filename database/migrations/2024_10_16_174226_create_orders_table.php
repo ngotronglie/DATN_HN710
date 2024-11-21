@@ -20,7 +20,8 @@ return new class extends Migration
         $table->string('user_email');
         $table->string('user_phone');
         $table->string('user_address');
-        $table->foreignIdFor(Voucher::class)->nullable()->constrained()->onDelete('set null'); 
+        $table->foreignIdFor(Voucher::class)->nullable()->constrained()->onDelete('set null');
+        $table->integer('discount')->nullable();
         $table->bigInteger('total_amount');
         $table->string('status')->default('1');
         $table->enum('payment_method', ['cod', 'online'])->default('cod'); 
