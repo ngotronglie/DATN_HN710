@@ -6,7 +6,6 @@
         // Lắng nghe sự kiện click trên checkbox "Check All"
         $(document).on('click', '#checkAllTable', function () {
             let checkAll = $(this).prop('checked');
-            console.log('Check All:', checkAll); // Kiểm tra giá trị của checkbox
 
             // Cập nhật tất cả checkbox có class "checkBoxItem"
             $('.checkBoxItem').prop('checked', checkAll);

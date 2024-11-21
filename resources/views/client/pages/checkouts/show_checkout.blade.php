@@ -137,11 +137,6 @@
                                         <label>Tên người nhận</label>
                                         <input placeholder="Nhập tên người nhận" type="text" name="name"
                                             value="{{ old('name', Auth::user()->name ?? '') }}">
-                                        @error('name')
-                                            <small class="text-danger">
-                                                {{ $message }}
-                                            </small>
-                                        @enderror
                                     </div>
                                 </div>
                                 <!-- Name Input End -->
@@ -152,11 +147,6 @@
                                         <label>Email <span class="required">*</span></label>
                                         <input placeholder="Nhập email" type="email" name="email"
                                             value="{{ old('email', Auth::user()->email ?? '') }}">
-                                        @error('email')
-                                            <small class="text-danger">
-                                                {{ $message }}
-                                            </small>
-                                        @enderror
                                     </div>
                                 </div>
                                 <!-- Email Input End -->
@@ -167,11 +157,6 @@
                                         <label>Địa chỉ <span class="required">*</span></label>
                                         <input placeholder="Nhập địa chỉ giao hàng" type="text" name="address"
                                             value="{{ old('address', Auth::user()->address ?? '') }}">
-                                        @error('address')
-                                            <small class="text-danger">
-                                                {{ $message }}
-                                            </small>
-                                        @enderror
                                     </div>
                                 </div>
                                 <!-- Address Input End -->
@@ -182,11 +167,6 @@
                                         <label>Điện thoại <span class="required">*</span></label>
                                         <input placeholder="Nhập số điện thoại" type="text" name="phone"
                                             value="{{ old('phone', Auth::user()->phone ?? '') }}">
-                                        @error('phone')
-                                            <small class="text-danger">
-                                                {{ $message }}
-                                            </small>
-                                        @enderror
                                     </div>
                                 </div>
                                 <!-- Phone Input End -->
@@ -220,38 +200,39 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if (Auth::check())
-                                            @foreach ($cartItems as $cart)
-                                                @foreach ($cart->items as $item)
-                                                    <tr>
-                                                        <td>{{ $item->productVariant->product->name }}
-                                                            <span>({{ $item->productVariant->size->name }} /
-                                                                {{ $item->productVariant->color->name }}) x
-                                                                {{ $item->quantity }}</span>
-                                                        </td>
-                                                        <td class="text-end">{{ number_format($item->total_price) }} đ</td>
-                                                    </tr>
-                                                @endforeach
-                                            @endforeach
-                                        @else
-                                            @foreach ($cartItems as $item)
-                                                <tr>
-                                                    <td>
-                                                        {{ $item['name'] }}
-                                                        <span>({{ $item['size'] }} / {{ $item['color'] }}) x
-                                                            {{ $item['quantity'] }}</span>
-                                                    </td>
-                                                    <td class="text-end">{{ number_format($item['total_price']) }} đ</td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
+                                        @foreach ($products as $product)
+                                            <tr>
+                                                <td>
+                                                    {{ $product->name }} /
+                                                    <span>
+                                                        {{ $product->size->name }} /
+                                                        {{ $product->color->name }} /
+                                                        x{{ $product->quantity }}
+                                                    </span>
+                                                </td>
+                                                <td class="text-end">
+                                                    {{ number_format($product->sumtotal, 0, ',', '.') }} đ
+                                                </td>
+                                            </tr>
+
+                                            <input type="hidden" name="product_name[]" value="{{ $product->name }}">
+                                            <input type="hidden" name="size_name[]" value="{{ $product->size->name }}">
+                                            <input type="hidden" name="color_name[]" value="{{ $product->color->name }}">
+                                            <input type="hidden" name="quantity[]" value="{{ $product->quantity }}">
+                                            <input type="hidden" name="price[]" value="{{ $product->price }}">
+                                            <input type="hidden" name="product_variant_ids[]" value="{{ $product->id }}">
+                                        @endforeach
+
+                                        <input type="hidden" name="total_amount" value="{{ $total }}">
+
+
                                     </tbody>
                                     <tfoot>
 
                                         <tr class="cart-subtotal">
                                             <th class="text-start ps-0">Tổng Cộng</th>
                                             <td class="text-end pe-0">
-                                                <span class="amount">{{ number_format($totalAmount) }} đ</span>
+                                                <span class="amount">{{ number_format($total, 0, ',', '.') }} đ</span>
                                             </td>
                                         </tr>
                                         <tr class="cart-subtotal">
@@ -278,7 +259,7 @@
                                             <td class="text-end pe-0">
                                                 <strong>
                                                     <span class="amount" id="total-amount">
-                                                        {{ session('voucher_id') ? number_format(session('totalAmountWithDiscount')) : number_format($totalAmount + 30000) }}
+                                                        {{ session('voucher_id') ? number_format(session('totalAmountWithDiscount')) : number_format($total + 30000, 0, ',', '.') }}
                                                         đ
                                                     </span>
                                                 </strong>
@@ -301,9 +282,6 @@
                                         </label>
                                         <div class="payment-description mt-2">
                                             <p>Vui lòng thanh toán cho người giao hàng.</p>
-
-
-
                                         </div>
                                     </div>
 
@@ -320,11 +298,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                @error('payment_method')
-                                    <small class="text-danger">
-                                        {{ $message }}
-                                    </small>
-                                @enderror
 
 
 
@@ -362,6 +335,7 @@
                         voucher_code: voucherCode
                     },
                     success: function(response) {
+                        console.log(response);
                         if (response.success) {
                             Swal.fire({
                                 icon: 'success',
@@ -380,7 +354,7 @@
                             $('#total-amount').text(response.totalAmountWithDiscount
                                 .toLocaleString() + ' đ');
                             $('#discount-amount').text('-' + response.discount
-                            .toLocaleString() + ' đ');
+                                .toLocaleString() + ' đ');
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -410,25 +384,29 @@
                     type: 'POST',
                     data: formData,
                     success: function(response) {
+                        console.log(response);
+
+                        $('.header-action-num').html(response.count);
+
                         if (response.success) {
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Đặt hàng thành công!',
-                                html: `<p style="font-size: 16px; font-weight: bold;">Mã đơn hàng #<span id="orderCode">${response.order.order_code}</span> 
-                                       <i id="copyIcon" title="Sao chép" class="fa fa-copy" style="cursor: pointer; color: blue; margin-left: 10px;" onclick="copyToClipboard('${response.order.order_code}')"></i>
-                                   </p>
-                                   <hr style="border-top: 1px solid #ddd;">
-                                   <p style="font-size: 14px; color: #333;">
-                                       <strong>Thông tin giao hàng:</strong><br>
-                                       Tên: ${response.order.user_name}<br>
-                                       Điện thoại: ${response.order.user_phone}<br>
-                                       Địa chỉ: ${response.order.user_address}
-                                   </p>
-                                   <hr style="border-top: 1px solid #ddd;">
-                                   <p style="font-size: 14px; color: #333;">
-                                       <strong>Phương thức thanh toán:</strong><br>
-                                       ${response.order.payment_method === 'cod' ? 'Thanh toán khi nhận hàng (COD)' : 'Thanh toán trực tuyến'}
-                                   </p>`,
+                                html: `<p style="font-size: 16px; font-weight: bold;">Mã đơn hàng #<span id="orderCode">${response.order.order_code}</span>
+                                   <i id="copyIcon" title="Sao chép" class="fa fa-copy" style="cursor: pointer; color: blue; margin-left: 10px;" onclick="copyToClipboard('${response.order.order_code}')"></i>
+                               </p>
+                               <hr style="border-top: 1px solid #ddd;">
+                               <p style="font-size: 14px; color: #333;">
+                                   <strong>Thông tin giao hàng:</strong><br>
+                                   Tên: ${response.order.user_name}<br>
+                                   Điện thoại: ${response.order.user_phone}<br>
+                                   Địa chỉ: ${response.order.user_address}
+                               </p>
+                               <hr style="border-top: 1px solid #ddd;">
+                               <p style="font-size: 14px; color: #333;">
+                                   <strong>Phương thức thanh toán:</strong><br>
+                                   ${response.order.payment_method === 'cod' ? 'Thanh toán khi nhận hàng (COD)' : 'Thanh toán trực tuyến'}
+                               </p>`,
                                 showCancelButton: true,
                                 cancelButtonText: 'Tiếp tục mua hàng',
                                 confirmButtonText: !response.is_logged_in ?
@@ -474,7 +452,7 @@
                 });
             });
 
-            // Chức năng sao chép mã đơn hàng 
+            // Chức năng sao chép mã đơn hàng
             function copyToClipboard(text) {
                 var tempInput = document.createElement("input");
                 tempInput.value = text;
@@ -484,7 +462,7 @@
                 document.body.removeChild(tempInput);
             }
 
-            //  mô tả phương thức thanh toán 
+            //  mô tả phương thức thanh toán
             document.querySelectorAll('input[name="payment_method"]').forEach((elem) => {
                 elem.addEventListener('change', function() {
                     document.querySelectorAll('.payment-description').forEach((desc) => {

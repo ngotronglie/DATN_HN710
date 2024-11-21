@@ -236,7 +236,7 @@
             <!-- Offcanvas Cart Content Start -->
             <div class="offcanvas-cart-content">
                 <!-- Offcanvas Cart Title Start -->
-                <h2 class="offcanvas-cart-title mb-6">Giỏ hàng</h2>
+                <h2 class="offcanvas-cart-title mb-5">Giỏ hàng</h2>
                 <!-- Offcanvas Cart Title End -->
 
                 @if (!empty($processedItems))

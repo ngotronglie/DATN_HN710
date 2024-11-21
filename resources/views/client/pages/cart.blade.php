@@ -1,6 +1,15 @@
 @extends('client.index')
 
-
+@section('style')
+    <style>
+        input[type="checkbox"] {
+            display: block;
+        }
+        .hidenInput{
+            display: none;
+        }
+    </style>
+@endsection
 @section('main')
     <!-- Breadcrumb Section Start -->
     <div class="section">
@@ -38,6 +47,9 @@
                             <!-- Table Head Start -->
                             <thead>
                                 <tr>
+                                    <th>
+                                        <input id="checkAllTable" class="checkCart" type="checkbox">
+                                    </th>
                                     <th class="pro-thumbnail">Ảnh</th>
                                     <th class="pro-title">Tên sản phẩm</th>
                                     <th class="pro-price">Giá</th>
@@ -51,39 +63,54 @@
                             <!-- Table Body Start -->
                             <tbody>
                                 @if (!empty($processedItems))
-                                @foreach ($processedItems as $item)
-                                <tr class="remove-cart">
-                                    <td><a href="#"><img style="width: 45%" class="img-fluid"
-                                                src="{{ Storage::url($item->productVariant->product->img_thumb) }}"
-                                                alt="Product" /></a></td>
-                                    <td class="pro-title"><a href="{{route('shops.show', $item->productVariant->product->slug)}}">{{ $item->productVariant->product->name }}
-                                            <br> {{ $item->productVariant->size->name }} /
-                                            {{ $item->productVariant->color->name }}</a></td>
-                                    <td class="pro-price"><span>{{ number_format($item->productVariant->price_sale, 0, ',', '.') . ' đ' }}</span></td>
-                                    <td class="pro-quantity">
-                                        <div class="quantity">
-                                            <div class="cart-plus-minus">
-                                                <input class="cart-plus-minus-box" value="{{ $item->quantity }}" type="text">
-                                                <div class="dec qtybutton">-</div>
-                                                <div class="inc qtybutton">+</div>
-                                                <div class="dec qtybutton"><i class="fa fa-minus"></i></div>
-                                                <div class="inc qtybutton"><i class="fa fa-plus"></i></div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="pro-subtotal"><span id="total-{{$item->id}}">{{ number_format($item->total_price, 0, ',', '.') . 'đ' }} đ</span></td>
-                                    <td class="pro-remove"><span data-id="{{$item->id}}" data-quantity="{{$item->productVariant->quantity}}"
-                                     class="deleteCart"><i class="pe-7s-trash" style="font-size: 1.5rem;"></i></span></td>
-                                </tr>
-                            @endforeach
-                            @else
-                            <tr id="cart-null">
-                                <td colspan="6"><p>Giỏ hàng của bạn hiện đang trống.</p></td>
-                            </tr>
+                                    @foreach ($processedItems as $item)
+                                        <tr class="remove-cart">
+                                            <td>
+                                                <input type="checkbox" id="checked-{{ $item->id }}" class="checkBoxItem"
+                                                    data-id="{{ $item->productVariant->id }}" data-total="{{ $item->total_price }}"
+                                                    data-quantity="{{ $item->quantity }}">
+                                            </td>
+                                            <td><a href="{{ route('shops.show', $item->productVariant->product->slug) }}"><img
+                                                        style="width: 45%" class="img-fluid"
+                                                        src="{{ Storage::url($item->productVariant->product->img_thumb) }}"
+                                                        alt="Product" /></a></td>
+                                            <td class="pro-title"><a
+                                                    href="{{ route('shops.show', $item->productVariant->product->slug) }}">{{ $item->productVariant->product->name }}
+                                                    <br> {{ $item->productVariant->size->name }} /
+                                                    {{ $item->productVariant->color->name }}</a></td>
+                                            <td class="pro-price">
+                                                <span>{{ number_format($item->productVariant->price_sale, 0, ',', '.') . ' đ' }}</span>
+                                            </td>
+                                            <td class="pro-quantity">
+                                                <div class="quantity">
+                                                    <div class="cart-plus-minus">
+                                                        <input class="cart-plus-minus-box" value="{{ $item->quantity }}"
+                                                            type="text">
+                                                        <div class="dec qtybutton">-</div>
+                                                        <div class="inc qtybutton">+</div>
+                                                        <div class="dec qtybutton"><i class="fa fa-minus"></i></div>
+                                                        <div class="inc qtybutton"><i class="fa fa-plus"></i></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="pro-subtotal"><span
+                                                    id="total-{{ $item->id }}">{{ number_format($item->total_price, 0, ',', '.') . 'đ' }}
+                                                    đ</span></td>
+                                            <td class="pro-remove"><span data-id="{{ $item->id }}"
+                                                    data-quantity="{{ $item->productVariant->quantity }}"
+                                                    class="deleteCart"><i class="pe-7s-trash"
+                                                        style="font-size: 1.5rem;"></i></span></td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr id="cart-null">
+                                        <td colspan="7">
+                                            <p>Giỏ hàng của bạn hiện đang trống.</p>
+                                        </td>
+                                    </tr>
                                 @endif
                                 <tr id="cart-null">
                                 </tr>
-
                             </tbody>
                             <!-- Table Body End -->
 
@@ -113,7 +140,7 @@
                                 <table class="table">
                                     <tr>
                                         <td>Tổng cộng</td>
-                                        <td><span style="font-weight:600 " class="totalAll">{{ number_format($total, 0, ',', '.') . 'đ' }}</span></td>
+                                        <td><span style="font-weight:600 " class="totalAll">0 đ</span></td>
                                     </tr>
                                     <tr>
                                         <td>Phí vận chuyển</td>
@@ -121,7 +148,7 @@
                                     </tr>
                                     <tr class="total">
                                         <td>Đơn giá</td>
-                                        <td class="total-amount">{{ number_format($total + 30000, 0, ',', '.') . 'đ' }}</td>
+                                        <td class="total-amount">0 đ</td>
                                     </tr>
                                 </table>
                             </div>
@@ -131,7 +158,14 @@
                         <!-- Cart Calculate Items End -->
                         <!-- Cart Checktout Button Start -->
                         <div class="checkout-button-container text-center mt-4">
-                            <a href="{{route('checkout')}}" class="btn btn-dark btn-hover-primary rounded-0 w-100">Thanh toán</a>
+                            <form action="{{ route('checkout') }}" method="post">
+                                @csrf
+                                <input type="hidden" class="hidenInput" name="item" id="item"> <br>
+                                <input type="hidden" class="hidenInput" name="totalMyprd" id="totalMyprd">
+                                <button type="submit" class="btn btn-dark btn-hover-primary rounded-0 w-100">
+                                    Thanh toán
+                                </button>
+                            </form>
                         </div>
                         {{-- <a href="checkout.html" class="btn btn-dark btn-hover-primary rounded-0 w-100">Thanh toán</a> --}}
                         <!-- Cart Checktout Button End -->
@@ -147,5 +181,6 @@
 @endsection
 
 @section('script')
-<script src="{{ asset('plugins/js/updateQuatityCart.js') }}"></script>
+    <script src="{{ asset('plugins/js/updateQuatityCart.js') }}"></script>
+    <script src="{{ asset('plugins/js/checkall.js') }}"></script>
 @endsection

@@ -3,7 +3,6 @@
     var HT = {};
     var token = $('meta[name="csrf-token"]').attr('content');
     let mes = '';
-
     HT.upQuatity = () => {
         let debounceTimeout;
 
@@ -41,14 +40,11 @@
                 data: option,
                 dataType: 'json',
                 success: function (res) {
+                    $('#checked-' + id).attr('data-quantity',res.new_quantity);
+                    $('#checked-' + id).attr('data-total', res.total_price)
                     let formatTotalItem = new Intl.NumberFormat('vi-VN').format(res.total_price) + ' đ';
-                    let formatTotal = new Intl.NumberFormat('vi-VN').format(res.total_cart_price) + ' đ';
-                    let formatTotalShip = new Intl.NumberFormat('vi-VN').format(res.total_cart_price + 30000) + ' đ';
 
                     $('#total-' + id).empty().html(formatTotalItem);
-                    $('.totalAll').empty().html(formatTotal);
-                    $('.total-amount').empty().html(formatTotalShip);
-
 
                 },
                 error: function (xhr, status, error) {
@@ -70,12 +66,15 @@
             if ($this.hasClass('inc')) {
                 quantity = previousQuantity++;
                 input.data('previousQuantity');
-                console.log(id);
-
-
+                $('.inc').closest('tr').find('#checked-' + id).prop('checked', false);
+                $('.checkCart').prop('checked', false);
+                updateCheckedItemsAndTotal();
             } else if ($this.hasClass('dec') && previousQuantity > 1) {
                 quantity = previousQuantity--;
                 input.data('previousQuantity');
+                $('.inc').closest('tr').find('#checked-' + id).prop('checked', false);
+                $('.checkCart').prop('checked', false);
+                updateCheckedItemsAndTotal();
             }
 
             if (!validateInput(quantity, maxQuantity, input, quantityOld)) {
@@ -102,6 +101,9 @@
                 let quantity = parseInt(input.val());
                 let maxQuantity = input.closest('tr').find('.deleteCart').data('quantity') || 10;
                 let previousQuantity = input.data('previousQuantity') || 1;
+                $('.inc').closest('tr').find('#checked-' + id).prop('checked', false);
+                $('.checkCart').prop('checked', false);
+                updateCheckedItemsAndTotal();
 
 
                 if (quantity > maxQuantity) {
@@ -135,6 +137,46 @@
         });
     };
 
+    $(document).on('change', '.checkBoxItem, .checkCart', function () {
+
+        if ($(this).hasClass('checkCart')) {
+            let isCheckAll = $(this).prop('checked');
+            $('.checkBoxItem').prop('checked', isCheckAll);
+        }
+
+        updateCheckedItemsAndTotal();
+    });
+
+    function updateCheckedItemsAndTotal() {
+        let total = 0;
+        let items = [];
+
+        $('.checkBoxItem:checked').each(function () {
+            let checkbox = $(this);
+
+            let price = parseFloat(checkbox.attr('data-total')) || 0;
+            total += price;
+
+            let item = {
+                id: checkbox.attr('data-id'),
+                quantity: checkbox.attr('data-quantity')
+            };
+            items.push(item);
+        });
+
+        let formatTotal = new Intl.NumberFormat('vi-VN').format(total) + ' đ';
+        let formatTotalShip = new Intl.NumberFormat('vi-VN').format(total + 30000) + ' đ';
+
+        if (total > 0) {
+            $('.totalAll').html(formatTotal);
+            $('.total-amount').html(formatTotalShip);
+        } else {
+            $('.totalAll').html('0 đ');
+            $('.total-amount').html('0 đ');
+        }
+        $('#item').val(JSON.stringify(items));
+        $('#totalMyprd').val(total);
+    }
 
     $(document).ready(function () {
         HT.upQuatity();
