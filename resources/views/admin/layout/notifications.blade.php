@@ -40,16 +40,16 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <strong class="card-title">Thông báo</strong>
                         <div>
-                            <a class="btn btn-danger" href="{{ route('admin.colors.trashed') }}">
-                                <i class="fa fa-trash"></i> Thùng rác ()
-                            </a>
                             <div class="dropdown float-right ml-2">
                                 <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-cogs"></i> Tùy chọn
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item deleteAll" href="" style="border-bottom: 1px solid rgb(232, 232, 232)">
                                         <i class="fa fa-trash text-danger"></i> Xóa các mục đã chọn
+                                    </a>
+                                    <a class="dropdown-item" href="{{route('admin.deleteNotiAll')}}">
+                                        <i class="fa fa-trash text-danger"></i> Xóa tất các thông báo đã đọc
                                     </a>
                                 </div>
                             </div>
@@ -75,7 +75,7 @@
                             </tfoot>
                             <tbody>
                                 @foreach ($notifications as $key => $item)
-                                <tr class="{{$item->read_at == null ? 'read-noti' : ''}}">
+                                <tr class="{{$item->read_at == null ? 'read-noti' : ''}}" id="removeTr-{{ $item->id }}">
                                     <td>
                                         <input type="checkbox" class="checkBoxItem" data-id="{{ $item->id }}">
                                     </td>
@@ -99,11 +99,11 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                Bạn có chắc chắn muốn xóa màu "{{ $item->name }}" không?
+                                                Bạn có chắc chắn muốn xóa thông báo này không?
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
-                                                <form action="{{ route('admin.colors.destroy', $item) }}" method="POST">
+                                                <form action="{{ route('admin.deleteNoti', $item) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
@@ -138,4 +138,7 @@
 <script src="{{ asset('theme/admin/assets/js/init/datatables-init.js') }}"></script>
 
 <script src="{{asset('plugins/js/checkall.js')}}"></script>
+
+<script src="{{ asset('plugins/js/ChangeActive/notificationDeleteChecked.js') }}"></script>
+
 @endsection

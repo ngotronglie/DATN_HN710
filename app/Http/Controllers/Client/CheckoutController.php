@@ -225,12 +225,10 @@ class CheckoutController extends Controller
             session()->forget('cart');
         }
 
-        $admin = User::where('role', '2')->get();
+        $admin = User::whereIn('role', ['1', '2'])->get();
         if($admin){
         Notification::send($admin, new OrderPlacedNotification($order));
         }
-
-
 
         return response()->json([
             'success' => true,

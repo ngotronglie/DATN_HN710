@@ -194,6 +194,14 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
     Route::resource('category_blogs', CategoryBlogController::class);
 
+
+    //notification
+    Route::delete('notication/{id}', [NotificationController::class, 'delete'])->name('deleteNoti');
+    Route::get('deleteNotication', [NotificationController::class, 'deleteAll'])->name('deleteNotiAll');
+
+
+
+
     //Quản lý bài viết xóa mềm
     Route::get('blogs/trashed', [BlogController::class, 'trashed'])->name('blogs.trashed');
     Route::put('blogs/restore/{id}', [BlogController::class, 'restore'])->name('blogs.restore');
@@ -265,3 +273,5 @@ Route::post('blogs/ajax/changeAllActiveBlog', [ChangeActiveController::class, 'c
 Route::delete('blogs/ajax/deleteAllBlog', [DeleteController::class, 'deleteAllBlog']);
 //update count thung rac
 Route::get('blogs/ajax/trashedCount', [BlogController::class, 'trashedCount']);
+//ajax delete notification
+Route::delete('notification/ajax/deleteNoti', [DeleteController::class, 'deleteCheckedNoti'])->name('deleteNoti');

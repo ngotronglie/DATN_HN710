@@ -6,17 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 
-class NotificationController extends Controller{
+class NotificationController extends Controller
+{
 
     public function notification()
     {
         $user = Auth::user();
-
-        if ($user && $user->role == '2') {
-            $notifications = $user->notifications()->get();
-            //$unreadNotifications = $user->unreadNotifications()->get();
-        }
-        
+        $notifications = $user->notifications()->get();
+        //$unreadNotifications = $user->unreadNotifications()->get();
 
         return view('admin.layout.notifications', compact('notifications'));
     }
@@ -25,16 +22,38 @@ class NotificationController extends Controller{
     {
         $user = Auth::user();
         $order = Order::with(['orderDetails.productVariant.product', 'orderDetails.productVariant.size', 'orderDetails.productVariant.color', 'user'])->findOrFail($order_id);
-        if ($user && $user->role == '2') {
-            $notification = $user->notifications()->find($id);
+
+        $notification = $user->notifications()->find($id);
             if ($notification) {
                 $notification->markAsRead();
             }
-        }else{
-            return abort(403);
-        }
 
         return view('admin.layout.order.notificationOrder', compact('order'));
+    }
+
+    public function delete($id)
+    {
+        $user = Auth::user();
+
+        $notification = $user->notifications()->find($id);
+
+        $notification->delete();
+
+
+        return redirect()->route('admin.notification')->with('success', 'Xóa thành công');
+    }
+
+
+    public function deleteAll()
+    {
+        $user = Auth::user();
+
+        $notification = $user->notifications();
+
+        $notification->delete();
+
+
+        return redirect()->route('admin.notification')->with('success', 'Đã xóa thành công tất cả');
     }
 
 }

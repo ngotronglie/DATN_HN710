@@ -121,7 +121,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer('admin.include.header', function ($view) {
             $user = Auth::user();
 
-            if ($user && $user->role == '2') {
+            if ($user) {
                 $notifications = $user->notifications()->orderBy('id', 'desc')->take(10)->get();
                 $unreadNotifications = $user->unreadNotifications()->get();
             }else{

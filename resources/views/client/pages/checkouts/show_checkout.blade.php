@@ -380,7 +380,7 @@
                             $('#total-amount').text(response.totalAmountWithDiscount
                                 .toLocaleString() + ' đ');
                             $('#discount-amount').text('-' + response.discount
-                            .toLocaleString() + ' đ');
+                                .toLocaleString() + ' đ');
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -404,17 +404,28 @@
                 e.preventDefault();
 
                 var formData = $(this).serialize();
+                
+                Swal.fire({
+                    title: 'Đang xử lý...',
+                    text: 'Vui lòng đợi trong giây lát.',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
 
                 $.ajax({
                     url: '{{ route('placeOrder') }}',
                     type: 'POST',
                     data: formData,
                     success: function(response) {
+                        Swal.close();
+
                         if (response.success) {
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Đặt hàng thành công!',
-                                html: `<p style="font-size: 16px; font-weight: bold;">Mã đơn hàng #<span id="orderCode">${response.order.order_code}</span> 
+                                html: `<p style="font-size: 16px; font-weight: bold;">Mã đơn hàng #<span id="orderCode">${response.order.order_code}</span>
                                        <i id="copyIcon" title="Sao chép" class="fa fa-copy" style="cursor: pointer; color: blue; margin-left: 10px;" onclick="copyToClipboard('${response.order.order_code}')"></i>
                                    </p>
                                    <hr style="border-top: 1px solid #ddd;">
@@ -474,7 +485,7 @@
                 });
             });
 
-            // Chức năng sao chép mã đơn hàng 
+            // Chức năng sao chép mã đơn hàng
             function copyToClipboard(text) {
                 var tempInput = document.createElement("input");
                 tempInput.value = text;
@@ -484,7 +495,7 @@
                 document.body.removeChild(tempInput);
             }
 
-            //  mô tả phương thức thanh toán 
+            //  mô tả phương thức thanh toán
             document.querySelectorAll('input[name="payment_method"]').forEach((elem) => {
                 elem.addEventListener('change', function() {
                     document.querySelectorAll('.payment-description').forEach((desc) => {

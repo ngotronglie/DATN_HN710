@@ -26,8 +26,9 @@
                         <span class="count bg-danger">{{ $unreadNotifications->count() }}</span>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="notification">
-                        @if (empty($notification))
-
+                        @if ($notifications->isEmpty())
+                            <p style="width: 180px">Không có thông báo</p>
+                        @else
                             @foreach ($notifications as $index => $notification)
                                 <a class="dropdown-item media {{ $notification->read_at == null ? 'read-noti' : '' }}"
                                     href="{{ route('admin.order.detailNotication', ['order_id' => $notification->data['order_id'], 'noti_id' => $notification->id]) }}">
@@ -39,19 +40,11 @@
                                 </a>
                                 <hr style="margin: 0px">
                             @endforeach
-                            @if (!empty($notification))
-                                <a href="{{ route('admin.notification') }}" class="read-noti"
-                                    style="display: flex;justify-content: center;text-decoration: underline;color: rgb(84, 87, 99)">
-                                    Xem tất cả thông báo
-                                </a>
-                            @endif
-                            @if (Auth::user()->role != '2')
-                                <p style="width: 180px">Không có thông báo</p>
-
-                            @endif
-
+                            <a href="{{ route('admin.notification') }}" class="read-noti"
+                                style="display: flex;justify-content: center;text-decoration: underline;color: rgb(84, 87, 99)">
+                                Xem tất cả thông báo
+                            </a>
                         @endif
-
                     </div>
                 </div>
 
