@@ -108,6 +108,10 @@
             background-color: #007bff;
             color: white;
         }
+
+        .read-noti{
+            background-color: rgb(240, 242, 245)
+        }
     </style>
     <script>
         var BASE_URL = '{{ config('app.url') }}';

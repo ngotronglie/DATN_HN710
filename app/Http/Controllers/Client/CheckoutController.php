@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Client;
 
+
 use App\Models\CartItem;
+use App\Notifications\OrderPlacedNotification;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
@@ -14,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\InvoiceMail;
 use App\Models\OrderDetail;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -220,6 +224,11 @@ class CheckoutController extends Controller
         }
 
         session()->forget('voucher_id');
+
+        $admin = User::whereIn('role', ['1', '2'])->get();
+        if($admin){
+        Notification::send($admin, new OrderPlacedNotification($order));
+        }
 
         return response()->json([
             'success' => true,

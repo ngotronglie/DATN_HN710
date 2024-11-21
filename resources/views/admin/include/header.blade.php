@@ -1,4 +1,3 @@
-
 <!-- Header-->
 <header id="header" class="header">
     <div class="top-left">
@@ -24,22 +23,28 @@
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="notification"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-bell"></i>
-                        <span class="count bg-danger">3</span>
+                        <span class="count bg-danger">{{ $unreadNotifications->count() }}</span>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="notification">
-                        <p class="red">You have 3 Notification</p>
-                        <a class="dropdown-item media" href="#">
-                            <i class="fa fa-check"></i>
-                            <p>Server #1 overloaded.</p>
-                        </a>
-                        <a class="dropdown-item media" href="#">
-                            <i class="fa fa-info"></i>
-                            <p>Server #2 overloaded.</p>
-                        </a>
-                        <a class="dropdown-item media" href="#">
-                            <i class="fa fa-warning"></i>
-                            <p>Server #3 overloaded.</p>
-                        </a>
+                        @if ($notifications->isEmpty())
+                            <p style="width: 180px">Không có thông báo</p>
+                        @else
+                            @foreach ($notifications as $index => $notification)
+                                <a class="dropdown-item media {{ $notification->read_at == null ? 'read-noti' : '' }}"
+                                    href="{{ route('admin.order.detailNotication', ['order_id' => $notification->data['order_id'], 'noti_id' => $notification->id]) }}">
+                                    <p>
+                                        {{ $notification->data['message'] }} -
+                                        <strong>Tổng đơn:</strong>
+                                        {{ number_format($notification->data['total_amount'], 0, ',', '.') }} đ
+                                    </p>
+                                </a>
+                                <hr style="margin: 0px">
+                            @endforeach
+                            <a href="{{ route('admin.notification') }}" class="read-noti"
+                                style="display: flex;justify-content: center;text-decoration: underline;color: rgb(84, 87, 99)">
+                                Xem tất cả thông báo
+                            </a>
+                        @endif
                     </div>
                 </div>
 
@@ -90,27 +95,32 @@
             <div class="user-area dropdown float-right">
                 <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
-                @if(Auth::check() && Auth::user()->avatar)
-                    <img class=" rounded-circle" width="30px" src="{{ Storage::url(Auth::user()->avatar) }}" alt="User Avatar">
-                @else
-                    <i class="bi bi-person-circle" style="font-size: 1.75rem;"></i>
-                @endif
-                
+                    @if (Auth::check() && Auth::user()->avatar)
+                        <img class=" rounded-circle" width="30px" src="{{ Storage::url(Auth::user()->avatar) }}"
+                            alt="User Avatar">
+                    @else
+                        <i class="bi bi-person-circle" style="font-size: 1.75rem;"></i>
+                    @endif
+
                 </a>
 
                 <div class="user-menu dropdown-menu">
-                    <a class="nav-link" href="{{route('admin.accounts.myAccount')}}"><i class="fa fa-user"></i>Thông Tin</a>
-                    <a class="nav-link" href="#"><i class="fa fa-user"></i> Notifications <span class="count">13</span></a>
+                    <a class="nav-link" href="{{ route('admin.accounts.myAccount') }}"><i
+                            class="fa fa-user"></i>Thông
+                        Tin</a>
+                    <a class="nav-link" href="#"><i class="fa fa-user"></i> Notifications <span
+                            class="count">13</span></a>
                     <a class="nav-link" href="#"><i class="fa fa-cog"></i> Settings</a>
-                
+
                     <form action="{{ route('admin.logout') }}" method="post" style="display: inline;">
                         @csrf
-                        <button type="submit" class="nav-link" style="background: none; border: none; padding: 0; margin: 0; color: inherit; cursor: pointer;">
+                        <button type="submit" class="nav-link"
+                            style="background: none; border: none; padding: 0; margin: 0; color: inherit; cursor: pointer;">
                             <i class="fa fa-power-off"></i> Đăng xuất
                         </button>
                     </form>
                 </div>
-                
+
             </div>
 
         </div>

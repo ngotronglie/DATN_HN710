@@ -2,6 +2,7 @@
 namespace App\Providers;
 
 use App\Models\ProductVariant;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use App\Models\CartItem;
 use App\Models\Category;
@@ -31,14 +32,14 @@ class AppServiceProvider extends ServiceProvider
                 $cartItems = CartItem::whereHas('cart', function ($query) use ($user) {
                     $query->where('user_id', $user->id);
                 })
-                ->whereHas('productVariant.product', function ($query) {
-                    $query->where('is_active', 1)
-                        ->whereHas('category', function ($query) {
-                            $query->where('is_active', 1);
-                        });
-                })
-                ->with('productVariant')
-                ->get();
+                    ->whereHas('productVariant.product', function ($query) {
+                        $query->where('is_active', 1)
+                            ->whereHas('category', function ($query) {
+                                $query->where('is_active', 1);
+                            });
+                    })
+                    ->with('productVariant')
+                    ->get();
 
                 $groupedItems = $cartItems->groupBy('product_variant_id');
 
@@ -65,58 +66,75 @@ class AppServiceProvider extends ServiceProvider
             } else {
                 $sessionCart = session()->get('cart', ['items' => []]);
 
-            $cartItems = collect($sessionCart['items'])->map(function ($item) {
-                $productVariant = ProductVariant::with('product', 'size', 'color')->find($item['product_variant_id']);
-                return (object) [
-                    'productVariant' => $productVariant,
-                    'quantity' => $item['quantity'],
-                ];
-            })->filter(function ($item) {
-                return $item->productVariant
-                    && $item->productVariant->product->is_active
-                    && $item->productVariant->product->category->is_active;
-            });
+                $cartItems = collect($sessionCart['items'])->map(function ($item) {
+                    $productVariant = ProductVariant::with('product', 'size', 'color')->find($item['product_variant_id']);
+                    return (object) [
+                        'productVariant' => $productVariant,
+                        'quantity' => $item['quantity'],
+                    ];
+                })->filter(function ($item) {
+                    return $item->productVariant
+                        && $item->productVariant->product->is_active
+                        && $item->productVariant->product->category->is_active;
+                });
 
 
-            $groupedItems = $cartItems->groupBy(function ($item) {
-                return $item->productVariant->id;
-            });
+                $groupedItems = $cartItems->groupBy(function ($item) {
+                    return $item->productVariant->id;
+                });
 
-            $processedItems = [];
-            $totalCartAmount = 0;
+                $processedItems = [];
+                $totalCartAmount = 0;
 
+                foreach ($groupedItems as $variantId => $items) {
+                    $productVariant = $items->first()->productVariant;
+                    $totalQuantity = $items->sum('quantity');
+                    $price = $productVariant->price_sale;
+                    $totalPriceForItem = $price * $totalQuantity;
+                    $totalCartAmount += $totalPriceForItem;
 
-            foreach ($groupedItems as $variantId => $items) {
-                $productVariant = $items->first()->productVariant;
-                $totalQuantity = $items->sum('quantity');
-                $price = $productVariant->price_sale;
-                $totalPriceForItem = $price * $totalQuantity;
-                $totalCartAmount += $totalPriceForItem;
+                    $product = $productVariant->product;
+                    $sizeName = $productVariant->size->name ?? '';
+                    $colorName = $productVariant->color->name ?? '';
 
-                $product = $productVariant->product;
-                $sizeName = $productVariant->size->name ?? '';
-                $colorName = $productVariant->color->name ?? '';
+                    $processedItems[] = (object) [
+                        'id' => $variantId,
+                        'productVariant' => $productVariant,
+                        'quantity' => $totalQuantity,
+                        'price_sale' => $price,
+                        'total_price' => $totalPriceForItem,
+                        'slug' => $product->slug,
+                        'img_thumb' => $product->img_thumb,
+                        'size_name' => $sizeName,
+                        'color_name' => $colorName,
+                    ];
+                }
 
-                $processedItems[] = (object) [
-                    'id' => $variantId,
-                    'productVariant' => $productVariant,
-                    'quantity' => $totalQuantity,
-                    'price_sale' => $price,
-                    'total_price' => $totalPriceForItem,
-                    'slug' => $product->slug,
-                    'img_thumb' => $product->img_thumb,
-                    'size_name' => $sizeName,
-                    'color_name' => $colorName,
-                ];
-            }
+                $uniqueVariantCount = count($processedItems);
 
-            $uniqueVariantCount = count($processedItems);
-
-
-            $view->with('processedItems', $processedItems);
-            $view->with('uniqueVariantCount', $uniqueVariantCount);
+                $view->with('processedItems', $processedItems);
+                $view->with('uniqueVariantCount', $uniqueVariantCount);
 
             }
         });
+
+        View::composer('admin.include.header', function ($view) {
+            $user = Auth::user();
+
+            if ($user) {
+                $notifications = $user->notifications()->orderBy('id', 'desc')->take(10)->get();
+                $unreadNotifications = $user->unreadNotifications()->get();
+            }else{
+                $notifications = collect();
+                $unreadNotifications = collect();
+            }
+
+            $view->with([
+                'notifications' => $notifications,
+                'unreadNotifications' => $unreadNotifications,
+            ]);
+        });
+
+
     }
 }

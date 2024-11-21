@@ -9,6 +9,7 @@ use App\Models\CategoryBlog;
 use App\Models\Color;
 use App\Models\Size;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DeleteController extends Controller
 {
@@ -70,4 +71,23 @@ class DeleteController extends Controller
     {
 
     }
+
+
+    //notification
+    public function deleteCheckedNoti(Request $request)
+    {
+        $user = Auth::user();
+        $id = $request->id;
+        if (empty($id) || !is_array($id)) {
+            return response()->json(['status' => false, 'message' => 'ID không hợp lệ'], 400);
+        }
+
+        $user->notifications()->whereIn('id', $id)->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Các thông báo đã được xóa thành công',
+        ]);
+        }
+
 }

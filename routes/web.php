@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ForgotPasswordController;
 use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SizeController;
 use App\Http\Controllers\Admin\VoucherController;
@@ -196,6 +197,14 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
     Route::resource('category_blogs', CategoryBlogController::class);
 
+
+    //notification
+    Route::delete('notication/{id}', [NotificationController::class, 'delete'])->name('deleteNoti');
+    Route::get('deleteNotication', [NotificationController::class, 'deleteAll'])->name('deleteNotiAll');
+
+
+
+
     //Quản lý bài viết xóa mềm
     Route::get('blogs/trashed', [BlogController::class, 'trashed'])->name('blogs.trashed');
     Route::put('blogs/restore/{id}', [BlogController::class, 'restore'])->name('blogs.restore');
@@ -226,8 +235,11 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('order/ship/{order_id}', [OrderController::class, 'shipOrder'])->name('order.shipOrder');
     Route::get('order/confirm-shipping/{order_id}', [OrderController::class, 'confirmShipping'])->name('order.confirmShipping');
     Route::get('order/cancel/{order_id}', [OrderController::class, 'cancelOrder'])->name('order.cancelOrder');
-
     Route::get('order-print/{checkout_code}', [OrderController::class, 'print_order'])->name('order.printOrder');
+
+    //Thông báo
+    Route::get('notification', [NotificationController::class, 'notification'])->name('notification');
+    Route::get('order/{order_id}/order-detail-notication/{noti_id}', [NotificationController::class, 'detailNotication'])->name('order.detailNotication');
 
     // Thống kê
     Route::get('statistics', [StatisticsController::class, 'index'])->name('statistics.index');
@@ -265,3 +277,5 @@ Route::post('blogs/ajax/changeAllActiveBlog', [ChangeActiveController::class, 'c
 Route::delete('blogs/ajax/deleteAllBlog', [DeleteController::class, 'deleteAllBlog']);
 //update count thung rac
 Route::get('blogs/ajax/trashedCount', [BlogController::class, 'trashedCount']);
+//ajax delete notification
+Route::delete('notification/ajax/deleteNoti', [DeleteController::class, 'deleteCheckedNoti'])->name('deleteNoti');

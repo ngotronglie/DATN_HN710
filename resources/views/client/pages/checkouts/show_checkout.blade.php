@@ -379,15 +379,23 @@
                 e.preventDefault();
 
                 var formData = $(this).serialize();
+                
+                Swal.fire({
+                    title: 'Đang xử lý...',
+                    text: 'Vui lòng đợi trong giây lát.',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
 
                 $.ajax({
                     url: '{{ route('placeOrder') }}',
                     type: 'POST',
                     data: formData,
                     success: function(response) {
-                        console.log(response);
-
                         $('.header-action-num').html(response.count);
+                        Swal.close();
 
                         if (response.success) {
                             Swal.fire({
