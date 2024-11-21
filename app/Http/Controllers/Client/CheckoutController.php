@@ -218,6 +218,12 @@ class CheckoutController extends Controller
                             }
                         }
                     }
+
+                    $count = CartItem::whereHas('cart', function ($query) use ($user) {
+                        $query->where('user_id', $user->id);
+                    })
+                        ->distinct('product_variant_id')
+                        ->count('product_variant_id');
                 } else {
                     $cart = Session::get('cart', []);
                     $updatedItems = collect($cart['items'])->filter(function ($item) use ($productVariantIds) {
@@ -225,6 +231,8 @@ class CheckoutController extends Controller
                     })->values()->toArray();
                     $cart['items'] = $updatedItems;
                     session()->put('cart', $cart);
+
+                    $count = count($updatedItems);
                 }
             }
     
@@ -232,12 +240,18 @@ class CheckoutController extends Controller
             Mail::to($order->user_email)->send(new InvoiceMail($order));
     
             session()->forget('voucher_id');
+
+            $admin = User::whereIn('role', ['1', '2'])->get();
+            if($admin){
+                Notification::send($admin, new OrderPlacedNotification($order));
+            }
     
             DB::commit();
     
             return response()->json([
                 'success' => true,
                 'order' => $order,
+                'count' => $count,
             ]);
     
         } catch (\Exception $e) {
@@ -248,18 +262,6 @@ class CheckoutController extends Controller
             ]);
         }
 
-        session()->forget('voucher_id');
-
-        $admin = User::whereIn('role', ['1', '2'])->get();
-        if($admin){
-        Notification::send($admin, new OrderPlacedNotification($order));
-        }
-
-        return response()->json([
-            'success' => true,
-            'order' => $order,
-            'count' => $count,
-        ]);
     }
     
    
