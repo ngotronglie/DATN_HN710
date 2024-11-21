@@ -35,6 +35,8 @@
                                     <a href="{{route('blogs.index')}}"><span>Bài viết</span></a>
                                 </li>
                                 <li><a href="/contact"> <span>Liên hệ</span></a></li>
+                                <li><a href="{{route('bill.search')}}"> <span>Tra cứu</span></a></li>
+
                             </ul>
                         </div>
                     </div>

@@ -107,18 +107,24 @@
                       
                     
                     
-                        <!-- Hiển thị Voucher nếu có -->
                         @if($voucher)
-                        <div class="voucher-banner" style="margin-top: 30px; background-color: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
-                            <h4 style="font-weight: 600;">Khuyến mãi đặc biệt cho bạn!</h4>
-                            <div class="voucher-item" style="border: 1px solid #ddd; padding: 10px; border-radius: 8px; background-color: #fff; width: 200px; margin: 0 auto;">
-                                <h5 style="font-weight: bold;">Mã: {{ $voucher->code }}</h5>
-                                <p>Giảm: {{ $voucher->discount }}%</p>
-                                <p>Hạn sử dụng: {{ \Carbon\Carbon::parse($voucher->end_date)->format('d/m/Y') }}</p>
-                                <button class="btn btn-primary apply-voucher-btn" style="margin-top: 10px; display: inline-block;" data-voucher-code="{{ $voucher->code }}">Sử dụng ngay</button>
+                        <div class="voucher-banner" style="margin-top: 30px; background-color: #f1f8e9; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                            <h4 style="font-weight: bold; color: #2e7d32;">🎉 Khuyến mãi đặc biệt dành cho bạn! 🎉</h4>
+                            <div class="voucher-item" style="border: 2px dashed #4caf50; padding: 15px; border-radius: 12px; background-color: #ffffff; width: 280px; margin: 20px auto; text-align: left;">
+                                <h5 style="font-weight: bold; text-align: center; color: #2e7d32;">Mã: <span style="color: #d32f2f;">{{ $voucher->code }}</span></h5>
+                                <ul style="list-style: none; padding: 0; margin-top: 10px;">
+                                    <li style="margin-bottom: 5px;"><strong>Giảm:</strong> {{ $voucher->discount }}%</li>
+                                    <li style="margin-bottom: 5px;"><strong>Từ:</strong> {{ number_format($voucher->min_money, 0, ',', '.') }} VNĐ</li>
+                                    <li style="margin-bottom: 5px;"><strong>Đến:</strong> {{ number_format($voucher->max_money, 0, ',', '.') }} VNĐ</li>
+                                    <li style="margin-bottom: 5px;"><strong>Hạn sử dụng:</strong> {{ \Carbon\Carbon::parse($voucher->end_date)->format('d/m/Y') }}</li>
+                                </ul>
+                                <button class="btn btn-success apply-voucher-btn" style="margin-top: 15px; display: block; width: 100%; font-weight: bold;" data-voucher-code="{{ $voucher->code }}">
+                                   Lưu
+                                </button>
                             </div>
                         </div>
                     @endif
+                                          
                     
                    
                     

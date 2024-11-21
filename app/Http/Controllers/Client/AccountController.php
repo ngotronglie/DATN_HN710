@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\VerifyEmailPassword;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\UserVoucher;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
@@ -251,8 +253,11 @@ class AccountController extends Controller
     if(!$user) {
         return redirect()->route('login');
     }
+    $vouchers = UserVoucher::with('voucher') ->where('user_id', $user->id)->get();
+    
+    
     $bills = Order::query()->where('user_id',$user->id)->with('voucher')->get();
-    return view('client.pages.account.my_account.my-account', compact('user','bills'));
+    return view('client.pages.account.my_account.my-account', compact('user','bills','vouchers'));
    }
 
 public function orderBillDetail($id)
@@ -281,21 +286,9 @@ public function cancelOrder($id){
         return redirect()->back()->with('error', 'Đơn hàng không thể hủy.');
     }
 }
-//loc trang thái
-public function getOrdersByStatus($status = null)
-{
-    $user = Auth::user();
 
-    $query = Order::query();
 
-    if ($status) {
-        $query->where('status', $status);
-    }
 
-    $bills = $query->orderBy('created_at', 'desc')->get();
-
-    return view('client.pages.account.my_account.my-account', compact('user','bills', 'status'));
-}
    public function updateMyAcount(request $request,$id){
           $user=User::findOrFail($id);
           $request->validate([

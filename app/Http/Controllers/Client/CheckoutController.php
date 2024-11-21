@@ -207,12 +207,11 @@ class CheckoutController extends Controller
                     $productVariant->decrement('quantity', $item['quantity']);
                 }
             }
-        }
-
-        if ($voucher) {
+        }      
+        if ($voucher ) {
             $voucher = Voucher::find($voucher);
-            if ($voucher) {
-                $voucher->decrement('quantity', 1);
+            if ($voucher ) {
+                 $voucher->decrement('quantity', 1);
                 DB::table('user_vouchers')->where('user_id', $user->id)
                     ->where('voucher_id', $voucher->id)
                     ->update(['status' => 'used']);
@@ -278,14 +277,19 @@ class CheckoutController extends Controller
     }
     //tra cuu
   
-    public function billSearch(Request $request)
-    {
+    public function billSearch(Request $request){
         $orderCode = $request->input('order_code');
+    
+        // Nếu không có mã đơn hàng (lần đầu vào trang), chỉ trả về view mà không có thông báo
+        if (!$orderCode) {
+            return view('client.pages.checkouts.order_tracking');
+        }
     
         $bills = Order::with('voucher') 
                       ->where('order_code', $orderCode)
                       ->get();
     
+        // Nếu không tìm thấy đơn hàng
         if ($bills->isEmpty()) {
             return view('client.pages.checkouts.order_tracking', [
                 'message' => 'Không tìm thấy đơn hàng nào với mã đơn hàng này.'
@@ -300,5 +304,6 @@ class CheckoutController extends Controller
     
         return view('client.pages.checkouts.order_tracking', compact('bills', 'billDetails'));
     }
+    
     
 }

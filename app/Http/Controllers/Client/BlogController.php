@@ -125,7 +125,6 @@ class BlogController extends Controller
     // }
 
     public function show($id){
-    // Truy vấn bài viết và thông tin liên quan
     $blog = Blog::with(['categoryBlog', 'user'])->where('is_active', 1)
         ->whereHas('categoryBlog', function ($query) {
             $query->where('is_active', 1)
@@ -136,21 +135,20 @@ class BlogController extends Controller
         })
         ->findOrFail($id);
 
-        $voucher = Voucher::where('is_active', true)
+        $voucher = Voucher::where('is_active', true) 
         ->where('end_date', '>=', Carbon::now()->startOfDay())  
+        ->where('quantity', '>', 0) 
         ->inRandomOrder() 
-        ->first();  
+        ->first();
+    
        
-    // Tăng số lượt xem của bài viết
     $blog->increment('view');
 
-    // Lấy các bài viết nổi bật
     $hotblogs = Blog::with(['categoryBlog', 'user'])
         ->orderBy('view', 'desc')
         ->take(6)
         ->get();
 
-    // Lấy danh mục bài viết
     $categoryBlog = CategoryBlog::withCount([
         'blogs' => function ($query) {
             $query->where('is_active', 1);
@@ -162,43 +160,47 @@ class BlogController extends Controller
 
     return view('client.pages.blogs.blog-detail', compact('blog', 'hotblogs', 'categoryBlog', 'voucher'));
 }
-public function applyVoucher(Request $request)
-{
+public function applyVoucher(Request $request){
     if (!Auth::check()) {
         return response()->json(['success' => false, 'message' => 'Bạn phải đăng nhập để sử dụng voucher.'], 401);
     }
 
-    $user = Auth::user(); // Lấy thông tin người dùng đang đăng nhập
-    $voucherCode = $request->input('voucher_code'); // Lấy mã voucher từ request
+    $user = Auth::user();
+    $voucherCode = $request->input('voucher_code');
 
-    // Kiểm tra xem voucher có tồn tại và còn hạn sử dụng không
     $voucher = Voucher::where('code', $voucherCode)
         ->where('is_active', true)
         ->where('end_date', '>=', now()->startOfDay())
         ->first();
 
     if ($voucher) {
-        // Kiểm tra xem người dùng đã sử dụng voucher này chưa
+        if ($voucher->quantity <= 0) {
+            return response()->json(['success' => false, 'message' => 'Voucher đã hết số lượng sử dụng.'], 400);
+        }
+
         $existingUserVoucher = UserVoucher::where('user_id', $user->id)
             ->where('voucher_id', $voucher->id)
             ->exists();
 
         if ($existingUserVoucher) {
-            return response()->json(['success' => false, 'message' => 'Bạn đã sử dụng voucher này rồi.'], 400);
+            return response()->json(['success' => false, 'message' => 'Bạn đã lưu voucher này rồi.'], 400);
         }
 
-        // Lưu voucher vào bảng user_vouchers
         UserVoucher::create([
             'user_id' => $user->id,
             'voucher_id' => $voucher->id,
-            'status' => 'applied', // Hoặc 'used', tùy theo logic của bạn
+            'status' => 'not_used',
         ]);
 
-        return response()->json(['success' => true, 'message' => 'Voucher đã được áp dụng thành công!']);
+        // $voucher->quantity = $voucher->quantity - 1;
+        // $voucher->save();
+
+        return response()->json(['success' => true, 'message' => 'Voucher đã được lưu thành công!']);
     }
 
     return response()->json(['success' => false, 'message' => 'Voucher không hợp lệ hoặc đã hết hạn.'], 400);
 }
+
 
 
 

@@ -36,14 +36,14 @@
                         <div class="row">
                             <div class="col-lg-3 col-md-4">
                                 <div class="myaccount-tab-menu nav" role="tablist">
-                                    <a href="#dashboad"  data-bs-toggle="tab" data-bs-target="#dashboad"><i
+                                    <a href="#dashboad" data-bs-toggle="tab" data-bs-target="#dashboad"><i
                                             class="fa fa-dashboard"></i> Thông tin chung</a>
                                     <a href="#orders" data-bs-toggle="tab" data-bs-target="#orders"><i
                                             class="fa fa-cart-arrow-down"></i>Đơn hàng</a>
                                     <a href="#download" data-bs-toggle="tab" data-bs-target="#download"><i
                                             class="fa fa-solid fa-lock"></i> Đổi mật khẩu</a>
                                     <a href="#payment-method" data-bs-toggle="tab" data-bs-target="#payment-method"><i
-                                            class="fa fa-credit-card"></i> Payment Method</a>
+                                            class="fa fa-credit-card"></i> Vourcher của tôi</a>
                                     <a href="#address-edit" data-bs-toggle="tab" data-bs-target="#address-edit"><i
                                             class="fa fa-map-marker"></i> address</a>
                                     <a href="#account-info" data-bs-toggle="tab" data-bs-target="#account-info"><i
@@ -71,7 +71,7 @@
                                                                 <label for="first-name" class="required mb-1">Tên</label>
                                                                 <input type="text" id="first-name" name="name"
                                                                     placeholder="First Name" value="{{ $user->name }}">
-                                                                    @error('name')
+                                                                @error('name')
                                                                     <small class="text-danger">
                                                                         {{ $message }}
                                                                     </small>
@@ -90,7 +90,7 @@
                                                         <label for="display-name" class="required mb-1">Địa chỉ</label>
                                                         <input type="text" id="display-name" placeholder="Địa chỉ"
                                                             name="address" value="{{ $user->address }}">
-                                                            @error('address')
+                                                        @error('address')
                                                             <small class="text-danger">
                                                                 {{ $message }}
                                                             </small>
@@ -99,8 +99,8 @@
                                                     <div class="single-input-item mb-3">
                                                         <label for="phone" class="required mb-1">Điện thoại</label>
                                                         <input type="text" id="phone" placeholder="Điện thoại"
-                                                            name="phone" value="{{ $user->phone }}" >
-                                                            @error('phone')
+                                                            name="phone" value="{{ $user->phone }}">
+                                                        @error('phone')
                                                             <small class="text-danger">
                                                                 {{ $message }}
                                                             </small>
@@ -110,7 +110,7 @@
                                                         <label for="date_of_birth" class="required mb-1">Ngày sinh</label>
                                                         <input type="date" id="date_of_birth" name="date_of_birth"
                                                             placeholder="Ngày sinh" value="{{ $user->date_of_birth }}">
-                                                            @error('date_of_birth')
+                                                        @error('date_of_birth')
                                                             <small class="text-danger">
                                                                 {{ $message }}
                                                             </small>
@@ -125,15 +125,16 @@
                                                             <div
                                                                 style="text-align: center; margin-top: 10px; margin-bottom: 15px">
                                                                 <img width="100"
-                                                                    src="{{ Storage::url($user->avatar) }}" alt="Avatar"
+                                                                    src="{{ Storage::url($user->avatar) }}"
+                                                                    alt="Avatar"
                                                                     style="border: 2px solid #ccc; border-radius: 50%; padding: 5px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
                                                             </div>
                                                         @endif
                                                         @error('avatar')
-                                                        <small class="text-danger">
-                                                            {{ $message }}
-                                                        </small>
-                                                    @enderror
+                                                            <small class="text-danger">
+                                                                {{ $message }}
+                                                            </small>
+                                                        @enderror
                                                     </div>
 
                                                     <div class="single-input-item single-item-button">
@@ -153,20 +154,13 @@
                                     
                                             <!-- Bộ lọc trạng thái -->
                                             <div class="order-status-filter mb-4">
-                                                <a href="{{ route('orders.byStatus') }}" 
-                                                    class="btn btn-sm {{ !request()->status ? 'btn-primary' : 'btn-outline-primary' }}">Tất cả</a>
-                                                <a href="{{ route('orders.byStatus', 1) }}" 
-                                                    class="btn btn-sm {{ request()->status == 1 ? 'btn-primary' : 'btn-outline-primary' }}">Chờ xác nhận</a>
-                                                <a href="{{ route('orders.byStatus', 2) }}" 
-                                                    class="btn btn-sm {{ request()->status == 2 ? 'btn-primary' : 'btn-outline-primary' }}">Chờ lấy hàng</a>
-                                                <a href="{{ route('orders.byStatus', 3) }}" 
-                                                    class="btn btn-sm {{ request()->status == 3 ? 'btn-primary' : 'btn-outline-primary' }}">Đang giao hàng</a>
-                                                <a href="{{ route('orders.byStatus', 4) }}" 
-                                                    class="btn btn-sm {{ request()->status == 4 ? 'btn-primary' : 'btn-outline-primary' }}">Giao thành công</a>
-                                                <a href="{{ route('orders.byStatus', 5) }}" 
-                                                    class="btn btn-sm {{ request()->status == 5 ? 'btn-primary' : 'btn-outline-primary' }}">Chờ hủy</a>
-                                                <a href="{{ route('orders.byStatus', 6) }}" 
-                                                    class="btn btn-sm {{ request()->status == 6 ? 'btn-primary' : 'btn-outline-primary' }}">Đã hủy</a>
+                                                <button class="btn btn-sm filter-btn" data-status="all">Tất cả</button>
+                                                <button class="btn btn-sm filter-btn" data-status="1">Chờ xác nhận</button>
+                                                <button class="btn btn-sm filter-btn" data-status="2">Chờ lấy hàng</button>
+                                                <button class="btn btn-sm filter-btn" data-status="3">Đang giao hàng</button>
+                                                <button class="btn btn-sm filter-btn" data-status="4">Giao thành công</button>
+                                                <button class="btn btn-sm filter-btn" data-status="5">Chờ hủy</button>
+                                                <button class="btn btn-sm filter-btn" data-status="6">Đã hủy</button>
                                             </div>
                                     
                                             <!-- Bảng hiển thị đơn hàng -->
@@ -182,46 +176,45 @@
                                                             <th>Hành động</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody>
-                                                        @if($bills->count() > 0)
+                                                    <tbody id="order-list">
+                                                        @if ($bills->count() > 0)
                                                             @foreach ($bills as $key => $item)
-                                                            <tr> 
-                                                                <td>{{ $key + 1 }}</td>
-                                                                <td>{{ $item->order_code }}</td>
-                                                                <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
-                                                                <td>
-                                                                    @switch($item->status)
-                                                                        @case(1)
-                                                                            Chờ xác nhận
+                                                                <tr class="order-card" data-status="{{ $item->status }}">
+                                                                    <td>{{ $key + 1 }}</td>
+                                                                    <td>{{ $item->order_code }}</td>
+                                                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
+                                                                    <td>
+                                                                        @switch($item->status)
+                                                                            @case(1)
+                                                                                Chờ xác nhận
                                                                             @break
-                                                                        @case(2)
-                                                                            Chờ lấy hàng
+                                                                            @case(2)
+                                                                                Chờ lấy hàng
                                                                             @break
-                                                                        @case(3)
-                                                                            Đang giao hàng
+                                                                            @case(3)
+                                                                                Đang giao hàng
                                                                             @break
-                                                                        @case(4)
-                                                                            Giao thành công
+                                                                            @case(4)
+                                                                                Giao thành công
                                                                             @break
-                                                                        @case(5)
-                                                                            Chờ hủy
+                                                                            @case(5)
+                                                                                Chờ hủy
                                                                             @break
-                                                                        @case(6)
-                                                                            Đã hủy
+                                                                            @case(6)
+                                                                                Đã hủy
                                                                             @break
-                                                                        @default
-                                                                            Không xác định
-                                                                    @endswitch
-                                                                </td>
-                                                                <td>{{ number_format($item->total_amount, 0, ',', '.') }} VND</td>
-                                                                <td>
-                                                                    <a href="{{ route('viewBillDetail', $item->id) }}">Xem</a>
-                                                                    @if($item->status == 1)
-                                                                    | <a href="{{ route('cancelOrder', $item->id) }}" 
-                                                                         onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?')">Hủy</a>
-                                                                    @endif
-                                                                </td>
-                                                            </tr>
+                                                                            @default
+                                                                                Không xác định
+                                                                        @endswitch
+                                                                    </td>
+                                                                    <td>{{ number_format($item->total_amount, 0, ',', '.') }} VND</td>
+                                                                    <td>
+                                                                        <a href="{{ route('viewBillDetail', $item->id) }}">Xem</a>
+                                                                        @if ($item->status == 1)
+                                                                            | <a href="{{ route('cancelOrder', $item->id) }}" onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?')">Hủy</a>
+                                                                        @endif
+                                                                    </td>
+                                                                </tr>
                                                             @endforeach
                                                         @else
                                                             <tr>
@@ -234,6 +227,7 @@
                                         </div>
                                     </div>
                                     
+
                                     <!-- Single Tab Content End -->
 
                                     <!-- Single Tab Content Start -->
@@ -245,15 +239,19 @@
                                                     action="{{ route('user.updatePassword', ['id' => Auth::user()->id]) }}"
                                                     method="post">
                                                     @csrf
-                                                    
+
                                                     <div class="single-input-item mb-3">
-                                                        <label for="current_password" class="required mb-1">Mật khẩu hiện tại</label>
+                                                        <label for="current_password" class="required mb-1">Mật khẩu hiện
+                                                            tại</label>
                                                         <div class="input-group">
-                                                            <input type="password" id="current_password" name="current_password" class="form-control"
-                                                                   placeholder="********"  style="padding-right: 40px;">
+                                                            <input type="password" id="current_password"
+                                                                name="current_password" class="form-control"
+                                                                placeholder="********" style="padding-right: 40px;">
                                                             <div class="input-group-append"
-                                                                 style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
-                                                                <span class="input-group-text" onclick="togglePassword('current_password', 'eyeIconCurrent')" style="background: none; border: none;">
+                                                                style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                                                                <span class="input-group-text"
+                                                                    onclick="togglePassword('current_password', 'eyeIconCurrent')"
+                                                                    style="background: none; border: none;">
                                                                     <i class="fa fa-eye" id="eyeIconCurrent"></i>
                                                                 </span>
                                                             </div>
@@ -264,55 +262,66 @@
                                                             </small>
                                                         @enderror
                                                     </div>
-                                                    
+
                                                     <div class="row">
                                                         <div class="col-lg-6">
                                                             <div class="single-input-item mb-3">
-                                                                <label for="new_password" class="required mb-1">Mật khẩu mới</label>
+                                                                <label for="new_password" class="required mb-1">Mật khẩu
+                                                                    mới</label>
                                                                 <div class="input-group">
-                                                                    <input type="password" id="new_password" name="new_password" class="form-control"
-                                                                           placeholder="********" style="padding-right: 40px;">
+                                                                    <input type="password" id="new_password"
+                                                                        name="new_password" class="form-control"
+                                                                        placeholder="********"
+                                                                        style="padding-right: 40px;">
                                                                     <div class="input-group-append"
-                                                                         style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
-                                                                        <span class="input-group-text" onclick="togglePassword('new_password', 'eyeIconNew')" style="background: none; border: none;">
+                                                                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                                                                        <span class="input-group-text"
+                                                                            onclick="togglePassword('new_password', 'eyeIconNew')"
+                                                                            style="background: none; border: none;">
                                                                             <i class="fa fa-eye" id="eyeIconNew"></i>
                                                                         </span>
                                                                     </div>
                                                                 </div>
                                                                 @error('new_password')
-                                                                <small class="text-danger">
-                                                                    {{ $message }}
-                                                                </small>
+                                                                    <small class="text-danger">
+                                                                        {{ $message }}
+                                                                    </small>
                                                                 @enderror
                                                             </div>
                                                         </div>
-                                                    
+
                                                         <div class="col-lg-6">
                                                             <div class="single-input-item mb-3">
-                                                                <label for="confirm_password" class="required mb-1">Nhập lại mật khẩu</label>
+                                                                <label for="confirm_password" class="required mb-1">Nhập
+                                                                    lại mật khẩu</label>
                                                                 <div class="input-group">
-                                                                    <input type="password" id="confirm_password" name="new_password_confirmation" class="form-control"
-                                                                           placeholder="********" style="padding-right: 40px;">
+                                                                    <input type="password" id="confirm_password"
+                                                                        name="new_password_confirmation"
+                                                                        class="form-control" placeholder="********"
+                                                                        style="padding-right: 40px;">
                                                                     <div class="input-group-append"
-                                                                         style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
-                                                                        <span class="input-group-text" onclick="togglePassword('confirm_password', 'eyeIconConfirm')" style="background: none; border: none;">
+                                                                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                                                                        <span class="input-group-text"
+                                                                            onclick="togglePassword('confirm_password', 'eyeIconConfirm')"
+                                                                            style="background: none; border: none;">
                                                                             <i class="fa fa-eye" id="eyeIconConfirm"></i>
                                                                         </span>
                                                                     </div>
                                                                 </div>
                                                                 @error('new_password_confirmation')
-                                                                <small class="text-danger">
-                                                                    {{ $message }}
-                                                                </small>
+                                                                    <small class="text-danger">
+                                                                        {{ $message }}
+                                                                    </small>
                                                                 @enderror
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    
+
                                                     <div class="single-input-item single-item-button">
-                                                        <button class="btn btn-dark btn-hover-primary rounded-0">Đổi mật khẩu</button>
+                                                        <button class="btn btn-dark btn-hover-primary rounded-0">Đổi mật
+                                                            khẩu</button>
                                                     </div>
-                                                    
+
                                                 </form>
                                             </div>
 
@@ -323,8 +332,58 @@
                                     <!-- Single Tab Content Start -->
                                     <div class="tab-pane fade" id="payment-method" role="tabpanel">
                                         <div class="myaccount-content">
-                                            <h3 class="title">Payment Method</h3>
-                                            <p class="saved-message">You Can't Saved Your Payment Method yet.</p>
+                                            <h3 class="title">Tất cả vourcher</h3>
+                                            <div class="btn-group mb-3">
+                                                <button class="btn btn-sm btn-primary filter-btn" data-status="all">Tất cả</button>
+                                                <button class="btn btn-sm btn-outline-primary filter-btn" data-status="used">Đã dùng</button>
+                                                <button class="btn btn-sm btn-outline-primary filter-btn" data-status="not_used">Chưa dùng</button>
+                                                <button class="btn btn-sm btn-outline-primary filter-btn" data-status="expired">Hết hạn</button>
+                                            </div>
+                                            
+                                            <div class="row" id="voucher-container">
+                                                @foreach ($vouchers as $uservoucher)
+                                                    <div class="col-md-4 mb-3 voucher-card" data-status="{{ $uservoucher->status }}">
+                                                        <div class="card shadow-sm border-0">
+                                                            <div class="card-body d-flex align-items-center">
+                                                                <div class="voucher-icon text-primary me-3" style="font-size: 24px;">
+                                                                    <i class="fa fa-tags"></i>
+                                                                </div>
+                                                                <div class="voucher-details flex-grow-1">
+                                                                    <h6 class="mb-1 text-dark fw-bold">{{ $uservoucher->voucher->code }}</h6>
+                                                                    <small class="text-muted">Giảm giá: {{ $uservoucher->voucher->discount ?? 0 }}%</small>
+                                                                    <br>
+                                                                    @php
+                                                                        $minMoney = $uservoucher->voucher->min_money;
+                                                                        $maxMoney = $uservoucher->voucher->max_money;
+                                                                        $formattedMinMoney = $minMoney >= 1_000_000 
+                                                                            ? number_format($minMoney / 1_000_000, 0, ',', '') . 'tr' 
+                                                                            : number_format($minMoney / 1_000, 0, ',', '') . 'k';        
+                                                                        $formattedMaxMoney = $maxMoney >= 1_000_000 
+                                                                            ? number_format($maxMoney / 1_000_000, 0, ',', '') . 'tr' 
+                                                                            : number_format($maxMoney / 1_000, 0, ',', '') . 'k';                    
+                                                                    @endphp
+                                                                    <small>Áp dụng: {{ $formattedMinMoney }} - {{ $formattedMaxMoney }}</small>
+                                                                    <br>
+                                                                    <small>HSD: {{ \Carbon\Carbon::parse($uservoucher->voucher->end_date)->format('d/m/Y') }}</small>
+                                                                    <br>
+                                                                    <span class="badge 
+                                                                        @if ($uservoucher->status === 'used') bg-success 
+                                                                        @elseif ($uservoucher->status === 'not_used') bg-primary 
+                                                                        @elseif ($uservoucher->status === 'expired') bg-danger 
+                                                                        @endif">
+                                                                        @if ($uservoucher->status === 'used') Đã dùng 
+                                                                        @elseif ($uservoucher->status === 'not_used') Chưa dùng 
+                                                                        @elseif ($uservoucher->status === 'expired') Hết hạn 
+                                                                        @endif
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                            
+                                            
                                         </div>
                                     </div>
                                     <!-- Single Tab Content End -->
@@ -427,20 +486,20 @@
         </div>
     </div>
     <script>
-       function togglePassword(inputId, iconId) {
-        var passwordInput = document.getElementById(inputId);
-        var eyeIcon = document.getElementById(iconId);
+        function togglePassword(inputId, iconId) {
+            var passwordInput = document.getElementById(inputId);
+            var eyeIcon = document.getElementById(iconId);
 
-        if (passwordInput.type === "password") {
-            passwordInput.type = "text"; 
-            eyeIcon.classList.remove("fa-eye");
-            eyeIcon.classList.add("fa-eye-slash");
-        } else {
-            passwordInput.type = "password"; 
-            eyeIcon.classList.remove("fa-eye-slash");
-            eyeIcon.classList.add("fa-eye");
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeIcon.classList.remove("fa-eye");
+                eyeIcon.classList.add("fa-eye-slash");
+            } else {
+                passwordInput.type = "password";
+                eyeIcon.classList.remove("fa-eye-slash");
+                eyeIcon.classList.add("fa-eye");
+            }
         }
-    }
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -458,4 +517,63 @@
             });
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const voucherCards = document.querySelectorAll('.voucher-card');
+    
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    // Lấy trạng thái cần lọc
+                    const status = this.getAttribute('data-status');
+    
+                    // Thay đổi trạng thái nút
+                    filterButtons.forEach(btn => btn.classList.remove('btn-primary'));
+                    filterButtons.forEach(btn => btn.classList.add('btn-outline-primary'));
+                    this.classList.remove('btn-outline-primary');
+                    this.classList.add('btn-primary');
+    
+                    // Hiển thị/hide các voucher dựa trên trạng thái
+                    voucherCards.forEach(card => {
+                        if (status === 'all' || card.getAttribute('data-status') === status) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const orderCards = document.querySelectorAll('.order-card');
+            
+            // Xử lý sự kiện khi nhấn vào nút bộ lọc
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Lấy trạng thái của nút vừa được nhấn
+                    const status = this.getAttribute('data-status');
+                    
+                    // Thay đổi kiểu nút đã chọn
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('btn-primary');
+                        btn.classList.add('btn-outline-primary');
+                    });
+                    this.classList.remove('btn-outline-primary');
+                    this.classList.add('btn-primary');
+                    
+                    orderCards.forEach(card => {
+                        if (status === 'all' || card.getAttribute('data-status') === status) {
+                            card.style.display = 'table-row';  
+                        } else {
+                            card.style.display = 'none';  
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+    
 @endsection

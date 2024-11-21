@@ -58,34 +58,11 @@
                                                                 @php
                                                                     $minMoney = $voucher->min_money;
                                                                     $maxMoney = $voucher->max_money;
-                                                                    $formattedMinMoney =
-                                                                        $minMoney >= 1_000_000
-                                                                            ? number_format(
-                                                                                    $minMoney / 1_000_000,
-                                                                                    0,
-                                                                                    ',',
-                                                                                    '',
-                                                                                ) . 'tr'
-                                                                            : number_format(
-                                                                                    $minMoney / 1_000,
-                                                                                    0,
-                                                                                    ',',
-                                                                                    '',
-                                                                                ) . 'k';
+                                                                    $formattedMinMoney =  $minMoney >= 1_000_000 ? number_format ( $minMoney / 1_000_000, 0, ',','', ) 
+                                                                    . 'tr' : number_format( $minMoney / 1_000, 0,',','',) . 'k';        
                                                                     $formattedMaxMoney =
-                                                                        $maxMoney >= 1_000_000
-                                                                            ? number_format(
-                                                                                    $maxMoney / 1_000_000,
-                                                                                    0,
-                                                                                    ',',
-                                                                                    '',
-                                                                                ) . 'tr'
-                                                                            : number_format(
-                                                                                    $maxMoney / 1_000,
-                                                                                    0,
-                                                                                    ',',
-                                                                                    '',
-                                                                                ) . 'k';
+                                                                        $maxMoney >= 1_000_000 ? number_format( $maxMoney / 1_000_000, 0,',','', )
+                                                                    . 'tr' : number_format(   $maxMoney / 1_000, 0,',', '', ) . 'k';                    
                                                                 @endphp
                                                                 <small>Tối thiểu: {{ $formattedMinMoney }} - Tối đa:
                                                                     {{ $formattedMaxMoney }}</small>

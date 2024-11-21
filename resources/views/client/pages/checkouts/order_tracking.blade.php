@@ -20,7 +20,7 @@
                     <!-- Search Form Start -->
                     <div class="search-form-wrapper text-center mb-5">
                         <form action="{{ route('bill.search') }}" method="GET" class="search-form d-flex justify-content-center">
-                            <input type="text" name="order_code" class="form-control" placeholder="Nhập mã đơn hàng" required>
+                            <input type="text" name="order_code" class="form-control" placeholder="Nhập mã đơn hàng" required >
                             <button type="submit" class="btn btn-primary ml-2">Tra cứu</button>
                         </form>
                     </div>
@@ -31,38 +31,17 @@
                             <div class="col-lg-12">
                                 <div class="order-results-content">
                                     @if (isset($message))
-                                        {{-- <div class="alert alert-warning">{{ $message }}</div> --}}
-                                    @else
+                                    <div class="alert alert-danger" style="margin-top: 20px;">
+                                        {{ $message }}
+                                    </div>
+                                     @elseif(isset($bills) && !$bills->isEmpty())
                                     <h3 class="text-center">Kết quả tìm kiếm</h3>
 
                                         @foreach ($bills as $bill)
                                             <div class="card mb-4">
                                                 <div class="card-header d-flex justify-content-between align-items-center">
                                                     <h5>Mã đơn hàng: {{ $bill->order_code }}</h5>
-                                                    <span class="badge badge-info">
-                                                        @switch($bill->status)
-                                                            @case(1)
-                                                                Chờ xác nhận
-                                                                @break
-                                                            @case(2)
-                                                                Chờ lấy hàng
-                                                                @break
-                                                            @case(3)
-                                                                Đang giao hàng
-                                                                @break
-                                                            @case(4)
-                                                                Giao thành công
-                                                                @break
-                                                            @case(5)
-                                                                Chờ hủy
-                                                                @break
-                                                            @case(6)
-                                                                Đã hủy
-                                                                @break
-                                                            @default
-                                                                Không xác định
-                                                        @endswitch
-                                                    </span>
+                                                    
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="row">
@@ -74,10 +53,27 @@
                                                             <p><strong>Email:</strong> {{ $bill->user_email }}</p>
                                                             <p><strong>Địa chỉ:</strong> {{ $bill->user_address }}</p>
                                                             <hr style="border-top: 2px solid #2c2727; margin: 20px 0;">
-                                                            <p><strong>Ngày mua:</strong> {{ \Carbon\Carbon::parse($bill->created_at)->format('d-m-Y H:i:s') }}</p>
+                                                            <p><strong>Trạng thái:</strong> 
+                                                                @if ($bill->status == 1)
+                                                                    Chờ xác nhận
+                                                                @elseif ($bill->status == 2)
+                                                                    Chờ lấy hàng
+                                                                @elseif ($bill->status == 3)
+                                                                    Đang giao hàng
+                                                                @elseif ($bill->status == 4)
+                                                                    Giao thành công
+                                                                @elseif ($bill->status == 5)
+                                                                    Chờ hủy
+                                                                @elseif ($bill->status == 6)
+                                                                    Đã hủy
+                                                                @else
+                                                                    Không xác định
+                                                                @endif
+                                                            </p>
+                                                                                                                        <p><strong>Ngày mua:</strong> {{ \Carbon\Carbon::parse($bill->created_at)->format('d-m-Y H:i:s') }}</p>
                                                             <p><strong>Thanh toán:</strong> {{ $bill->payment_method == 'cod' ? 'Thanh toán khi nhận hàng' : 'Đã thanh toán thành công' }}</p>
                                                             @if($bill->voucher)
-                                                     <p><strong>Mã Voucher:</strong> {{ $bill->voucher->code }} (-{{ $bill->voucher->discount}}%)</p>
+                                                            <p><strong>Mã Voucher:</strong> {{ $bill->voucher->code }} (-{{ $bill->voucher->discount}}%)</p>
                                                             @endif
                                                             <p><strong>Tổng tiền:</strong> {{ number_format($bill->total_amount, 0, ',', '.') }} VND</p>
                                                         </div>

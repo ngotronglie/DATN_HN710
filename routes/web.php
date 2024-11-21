@@ -112,7 +112,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/my_acount/update-password/{id}', [AccountController::class, 'updatePassword'])->name('user.updatePassword');
     Route::get('/my_acount/{id}/bill_detail', [AccountController::class, 'orderBillDetail'])->name('viewBillDetail');
     Route::get('my_acount/orders/cancel/{id}', [AccountController::class, 'cancelOrder'])->name('cancelOrder');
-    Route::get('/orders/status/{status?}', [AccountController::class, 'getOrdersByStatus'])->name('orders.byStatus');
+    // Route::get('/orders/status/{status?}', [AccountController::class, 'getOrdersByStatus'])->name('orders.byStatus');
+    // Route::get('/voucher/status/{status?}', [AccountController::class, 'getVouchersByStatus'])->name('voucher.byStatus');
 
 });
 Route::get('/verify/{token}', [AccountController::class, 'verify'])->name('verify');
