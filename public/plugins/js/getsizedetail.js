@@ -554,7 +554,6 @@
 
                                                     <div class="cart-product-btn mt-4">
                                                         <a href="/cart" class="btn btn-dark btn-hover-primary rounded-0 w-100">Giỏ hàng</a>
-                                                        <a href="/checkout" class="btn btn-dark btn-hover-primary rounded-0 w-100 mt-4">Thanh toán</a>
                                                     </div>`;
 
                             cartContent.html(productHtml);
@@ -728,7 +727,6 @@
 
                                                     <div class="cart-product-btn mt-4">
                                                         <a href="/cart" class="btn btn-dark btn-hover-primary rounded-0 w-100">Giỏ hàng</a>
-                                                        <a href="/checkout" class="btn btn-dark btn-hover-primary rounded-0 w-100 mt-4">Thanh toán</a>
                                                     </div>`;
 
                             cartContent.html(productHtml);
