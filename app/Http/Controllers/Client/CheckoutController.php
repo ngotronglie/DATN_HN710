@@ -219,12 +219,11 @@ class CheckoutController extends Controller
                         }
                     }
 
-                    $countd = CartItem::whereHas('cart', function ($query) use ($user) {
+                    $count = CartItem::whereHas('cart', function ($query) use ($user) {
                         $query->where('user_id', $user->id);
                     })
                         ->distinct('product_variant_id')
                         ->count('product_variant_id');
-                        $count = $countd-1;
                 } else {
                     $cart = Session::get('cart', []);
                     $updatedItems = collect($cart['items'])->filter(function ($item) use ($productVariantIds) {

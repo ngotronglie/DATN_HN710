@@ -6,7 +6,6 @@
 
     HT.changeStt = () => {
 
-        //ket hop swk de thay doi tt tai khoan
         if ($('.active').length) {
             $(document).on('change', '.active', function () {
                 let _this = $(this)
@@ -21,18 +20,16 @@
 
                 $.ajax({
                     type: 'POST',
-                    url: 'categories/ajax/changeActiveCategory', // URL của máy chủ xử lý yêu cầu
-                    data: option, // Dữ liệu gửi đến máy chủ
-                    dataType: 'json', // Loại dữ liệu nhận lại từ máy chủ
+                    url: 'categories/ajax/changeActiveCategory',
+                    data: option,
+                    dataType: 'json',
                     success: function (res) {
-                        if (res.status) {
-                            // Cập nhật lại data-model
-                            _this.attr('data-model', res.newStatus);
-                            alert('Cập nhật thành công!')
-                            showAlert('Thay đổi trạng thái của: ' + title + ' thành công!', 'success');
+                        console.log(res);
+
+                        if (res.status == true) {
+                            swalSuccess(res.message);
                         } else {
-                            // In ra thông báo lỗi vào console
-                            console.error('Cập nhật thất bại: ' + res.message);
+
                         }
                     },
                     error: function (xhr, status, error) {

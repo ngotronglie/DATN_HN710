@@ -25,27 +25,30 @@
                         <i class="fa fa-bell"></i>
                         <span class="count bg-danger">{{ $unreadNotifications->count() }}</span>
                     </button>
-                    <div class="dropdown-menu" aria-labelledby="notification">
+                    <div class="dropdown-menu notification-menu" aria-labelledby="notification">
                         @if ($notifications->isEmpty())
-                            <p style="width: 180px">Không có thông báo</p>
+                            <div class="empty-notification">
+                                <p>Không có thông báo</p>
+                            </div>
                         @else
-                            @foreach ($notifications as $index => $notification)
-                                <a class="dropdown-item media {{ $notification->read_at == null ? 'read-noti' : '' }}"
+                            @foreach ($notifications as $notification)
+                                <a
+                                    class="dropdown-item notification-item {{ $notification->read_at == null ? 'unread' : 'read' }}"
                                     href="{{ route('admin.order.detailNotication', ['order_id' => $notification->data['order_id'], 'noti_id' => $notification->id]) }}">
-                                    <p>
-                                        {{ $notification->data['message'] }} -
-                                        <strong>Tổng đơn:</strong>
-                                        {{ number_format($notification->data['total_amount'], 0, ',', '.') }} đ
-                                    </p>
+                                    <div class="notification-content">
+                                        <p class="notification-message">{{ $notification->data['message'] }}</p>
+                                        <p class="notification-meta">
+                                            <strong>Tổng đơn:</strong> {{ number_format($notification->data['total_amount'], 0, ',', '.') }} đ
+                                        </p>
+                                    </div>
                                 </a>
-                                <hr style="margin: 0px">
                             @endforeach
-                            <a href="{{ route('admin.notification') }}" class="read-noti"
-                                style="display: flex;justify-content: center;text-decoration: underline;color: rgb(84, 87, 99)">
+                            <a href="{{ route('admin.notification') }}" class="view-all">
                                 Xem tất cả thông báo
                             </a>
                         @endif
                     </div>
+
                 </div>
 
                 <div class="dropdown for-message">
