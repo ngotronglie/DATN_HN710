@@ -24,9 +24,9 @@ class NotificationController extends Controller
         $order = Order::with(['orderDetails.productVariant.product', 'orderDetails.productVariant.size', 'orderDetails.productVariant.color', 'user'])->findOrFail($order_id);
 
         $notification = $user->notifications()->find($id);
-            if ($notification) {
-                $notification->markAsRead();
-            }
+        if ($notification) {
+            $notification->markAsRead();
+        }
 
         return view('admin.layout.order.notificationOrder', compact('order'));
     }
@@ -34,25 +34,30 @@ class NotificationController extends Controller
     public function delete($id)
     {
         $user = Auth::user();
-
         $notification = $user->notifications()->find($id);
-
         $notification->delete();
-
-
         return redirect()->route('admin.notification')->with('success', 'Xóa thành công');
     }
 
 
-    public function deleteAll()
+    public function deleteAllNotiRead()
     {
         $user = Auth::user();
+        $readNotifications = $user->notifications()->whereNotNull('read_at');
+        if ($readNotifications->exists()) {
+            $readNotifications->delete();
+            return redirect()->route('admin.notification')->with('success', 'Đã xóa thành công tất cả thông báo đã đọc.');
+        } else {
+            return redirect()->route('admin.notification')->with('error', 'Không có thông báo nào để xóa.');
+        }
+    }
 
+
+    public function deleteAllNoti()
+    {
+        $user = Auth::user();
         $notification = $user->notifications();
-
         $notification->delete();
-
-
         return redirect()->route('admin.notification')->with('success', 'Đã xóa thành công tất cả');
     }
 

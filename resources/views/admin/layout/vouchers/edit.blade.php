@@ -44,7 +44,7 @@
                             @method('PUT')
 
                             <div class="form-group">
-                                <label for="code" class="form-control-label">Mã Voucher</label>
+                                <label for="code" class="form-control-label">Mã giảm giá</label>
                                 <input type="text" id="code" name="code" value="{{ old('code', $voucher->code) }}"
                                     class="form-control" required>
                                 @error('code')

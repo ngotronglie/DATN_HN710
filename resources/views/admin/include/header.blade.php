@@ -23,29 +23,32 @@
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="notification"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-bell"></i>
-                        <span class="count bg-danger">{{ $unreadNotifications->count() }}</span>
+                        <span class="count bg-danger coutNotiUnRead">{{ $unreadNotifications->count() }}</span>
                     </button>
-                    <div class="dropdown-menu" aria-labelledby="notification">
+                    <div class="dropdown-menu notification-menu" aria-labelledby="notification">
                         @if ($notifications->isEmpty())
-                            <p style="width: 180px">Không có thông báo</p>
+                            <div class="empty-notification">
+                                <p>Không có thông báo</p>
+                            </div>
                         @else
-                            @foreach ($notifications as $index => $notification)
-                                <a class="dropdown-item media {{ $notification->read_at == null ? 'read-noti' : '' }}"
+                            @foreach ($notifications as $notification)
+                                <a
+                                    class="dropdown-item notification-item {{ $notification->read_at == null ? 'unread' : 'read' }}"
                                     href="{{ route('admin.order.detailNotication', ['order_id' => $notification->data['order_id'], 'noti_id' => $notification->id]) }}">
-                                    <p>
-                                        {{ $notification->data['message'] }} -
-                                        <strong>Tổng đơn:</strong>
-                                        {{ number_format($notification->data['total_amount'], 0, ',', '.') }} đ
-                                    </p>
+                                    <div class="notification-content">
+                                        <p class="notification-message">{{ $notification->data['message'] }}</p>
+                                        <p class="notification-meta">
+                                            <strong>Tổng đơn:</strong> {{ number_format($notification->data['total_amount'], 0, ',', '.') }} đ
+                                        </p>
+                                    </div>
                                 </a>
-                                <hr style="margin: 0px">
                             @endforeach
-                            <a href="{{ route('admin.notification') }}" class="read-noti"
-                                style="display: flex;justify-content: center;text-decoration: underline;color: rgb(84, 87, 99)">
+                            <a href="{{ route('admin.notification') }}" class="view-all">
                                 Xem tất cả thông báo
                             </a>
                         @endif
                     </div>
+
                 </div>
 
                 <div class="dropdown for-message">
@@ -93,8 +96,7 @@
             </div>
 
             <div class="user-area dropdown float-right">
-                <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false">
+                <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     @if (Auth::check() && Auth::user()->avatar)
                         <img class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;" src="{{ Storage::url(Auth::user()->avatar) }}"
                             alt="User Avatar">
@@ -103,11 +105,11 @@
                     @endif
                 </a>
 
+
                 <div class="user-menu dropdown-menu">
-                    <a class="nav-link" href="{{ route('admin.accounts.myAccount') }}"><i
-                            class="fa fa-user"></i> Hồ sơ cá nhân</a>
-                    <a class="nav-link" href="#"><i class="fa fa-bell"></i> Notifications <span
-                            class="count">13</span></a>
+                    <a class="nav-link" href="{{ route('admin.accounts.myAccount') }}"><i class="fa fa-user"></i> Hồ sơ cá nhân</a>
+                    <a class="nav-link" href="{{ route('admin.notification') }}"><i class="fa fa-bell"></i> Thông báo 
+                        <span class="count">{{ $unreadNotifications->count() }}</span></a>
                     <a class="nav-link" href="{{ route('admin.accounts.showChangePasswordForm') }}"><i class="fa fa-cog"></i> Đổi mật khẩu</a>
 
                     <form action="{{ route('admin.logout') }}" method="post" style="display: inline;">

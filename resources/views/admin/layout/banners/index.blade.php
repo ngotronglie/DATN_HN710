@@ -49,7 +49,7 @@
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
                             <a class="btn btn-danger" href="{{ route('admin.banners.trashed') }}">
-                                <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
+                                <i class="fa fa-trash"></i> Thùng rác <span class="countTrash">({{ $trashedCount }})</span>
                             </a>
                             <div class="dropdown float-right ml-2">
                                 <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -62,7 +62,7 @@
                                     <a class="dropdown-item activeAll" data-is_active="1" href="#">
                                         <i class="fa fa-toggle-off text-danger"></i> Tắt các mục đã chọn
                                     </a>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item deleteAll" href="#">
                                         <i class="fa fa-trash text-danger"></i> Xóa các mục đã chọn
                                     </a>
                                 </div>
@@ -97,7 +97,7 @@
                                     <th>Chức năng</th>
                                 </tr>
                             </tfoot>
-                            <tbody>
+                            <tbody class="null_Table">
                                 @foreach ($banners as $key => $item)
                                 <tr>
                                     <td>
@@ -113,13 +113,13 @@
                                         @if (!$item->creator->is_active)
                                         <div style="color: red;">(Bị khóa)</div>
                                         @endif
-                                    </td>  
+                                    </td>
                                     <td>
                                         {{ $item->updater->name ?? 'Chưa có sửa đổi' }}
                                         @if ($item->updater && !$item->updater->is_active)
                                         <div style="color: red;">(Bị khóa)</div>
                                         @endif
-                                    </td>                                  
+                                    </td>
                                     <td style="width: 12%" class="text-center">
                                         <input type="checkbox" class="js-switch active" data-model="{{ $item->is_active }}"
                                             {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"
@@ -191,6 +191,9 @@
 <script src="{{asset('plugins/js/changeActive/Banner/changeAllActiveBanner.js')}}"></script>
 
 <script src="{{asset('plugins/js/changeActive/Banner/changeActiveBanner.js')}}"></script>
+
+<script src="{{asset('plugins/js/ChangeActive/Banner/deleteCheckedBanner.js')}}"></script>
+
 
 <script>
     // Loại bỏ padding-right khi modal đóng

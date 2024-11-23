@@ -16,103 +16,20 @@
 
     <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png">
     <link rel="shortcut icon" href="https://i.imgur.com/QRAUqs9.png">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.0/normalize.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
-    <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.0/css/flag-icon.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
     <link rel="stylesheet" href="{{ asset('theme/admin/assets/css/cs-skin-elastic.css') }}">
     <link rel="stylesheet" href="{{ asset('theme/admin/assets/css/style.css') }}">
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.0/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="{{asset('plugins/css/cssAdmin.css')}}">
     @yield('style')
-    <style>
-        #weatherWidget .currentDesc {
-            color: #ffffff !important;
-        }
-
-        .traffic-chart {
-            min-height: 335px;
-        }
-
-        #flotPie1 {
-            height: 150px;
-        }
-
-        #flotPie1 td {
-            padding: 3px;
-        }
-
-        #flotPie1 table {
-            top: 20px !important;
-            right: -10px !important;
-        }
-
-        .chart-container {
-            display: table;
-            min-width: 270px;
-            text-align: left;
-            padding-top: 10px;
-            padding-bottom: 10px;
-        }
-
-        #flotLine5 {
-            height: 105px;
-        }
-
-        #flotBarChart {
-            height: 150px;
-        }
-
-        #cellPaiChart {
-            height: 160px;
-        }
-
-        /* Đảm bảo Select2 có chiều cao và đường viền giống với form-control */
-        .select2-container--default .select2-selection--single {
-            height: calc(2.25rem + 2px);
-            padding: 0.375rem 0.75rem;
-            font-size: 1rem;
-            line-height: 1.5;
-            color: #495057;
-            background-color: #fff;
-            border: 1px solid #ced4da;
-            border-radius: 0.25rem;
-            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-        }
-
-        .select2-container--default .select2-selection--single .select2-selection__rendered {
-            color: #495057;
-            line-height: 1.5;
-        }
-
-        .select2-container--default .select2-selection--single .select2-selection__arrow {
-            height: 100%;
-            top: 0;
-            right: 10px;
-            width: 2rem;
-        }
-
-        .select2-container .select2-dropdown {
-            border-radius: 0.25rem;
-            border: 1px solid #ced4da;
-        }
-
-        .select2-results__option--highlighted[aria-selected] {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .read-noti{
-            background-color: rgb(240, 242, 245)
-        }
-    </style>
     <script>
         var BASE_URL = '{{ config('app.url') }}';
     </script>

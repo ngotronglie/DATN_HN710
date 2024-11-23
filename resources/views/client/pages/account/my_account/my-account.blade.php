@@ -151,7 +151,7 @@
                                     <div class="tab-pane fade" id="orders" role="tabpanel">
                                         <div class="myaccount-content">
                                             <h3 class="title">Đơn hàng của tôi</h3>
-                                    
+
                                             <!-- Bộ lọc trạng thái -->
                                             <div class="order-status-filter mb-4">
                                                 <button class="btn btn-sm filter-btn" data-status="all">Tất cả</button>
@@ -162,7 +162,7 @@
                                                 <button class="btn btn-sm filter-btn" data-status="5">Chờ hủy</button>
                                                 <button class="btn btn-sm filter-btn" data-status="6">Đã hủy</button>
                                             </div>
-                                    
+
                                             <!-- Bảng hiển thị đơn hàng -->
                                             <div class="myaccount-table table-responsive text-center">
                                                 <table class="table table-bordered">
@@ -226,7 +226,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
 
                                     <!-- Single Tab Content End -->
 
@@ -332,58 +332,62 @@
                                     <!-- Single Tab Content Start -->
                                     <div class="tab-pane fade" id="payment-method" role="tabpanel">
                                         <div class="myaccount-content">
-                                            <h3 class="title">Tất cả vourcher</h3>
+                                            <h3 class="title">Tất cả mã giảm giá</h3>
                                             <div class="btn-group mb-3">
                                                 <button class="btn btn-sm btn-primary filter-btn" data-status="all">Tất cả</button>
                                                 <button class="btn btn-sm btn-outline-primary filter-btn" data-status="used">Đã dùng</button>
                                                 <button class="btn btn-sm btn-outline-primary filter-btn" data-status="not_used">Chưa dùng</button>
                                                 <button class="btn btn-sm btn-outline-primary filter-btn" data-status="expired">Hết hạn</button>
                                             </div>
-                                            
+
                                             <div class="row" id="voucher-container">
+                                                @if (!$vouchers->empty())
                                                 @foreach ($vouchers as $uservoucher)
-                                                    <div class="col-md-4 mb-3 voucher-card" data-status="{{ $uservoucher->status }}">
-                                                        <div class="card shadow-sm border-0">
-                                                            <div class="card-body d-flex align-items-center">
-                                                                <div class="voucher-icon text-primary me-3" style="font-size: 24px;">
-                                                                    <i class="fa fa-tags"></i>
-                                                                </div>
-                                                                <div class="voucher-details flex-grow-1">
-                                                                    <h6 class="mb-1 text-dark fw-bold">{{ $uservoucher->voucher->code }}</h6>
-                                                                    <small class="text-muted">Giảm giá: {{ $uservoucher->voucher->discount ?? 0 }}%</small>
-                                                                    <br>
-                                                                    @php
-                                                                        $minMoney = $uservoucher->voucher->min_money;
-                                                                        $maxMoney = $uservoucher->voucher->max_money;
-                                                                        $formattedMinMoney = $minMoney >= 1_000_000 
-                                                                            ? number_format($minMoney / 1_000_000, 0, ',', '') . 'tr' 
-                                                                            : number_format($minMoney / 1_000, 0, ',', '') . 'k';        
-                                                                        $formattedMaxMoney = $maxMoney >= 1_000_000 
-                                                                            ? number_format($maxMoney / 1_000_000, 0, ',', '') . 'tr' 
-                                                                            : number_format($maxMoney / 1_000, 0, ',', '') . 'k';                    
-                                                                    @endphp
-                                                                    <small>Áp dụng: {{ $formattedMinMoney }} - {{ $formattedMaxMoney }}</small>
-                                                                    <br>
-                                                                    <small>HSD: {{ \Carbon\Carbon::parse($uservoucher->voucher->end_date)->format('d/m/Y') }}</small>
-                                                                    <br>
-                                                                    <span class="badge 
-                                                                        @if ($uservoucher->status === 'used') bg-success 
-                                                                        @elseif ($uservoucher->status === 'not_used') bg-primary 
-                                                                        @elseif ($uservoucher->status === 'expired') bg-danger 
-                                                                        @endif">
-                                                                        @if ($uservoucher->status === 'used') Đã dùng 
-                                                                        @elseif ($uservoucher->status === 'not_used') Chưa dùng 
-                                                                        @elseif ($uservoucher->status === 'expired') Hết hạn 
-                                                                        @endif
-                                                                    </span>
-                                                                </div>
+                                                <div class="col-md-4 mb-3 voucher-card" data-status="{{ $uservoucher->status }}">
+                                                    <div class="card shadow-sm border-0">
+                                                        <div class="card-body d-flex align-items-center">
+                                                            <div class="voucher-icon text-primary me-3" style="font-size: 24px;">
+                                                                <i class="fa fa-tags"></i>
+                                                            </div>
+                                                            <div class="voucher-details flex-grow-1">
+                                                                <h6 class="mb-1 text-dark fw-bold">{{ $uservoucher->voucher->code }}</h6>
+                                                                <small class="text-muted">Giảm giá: {{ $uservoucher->voucher->discount ?? 0 }}%</small>
+                                                                <br>
+                                                                @php
+                                                                    $minMoney = $uservoucher->voucher->min_money;
+                                                                    $maxMoney = $uservoucher->voucher->max_money;
+                                                                    $formattedMinMoney = $minMoney >= 1_000_000
+                                                                        ? number_format($minMoney / 1_000_000, 0, ',', '') . 'tr'
+                                                                        : number_format($minMoney / 1_000, 0, ',', '') . 'k';
+                                                                    $formattedMaxMoney = $maxMoney >= 1_000_000
+                                                                        ? number_format($maxMoney / 1_000_000, 0, ',', '') . 'tr'
+                                                                        : number_format($maxMoney / 1_000, 0, ',', '') . 'k';
+                                                                @endphp
+                                                                <small>Áp dụng: {{ $formattedMinMoney }} - {{ $formattedMaxMoney }}</small>
+                                                                <br>
+                                                                <small>HSD: {{ \Carbon\Carbon::parse($uservoucher->voucher->end_date)->format('d/m/Y') }}</small>
+                                                                <br>
+                                                                <span class="badge
+                                                                    @if ($uservoucher->status === 'used') bg-success
+                                                                    @elseif ($uservoucher->status === 'not_used') bg-primary
+                                                                    @elseif ($uservoucher->status === 'expired') bg-danger
+                                                                    @endif">
+                                                                    @if ($uservoucher->status === 'used') Đã dùng
+                                                                    @elseif ($uservoucher->status === 'not_used') Chưa dùng
+                                                                    @elseif ($uservoucher->status === 'expired') Hết hạn
+                                                                    @endif
+                                                                </span>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                @endforeach
+                                                </div>
+                                            @endforeach
+                                            @else
+                                            <p>Không có mã giảm giá nào.</p>
+                                                @endif
                                             </div>
-                                            
-                                            
+
+
                                         </div>
                                     </div>
                                     <!-- Single Tab Content End -->
@@ -521,18 +525,18 @@
         document.addEventListener('DOMContentLoaded', function () {
             const filterButtons = document.querySelectorAll('.filter-btn');
             const voucherCards = document.querySelectorAll('.voucher-card');
-    
+
             filterButtons.forEach(button => {
                 button.addEventListener('click', function () {
                     // Lấy trạng thái cần lọc
                     const status = this.getAttribute('data-status');
-    
+
                     // Thay đổi trạng thái nút
                     filterButtons.forEach(btn => btn.classList.remove('btn-primary'));
                     filterButtons.forEach(btn => btn.classList.add('btn-outline-primary'));
                     this.classList.remove('btn-outline-primary');
                     this.classList.add('btn-primary');
-    
+
                     // Hiển thị/hide các voucher dựa trên trạng thái
                     voucherCards.forEach(card => {
                         if (status === 'all' || card.getAttribute('data-status') === status) {
@@ -549,13 +553,13 @@
         document.addEventListener('DOMContentLoaded', function() {
             const filterButtons = document.querySelectorAll('.filter-btn');
             const orderCards = document.querySelectorAll('.order-card');
-            
+
             // Xử lý sự kiện khi nhấn vào nút bộ lọc
             filterButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     // Lấy trạng thái của nút vừa được nhấn
                     const status = this.getAttribute('data-status');
-                    
+
                     // Thay đổi kiểu nút đã chọn
                     filterButtons.forEach(btn => {
                         btn.classList.remove('btn-primary');
@@ -563,17 +567,17 @@
                     });
                     this.classList.remove('btn-outline-primary');
                     this.classList.add('btn-primary');
-                    
+
                     orderCards.forEach(card => {
                         if (status === 'all' || card.getAttribute('data-status') === status) {
-                            card.style.display = 'table-row';  
+                            card.style.display = 'table-row';
                         } else {
-                            card.style.display = 'none';  
+                            card.style.display = 'none';
                         }
                     });
                 });
             });
         });
     </script>
-    
+
 @endsection

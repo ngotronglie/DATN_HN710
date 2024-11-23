@@ -21,8 +21,8 @@
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Bảng điều khiển</a></li>
-                            <li><a href="#">Quản lí size</a></li>
-                            <li class="active">Danh sách size</li>
+                            <li><a href="#">Quản lí kích cỡ</a></li>
+                            <li class="active">Danh sách kích cỡ</li>
                         </ol>
                     </div>
                 </div>
@@ -38,20 +38,20 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong class="card-title">Danh sách size</strong>
+                        <strong class="card-title">Danh sách kích cỡ</strong>
                         <div>
                             <a class="btn btn-primary mr-1" href="{{ route('admin.sizes.create') }}">
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
                             <a class="btn btn-danger" href="{{ route('admin.sizes.trashed') }}">
-                                <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
+                                <i class="fa fa-trash"></i> Thùng rác <span class="countTrash">({{ $trashedCount }})</span>
                             </a>
                             <div class="dropdown float-right ml-2">
                                 <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-cogs"></i> Tùy chọn
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item deleteAll" href="#">
                                         <i class="fa fa-trash text-danger"></i> Xóa các mục đã chọn
                                     </a>
                                 </div>
@@ -66,7 +66,7 @@
                                         <input id="checkAllTable" type="checkbox">
                                     </th>
                                     <th>STT</th>
-                                    <th>Tên size</th>
+                                    <th>Kích cỡ</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </thead>
@@ -74,11 +74,11 @@
                                 <tr>
                                     <th></th>
                                     <th>STT</th>
-                                    <th>Tên size</th>
+                                    <th>Kích cỡ</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </tfoot>
-                            <tbody>
+                            <tbody class="null_Table">
                                 @foreach ($sizes as $key => $item)
                                 <tr>
                                     <td>
@@ -106,7 +106,7 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                Bạn có chắc chắn muốn xóa size "{{ $item->name }}" không?
+                                                Bạn có chắc chắn muốn xóa kích cỡ "{{ $item->name }}" không?
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
@@ -145,6 +145,8 @@
 <script src="{{ asset('theme/admin/assets/js/init/datatables-init.js') }}"></script>
 
 <script src="{{asset('plugins/js/checkall.js')}}"></script>
+<script src="{{asset('plugins/js/ChangeActive/Size/deleteCheckedSize.js')}}"></script>
+
 
 <script>
     // Loại bỏ padding-right khi modal đóng

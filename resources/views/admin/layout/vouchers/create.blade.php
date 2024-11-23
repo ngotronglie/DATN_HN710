@@ -42,7 +42,7 @@
                         <form action="{{ route('admin.vouchers.store') }}" method="POST">
                             @csrf
                             <div class="form-group">
-                                <label for="code" class="form-control-label">Mã Voucher</label>
+                                <label for="code" class="form-control-label">Mã giảm giá</label>
                                 <input type="text" id="code" name="code" value="{{ old('code') }}" class="form-control" required>
                                 @error('code')
                                 <small class="form-text text-danger">{{ $message }}</small>

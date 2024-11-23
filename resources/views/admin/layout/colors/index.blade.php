@@ -44,14 +44,14 @@
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
                             <a class="btn btn-danger" href="{{ route('admin.colors.trashed') }}">
-                                <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
+                                <i class="fa fa-trash"></i> Thùng rác <span class="countTrash">({{ $trashedCount }})</span>
                             </a>
                             <div class="dropdown float-right ml-2">
                                 <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-cogs"></i> Tùy chọn
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item deleteAll" href="#">
                                         <i class="fa fa-trash text-danger"></i> Xóa các mục đã chọn
                                     </a>
                                 </div>
@@ -80,7 +80,7 @@
                                     <th>Chức năng</th>
                                 </tr>
                             </tfoot>
-                            <tbody>
+                            <tbody class="null_Table">
                                 @foreach ($colors as $key => $item)
                                 <tr>
                                     <td>
@@ -151,6 +151,8 @@
 <script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.print.min.js') }}"></script>
 <script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.colVis.min.js') }}"></script>
 <script src="{{ asset('theme/admin/assets/js/init/datatables-init.js') }}"></script>
+<script src="{{ asset('plugins/js/ChangeActive/color/deleteCheckedColor.js') }}"></script>
+
 
 <script src="{{asset('plugins/js/checkall.js')}}"></script>
 

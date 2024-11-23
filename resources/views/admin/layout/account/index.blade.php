@@ -63,9 +63,6 @@
                                     <a class="dropdown-item activeAll" data-is_active="1" href="#">
                                         <i class="fa fa-toggle-off text-danger"></i> Tắt các mục đã chọn
                                     </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fa fa-trash text-danger"></i> Xóa các mục đã chọn
-                                    </a>
                                 </div>
                             </div>
                         </div>

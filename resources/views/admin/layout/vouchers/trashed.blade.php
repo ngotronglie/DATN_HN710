@@ -46,7 +46,7 @@
                             <thead>
                                 <tr>
                                     <th>STT</th>
-                                    <th>Code</th>
+                                    <th>Mã</th>
                                     <th>Giảm giá</th>
                                     <th>Chức năng</th>
                                 </tr>
@@ -54,7 +54,7 @@
                             <tfoot>
                                 <tr>
                                     <th>STT</th>
-                                    <th>Code</th>
+                                    <th>Mã</th>
                                     <th>Giảm giá</th>
                                     <th>Chức năng</th>
                                 </tr>
@@ -86,7 +86,7 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                Bạn có chắc chắn muốn khôi phục voucher "{{ $item->name }}" không?
+                                                Bạn có chắc chắn muốn khôi phục mã giảm giá "{{ $item->code }}" không?
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>

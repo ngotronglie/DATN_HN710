@@ -17,7 +17,7 @@
                 });
 
                 if (id.length === 0) {
-                    alert('Vui lòng chọn ít nhất một mục');
+                    swalErrorAd('Vui lòng chọn ít nhất một mục');
                     return;
                 }
 
@@ -25,8 +25,6 @@
                     'id': id,
                     '_token': token
                 };
-                console.log(option);
-
 
                 $.ajax({
                     type: 'DELETE',
@@ -34,10 +32,11 @@
                     data: option,
                     dataType: 'json',
                     success: function (res) {
-                        
-                            id.forEach(function (deletedId) {
-                                $('#removeTr-' + deletedId).empty();
-                            });
+                        swalSuccessAd(res.message);
+                        $('.coutNotiUnRead').html(res.count);
+                        id.forEach(function (deletedId) {
+                            $('#removeTr-' + deletedId).empty();
+                        });
                     },
                     error: function (xhr, status, error) {
                         let message = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : error;
@@ -48,8 +47,54 @@
         }
     }
 
+    HT.deleteNotiChecked = () => {
+        $(document).on('click', '.deleteNotiRead', function (e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Bạn có chắc chắn',
+                text: "Hành động này sẽ xóa tất cả các thông báo đã đọc",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "http://datn_hn710.test/admin/deleteNoticationRead";
+                }
+            });
+        });
+    }
+
+
+    HT.deleteNotiAll = () => {
+        $(document).on('click', '.deleteNotiAll', function (e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Bạn có chắc chắn',
+                text: "Hành động này sẽ xóa tất cả thông báo",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "http://datn_hn710.test/admin/deleteAllNoti";
+                }
+            });
+        });
+
+    }
+
     $(document).ready(function () {
         HT.deleteall();
+        HT.deleteNotiChecked();
+        HT.deleteNotiAll();
     });
 
 })(jQuery);

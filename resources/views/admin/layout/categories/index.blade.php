@@ -49,7 +49,7 @@
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
                             <a class="btn btn-danger" href="{{ route('admin.categories.trashed') }}">
-                                <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
+                                <i class="fa fa-trash"></i> Thùng rác <span class="countTrash">({{ $trashedCount }})</span>
                             </a>
                             <div class="dropdown float-right ml-2">
                                 <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -62,7 +62,7 @@
                                     <a class="dropdown-item activeAll" data-is_active="1" href="#">
                                         <i class="fa fa-toggle-off text-danger"></i> Tắt các mục đã chọn
                                     </a>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item deleteAll" href="#">
                                         <i class="fa fa-trash text-danger"></i> Xóa các mục đã chọn
                                     </a>
                                 </div>
@@ -93,7 +93,7 @@
                                     <th>Chức năng</th>
                                 </tr>
                             </tfoot>
-                            <tbody>
+                            <tbody class="null_Table">
                                 @foreach ($categories as $key => $item)
                                 <tr>
                                     <td>
@@ -115,6 +115,7 @@
                                         </button>
                                     </td>
                                 </tr>
+
 
                                 <!-- Modal Xóa -->
                                 <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ $item->id }}" aria-hidden="true">
@@ -173,6 +174,9 @@
 <script src="{{asset('plugins/js/changeActive/Category/changeAllActiveCategory.js')}}"></script>
 
 <script src="{{asset('plugins/js/changeActive/Category/changeActiveCategory.js')}}"></script>
+
+<script src="{{asset('plugins/js/ChangeActive/Category/deleteCheckedctgr.js')}}"></script>
+
 
 <script>
     // Loại bỏ padding-right khi modal đóng

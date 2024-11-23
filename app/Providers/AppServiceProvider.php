@@ -122,7 +122,7 @@ class AppServiceProvider extends ServiceProvider
             $user = Auth::user();
 
             if ($user) {
-                $notifications = $user->notifications()->orderBy('id', 'desc')->take(10)->get();
+                $notifications = $user->notifications()->orderBy('id', 'desc')->get();
                 $unreadNotifications = $user->unreadNotifications()->get();
             }else{
                 $notifications = collect();

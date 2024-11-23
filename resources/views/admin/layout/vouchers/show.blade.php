@@ -38,7 +38,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong>Chi tiết Voucher</strong>
+                        <strong>Chi tiết mã giảm giá</strong>
                         <a href="{{ route('admin.vouchers.index') }}" class="btn btn-primary  ">
                             <i class="fa fa-arrow-left mr-1"></i> Quay lại
                         </a>
@@ -46,7 +46,7 @@
                     <div class="card-body">
                         <table class="table table-bordered">
                             <tbody>
-                                <tr>
+                                <tr>giảm giá
                                     <th>Mã Voucher</th>
                                     <td>{{ $voucher->code }}</td>
                                 </tr>
