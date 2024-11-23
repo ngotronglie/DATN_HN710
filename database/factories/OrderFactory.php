@@ -30,7 +30,7 @@ class OrderFactory extends Factory
             'total_amount' => fake()->numberBetween(100000, 500000), 
             'status' => fake()->randomElement(['1', '2', '3', '4']),
             'payment_method' => fake()->randomElement(['cod', 'online']),
-            'payment_status' => fake()->randomElement(['unpaid', 'paid', 'failed', 'refunded']),
+            'payment_status' => fake()->randomElement(['unpaid', 'paid', 'refunded']),
             'order_code' => 'ORD-' . strtoupper(Str::random(8)),
             'note' => fake()->optional()->sentence(),
         ];
