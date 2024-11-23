@@ -19,6 +19,9 @@ class CommentController extends Controller
                 $query->where('is_active', 0); // Đếm số bình luận tắt
             }
         ])
+            ->whereHas('category', function ($query) {
+                $query->whereNull('deleted_at');
+            })
             ->orderBy('comments_count', 'desc')
             ->get();
 
@@ -28,6 +31,10 @@ class CommentController extends Controller
     public function show($id)
     {
         $product = Product::findOrFail($id);
+
+        if (!$product || !$product->category) {
+            abort(404);
+        }
 
         $comments = Comment::with('user')
             ->withCount('children')
@@ -50,12 +57,16 @@ class CommentController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
+        if ($childComments->isEmpty()) {
+            return back()->with('warning', 'Không có bình luận con nào cho bình luận cha này');
+        }
+
         $parentComment = $childComments->first()->parent ?? null;
 
         $product = $childComments->first()->product ?? null;
 
-        if ($childComments->isEmpty()) {
-            return back()->with('warning', 'Không có bình luận con nào cho bình luận cha này');
+        if (!$product || !$product->category) {
+            abort(404);
         }
 
         return view('admin.layout.comments.showChildren', compact('childComments', 'parentComment', 'product'));

@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('user_vouchers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('restrict');
             $table->foreignId('voucher_id')->constrained()->onDelete('cascade');
-            $table->string('status')->default('not_used'); // Trạng thái voucher: not_used, used, expired
+            $table->string('status')->default('not_used');
             $table->timestamps();
         });
     }

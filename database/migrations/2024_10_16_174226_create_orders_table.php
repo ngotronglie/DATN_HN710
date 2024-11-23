@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
         $table->id();
-        $table->foreignIdFor(User::class)->nullable()->constrained(); 
+        $table->foreignIdFor(User::class)->nullable()->constrained()->onDelete('restrict'); 
         $table->string('user_name'); 
         $table->string('user_email');
         $table->string('user_phone');
@@ -25,7 +25,7 @@ return new class extends Migration
         $table->bigInteger('total_amount');
         $table->string('status')->default('1');
         $table->enum('payment_method', ['cod', 'online'])->default('cod'); 
-        $table->enum('payment_status', ['unpaid', 'paid', 'failed', 'refunded'])->default('unpaid');//Đơn hàng chưa thanh toán, Đơn hàng đã thanh toán, Giao dịch thanh toán k thành công, Hoàn tiền
+        $table->enum('payment_status', ['unpaid', 'paid', 'refunded'])->default('unpaid');//Đơn hàng chưa thanh toán, Đơn hàng đã thanh toán, Hoàn tiền
         $table->string('order_code')->unique();
         $table->text('note')->nullable();
         $table->timestamps();

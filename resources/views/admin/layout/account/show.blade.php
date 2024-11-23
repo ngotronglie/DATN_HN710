@@ -60,7 +60,7 @@
                                 <th>Ảnh</th>
                                 <td>
                                     @if($account->avatar)
-                                    <img src="{{ Storage::url($account->avatar) }}" alt="Avatar" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;">
+                                    <img src="{{ Storage::url($account->avatar) }}" alt="Avatar" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;">
                                     @else
                                     <span>Chưa cập nhật</span>
                                     @endif

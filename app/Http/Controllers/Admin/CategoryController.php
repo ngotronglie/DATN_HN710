@@ -19,7 +19,9 @@ class CategoryController extends Controller
         if (Gate::denies('viewAny', Category::class)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
-        $categories = Category::withCount('products')->orderBy('id', 'desc')->get();
+        $categories = Category::withCount(['products' => function ($query) {
+            $query->whereNull('deleted_at');
+        }])->orderBy('id', 'desc')->get();
         $trashedCount = Category::onlyTrashed()->count();
         return view(self::PATH_VIEW . __FUNCTION__, compact('categories', 'trashedCount'));
     }

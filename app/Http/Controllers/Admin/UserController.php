@@ -26,9 +26,8 @@ class UserController extends Controller
             return back()->with('warning', 'Bạn không có quyền!');
         }
         $data = User::whereIn('role', ['1', '2'])->orderBy('role', 'desc')->orderBy('id', 'desc')->get();
-        $trashedCount = User::onlyTrashed()->count();
         $users = User::where('role', '0')->count();
-        return view(self::PATH_VIEW . __FUNCTION__, compact('data', 'trashedCount', 'users'));
+        return view(self::PATH_VIEW . __FUNCTION__, compact('data', 'users'));
     }
 
     public function listUser()
@@ -115,75 +114,37 @@ class UserController extends Controller
         $account->update($data);
         return redirect()->route('admin.accounts.index')->with('success', 'Sửa thành công');
     }
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $account)
-    {
-        if (Gate::denies('delete', $account)) {
-            return back()->with('warning', 'Bạn không có quyền!');
-        }
-        $account->delete();
-        return redirect()->route('admin.accounts.index')->with('success', 'Xóa mềm thành công');
-    }
-
-    public function trashed()
-    {
-        if (Gate::denies('viewTrashed', User::class)) {
-            return back()->with('warning', 'Bạn không có quyền!');
-        }
-        $trashedUsers = User::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
-        return view('admin.layout.account.trashed', compact('trashedUsers'));
-    }
-
-    public function restore($id)
-    {
-        $user = User::withTrashed()->find($id);
-        if (Gate::denies('restore', $user)) {
-            return back()->with('warning', 'Bạn không có quyền!');
-        }
-        $user->restore();
-        return redirect()->route('admin.accounts.trashed')->with('success', 'Khôi phục thành công');
-    }
-
-    public function forceDelete($id)
-    {
-        $user = User::withTrashed()->find($id);
-        if (Gate::denies('forceDelete', $user)) {
-            return back()->with('warning', 'Bạn không có quyền!');
-        }
-        if ($user->avatar) {
-            Storage::delete($user->avatar);
-        }
-        $user->forceDelete();
-        return redirect()->route('admin.accounts.trashed')->with('success', 'Tài khoản đã được xóa vĩnh viễn');
-    }
 
     public function myAccount()
     {
-        $user = Auth::user();
-        return view('admin.layout.account.my_account', compact('user'));
+        return view('admin.layout.account.my_account');
     }
 
-    public function updateMyAcount(request $request, $id)
+    public function updateMyAcount(request $request)
     {
-        $user = User::findOrFail($id);
-        $request->validate([
-            'name' => 'nullable|string|max:255',
-            'address' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|regex:/^[0-9]{10}$/',
-            'date_of_birth' => 'nullable|date|before:today',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ], [
-            'date_of_birth.before' => 'Ngày sinh không hợp lệ.',
-            'phone.regex' => 'Số điện thoại không hợp lệ.',
-            'avatar.image' => 'Tệp tải lên phải là hình ảnh.',
-            'avatar.mimes' => 'Ảnh đại diện phải có định dạng: jpeg, png, jpg, gif.',
-            'avatar.max' => 'Ảnh đại diện không được lớn hơn 2MB.',
-        ]);
-        $data = $request->except('avatar');
-        $data['email'] = $user->email;
-        $data = $request->except('avatar');
+        $request->validate(
+            [
+                'address' => 'required|string|max:255',
+                'phone' => 'required|string|regex:/^[0-9]{10}$/',
+                'date_of_birth' => 'required|date|before:today',
+                'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ],
+            [
+                'address.required' => 'Địa chỉ là bắt buộc',
+                'address.max' => 'Tối đa 255 kí tự',
+                'phone.required' => 'Số điện thoại là bắt buộc',
+                'phone.regex' => 'Số điện thoại không hợp lệ',
+                'avatar.image' => 'Tệp tải lên phải là hình ảnh',
+                'avatar.mimes' => 'Ảnh đại diện phải có định dạng: jpeg, png, jpg, gif',
+                'avatar.max' => 'Ảnh đại diện không được lớn hơn 2MB',
+                'date_of_birth.required' => 'Ngày sinh là bắt buộc',
+                'date_of_birth.date' => 'Ngày sinh không hợp lệ',
+                'date_of_birth.before' => 'Ngày sinh không được là ngày hiện tại',
+            ]
+        );
+        $user = User::findOrFail(auth()->user()->id);
+
+        $data = $request->only(['phone', 'address', 'date_of_birth']);
         if ($request->hasFile('avatar')) {
 
             $data['avatar'] = Storage::put('users', $request->file('avatar'));
@@ -191,34 +152,44 @@ class UserController extends Controller
                 Storage::delete($user->avatar);
             }
         } else {
-            $data['image'] = $user->avatar;
+            $data['avatar'] = $user->avatar;
         }
+
         $user->update($data);
         return redirect()->route('admin.accounts.myAccount')->with('success', 'Cập nhật thông tin thành công');
     }
-    
-    public function updatePassword(Request $request, $id)
+
+    public function showChangePasswordForm()
     {
-        $user = User::findOrFail($id);
-        if (empty($request->current_password)) {
-            return back()->withErrors(['current_password' => 'Vui lòng nhập mật khẩu hiện tại.']);
-        }
-        if (!Hash::check($request->current_password, $user->password)) {
-            return back()->withErrors(['current_password' => 'Mật khẩu hiện tại không đúng']);
-        }
+        return view('admin.layout.account.change-password');
+    }
+
+    public function updatePassword(Request $request)
+    {
         $request->validate([
+            'current_password' => 'required|string',
             'new_password' => ['required', 'string', 'min:8', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'confirmed'],
             'new_password_confirmation' => 'required|string',
         ], [
-            'new_password.required' => 'Vui lòng nhập mật khẩu mới.',
-            'new_password.regex' => 'Mật khẩu bao gồm chữ in hoa, chữ cái thường và số.',
-            'new_password.min' => 'Mật khẩu mới phải ít nhất 8 ký tự.',
-            'new_password.confirmed' => 'Mật khẩu mới không trùng khớp.',
-            'new_password_confirmation.required' => 'Vui lòng không bỏ trống.',
+            'current_password.required' => 'Vui lòng nhập mật khẩu hiện tại',
+            'new_password.required' => 'Vui lòng nhập mật khẩu mới',
+            'new_password.regex' => 'Mật khẩu bao gồm chữ in hoa, chữ cái thường và số',
+            'new_password.min' => 'Mật khẩu mới phải ít nhất 8 ký tự',
+            'new_password.confirmed' => 'Mật khẩu mới không trùng khớp',
+            'new_password_confirmation.required' => 'Vui lòng không bỏ trống',
         ]);
-        if (Hash::check($request->new_password, $user->password)) {
+
+        // Kiểm tra mật khẩu hiện tại
+        if (!Hash::check($request->current_password, auth()->user()->password)) {
+            return back()->withErrors(['current_password' => 'Mật khẩu hiện tại không chính xác']);
+        }
+
+        if (Hash::check($request->new_password, auth()->user()->password)) {
             return back()->withErrors(['new_password' => 'Mật khẩu mới không được giống với mật khẩu hiện tại']);
         }
+
+        // Cập nhật mật khẩu mới
+        $user = User::findOrFail(auth()->user()->id);
         $user->password = Hash::make($request->new_password);
         $user->save();
         Auth::logout();

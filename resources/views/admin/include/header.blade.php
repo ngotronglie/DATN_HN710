@@ -96,21 +96,19 @@
                 <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
                     @if (Auth::check() && Auth::user()->avatar)
-                        <img class=" rounded-circle" width="30px" src="{{ Storage::url(Auth::user()->avatar) }}"
+                        <img class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;" src="{{ Storage::url(Auth::user()->avatar) }}"
                             alt="User Avatar">
                     @else
                         <i class="bi bi-person-circle" style="font-size: 1.75rem;"></i>
                     @endif
-
                 </a>
 
                 <div class="user-menu dropdown-menu">
                     <a class="nav-link" href="{{ route('admin.accounts.myAccount') }}"><i
-                            class="fa fa-user"></i>Thông
-                        Tin</a>
-                    <a class="nav-link" href="#"><i class="fa fa-user"></i> Notifications <span
+                            class="fa fa-user"></i> Hồ sơ cá nhân</a>
+                    <a class="nav-link" href="#"><i class="fa fa-bell"></i> Notifications <span
                             class="count">13</span></a>
-                    <a class="nav-link" href="#"><i class="fa fa-cog"></i> Settings</a>
+                    <a class="nav-link" href="{{ route('admin.accounts.showChangePasswordForm') }}"><i class="fa fa-cog"></i> Đổi mật khẩu</a>
 
                     <form action="{{ route('admin.logout') }}" method="post" style="display: inline;">
                         @csrf

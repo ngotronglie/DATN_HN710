@@ -21,7 +21,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->bigInteger('view')->default(0);
             $table->foreignIdFor(CategoryBlog::class)->constrained()->onDelete('cascade');
-            $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
+            $table->foreignIdFor(User::class)->constrained()->onDelete('restrict');
             $table->softDeletes();
             $table->timestamps();
         });

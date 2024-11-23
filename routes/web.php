@@ -143,17 +143,14 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
     // Các route tùy chỉnh
     Route::get('/accounts/my_account', [UserController::class, 'myAccount'])->name('accounts.myAccount');
-    Route::post('accounts/my_account/{id}', [UserController::class, 'updateMyAcount'])->name('accounts.updateMyAccount');
-    Route::post('/accounts/update-password/{id}', [UserController::class, 'updatePassword'])->name('accounts.updatePassword');
+    Route::put('accounts/my_account', [UserController::class, 'updateMyAcount'])->name('accounts.updateMyAccount');
+    Route::get('/accounts/change-password', [UserController::class, 'showChangePasswordForm'])->name('accounts.showChangePasswordForm');
+    Route::put('/accounts/change-password', [UserController::class, 'updatePassword'])->name('accounts.updatePassword');
 
-    Route::delete('/accounts/{id}/forceDelete', [UserController::class, 'forceDelete'])->name('accounts.forceDelete');
-    Route::get('accounts/trashed', [UserController::class, 'trashed'])->name('accounts.trashed');
-    Route::post('accounts/{user}/restore', [UserController::class, 'restore'])->name('accounts.restore');
     Route::get('accounts/listUser', [UserController::class, 'listUser'])->name('accounts.listUser');
 
-    // Các route resource cho accounts
-
-    Route::resource('accounts', UserController::class);
+    // Quản lí tài khoản
+    Route::resource('accounts', UserController::class)->except(['destroy']);;
 
     // Quản lý các size đã bị xóa mềm
     Route::get('sizes/trashed', [SizeController::class, 'trashed'])->name('sizes.trashed');

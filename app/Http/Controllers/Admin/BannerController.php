@@ -22,9 +22,7 @@ class BannerController extends Controller
         if (Gate::denies('viewAny', Banner::class)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
-        $banners = Banner::whereHas('creator', function ($query) {
-            $query->whereNull('deleted_at'); // Chỉ lấy tài khoản chưa bị xóa mềm
-        })->orderBy('id', 'desc')->get();
+        $banners = Banner::orderBy('id', 'desc')->get();
         $trashedCount = Banner::onlyTrashed()->count();
         return view(self::PATH_VIEW . __FUNCTION__, compact('banners', 'trashedCount'));
     }
@@ -68,9 +66,7 @@ class BannerController extends Controller
         if (Gate::denies('view', $banner)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
-        if (!$banner->creator || $banner->creator->trashed()) {
-            abort(404);
-        }
+
         $banner->load(['creator', 'updater']);
         return view(self::PATH_VIEW . __FUNCTION__, compact('banner'));
     }
@@ -83,9 +79,7 @@ class BannerController extends Controller
         if (Gate::denies('update', $banner)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
-        if (!$banner->creator || $banner->creator->trashed()) {
-            abort(404);
-        }
+        
         return view(self::PATH_VIEW . __FUNCTION__, compact('banner'));
     }
 
@@ -122,6 +116,7 @@ class BannerController extends Controller
         if (Gate::denies('delete', $banner)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
+        
         $banner->delete();
         return back()->with('success', 'Xóa thành công');
     }

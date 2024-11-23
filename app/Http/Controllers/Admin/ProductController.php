@@ -135,7 +135,7 @@ class ProductController extends Controller
         if (Gate::denies('view', $product)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
-        if (!$product->category || $product->category->trashed()) {
+        if (!$product->category) {
             abort(404);
         }
 
@@ -161,7 +161,7 @@ class ProductController extends Controller
         if (Gate::denies('update', $product)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
-        if (!$product->category || $product->category->trashed()) {
+        if (!$product->category) {
             abort(404);
         }
 

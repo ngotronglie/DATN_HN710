@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table id="bootstrap-data-table" class="table table-striped table-bordered">
+                        <table id="bootstrap-data-table" class="table table-striped table-bordered" data-disable-sort="false">
                             <thead>
                                 <tr>
                                     <th>
@@ -113,7 +113,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <img src="{{ Storage::url($item->img_thumb) }}" alt="{{ $item->name }}" style="width: 100px; height: auto;">
+                                        <img src="{{ Storage::url($item->img_thumb) }}" alt="{{ $item->name }}" style="width: 100px; height: 150px; object-fit: contain;">
                                     </td>
                                     <td>
                                         {{ $item->category->name }}

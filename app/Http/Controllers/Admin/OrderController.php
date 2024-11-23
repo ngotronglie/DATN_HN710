@@ -7,11 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
-use App\Models\OrderDetail;
 use Illuminate\Http\Request;
-// use PDF;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\Auth;
+
 class OrderController extends Controller
 {
     /**
@@ -41,7 +39,7 @@ class OrderController extends Controller
 
     public function detail($order_id)
     {
-        $order = Order::with(['orderDetails.productVariant.product', 'orderDetails.productVariant.size', 'orderDetails.productVariant.color', 'user'])->findOrFail($order_id);
+        $order = Order::with(['user', 'voucher', 'orderDetails'])->findOrFail($order_id);
         return view('admin.layout.order.detail', compact('order'));
     }
 
@@ -49,7 +47,7 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($order_id);
 
-        if ($order->status == 1 && $order->canProceed()) {
+        if ($order->status == 1) {
             $order->status = 2; // Chuyển sang "Chờ lấy hàng"
             $order->save();
             return redirect()->back()->with('success', 'Đơn hàng đã được xác nhận');
@@ -62,7 +60,7 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($order_id);
 
-        if ($order->status == 2 && $order->canProceed()) {
+        if ($order->status == 2) {
             $order->status = 3; // Chuyển sang "Đang giao hàng"
             $order->save();
             return redirect()->back()->with('success', 'Đơn hàng đang được giao');
@@ -75,7 +73,7 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($order_id);
 
-        if ($order->status == 3 && $order->canProceed()) {
+        if ($order->status == 3) {
             $order->status = 4; // Chuyển sang "Giao hàng thành công"
             $order->payment_status = 'paid';
             $order->save();
@@ -85,12 +83,11 @@ class OrderController extends Controller
         }
     }
 
-
     public function cancelOrder($order_id)
     {
         $order = Order::find($order_id);
 
-        if ($order->status == 5 && $order->canProceed()) {
+        if ($order->status == 5) {
             $order->status = 6;
             $order->save();
             foreach ($order->orderDetails as $detail) {
@@ -105,13 +102,14 @@ class OrderController extends Controller
             return redirect()->back()->with('error', 'Không thể hủy đơn hàng với trạng thái hiện tại');
         }
     }
+
     public function print_order($checkout_code)
     {
-        $order = Order::with(['user', 'voucher', 'orderDetails.productVariant.product'])
+        $order = Order::with(['user', 'voucher', 'orderDetails'])
             ->where('order_code', $checkout_code)
             ->firstOrFail();
 
-        if ($order->status == 2 || ($order->payment_status == 'paid' && $order->payment_method == 'cod' && $order->canProceed())) {
+        if ($order->status == 2 || $order->status == 4) {
             $data = [
                 'title' => "Hóa đơn chi tiết",
                 'date' => date('d/m/Y'),
@@ -123,53 +121,5 @@ class OrderController extends Controller
         } else {
             return redirect()->back()->with('error', 'Không hợp lệ');
         }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreOrderRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Order $order)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Order $order)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateOrderRequest $request, Order $order)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Order $order)
-    {
-        //
     }
 }

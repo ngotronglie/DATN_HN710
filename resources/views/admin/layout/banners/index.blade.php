@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table id="bootstrap-data-table" class="table table-striped table-bordered">
+                        <table id="bootstrap-data-table" class="table table-striped table-bordered" data-disable-sort="false">
                             <thead>
                                 <tr>
                                     <th>
@@ -106,7 +106,7 @@
                                     <td>{{ $key+1 }}</td>
                                     <td>{{ $item->title }}</td>
                                     <td style="width: 120px;">
-                                        <img src="{{ Storage::url($item->image) }}" class="img-fluid" style="max-height: 100px; width: 100%; object-fit: cover; border: 1px solid #ddd;" alt="Banner Image">
+                                        <img src="{{ Storage::url($item->image) }}" class="img-fluid" style="max-height: 100px; width: 100%; object-fit: contain; border: 1px solid #ddd;" alt="Banner Image">
                                     </td>
                                     <td>
                                         {{ $item->creator->name }}

@@ -22,7 +22,7 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:users,name',
             'email' => 'required|email|unique:users,email',
             'address' => 'required|string|max:255',
             'phone' => 'required|regex:/^0[0-9]{9}$/',
@@ -36,6 +36,7 @@ class StoreUserRequest extends FormRequest
         return [
             'name.required' => 'Tên là bắt buộc',
             'name.max' => 'Tên không được vượt quá 255 ký tự',
+            'name.unique' => 'Tên này đã được sử dụng',
 
             'email.required' => 'Email là bắt buộc',
             'email.email' => 'Email không đúng định dạng',

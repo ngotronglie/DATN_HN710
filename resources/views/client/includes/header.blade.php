@@ -53,9 +53,8 @@
                                         <li class="has-children position-static">
                                             <a href="javascript:void(0);">
                                                 @if (Auth::check() && Auth::user()->avatar)
-                                                    <i class="bi bi-person-circle" style="font-size: 1.75rem;"></i>
-
-                                                    <img class="rounded-circle" style="margin-top: -10px" width="30px"
+                                                <a href="header-action-btn d-none d-md-block"></a>
+                                                    <img class="rounded-circle" width="30px" height="30px" style="object-fit: cover;"
                                                         src="{{ Storage::url(Auth::user()->avatar) }}"
                                                         alt="User Avatar">
                                                 @else

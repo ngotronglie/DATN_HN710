@@ -2,7 +2,7 @@
 @section('style')
     <style>
         .blog-thumb {
-            width: 80%;
+            width: 100%;
             height: auto;
             aspect-ratio: 1;
             position: relative;

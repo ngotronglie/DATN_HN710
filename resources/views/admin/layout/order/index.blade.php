@@ -57,12 +57,10 @@
 
                         </div>
                         <div class="card-body">
-                            <table id="bootstrap-data-table" class="table table-striped table-bordered">
+                            <table id="bootstrap-data-table" class="table table-striped table-bordered" data-disable-sort="true">
                                 <thead>
                                     <tr>
-                                        <th>
-                                            <input id="checkAllTable" type="checkbox">
-                                        </th>
+                                        <th>STT</th>
                                         <th>Mã đơn</th>
                                         <th>Khách hàng</th>
                                         <th>Ngày đặt</th>
@@ -73,7 +71,7 @@
                                 </thead>
                                 <tfoot>
                                     <tr>
-                                        <th></th>
+                                        <th>STT</th>
                                         <th>Mã đơn hàng</th>
                                         <th>Khách hàng</th>
                                         <th>Ngày đặt </th>
@@ -83,71 +81,66 @@
                                     </tr>
                                 </tfoot>
                                 <tbody>
-                                    @foreach ($order as $item)
+                                    @foreach ($order as $key => $item)
                                         <tr>
-                                            <td><input type="checkbox" class="checkBoxItem" data-id="{{ $item->id }}"></td>
-
-                                            </td>
+                                            <td>{{ $key+1 }}</td>
                                             <td>{{ $item->order_code }}</td>
                                             @if ($item->user_id)
                                                 <td>{{ $item->user->name }}</td>
                                             @else
                                                 <td>Khách vãng lai</td>
                                             @endif
-                                            
                                             <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y H:i:s') }}</td>
-
                                             <td>
                                                 {{ number_format($item->total_amount, 0, ',', '.') }} VND
                                             </td>
-
                                             <td>
                                                 @if ($item->status == 1)
-                                                    Chờ xác nhận
+                                                    <span class="badge badge-warning">Chờ xác nhận</span>
                                                 @elseif($item->status == 2)
-                                                    Chờ lấy hàng
+                                                    <span class="badge badge-info">Chờ lấy hàng</span>
                                                 @elseif($item->status == 3)
-                                                    Đang giao hàng
+                                                    <span class="badge badge-primary">Đang giao hàng</span>
                                                 @elseif($item->status == 4)
-                                                    Giao hàng thành công
+                                                    <span class="badge badge-success">Giao hàng thành công</span>
                                                 @elseif($item->status == 5)
-                                                    Chờ hủy
+                                                    <span class="badge badge-secondary">Chờ hủy</span>
                                                 @elseif($item->status == 6)
-                                                    Đã hủy
+                                                    <span class="badge badge-danger">Đã hủy</span>
                                                 @endif
                                             </td>
                                             <td class="d-flex">
-                                                <a class="btn btn-primary mr-2" href="{{ route('admin.order.detail', $item) }}" title="Xem chi tiết">
+                                                <a class="btn btn-primary" href="{{ route('admin.order.detail', $item) }}" title="Xem chi tiết">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
-                                                @if ($item->status != 6 && $item->canProceed()) <!-- Nếu trạng thái khác "Đã hủy" thì hiển thị các nút khác -->
+                                                @if ($item->status != 6 && $item->status != 4)
                                                     @if($item->status == 1)
-                                                        <a class="btn btn-success" href="{{ route('admin.order.confirmOrder', $item->id) }}"
-                                                           onclick="return confirm('Bạn có chắc chắn muốn xác nhận đơn hàng này không?');">
+                                                        <a class="btn btn-success ml-2" href="{{ route('admin.order.confirmOrder', $item->id) }}"
+                                                           onclick="return confirm('Bạn có chắc chắn muốn xác nhận đơn hàng này không?');" title="Chờ lấy hàng">
                                                            <i class="fa fa-check"></i>
                                                         </a>
                                                     @elseif($item->status == 2)
-                                                        <a class="btn btn-info" href="{{ route('admin.order.shipOrder', $item->id) }}"
-                                                           onclick="return confirm('Bạn có chắc chắn muốn giao đơn hàng này không?');">
+                                                        <a class="btn btn-info ml-2" href="{{ route('admin.order.shipOrder', $item->id) }}"
+                                                           onclick="return confirm('Bạn có chắc chắn muốn giao đơn hàng này không?');" title="Đang giao hàng">
                                                            <i class="fa fa-truck"></i>
                                                         </a>
                                                     @elseif($item->status == 3)
-                                                        <a class="btn btn-success" href="{{ route('admin.order.confirmShipping', $item->id) }}"
-                                                           onclick="return confirm('Bạn có chắc chắn đơn hàng này đã được giao không?');">
+                                                        <a class="btn btn-success ml-2" href="{{ route('admin.order.confirmShipping', $item->id) }}"
+                                                           onclick="return confirm('Bạn có chắc chắn đơn hàng này đã được giao không?');" title="Giao hàng thành công">
                                                            <i class="fa fa-check-circle-o"></i>
                                                         </a>
                                                     @elseif($item->status == 5)
-                                                        <a class="btn btn-danger" href="{{ route('admin.order.cancelOrder', $item->id) }}"
-                                                           onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');">
+                                                        <a class="btn btn-danger ml-2" href="{{ route('admin.order.cancelOrder', $item->id) }}"
+                                                           onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');" title="Đã hủy">
                                                            <i class="fa fa-times-circle"></i>
                                                         </a>
                                                     @endif
                                                 @endif
-                                                @if ($item->status == 2 || ($item->payment_status == 'paid' && $item->payment_method == 'cod'))
-                                                <a class="btn btn-hover-d btn-dark ml-2" target="_blank" href="{{route('admin.order.printOrder', $item->order_code)}}" title="In đơn hàng">
+                                                @if ($item->status == 2 || $item->status == 4)
+                                                <a class="btn btn-hover-d btn-dark ml-2" onclick="return confirm('Bạn có muốn in hóa đơn, đơn hàng này không?');" target="_blank" href="{{route('admin.order.printOrder', $item->order_code)}}" title="In đơn hàng">
                                                     <i class="fa fa-print"></i>
                                                 </a>
-                                            @endif
+                                                @endif
                                             </td>                                      
                                         </tr>
                                     @endforeach
@@ -191,8 +184,6 @@
         url.searchParams.delete('status');
     }
     window.location.href = url.href;
-}
-
+    }
    </script>
-
 @endsection
