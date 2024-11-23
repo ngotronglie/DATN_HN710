@@ -43,7 +43,7 @@
                                     <a href="#download" data-bs-toggle="tab" data-bs-target="#download"><i
                                             class="fa fa-solid fa-lock"></i> Đổi mật khẩu</a>
                                     <a href="#payment-method" data-bs-toggle="tab" data-bs-target="#payment-method"><i
-                                            class="fa fa-credit-card"></i> Vourcher của tôi</a>
+                                            class="fa fa-credit-card"></i> Mã giảm giá của tôi</a>
                                     <a href="#address-edit" data-bs-toggle="tab" data-bs-target="#address-edit"><i
                                             class="fa fa-map-marker"></i> address</a>
                                     <a href="#account-info" data-bs-toggle="tab" data-bs-target="#account-info"><i

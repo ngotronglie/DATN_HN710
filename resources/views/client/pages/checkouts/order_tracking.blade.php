@@ -70,10 +70,10 @@
                                                                     Không xác định
                                                                 @endif
                                                             </p>
-                                                                                                                        <p><strong>Ngày mua:</strong> {{ \Carbon\Carbon::parse($bill->created_at)->format('d-m-Y H:i:s') }}</p>
+                                                           <p><strong>Ngày mua:</strong> {{ \Carbon\Carbon::parse($bill->created_at)->format('d-m-Y H:i:s') }}</p>
                                                             <p><strong>Thanh toán:</strong> {{ $bill->payment_method == 'cod' ? 'Thanh toán khi nhận hàng' : 'Đã thanh toán thành công' }}</p>
                                                             @if($bill->voucher)
-                                                            <p><strong>Mã Voucher:</strong> {{ $bill->voucher->code }} (-{{ $bill->voucher->discount}}%)</p>
+                                                            <p><strong>Giảm giá:</strong>  {{ $bill->discount}}%</p>
                                                             @endif
                                                             <p><strong>Tổng tiền:</strong> {{ number_format($bill->total_amount, 0, ',', '.') }} VND</p>
                                                         </div>

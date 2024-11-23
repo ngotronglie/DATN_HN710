@@ -129,6 +129,7 @@ class CheckoutController extends Controller
         try {
             DB::beginTransaction();
 
+            $discount = null;
             if ($voucherId) {
                 $voucher = Voucher::lockForUpdate()->find($voucherId);
                 if (!$voucher || $voucher->quantity < 1) {
@@ -152,11 +153,10 @@ class CheckoutController extends Controller
                         ->update(['status' => 'used']);
                 }
 
-                // Giảm số lượng của voucher
+                $discount=$voucher->discount;
                 $voucher->decrement('quantity', 1);
             }
-
-            // Tạo order
+    
             $order = Order::create([
                 'user_id' => $user ? $user->id : null,
                 'user_name' => $request->input('name'),
@@ -164,6 +164,7 @@ class CheckoutController extends Controller
                 'user_phone' => $request->input('phone'),
                 'user_address' => $request->input('address'),
                 'voucher_id' => $voucherId,
+                'discount'=>$discount,
                 'total_amount' => $totalAmountWithDiscount,
                 'payment_method' => $request->input('payment_method'),
                 'payment_status' => $request->input('payment_method') === 'cod' ? 'unpaid' : 'paid',
@@ -187,7 +188,6 @@ class CheckoutController extends Controller
                 })->first();
 
                 if ($productVariant) {
-                    // Kiểm tra số lượng tồn kho
                     if ($productVariant->quantity < $quantity) {
                         throw new \Exception("Sản phẩm không đủ số lượng trong kho.");
                     }
@@ -315,7 +315,6 @@ class CheckoutController extends Controller
     {
         $orderCode = $request->input('order_code');
 
-        // Nếu không có mã đơn hàng (lần đầu vào trang), chỉ trả về view mà không có thông báo
         if (!$orderCode) {
             return view('client.pages.checkouts.order_tracking');
         }
@@ -324,7 +323,6 @@ class CheckoutController extends Controller
             ->where('order_code', $orderCode)
             ->get();
 
-        // Nếu không tìm thấy đơn hàng
         if ($bills->isEmpty()) {
             return view('client.pages.checkouts.order_tracking', [
                 'message' => 'Không tìm thấy đơn hàng nào với mã đơn hàng này.'
