@@ -70,7 +70,7 @@
                                     <th>Hình ảnh</th>
                                     <td>
                                         @if($banner->image)
-                                        <img src="{{ Storage::url($banner->image) }}" alt="Banner Image" style="max-width: 200px; height: auto;">
+                                        <img src="{{ Storage::url($banner->image) }}" alt="Banner Image" style="max-width: 300px; height: auto; object-fit: contain;">
                                         @else
                                         <span>Không có hình ảnh</span>
                                         @endif

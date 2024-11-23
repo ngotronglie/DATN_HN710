@@ -43,7 +43,7 @@
                         <strong class="card-title">Danh sách bình luận</strong>
                     </div>
                     <div class="card-body">
-                        <table id="bootstrap-data-table" class="table table-striped table-bordered">
+                        <table id="bootstrap-data-table" class="table table-striped table-bordered" data-disable-sort="true">
                             <thead>
                                 <tr>
                                     <th>STT</th>
@@ -69,7 +69,7 @@
                                     <td>{{ $item->name }}</td>
                                     <td>
                                         @if ($item->img_thumb)
-                                            <img src="{{ Storage::url($item->img_thumb) }}" alt="{{ $item->name }}" style="width: 80px; height: 100px; object-fit: cover;">
+                                            <img src="{{ Storage::url($item->img_thumb) }}" alt="{{ $item->name }}" style="width: 100px; height: 150px; object-fit: contain;">
                                         @else
                                         Không có ảnh!
                                         @endif

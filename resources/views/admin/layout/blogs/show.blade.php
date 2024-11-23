@@ -66,7 +66,7 @@
                                     <th>Ảnh đại diện</th>
                                     <td>
                                         @if($blog->img_avt)
-                                        <img src="{{ Storage::url($blog->img_avt) }}" alt="Blog Image" style="max-width: 200px; height: auto;">
+                                        <img src="{{ Storage::url($blog->img_avt) }}" alt="Blog Image" style="width: 200px; height: 130px; object-fit: contain;">
                                         @else
                                         <span>Không có hình ảnh</span>
                                         @endif

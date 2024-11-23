@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('favorites', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class)->constrained()->onDelete('cascade'); // Mối quan hệ với người dùng
+            $table->foreignIdFor(User::class)->constrained()->onDelete('restrict');
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('favorite_products');
+        Schema::dropIfExists('favorites');
     }
 };

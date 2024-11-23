@@ -33,7 +33,6 @@ class ForgotPasswordController extends Controller
         }
 
         $user->update([
-
             'email_verification_expires_at' => Carbon::now()->addMinutes(30)
         ]);
         $role=$user->role;

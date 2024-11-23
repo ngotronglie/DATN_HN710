@@ -1,136 +1,114 @@
 @extends('admin.dashboard')
 
 @section('content')
-    <div class="container" style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-        <div class="row" style="width: 100%; max-width: 1200px;">
-            <!-- Cập nhật thông tin cá nhân -->
-            <div class="col-md-6">
-                <div class="card" style="width: 100%;">
-                    <div class="card-header">Thông Tin Cá Nhân</div>
-                    <div class="card-body card-block">
-                        <form action="{{ route('admin.accounts.updateMyAccount', $user->id) }}" method="post" enctype="multipart/form-data">
-                            @csrf
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-user"></i></div>
-                                    <input type="text" id="username" name="name" placeholder="Username" class="form-control" value="{{ $user->name }}" >
-                                    
-                                </div>
-                                @error('name')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-envelope"></i></div>
-                                    <input type="email" id="email" name="email" placeholder="Email" class="form-control" value="{{ $user->email }}" readonly>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-location-arrow"></i></div>
-                                    <input type="text" id="address" name="address" placeholder="Địa chỉ" class="form-control" value="{{ $user->address }}">
-                                    
-                                </div>
-                                @error('address')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-phone"></i></div>
-                                    <input type="text" id="phone" name="phone" placeholder="Phone" class="form-control" value="{{ $user->phone }}">
-                                    
-                                </div>
-                                @error('phone')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-                                    <input type="date" id="date_of_birth" name="date_of_birth" placeholder="Date_of_birth" class="form-control" value="{{ $user->date_of_birth }}">
-                                  
-                                </div>
-                                @error('date_of_birth')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="menu-icon fa fa-photo"></i></div>
-                                    <input type="file" id="avatar" name="avatar" placeholder="Avatar" class="form-control">
-                                </div>
-                                @if ($user->avatar)
-                                    <div class="text-center mt-2 mb-3">
-                                        <img width="100" src="{{ Storage::url($user->avatar) }}" alt="Avatar" style="border: 2px solid #ccc; border-radius: 50%; padding: 5px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-                                    </div>
+    <div class="content mb-5">
+        <div class="animated fadeIn">
+            <div class="row">
+    
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Hồ sơ cá nhân</strong>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-4">
+                                @if(auth()->user()->avatar)
+                                    <img id="profile-image" src="{{ Storage::url(auth()->user()->avatar) }}" alt="Avatar" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                                @else
+                                    <img id="profile-image" src="https://via.placeholder.com/150" alt="Avatar" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
                                 @endif
-                                @error('avatar')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
                             </div>
+                            <form action="{{ route('admin.accounts.updateMyAccount') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
+                                <div class="form-group row">
+                                    <label for="#" class="col-sm-3 col-form-label">Họ và tên</label>
+                                    <div class="col-sm-9">
+                                        <p class="form-control-plaintext">{{ auth()->user()->name }}</p>
+                                    </div>
+                                </div>
+                    
+                                <div class="form-group row">
+                                    <label for="#" class="col-sm-3 col-form-label">Email</label>
+                                    <div class="col-sm-9">
+                                        <p class="form-control-plaintext">{{ auth()->user()->email }}</p>
+                                    </div>
+                                </div>
+                    
+                                <div class="form-group row">
+                                    <label for="phone" class="col-sm-3 col-form-label">Số điện thoại</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" placeholder="Nhập số điện thoại" id="phone" name="phone" value="{{ old('phone', auth()->user()->phone) }}">
+                                        @error('phone')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+                                </div>
+                    
+                                <div class="form-group row">
+                                    <label for="address" class="col-sm-3 col-form-label">Địa chỉ</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" placeholder="Nhập địa chỉ" id="address" name="address" value="{{ old('address', auth()->user()->address) }}">
+                                        @error('address')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+                                </div>
 
-                            <div>
-                                <button class="btn btn-success" type="submit">Cập nhật</button>
-                            </div>
-                        </form>
+                                <div class="form-group row">
+                                    <label for="date_of_birth" class="col-sm-3 col-form-label">Ngày sinh</label>
+                                    <div class="col-sm-9">
+                                        <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="{{ old('date_of_birth', auth()->user()->date_of_birth) }}">
+                                        @error('date_of_birth')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+                                </div>
+                    
+                                <div class="form-group row">
+                                    <label for="image" class="col-sm-3 col-form-label">Ảnh đại diện</label>
+                                    <div class="col-sm-9">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="avatar" name="avatar" onchange="previewImage()" accept="image/*">
+                                            <label class="custom-file-label" for="avatar">Chọn ảnh...</label>
+                                            @error('avatar')
+                                            <small class="text-danger">{{ $message }}</small>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                    
+                                <div class="form-group row">
+                                    <div class="col-sm-9 offset-sm-3">
+                                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                                        <a href="{{ route('admin.accounts.showChangePasswordForm') }}" class="btn btn-secondary ml-2">Đổi mật khẩu</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
+    
+    
             </div>
+        </div><!-- .animated -->
+    </div><!-- .content -->
+@endsection
 
-            <!-- Đổi mật khẩu -->
-            <div class="col-md-6">
-                <div class="card" style="width: 100%;">
-                    <div class="card-header">Đổi Mật Khẩu</div>
-                    <div class="card-body card-block">
-                        <form action="{{ route('admin.accounts.updatePassword', $user->id) }}" method="post">
-                            @csrf
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-lock"></i></div>
-                                    <input type="password" id="current_password" name="current_password" placeholder="Mật khẩu hiện tại" class="form-control" >
-                                   
-                                </div>
-                                @error('current_password')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
-                            </div>
+@section('script')
+<script>
+    // Hiển thị ảnh đã chọn
+    function previewImage() {
+        var file = document.getElementById("avatar").files[0];
+        var reader = new FileReader();
 
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-lock"></i></div>
-                                    <input type="password" id="new_password" name="new_password" placeholder="Mật khẩu mới" class="form-control" >
-                                   
-                                </div>
-                                @error('new_password')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
-                            </div>
+        reader.onloadend = function () {
+            document.getElementById("profile-image").src = reader.result;
+        }
 
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-lock"></i></div>
-                                    <input type="password" id="new_password_confirmation" name="new_password_confirmation" placeholder="Xác nhận mật khẩu mới" class="form-control" >
-                                   
-                                </div>
-                                @error('new_password_confirmation')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
-                            </div>
-
-                            <div>
-                                <button class="btn btn-primary" type="submit">Đổi mật khẩu</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
 @endsection

@@ -70,7 +70,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <table id="bootstrap-data-table" class="table table-striped table-bordered">
+                            <table id="bootstrap-data-table" class="table table-striped table-bordered" data-disable-sort="false">
                                 <thead>
                                     <tr>
                                         <th>
@@ -104,7 +104,7 @@
                                             <td>{{ $key + 1 }}</td>
                                             <td style="white-space: nowrap">
                                                 <div class="d-flex align-items-end">
-                                                    <img src="{{Storage::url($item->img_avt)}}" alt="Thumbnail" class="img-thumbnail mr-2" style="height: 80px; width: 80px; object-fit: cover;">
+                                                    <img src="{{Storage::url($item->img_avt)}}" alt="Thumbnail" class="mr-2" style="height: 80px; width: 100px; object-fit: cover;">
                                                     <div class="text-truncate" style="max-width: 200px;">
                                                         <span>{{ $item->title }}</span>
                                                         <div>{{ $item->created_at }}</div>

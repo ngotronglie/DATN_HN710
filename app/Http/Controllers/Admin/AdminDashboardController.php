@@ -25,6 +25,7 @@ class AdminDashboardController extends Controller
         $productCount = Product::count();
 
         $usersCount = User::where('role', '0')->count();
+        
         return view('admin.layout.yeld', compact('usersCount', 'productCount', 'ordersCount', 'totalRevenue'));
     }
 }

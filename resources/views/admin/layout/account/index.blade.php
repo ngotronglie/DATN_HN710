@@ -50,9 +50,6 @@
                             <a class="btn btn-success mr-1" href="{{ route('admin.accounts.listUser') }}">
                                 <i class="fa fa-user"></i> Người dùng ({{ $users }})
                             </a>
-                            <a class="btn btn-danger" href="{{ route('admin.accounts.trashed') }}">
-                                <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
-                            </a>
                             <div class="dropdown float-right ml-2">
                                 <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -74,7 +71,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table id="bootstrap-data-table" class="table table-striped table-bordered">
+                        <table id="bootstrap-data-table" class="table table-striped table-bordered" data-disable-sort="false">
                             <thead>
                                 <tr>
                                     <th>
@@ -126,42 +123,9 @@
                                     <a class="btn btn-primary mr-2" href="{{route('admin.accounts.show', $item)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
                                     @if($item->role != 2)
                                     <a class="btn btn-warning mr-2" href="{{route('admin.accounts.edit', $item)}}" title="Sửa"><i class="fa fa-edit"></i></a>
-                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $item->id }}" title="Xóa">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
                                     @endif
                                 </td>
                                 </tr>
-
-                                <!-- Modal Xóa -->
-                                <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1" role="dialog"
-                                    aria-labelledby="deleteModalLabel{{ $item->id }}" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header d-flex">
-                                                <h5 class="modal-title font-weight-bold"
-                                                    id="deleteModalLabel{{ $item->id }}">XÁC NHẬN XÓA</h5>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                    aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                Bạn có chắc chắn muốn xóa tài khoản "{{ $item->name }}" không?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-primary"
-                                                    data-dismiss="modal">Hủy</button>
-                                                <form action="{{ route('admin.accounts.destroy', $item) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                                 @endforeach
                             </tbody>
                         </table>

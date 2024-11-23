@@ -80,7 +80,7 @@
                                 <input type="file" id="avatar" name="avatar"
                                     class="form-control" requied accept="image/*">
                                     <div style="margin-top: 10px;">
-                                        <img id="preview-avatar" src="#" alt="Ảnh xem trước" style="display: none; max-width: 200px; height: auto; border-radius: 50%; border: 2px solid #ccc;">
+                                        <img id="preview-avatar" src="#" alt="Ảnh xem trước" style="display: none; width: 200px; height: 200px; border-radius: 50%; object-fit: cover;">
                                     </div>
                                 @error('avatar')
                                 <small class="text-danger">{{ $message }}</small>
