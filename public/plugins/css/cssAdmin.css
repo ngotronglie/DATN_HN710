@@ -169,7 +169,22 @@
     transform: scale(1.05);
 }
 
-.swal2-select, .swal2-checkbox, .swal2-textarea, .swal2-input, .swal2-file, .swal2-range, .swal2-radio {
-    display: none !important;
+.swal2-html-container {
+    font-size: 1.4rem !important;
+    font-weight: 500 !important;
 }
 
+.avatar-wrapper {
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}

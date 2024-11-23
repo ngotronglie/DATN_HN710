@@ -23,7 +23,7 @@
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="notification"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-bell"></i>
-                        <span class="count bg-danger">{{ $unreadNotifications->count() }}</span>
+                        <span class="count bg-danger coutNotiUnRead">{{ $unreadNotifications->count() }}</span>
                     </button>
                     <div class="dropdown-menu notification-menu" aria-labelledby="notification">
                         @if ($notifications->isEmpty())
@@ -96,23 +96,23 @@
             </div>
 
             <div class="user-area dropdown float-right">
-                <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false">
+                <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     @if (Auth::check() && Auth::user()->avatar)
-                        <img class=" rounded-circle" width="30px" src="{{ Storage::url(Auth::user()->avatar) }}"
-                            alt="User Avatar">
+                        <div class="avatar-wrapper">
+                            <img class="avatar-img" src="{{ Storage::url(Auth::user()->avatar) }}" alt="User Avatar">
+                        </div>
                     @else
                         <i class="bi bi-person-circle" style="font-size: 1.75rem;"></i>
                     @endif
-
                 </a>
+
 
                 <div class="user-menu dropdown-menu">
                     <a class="nav-link" href="{{ route('admin.accounts.myAccount') }}"><i
                             class="fa fa-user"></i>Thông
                         Tin</a>
-                    <a class="nav-link" href="#"><i class="fa fa-user"></i> Notifications <span
-                            class="count">13</span></a>
+                    <a class="nav-link" href="{{ route('admin.notification') }}"><i class="fa fa-user"></i> Thông báo <span
+                            class="count">{{ $unreadNotifications->count() }}</span></a>
                     <a class="nav-link" href="#"><i class="fa fa-cog"></i> Settings</a>
 
                     <form action="{{ route('admin.logout') }}" method="post" style="display: inline;">

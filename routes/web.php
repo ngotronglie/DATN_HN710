@@ -194,15 +194,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('category_blogs/trashed', [CategoryBlogController::class, 'trashed'])->name('category_blogs.trashed');
     Route::put('category_blogs/restore/{id}', [CategoryBlogController::class, 'restore'])->name('category_blogs.restore');
     Route::delete('category_blogs/forceDelete/{id}', [CategoryBlogController::class, 'forceDelete'])->name('category_blogs.forceDelete');
-
     Route::resource('category_blogs', CategoryBlogController::class);
-
-
-    //notification
-    Route::delete('notication/{id}', [NotificationController::class, 'delete'])->name('deleteNoti');
-    Route::get('deleteNotication', [NotificationController::class, 'deleteAll'])->name('deleteNotiAll');
-
-
 
 
     //Quản lý bài viết xóa mềm
@@ -240,6 +232,12 @@ Route::prefix('admin')->as('admin.')->group(function () {
     //Thông báo
     Route::get('notification', [NotificationController::class, 'notification'])->name('notification');
     Route::get('order/{order_id}/order-detail-notication/{noti_id}', [NotificationController::class, 'detailNotication'])->name('order.detailNotication');
+    Route::delete('notication/{id}', [NotificationController::class, 'delete'])->name('deleteNoti');
+    Route::get('deleteNoticationRead', [NotificationController::class, 'deleteAllNotiRead'])->name('deleteAllNotiRead');
+    Route::get('deleteNotication', [NotificationController::class, 'deleteAllNoti'])->name('deleteAllNoti');
+
+
+
 
     // Thống kê
     Route::get('statistics', [StatisticsController::class, 'index'])->name('statistics.index');
@@ -279,3 +277,15 @@ Route::delete('blogs/ajax/deleteAllBlog', [DeleteController::class, 'deleteAllBl
 Route::get('blogs/ajax/trashedCount', [BlogController::class, 'trashedCount']);
 //ajax delete notification
 Route::delete('notification/ajax/deleteNoti', [DeleteController::class, 'deleteCheckedNoti'])->name('deleteNoti');
+//ajax delete categorie
+Route::delete('categori/ajax/deleteCheckedCategori', [DeleteController::class, 'deleteCheckedCategori']);
+//ajax delete product
+Route::delete('product/ajax/deleteCheckedProduct', [DeleteController::class, 'deleteCheckeProduct']);
+//ajax delete size
+Route::delete('/size/ajax/deleteCheckedSize', [DeleteController::class, 'deleteCheckeSize']);
+//ajax delete color
+Route::delete('/color/ajax/deleteCheckedColor', [DeleteController::class, 'deleteCheckeColor']);
+//ajax delete voucher
+Route::delete('/voucher/ajax/deleteCheckedVoucher', [DeleteController::class, 'deleteCheckeVoucher']);
+//ajax delete banner
+Route::delete('/banner/ajax/deleteCheckedBanner', [DeleteController::class, 'deleteCheckeBanner']);

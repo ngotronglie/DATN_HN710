@@ -49,7 +49,7 @@
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
                             <a class="btn btn-danger" href="{{ route('admin.products.trashed') }}">
-                                <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
+                                <i class="fa fa-trash"></i> Thùng rác <span class="countTrash">({{ $trashedCount }})</span>
                             </a>
                             <div class="dropdown float-right ml-2">
                                 <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -62,7 +62,7 @@
                                     <a class="dropdown-item activeAll" data-is_active="1" href="#">
                                         <i class="fa fa-toggle-off text-danger"></i> Tắt các mục đã chọn
                                     </a>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item deleteAll" href="#">
                                         <i class="fa fa-trash text-danger"></i> Xóa các mục đã chọn
                                     </a>
                                 </div>
@@ -99,7 +99,7 @@
                                     <th>Chức năng</th>
                                 </tr>
                             </tfoot>
-                            <tbody>
+                            <tbody class="null_Table">
                                 @foreach ($products as $key => $item)
                                 <tr>
                                     <td>
@@ -148,7 +148,7 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                Bạn có chắc chắn muốn xóa danh mục "{{ $item->name }}" không?
+                                                Bạn có chắc chắn muốn xóa sản phẩm "{{ $item->name }}" không?
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
@@ -194,6 +194,9 @@
 <script src="{{asset('plugins/js/changeActive/Product/changeAllActiveProduct.js')}}"></script>
 
 <script src="{{asset('plugins/js/changeActive/Product/changeActiveProduct.js')}}"></script>
+
+<script src="{{asset('plugins/js/ChangeActive/Product/deleteCheckedPrd.js')}}"></script>
+
 
 <script>
     // Loại bỏ padding-right khi modal đóng

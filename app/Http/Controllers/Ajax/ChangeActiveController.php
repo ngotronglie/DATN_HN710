@@ -271,7 +271,7 @@ class ChangeActiveController extends Controller
 
         $banner = Banner::find($id);
         if (!$banner) {
-            return response()->json(['status' => false, 'message' => 'Banner không tìm thấy']);
+            return response()->json(['status' => false, 'message' => 'không tìm thấy']);
         }
 
         $newActive = $isActive == 1 ? 0 : 1;
@@ -280,7 +280,7 @@ class ChangeActiveController extends Controller
         if ($updated) {
             return response()->json([
                 'status' => true,
-                'message' => 'Cập nhật trạng thái banner thành công',
+                'message' => 'Cập nhật trạng thái biểu ngữ thành công',
                 'newStatus' => $newActive,
                 'banner' => $banner
             ]);
@@ -304,13 +304,13 @@ class ChangeActiveController extends Controller
         if ($updated) {
             return response()->json([
                 'status' => true,
-                'message' => 'Cập nhật trạng thái banner thành công',
+                'message' => 'Cập nhật trạng thái biểu ngữ thành công',
                 'newStatus' => $newActive,
                 'updatedCount' => $updated
             ]);
         }
 
-        return response()->json(['status' => false, 'message' => 'Không có banner nào được cập nhật']);
+        return response()->json(['status' => false, 'message' => 'Không có biểu ngữ nào được cập nhật']);
     }
 
     // Comment

@@ -47,7 +47,7 @@
                                     <i class="fa fa-plus"></i> Thêm mới
                                 </a>
                                 <a class="btn btn-danger countTrash" href="{{ route('admin.blogs.trashed') }}">
-                                    <i class="fa fa-trash "></i>Thùng rác ({{ $trashedCount }})
+                                    <i class="fa fa-trash"></i> Thùng rác <span class="blogCout">({{ $trashedCount }})</span>
                                 </a>
                                 <div class="dropdown float-right ml-2">
                                     <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton"
@@ -95,7 +95,7 @@
                                         <th>Chức năng</th>
                                     </tr>
                                 </tfoot>
-                                <tbody>
+                                <tbody class="null_Table">
                                     @foreach ($data as $key => $item)
                                         <tr>
                                             <td>
@@ -142,7 +142,6 @@
                                                 </button>
                                             </td>
                                         </tr>
-
                                         <!-- Modal Xóa -->
                                         <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1"
                                             role="dialog" aria-labelledby="deleteModalLabel{{ $item->id }}"

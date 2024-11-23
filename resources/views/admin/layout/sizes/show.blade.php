@@ -7,7 +7,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Chi tiết size</h1>
+                        <h1>Chi tiết kích cỡ</h1>
                     </div>
                 </div>
             </div>
@@ -16,8 +16,8 @@
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Bảng điều khiển</a></li>
-                            <li><a href="{{ route('admin.sizes.index') }}">Danh sách size</a></li>
-                            <li class="active">Chi tiết size</li>
+                            <li><a href="{{ route('admin.sizes.index') }}">Danh sách kích cỡ</a></li>
+                            <li class="active">Chi tiết kích cỡ</li>
                         </ol>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong>Chi tiết size</strong>
+                        <strong>Chi tiết kích cỡ</strong>
                         <a href="{{ route('admin.sizes.index') }}" class="btn btn-primary">
                             <i class="fa fa-arrow-left mr-1"></i> Quay lại
                         </a>
@@ -41,7 +41,7 @@
                         <table class="table table-bordered">
                             <tbody>
                                 <tr>
-                                    <th>Tên size</th>
+                                    <th>Tên kích cỡ</th>
                                     <td>{{ $size->name }}</td>
                                 </tr>
                                 <tr>

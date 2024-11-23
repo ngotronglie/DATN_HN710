@@ -45,7 +45,7 @@
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
                             <a href="{{ route('admin.vouchers.trashed') }}" class="btn btn-danger">
-                                <i class="fa fa-trash"></i> Thùng rác ({{ $trashedVouchers }})
+                                <i class="fa fa-trash"></i> Thùng rác <span class="countTrash">({{ $trashedVouchers }})</span>
                             </a>
                             <div class="dropdown float-right ml-2">
                                 <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -58,7 +58,7 @@
                                     <a class="dropdown-item activeAll" data-is_active="1" href="#">
                                         <i class="fa fa-toggle-off text-danger"></i> Tắt các mục đã chọn
                                     </a>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item deleteAll" href="#">
                                         <i class="fa fa-trash text-danger"></i> Xóa các mục đã chọn
                                     </a>
                                 </div>
@@ -73,7 +73,7 @@
                                         <input id="checkAllTable" type="checkbox">
                                     </th>
                                     <th>STT</th>
-                                    <th>Code</th>
+                                    <th>Mã</th>
                                     <th>Giảm giá</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
@@ -83,13 +83,13 @@
                                 <tr>
                                     <th></th>
                                     <th>STT</th>
-                                    <th>Code</th>
+                                    <th>Mã</th>
                                     <th>Giảm giá</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </tfoot>
-                            <tbody>
+                            <tbody class="null_Table">
                                 @foreach ($vouchers as $item)
                                 <tr>
                                     <td>
@@ -166,6 +166,8 @@
 <script src="{{ asset('theme/admin/assets/js/init/datatables-init.js') }}"></script>
 
 <script src="{{asset('plugins/js/checkall.js')}}"></script>
+<script src="{{asset('plugins/js/ChangeActive/Voucher/deleteCheckedVoucher.js')}}"></script>
+
 
 <script>
     // Loại bỏ padding-right khi modal đóng

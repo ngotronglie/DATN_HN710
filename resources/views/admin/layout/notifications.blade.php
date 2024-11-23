@@ -12,7 +12,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Danh sách màu</h1>
+                        <h1>Thông báo</h1>
                     </div>
                 </div>
             </div>
@@ -48,8 +48,11 @@
                                     <a class="dropdown-item deleteAll" href="" style="border-bottom: 1px solid rgb(232, 232, 232)">
                                         <i class="fa fa-trash text-danger"></i> Xóa các mục đã chọn
                                     </a>
-                                    <a class="dropdown-item" href="{{route('admin.deleteNotiAll')}}">
+                                    <a class="dropdown-item deleteNotiRead" href="#">
                                         <i class="fa fa-trash text-danger"></i> Xóa tất các thông báo đã đọc
+                                    </a>
+                                    <a class="dropdown-item deleteNotiAll" href="#">
+                                        <i class="fa fa-trash text-danger"></i> Xóa tất các thông báo
                                     </a>
                                 </div>
                             </div>
@@ -79,7 +82,7 @@
                                     <td>
                                         <input type="checkbox" class="checkBoxItem" data-id="{{ $item->id }}">
                                     </td>
-                                    <td>{{ $item->data['message'] }}</td>
+                                    <td><a style="color: rgb(69, 69, 69)" href="{{ route('admin.order.detailNotication', ['order_id' => $item->data['order_id'], 'noti_id' => $item->id]) }}">{{ $item->data['message'] }}</a></td>
                                     <td class="d-flex">
                                         <a class="btn btn-primary mr-2" href="{{ route('admin.order.detailNotication', ['order_id' => $item->data['order_id'], 'noti_id' => $item->id]) }}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>
                                         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $item->id }}" title="Xóa">
@@ -136,9 +139,6 @@
 <script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.print.min.js') }}"></script>
 <script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.colVis.min.js') }}"></script>
 <script src="{{ asset('theme/admin/assets/js/init/datatables-init.js') }}"></script>
-
 <script src="{{asset('plugins/js/checkall.js')}}"></script>
-
 <script src="{{ asset('plugins/js/ChangeActive/notificationDeleteChecked.js') }}"></script>
-
 @endsection
