@@ -43,7 +43,7 @@
                                     <a href="#download" data-bs-toggle="tab" data-bs-target="#download"><i
                                             class="fa fa-solid fa-lock"></i> Đổi mật khẩu</a>
                                     <a href="#payment-method" data-bs-toggle="tab" data-bs-target="#payment-method"><i
-                                            class="fa fa-credit-card"></i> Vourcher của tôi</a>
+                                            class="fa fa-credit-card"></i> Mã giảm giá của tôi</a>
                                     <a href="#address-edit" data-bs-toggle="tab" data-bs-target="#address-edit"><i
                                             class="fa fa-map-marker"></i> address</a>
                                     <a href="#account-info" data-bs-toggle="tab" data-bs-target="#account-info"><i
@@ -64,12 +64,29 @@
                                                 <form action="{{ route('updateMyAcount', $user->id) }}" method="post"
                                                     enctype="multipart/form-data">
                                                     @csrf
+                                                    <div class="single-input-item mb-3">
+                                                        @if ($user->avatar)
+                                                            <div class="avatar-container">
+                                                                <img class="avatar-image"
+                                                                    src="{{ Storage::url($user->avatar) }}"
+                                                                    alt="Avatar">
+                                                            </div>
+                                                        @endif
+                                                        <label for="avatar" class="required mb-1">Avatar</label>
+                                                        <input type="file" id="avatar" name="avatar"
+                                                        placeholder="Ảnh đại diện">
+                                                        @error('avatar')
+                                                            <small class="text-danger">
+                                                                {{ $message }}
+                                                            </small>
+                                                        @enderror
+                                                    </div>
 
                                                     <div class="row">
                                                         <div class="col-lg-6">
                                                             <div class="single-input-item mb-3">
                                                                 <label for="first-name" class="required mb-1">Tên</label>
-                                                                <input type="text" id="first-name" name="name"
+                                                                <input type="text" id="first-name1" name="name"
                                                                     placeholder="First Name" value="{{ $user->name }}">
                                                                 @error('name')
                                                                     <small class="text-danger">
@@ -86,7 +103,8 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="single-input-item mb-3">
+                                                    
+                                                    {{-- <div class="single-input-item mb-3">
                                                         <label for="display-name" class="required mb-1">Địa chỉ</label>
                                                         <input type="text" id="display-name" placeholder="Địa chỉ"
                                                             name="address" value="{{ $user->address }}">
@@ -95,51 +113,89 @@
                                                                 {{ $message }}
                                                             </small>
                                                         @enderror
-                                                    </div>
-                                                    <div class="single-input-item mb-3">
-                                                        <label for="phone" class="required mb-1">Điện thoại</label>
-                                                        <input type="text" id="phone" placeholder="Điện thoại"
-                                                            name="phone" value="{{ $user->phone }}">
-                                                        @error('phone')
-                                                            <small class="text-danger">
-                                                                {{ $message }}
-                                                            </small>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="single-input-item mb-3">
-                                                        <label for="date_of_birth" class="required mb-1">Ngày sinh</label>
-                                                        <input type="date" id="date_of_birth" name="date_of_birth"
-                                                            placeholder="Ngày sinh" value="{{ $user->date_of_birth }}">
-                                                        @error('date_of_birth')
-                                                            <small class="text-danger">
-                                                                {{ $message }}
-                                                            </small>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="single-input-item mb-3">
-                                                        <label for="avatar" class="required mb-1">Avatar</label>
+                                                    </div> --}}
 
-                                                        <input type="file" id="avatar" name="avatar"
-                                                            placeholder="Ảnh đại diện">
-                                                        @if ($user->avatar)
-                                                            <div
-                                                                style="text-align: center; margin-top: 10px; margin-bottom: 15px">
-                                                                <img width="100"
-                                                                    src="{{ Storage::url($user->avatar) }}"
-                                                                    alt="Avatar"
-                                                                    style="border: 2px solid #ccc; border-radius: 50%; padding: 5px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="single-input-item mb-3">
+                                                                <label for="phone" class="required mb-1">Điện thoại</label>
+                                                                <input type="text" id="phone" placeholder="Điện thoại"
+                                                                    name="phone" value="{{ $user->phone }}">
+                                                                @error('phone')
+                                                                    <small class="text-danger">
+                                                                        {{ $message }}
+                                                                    </small>
+                                                                @enderror
                                                             </div>
-                                                        @endif
-                                                        @error('avatar')
+                                                        </div>
+
+                                                        <div class="col-lg-6">
+                                                            <div class="single-input-item mb-3">
+                                                                <label for="date_of_birth" class="required mb-1">Ngày sinh</label>
+                                                                <input type="date" id="date_of_birth" name="date_of_birth"
+                                                                    placeholder="Ngày sinh" value="{{ $user->date_of_birth }}">
+                                                                @error('date_of_birth')
+                                                                    <small class="text-danger">
+                                                                        {{ $message }}
+                                                                    </small>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <h3 class="title">Địa chỉ</h3>
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="single-input-item mb-3">
+                                                                <label for="display-name" class="required mb-1">Thành phố</label>
+                                                                <select class="select2 province" name="provinces">
+                                                                    <option value="">[Chọn thành phố]</option>
+                                                                    @foreach ($provinces as $item)
+                                                                    <option value="{{$item->code}}">{{$item->name}}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-6">
+                                                            <div class="single-input-item mb-3">
+                                                                <label for="display-name" class="required mb-1">Quận/huyện</label>
+                                                                <select class="select2 districts" name="districs">
+                                                                    <option value="">[Chọn quận/huyện]</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="single-input-item mb-3">
+                                                                <label for="display-name" class="required mb-1">Phường/xã</label>
+                                                                <select class="select2 wards" name="wards">
+                                                                    <option value="">[Chọn phường/xã]</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-6">
+                                                            <div class="single-input-item mb-3">
+                                                                <label for="display-name" class="required mb-1">Tên đường/tòa nhà/số nhà</label>
+                                                                <input class="input_address" type="text" placeholder="Tên đường/tòa nhà/số nhà"
+                                                            name="address" value="{{ $user->address }}">
+                                                        @error('address')
                                                             <small class="text-danger">
                                                                 {{ $message }}
                                                             </small>
                                                         @enderror
+                                                            </div>
+                                                        </div>
                                                     </div>
+
 
                                                     <div class="single-input-item single-item-button">
                                                         <button class="btn btn btn-dark btn-hover-primary rounded-0">Cập
-                                                            nhật</button>
+                                                            nhật
+                                                        </button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -155,10 +211,14 @@
                                             <!-- Bộ lọc trạng thái -->
                                             <div class="order-status-filter mb-4">
                                                 <button class="btn btn-sm filter-btn" data-status="all">Tất cả</button>
-                                                <button class="btn btn-sm filter-btn" data-status="1">Chờ xác nhận</button>
-                                                <button class="btn btn-sm filter-btn" data-status="2">Chờ lấy hàng</button>
-                                                <button class="btn btn-sm filter-btn" data-status="3">Đang giao hàng</button>
-                                                <button class="btn btn-sm filter-btn" data-status="4">Giao thành công</button>
+                                                <button class="btn btn-sm filter-btn" data-status="1">Chờ xác
+                                                    nhận</button>
+                                                <button class="btn btn-sm filter-btn" data-status="2">Chờ lấy
+                                                    hàng</button>
+                                                <button class="btn btn-sm filter-btn" data-status="3">Đang giao
+                                                    hàng</button>
+                                                <button class="btn btn-sm filter-btn" data-status="4">Giao thành
+                                                    công</button>
                                                 <button class="btn btn-sm filter-btn" data-status="5">Chờ hủy</button>
                                                 <button class="btn btn-sm filter-btn" data-status="6">Đã hủy</button>
                                             </div>
@@ -182,43 +242,54 @@
                                                                 <tr class="order-card" data-status="{{ $item->status }}">
                                                                     <td>{{ $key + 1 }}</td>
                                                                     <td>{{ $item->order_code }}</td>
-                                                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
+                                                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}
+                                                                    </td>
                                                                     <td>
                                                                         @switch($item->status)
                                                                             @case(1)
                                                                                 Chờ xác nhận
                                                                             @break
+
                                                                             @case(2)
                                                                                 Chờ lấy hàng
                                                                             @break
+
                                                                             @case(3)
                                                                                 Đang giao hàng
                                                                             @break
+
                                                                             @case(4)
                                                                                 Giao thành công
                                                                             @break
+
                                                                             @case(5)
                                                                                 Chờ hủy
                                                                             @break
+
                                                                             @case(6)
                                                                                 Đã hủy
                                                                             @break
+
                                                                             @default
                                                                                 Không xác định
                                                                         @endswitch
                                                                     </td>
-                                                                    <td>{{ number_format($item->total_amount, 0, ',', '.') }} VND</td>
+                                                                    <td>{{ number_format($item->total_amount, 0, ',', '.') }}
+                                                                        VND</td>
                                                                     <td>
-                                                                        <a href="{{ route('viewBillDetail', $item->id) }}">Xem</a>
+                                                                        <a
+                                                                            href="{{ route('viewBillDetail', $item->id) }}">Xem</a>
                                                                         @if ($item->status == 1)
-                                                                            | <a href="{{ route('cancelOrder', $item->id) }}" onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?')">Hủy</a>
+                                                                            | <a href="{{ route('cancelOrder', $item->id) }}"
+                                                                                onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?')">Hủy</a>
                                                                         @endif
                                                                     </td>
                                                                 </tr>
                                                             @endforeach
                                                         @else
                                                             <tr>
-                                                                <td colspan="6">Không có đơn hàng nào trong trạng thái này.</td>
+                                                                <td colspan="6">Không có đơn hàng nào trong trạng thái
+                                                                    này.</td>
                                                             </tr>
                                                         @endif
                                                     </tbody>
@@ -332,55 +403,96 @@
                                     <!-- Single Tab Content Start -->
                                     <div class="tab-pane fade" id="payment-method" role="tabpanel">
                                         <div class="myaccount-content">
-                                            <h3 class="title">Tất cả vourcher</h3>
+                                            <h3 class="title">Tất cả mã giảm giá</h3>
                                             <div class="btn-group mb-3">
-                                                <button class="btn btn-sm btn-primary filter-btn" data-status="all">Tất cả</button>
-                                                <button class="btn btn-sm btn-outline-primary filter-btn" data-status="used">Đã dùng</button>
-                                                <button class="btn btn-sm btn-outline-primary filter-btn" data-status="not_used">Chưa dùng</button>
-                                                <button class="btn btn-sm btn-outline-primary filter-btn" data-status="expired">Hết hạn</button>
+                                                <button class="btn btn-sm btn-primary filter-btn" data-status="all">Tất
+                                                    cả</button>
+                                                <button class="btn btn-sm btn-outline-primary filter-btn"
+                                                    data-status="used">Đã dùng</button>
+                                                <button class="btn btn-sm btn-outline-primary filter-btn"
+                                                    data-status="not_used">Chưa dùng</button>
+                                                <button class="btn btn-sm btn-outline-primary filter-btn"
+                                                    data-status="expired">Hết hạn</button>
                                             </div>
 
                                             <div class="row" id="voucher-container">
-                                                @foreach ($vouchers as $uservoucher)
-                                                    <div class="col-md-4 mb-3 voucher-card" data-status="{{ $uservoucher->status }}">
-                                                        <div class="card shadow-sm border-0">
-                                                            <div class="card-body d-flex align-items-center">
-                                                                <div class="voucher-icon text-primary me-3" style="font-size: 24px;">
-                                                                    <i class="fa fa-tags"></i>
-                                                                </div>
-                                                                <div class="voucher-details flex-grow-1">
-                                                                    <h6 class="mb-1 text-dark fw-bold">{{ $uservoucher->voucher->code }}</h6>
-                                                                    <small class="text-muted">Giảm giá: {{ $uservoucher->voucher->discount ?? 0 }}%</small>
-                                                                    <br>
-                                                                    @php
-                                                                        $minMoney = $uservoucher->voucher->min_money;
-                                                                        $maxMoney = $uservoucher->voucher->max_money;
-                                                                        $formattedMinMoney = $minMoney >= 1_000_000
-                                                                            ? number_format($minMoney / 1_000_000, 0, ',', '') . 'tr'
-                                                                            : number_format($minMoney / 1_000, 0, ',', '') . 'k';
-                                                                        $formattedMaxMoney = $maxMoney >= 1_000_000
-                                                                            ? number_format($maxMoney / 1_000_000, 0, ',', '') . 'tr'
-                                                                            : number_format($maxMoney / 1_000, 0, ',', '') . 'k';
-                                                                    @endphp
-                                                                    <small>Áp dụng: {{ $formattedMinMoney }} - {{ $formattedMaxMoney }}</small>
-                                                                    <br>
-                                                                    <small>HSD: {{ \Carbon\Carbon::parse($uservoucher->voucher->end_date)->format('d/m/Y') }}</small>
-                                                                    <br>
-                                                                    <span class="badge
+                                                @if (!$vouchers->empty())
+                                                    @foreach ($vouchers as $uservoucher)
+                                                        <div class="col-md-4 mb-3 voucher-card"
+                                                            data-status="{{ $uservoucher->status }}">
+                                                            <div class="card shadow-sm border-0">
+                                                                <div class="card-body d-flex align-items-center">
+                                                                    <div class="voucher-icon text-primary me-3"
+                                                                        style="font-size: 24px;">
+                                                                        <i class="fa fa-tags"></i>
+                                                                    </div>
+                                                                    <div class="voucher-details flex-grow-1">
+                                                                        <h6 class="mb-1 text-dark fw-bold">
+                                                                            {{ $uservoucher->voucher->code }}</h6>
+                                                                        <small class="text-muted">Giảm giá:
+                                                                            {{ $uservoucher->voucher->discount ?? 0 }}%</small>
+                                                                        <br>
+                                                                        @php
+                                                                            $minMoney =
+                                                                                $uservoucher->voucher->min_money;
+                                                                            $maxMoney =
+                                                                                $uservoucher->voucher->max_money;
+                                                                            $formattedMinMoney =
+                                                                                $minMoney >= 1_000_000
+                                                                                    ? number_format(
+                                                                                            $minMoney / 1_000_000,
+                                                                                            0,
+                                                                                            ',',
+                                                                                            '',
+                                                                                        ) . 'tr'
+                                                                                    : number_format(
+                                                                                            $minMoney / 1_000,
+                                                                                            0,
+                                                                                            ',',
+                                                                                            '',
+                                                                                        ) . 'k';
+                                                                            $formattedMaxMoney =
+                                                                                $maxMoney >= 1_000_000
+                                                                                    ? number_format(
+                                                                                            $maxMoney / 1_000_000,
+                                                                                            0,
+                                                                                            ',',
+                                                                                            '',
+                                                                                        ) . 'tr'
+                                                                                    : number_format(
+                                                                                            $maxMoney / 1_000,
+                                                                                            0,
+                                                                                            ',',
+                                                                                            '',
+                                                                                        ) . 'k';
+                                                                        @endphp
+                                                                        <small>Áp dụng: {{ $formattedMinMoney }} -
+                                                                            {{ $formattedMaxMoney }}</small>
+                                                                        <br>
+                                                                        <small>HSD:
+                                                                            {{ \Carbon\Carbon::parse($uservoucher->voucher->end_date)->format('d/m/Y') }}</small>
+                                                                        <br>
+                                                                        <span
+                                                                            class="badge
                                                                         @if ($uservoucher->status === 'used') bg-success
                                                                         @elseif ($uservoucher->status === 'not_used') bg-primary
-                                                                        @elseif ($uservoucher->status === 'expired') bg-danger
-                                                                        @endif">
-                                                                        @if ($uservoucher->status === 'used') Đã dùng
-                                                                        @elseif ($uservoucher->status === 'not_used') Chưa dùng
-                                                                        @elseif ($uservoucher->status === 'expired') Hết hạn
-                                                                        @endif
-                                                                    </span>
+                                                                        @elseif ($uservoucher->status === 'expired') bg-danger @endif">
+                                                                            @if ($uservoucher->status === 'used')
+                                                                                Đã dùng
+                                                                            @elseif ($uservoucher->status === 'not_used')
+                                                                                Chưa dùng
+                                                                            @elseif ($uservoucher->status === 'expired')
+                                                                                Hết hạn
+                                                                            @endif
+                                                                        </span>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                @endforeach
+                                                    @endforeach
+                                                @else
+                                                    <p>Không có mã giảm giá nào.</p>
+                                                @endif
                                             </div>
 
 
@@ -415,7 +527,7 @@
                                                             <div class="single-input-item mb-3">
                                                                 <label for="first-name" class="required mb-1">First
                                                                     Name</label>
-                                                                <input type="text" id="first-name"
+                                                                <input type="text" id="first-name2"
                                                                     placeholder="First Name" />
                                                             </div>
                                                         </div>
@@ -423,7 +535,7 @@
                                                             <div class="single-input-item mb-3">
                                                                 <label for="last-name" class="required mb-1">Last
                                                                     Name</label>
-                                                                <input type="text" id="last-name"
+                                                                <input type="text" id="last-name1"
                                                                     placeholder="Last Name" />
                                                             </div>
                                                         </div>
@@ -431,7 +543,7 @@
                                                     <div class="single-input-item mb-3">
                                                         <label for="display-name" class="required mb-1">Display
                                                             Name</label>
-                                                        <input type="text" id="display-name"
+                                                        <input type="text" id="display-name-er"
                                                             placeholder="Display Name" />
                                                     </div>
                                                     <div class="single-input-item mb-3">
@@ -485,6 +597,9 @@
 
         </div>
     </div>
+@endsection
+@section('script')
+<script src="{{ asset('plugins/js/location.js') }}"></script>
     <script>
         function togglePassword(inputId, iconId) {
             var passwordInput = document.getElementById(inputId);
@@ -518,12 +633,12 @@
         });
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const filterButtons = document.querySelectorAll('.filter-btn');
             const voucherCards = document.querySelectorAll('.voucher-card');
 
             filterButtons.forEach(button => {
-                button.addEventListener('click', function () {
+                button.addEventListener('click', function() {
                     // Lấy trạng thái cần lọc
                     const status = this.getAttribute('data-status');
 
@@ -535,7 +650,8 @@
 
                     // Hiển thị/hide các voucher dựa trên trạng thái
                     voucherCards.forEach(card => {
-                        if (status === 'all' || card.getAttribute('data-status') === status) {
+                        if (status === 'all' || card.getAttribute('data-status') ===
+                            status) {
                             card.style.display = 'block';
                         } else {
                             card.style.display = 'none';
@@ -565,7 +681,8 @@
                     this.classList.add('btn-primary');
 
                     orderCards.forEach(card => {
-                        if (status === 'all' || card.getAttribute('data-status') === status) {
+                        if (status === 'all' || card.getAttribute('data-status') ===
+                            status) {
                             card.style.display = 'table-row';
                         } else {
                             card.style.display = 'none';
@@ -575,5 +692,4 @@
             });
         });
     </script>
-
 @endsection
