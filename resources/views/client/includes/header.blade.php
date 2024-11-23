@@ -55,11 +55,15 @@
                                         <li class="has-children position-static">
                                             <a href="javascript:void(0);" class="header-action-btn">
                                                 @if (Auth::check() && Auth::user()->avatar)
-                                                    <img class="rounded-circle user-avatar"
+                                                <a href="header-action-btn d-none d-md-block"></a>
+                                                    <img class="rounded-circle" width="30px" height="30px" style="object-fit: cover;"
                                                         src="{{ Storage::url(Auth::user()->avatar) }}"
                                                         alt="User Avatar">
                                                 @else
-                                                    <i class="pe-7s-user user-icon"></i>
+                                                    <a href="javascript:void(0);"
+                                                        class="header-action-btn d-none d-md-block">
+                                                        <i class="pe-7s-user"></i>
+                                                    </a>
                                                 @endif
                                             </a>
 

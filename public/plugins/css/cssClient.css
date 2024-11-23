@@ -93,18 +93,6 @@
     gap: 6px;
 }
 
-.user-avatar {
-    width: 33px;
-    height: 33px;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-.user-icon {
-    font-size: 1.75rem;
-    color: #6c757d;
-}
-
 .logoutClient {
     background: none;
     border: none;

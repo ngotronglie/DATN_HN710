@@ -98,12 +98,11 @@
             <div class="user-area dropdown float-right">
                 <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     @if (Auth::check() && Auth::user()->avatar)
-                        <div class="avatar-wrapper">
-                            <img class="avatar-img" src="{{ Storage::url(Auth::user()->avatar) }}" alt="User Avatar">
-                        </div>
-                    @else
-                        <i class="bi bi-person-circle" style="font-size: 1.75rem;"></i>
-                    @endif
+                    <img class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;" src="{{ Storage::url(Auth::user()->avatar) }}"
+                        alt="User Avatar">
+                @else
+                    <i class="bi bi-person-circle" style="font-size: 1.75rem;"></i>
+                @endif
                 </a>
 
 
