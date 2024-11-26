@@ -50,7 +50,7 @@ class AccountController extends Controller
 
         $remember = $request->has('remember');
         if (Auth::attempt($credentials, $remember)) {
-            
+
             if (Auth::user()->email_verified_at === null) {
                 Auth::logout();
                 return back()->withErrors([
@@ -99,6 +99,11 @@ class AccountController extends Controller
 
         if (!$user || $user->email_verification_expires_at < Carbon::now()) {
             if ($user) {
+                if ($user->is_active == 0) {
+                    return redirect('login')->withErrors([
+                        'error' => 'Tài khoản của bạn bị khóa.',
+                    ]);
+                }
                 $user->update([
                     'email_verification_expires_at' => Carbon::now()->addMinutes(30)
                 ]);
@@ -119,6 +124,7 @@ class AccountController extends Controller
             'email_verification_expires_at' => null
         ]);
         Auth::login($user);
+
         \request()->session()->regenerate();
 
         return redirect()->intended('/')->with('success', 'Xác thực email thành công.');
@@ -133,13 +139,14 @@ class AccountController extends Controller
     public function register(request $request)
     {
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:50'],
+            'name' => ['required', 'string', 'max:50', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:100', 'unique:users'],
             'password_confirmation' => 'required',
             'password' => ['required', 'string', 'min:8', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'confirmed'],
         ], [
 
             'name.required' => 'Vui lòng nhập tên',
+            'name.unique' => 'Tên đã tồn tại',
             'email.required' => 'Vui lòng nhập email',
             'email.unique' => 'Email đã tồn tại',
             'password.min' => 'Mật khẩu phải ít nhất 8 ký tự',
@@ -159,10 +166,12 @@ class AccountController extends Controller
         Mail::to($user->email)->send(new VerifyEmail($user->name, $token));
         return redirect()->route('login')->with('success', 'Đăng ký thành công, vui lòng xác thực email.');
     }
+
     public function forgotForm()
     {
         return view('client.pages.account.forgotpassword');
     }
+
     public function forgot(Request $request)
     {
         $request->validate(['email' => 'required|email'], [
@@ -177,6 +186,9 @@ class AccountController extends Controller
         }
         if ($user->email_verified_at === null) {
             return back()->withErrors(['email' => 'Email chưa được xác thực. Vui lòng xác thực email trước khi yêu cầu đặt lại mật khẩu.']);
+        }
+        if ($user->is_active == 0) {
+            return back()->withErrors(['email' => 'Tài khoản của bạn đã bị khóa']);
         }
         if ($user->email_verification_expires_at && Carbon::now()->lessThan($user->email_verification_expires_at)) {
             return back()->withErrors(['email' => 'Link xác thực đã được gửi trước đó. Vui lòng kiểm tra email của bạn hoặc thử lại sau 30 phút']);
@@ -245,16 +257,27 @@ class AccountController extends Controller
 
         return redirect()->route('login')->with('success', 'Mật khẩu đã được đổi thành công!');
     }
+
     public function myAccount()
     {
         $user = Auth::user();
+
         if (!$user) {
             return redirect()->route('login');
         }
+
+        // $now = Carbon::now();
+        // UserVoucher::with('voucher')
+        //     ->where('user_id', $user->id)
+        //     ->whereHas('voucher', function ($query) use ($now) {
+        //         $query->where('is_active', false)
+        //             ->orWhere('end_date', '<', $now);
+        //     })
+        //     ->update(values: ['status' => 'expired']);
+
         $vouchers = UserVoucher::with('voucher')->where('user_id', $user->id)->get();
 
-
-        $bills = Order::query()->where('user_id', $user->id)->with('voucher')->get();
+        $bills = Order::query()->where('user_id', $user->id)->with('voucher')->orderBy('id', 'desc')->get();
         return view('client.pages.account.my_account.my-account', compact('user', 'bills', 'vouchers'));
     }
 
@@ -271,10 +294,10 @@ class AccountController extends Controller
 
         return view('client.pages.account.my_account.bill-detail', compact('user', 'order'));
     }
+
     public function cancelOrder($id)
     {
         $order = Order::find($id);
-
 
         if ($order && $order->status == 1) {
             $order->status = 5;
@@ -286,28 +309,30 @@ class AccountController extends Controller
         }
     }
 
-
-
     public function updateMyAcount(request $request, $id)
     {
-        $user = User::findOrFail($id);
         $request->validate([
-            'name' => 'nullable|string|max:255',
-            'address' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|max:10|regex:/^[0-9]+$/',
-            'date_of_birth' => 'nullable|date|before:today',
+            'address' => 'required|string|max:255',
+            'phone' => 'required|string|regex:/^[0-9]{10}$/',
+            'date_of_birth' => 'required|date|before:today',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ], [
-            'date_of_birth.before' => 'Ngày sinh không hợp lệ.',
+            'address.required' => 'Địa chỉ là bắt buộc.',
+            'address.max' => 'Tối đa 255 kí tự.',
+            'phone.required' => 'Số điện thoại là bắt buộc.',
             'phone.regex' => 'Số điện thoại không hợp lệ.',
-            'phone.max' => 'Số điện thoại tối đa 10 số.',
+            'date_of_birth.required' => 'Ngày sinh là bắt buộc.',
+            'date_of_birth.date' => 'Ngày sinh không hợp lệ.',
+            'date_of_birth.before' => 'Ngày sinh không được là ngày hiện tại.',
             'avatar.image' => 'Tệp tải lên phải là hình ảnh.',
             'avatar.mimes' => 'Ảnh đại diện phải có định dạng: jpeg, png, jpg, gif.',
             'avatar.max' => 'Ảnh đại diện không được lớn hơn 2MB.',
         ]);
-        $data = $request->except('avatar');
-        $data['email'] = $user->email;
-        $data = $request->except('avatar');
+
+        $user = User::findOrFail($id);
+
+        $data = $request->only(['phone', 'address', 'date_of_birth']);
+
         if ($request->hasFile('avatar')) {
 
             $data['avatar'] = Storage::put('users', $request->file('avatar'));
@@ -320,33 +345,34 @@ class AccountController extends Controller
         $user->update($data);
         return redirect()->route('my_account')->with('success', 'Cập nhật thông tin thành công');
     }
-    
+
     public function updatePassword(Request $request, $id)
     {
-        $user = User::findOrFail($id);
-        if (!Hash::check($request->current_password, $user->password)) {
-            return back()->withErrors(['current_password' => 'Mật khẩu hiện tại không đúng']);
-        }
-        if (Hash::check($request->new_password, $user->password)) {
-            return back()->withErrors(['new_password' => 'Mật khẩu mới không được giống với mật khẩu hiện tại']);
-        }
         $request->validate([
             'current_password' => 'required|string',
-            'new_password_confirmation' => 'required|string',
             'new_password' => ['required', 'string', 'min:8', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'confirmed'],
+            'new_password_confirmation' => 'required|string',
         ], [
             'current_password.required' => 'Vui lòng nhập mật khẩu hiện tại.',
             'new_password.required' => 'Vui lòng nhập mật khẩu mới.',
             'new_password.regex' => 'Mật khẩu bao gồm chữ in hoa, chữ cái thường và số.',
             'new_password.min' => 'Mật khẩu mới phải ít nhất 8 ký tự.',
-            'new_password_confirmation' => 'Vui lòng không bỏ trống.',
             'new_password.confirmed' => 'Mật khẩu mới không trùng khớp.',
+            'new_password_confirmation.required' => 'Vui lòng không bỏ trống.',
         ]);
 
+        $user = User::findOrFail($id);
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'Mật khẩu hiện tại không chính xác.']);
+        }
+        if (Hash::check($request->new_password, $user->password)) {
+            return back()->withErrors(['new_password' => 'Mật khẩu mới không được giống với mật khẩu hiện tại.']);
+        }
 
         $user->password = Hash::make($request->new_password);
         $user->save();
         Auth::logout();
-        return redirect()->route('login')->with('success',  'Vui lòng đăng nhập lại');
+        return redirect()->route('login')->with('success',  'Đổi mật khẩu thành công. Vui lòng đăng nhập lại');
     }
 }

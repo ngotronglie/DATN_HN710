@@ -6,12 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class StatisticsController extends Controller
 {
     public function index()
     {
+        if (Auth::user()->role != 2) {
+            return back()->with('warning', 'Bạn không có quyền truy cập!');
+        }
+        
         // Khởi tạo biến
         $monthlyRevenue = session('monthlyRevenue', collect());
         $growthRates = session('growthRates', []);
@@ -24,6 +29,10 @@ class StatisticsController extends Controller
 
     public function showStatistics(Request $request)
     {
+        if (Auth::user()->role != 2) {
+            return back()->with('warning', 'Bạn không có quyền truy cập!');
+        }
+
         $request->validate([
             'start-date' => 'required|date',
             'end-date' => 'required|date|after_or_equal:start-date',

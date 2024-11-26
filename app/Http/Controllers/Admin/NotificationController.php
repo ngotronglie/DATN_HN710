@@ -21,7 +21,7 @@ class NotificationController extends Controller
     public function detailNotication($order_id, $id)
     {
         $user = Auth::user();
-        $order = Order::with(['orderDetails.productVariant.product', 'orderDetails.productVariant.size', 'orderDetails.productVariant.color', 'user'])->findOrFail($order_id);
+        $order = Order::with(['user', 'voucher', 'orderDetails'])->findOrFail($order_id);
 
         $notification = $user->notifications()->find($id);
         if ($notification) {

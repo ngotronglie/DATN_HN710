@@ -87,7 +87,6 @@ Route::post('/voucher/apply-code', [ClientBlogController::class, 'applyVoucher']
 Route::get('/contact', function () {
     return view('client.pages.contact');
 });
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 // Checkout
  Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 
@@ -137,8 +136,8 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
 });
 Route::get('verify-email/{token}', [ForgotPasswordController::class, 'verifyEmail'])->name('verify.email');
 
-//middleware(['auth', 'isAdmin'])
-Route::prefix('admin')->as('admin.')->group(function () {
+//
+Route::prefix('admin')->as('admin.')->middleware(['auth', 'isAdmin'])->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     // Các route tùy chỉnh
@@ -150,7 +149,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('accounts/listUser', [UserController::class, 'listUser'])->name('accounts.listUser');
 
     // Quản lí tài khoản
-    Route::resource('accounts', UserController::class)->except(['destroy']);;
+    Route::resource('accounts', UserController::class)->except(['destroy']);
 
     // Quản lý các size đã bị xóa mềm
     Route::get('sizes/trashed', [SizeController::class, 'trashed'])->name('sizes.trashed');
@@ -167,11 +166,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::resource('colors', ColorController::class);
 
     // Vouchers
-    Route::get('/vouchers/trashed', [VoucherController::class, 'trashed'])->name('vouchers.trashed');
-    Route::delete('vouchers/forceDelete/{id}', [VoucherController::class, 'forceDelete'])->name('vouchers.forceDelete');
-    Route::put('vouchers/restore/{id}', [VoucherController::class, 'restore'])->name('vouchers.restore');
-
-    Route::resource('vouchers', VoucherController::class);
+    Route::resource('vouchers', VoucherController::class)->except(['destroy']);;
 
     // Quản lý các danh mục đã bị xóa mềm
     Route::get('categories/trashed', [CategoryController::class, 'trashed'])->name('categories.trashed');
@@ -232,9 +227,6 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::delete('notication/{id}', [NotificationController::class, 'delete'])->name('deleteNoti');
     Route::get('deleteNoticationRead', [NotificationController::class, 'deleteAllNotiRead'])->name('deleteAllNotiRead');
     Route::get('deleteNotication', [NotificationController::class, 'deleteAllNoti'])->name('deleteAllNoti');
-
-
-
 
     // Thống kê
     Route::get('statistics', [StatisticsController::class, 'index'])->name('statistics.index');

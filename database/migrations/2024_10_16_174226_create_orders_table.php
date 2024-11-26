@@ -16,11 +16,11 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
         $table->id();
         $table->foreignIdFor(User::class)->nullable()->constrained()->onDelete('restrict'); 
-        $table->string('user_name'); 
+        $table->string('user_name');
         $table->string('user_email');
         $table->string('user_phone');
         $table->string('user_address');
-        $table->foreignIdFor(Voucher::class)->nullable()->constrained()->onDelete('set null');
+        $table->foreignIdFor(Voucher::class)->nullable()->constrained()->onDelete('restrict');
         $table->integer('discount')->nullable();
         $table->bigInteger('total_amount');
         $table->string('status')->default('1');

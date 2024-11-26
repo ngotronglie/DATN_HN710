@@ -18,12 +18,11 @@ class CheckLogin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        
-        if(Auth::check() && Auth::user()->isAdminOrStaff()){
+
+        if (Auth::check() && Auth::user()->isAdminOrStaff()) {
             return $next($request);
-           }
-           
-           return redirect()->route('admin.loginForm')->with('warning','Vui lòng đăng nhập để vào trang quản trị !');
-        
+        }else {
+            abort(403);
         }
+    }
 }

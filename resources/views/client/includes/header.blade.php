@@ -27,8 +27,7 @@
                                     <ul class="sub-menu">
                                         @foreach ($clientCategories as $item)
                                             <li>
-                                                <a
-                                                    href="{{ route('shops.category', $item->id) }}">{{ $item->name }}</a>
+                                                <a href="{{ route('shops.category', $item->id) }}">{{ $item->name }}</a>
                                             </li>
                                         @endforeach
                                     </ul>
@@ -47,6 +46,9 @@
                     <!-- Header Action Start -->
                     <div class="col-xl-2 col-6">
                         <div class="header-actions">
+                            
+                            <a href="javascript:void(0)" class="header-action-btn header-action-btn-search"><i
+                                class="pe-7s-search"></i></a>
 
                             @if (Auth::check())
                                 <div class="main-menu position-relative">
@@ -136,23 +138,26 @@
                 <nav>
                     <ul class="mobile-menu">
                         <li class="has-children">
-                            <a href="/">Home <i class="fa fa-angle-down"></i></a>
+                            <a href="{{ route('home') }}">Trang chủ</a>
 
                         </li>
                         <li class="has-children">
-                            <a href="/shop">Shop <i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                            <a href="/shop">Cửa hàng <i class="fa fa-angle-down" aria-hidden="true"></i></a>
                             <ul class="sub-menu">
-                                <li><a href="/cart">Cart</a></li>
-                                <li><a href="/checkout">Checkout</a></li>
-                                <li><a href="/wishlist">wishlist</a></li>
+                                @foreach ($clientCategories as $item)
+                                <li><a href="{{ route('shops.category', $item->id) }}">{{ $item->name }}</a></li>
+                                @endforeach
                             </ul>
                         </li>
 
                         <li class="has-children">
-                            <a href="/contact">contact</a>
+                            <a href="{{ route('blogs.index') }}">Bài viết</a>
                         </li>
                         <li class="has-children">
-                            <a href="/blog">blog</a>
+                            <a href="/contact">Liên hệ</a>
+                        </li>
+                        <li class="has-children">
+                            <a href="{{ route('bill.search') }}">Tra cứu</a>
                         </li>
                     </ul>
                 </nav>
@@ -161,9 +166,9 @@
             <div class="mt-auto">
 
                 <ul class="contact-links">
-                    <li><i class="fa fa-phone"></i><a href="#"> +012 3456 789 123</a></li>
+                    <li><i class="fa fa-phone"></i><a href="#"> 0376900771</a></li>
                     <li><i class="fa fa-envelope-o"></i><a href="#"> info@example.com</a></li>
-                    <li><i class="fa fa-clock-o"></i> <span>Monday - Sunday 9.00 - 18.00</span> </li>
+                    <li><i class="fa fa-clock-o"></i> <span>Thứ Hai - Chủ Nhật 9h00 - 18h00</span> </li>
                 </ul>
 
                 <div class="widget-social">
@@ -188,7 +193,7 @@
             </div>
 
             <form class="offcanvas-search-form" action="#">
-                <input type="text" placeholder="Search Here..." class="offcanvas-search-input">
+                <input type="text" placeholder="Tìm Kiếm..." class="offcanvas-search-input">
             </form>
 
         </div>

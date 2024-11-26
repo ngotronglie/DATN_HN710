@@ -61,7 +61,7 @@ class CheckoutController extends Controller
 
         if ($user) {
             $validVouchers = Voucher::where('end_date', '>=', Carbon::now()->startOfDay())
-                ->where('is_active', true)
+                ->where('is_active', 1)
                 ->where('quantity', '>', 0)
                 ->whereHas('users', function ($query) use ($user) {
                     $query->where('user_id', $user->id)

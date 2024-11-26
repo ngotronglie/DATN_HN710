@@ -5,14 +5,13 @@
             <div class="row mb-n10">
                 <div class="col-12 col-sm-6 col-lg-4 col-xl-4 mb-10" data-aos="fade-up" data-aos-delay="200">
                     <div class="single-footer-widget">
-                        <h2 class="widget-title">Contact Us</h2>
-                        <p class="desc-content">Lorem ipsum dolor sit amet, consectetur adipisicing sed do eiusmod
-                            tempor incididun</p>
+                        <h2 class="widget-title">Liên hệ với chúng tôi</h2>
+                        <p class="desc-content">Chúng tôi luôn sẵn sàng lắng nghe ý kiến và hỗ trợ bạn. Hãy liên hệ với chúng tôi để được giải đáp mọi thắc mắc</p>
                         <!-- Contact Address Start -->
                         <ul class="widget-address">
-                            <li><span>Address: </span> 123 Main Street, Anytown, CA 12345 - USA.</li>
-                            <li><span>Call to: </span> <a href="#"> (012) 800 456 789-987</a></li>
-                            <li><span>Mail to: </span> <a href="#"> yourmail@example.com</a></li>
+                            <li><span>Địa chỉ: </span> 132 Xuân Phương, Hà Nội</li>
+                            <li><span>Gọi đến: </span> <a href="#"> 0376900771</a></li>
+                            <li><span>Gửi mail đến: </span> <a href="#"> yourmail@example.com</a></li>
                         </ul>
                         <!-- Contact Address End -->
 
@@ -29,44 +28,43 @@
                 </div>
                 <div class="col-12 col-sm-6 col-lg-2 col-xl-2 mb-10" data-aos="fade-up" data-aos-delay="300">
                     <div class="single-footer-widget">
-                        <h2 class="widget-title">Information</h2>
+                        <h2 class="widget-title">Thông tin</h2>
                         <ul class="widget-list">
-                            <li><a href="about.html">About Us</a></li>
-                            <li><a href="about.html">Delivery Information</a></li>
-                            <li><a href="about.html">Privacy Policy</a></li>
-                            <li><a href="about.html">Terms & Conditions</a></li>
-                            <li><a href="about.html">Customer Service</a></li>
-                            <li><a href="about.html">Return Policy</a></li>
+                            <li><a href="#">Về chúng tôi</a></li>
+                            <li><a href="#">Thông tin giao hàng</a></li>
+                            <li><a href="#">Chính sách bảo mật</a></li>
+                            <li><a href="#">Điều khoản và điều kiện</a></li>
+                            <li><a href="#">Dịch vụ khách hàng</a></li>
+                            <li><a href="#">Chính sách đổi trả</a></li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-2 col-xl-2 mb-10" data-aos="fade-up" data-aos-delay="400">
                     <div class="single-footer-widget aos-init aos-animate">
-                        <h2 class="widget-title">My Account</h2>
+                        <h2 class="widget-title">Tài khoản của tôi</h2>
                         <ul class="widget-list">
-                            <li><a href="account.html">My Account</a></li>
-                            <li><a href="wishlist.html">Wishlist</a></li>
-                            <li><a href="contact.html">Newsletter</a></li>
-                            <li><a href="contact.html">Help Center</a></li>
-                            <li><a href="contact.html">Conditin</a></li>
-                            <li><a href="contact.html">Term Of Use</a></li>
+                            <li><a href="#">Tài khoản của tôi</a></li>
+                            <li><a href="#">Danh sách yêu thích</a></li>
+                            <li><a href="#">Nhận bản tin</a></li>
+                            <li><a href="#">Trung tâm trợ giúp</a></li>
+                            <li><a href="#">Điều kiện</a></li>
+                            <li><a href="#">Điều khoản sử dụng</a></li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-4 col-xl-4 mb-10" data-aos="fade-up" data-aos-delay="500">
                     <div class="single-footer-widget">
-                        <h2 class="widget-title">Newsletter</h2>
+                        <h2 class="widget-title">Nhận bản tin</h2>
                         <div class="widget-body">
-                            <p class="desc-content mb-0">Get E-mail updates about our latest shop and special
-                                offers.</p>
+                            <p class="desc-content mb-0">Nhận thông báo qua email về các sản phẩm mới và ưu đãi đặc biệt của chúng tôi</p>
 
                             <!-- Newsletter Form Start -->
                             <div class="newsletter-form-wrap pt-4">
                                 <form id="mc-form" class="mc-form">
                                     <input type="email" id="mc-email" class="form-control email-box mb-4"
-                                        placeholder="Enter your email here.." name="EMAIL">
+                                        placeholder="Nhập email của bạn tại đây.." name="EMAIL">
                                     <button id="mc-submit" class="newsletter-btn btn btn-primary btn-hover-dark"
-                                        type="submit">Subscribe</button>
+                                        type="submit">Đăng kí</button>
                                 </form>
                                 <!-- mailchimp-alerts Start -->
                                 <div class="mailchimp-alerts text-centre">
@@ -93,9 +91,9 @@
             <div class="row align-items-center">
                 <div class="col-12 text-center">
                     <div class="copyright-content">
-                        <p class="mb-0">© 2023 <strong>Destry </strong> Made width <i
-                                class="fa fa-heart text-danger"></i> by <a
-                                href="https://hasthemes.com/">HasThemes.</a></p>
+                        <p class="mb-0">© 2024 <strong>Destry </strong> Thiết kế với <i
+                            class="fa fa-heart text-danger"></i> bởi <a
+                            href="#">Team.</a></p>
                     </div>
                 </div>
             </div>

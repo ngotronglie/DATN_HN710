@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-
 use App\Models\Order;
-use App\Http\Requests\StoreOrderRequest;
-use App\Http\Requests\UpdateOrderRequest;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Gate;
 
 class OrderController extends Controller
 {
@@ -17,6 +15,10 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
+        if (Gate::denies('viewAny', Order::class)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
+
         $query = Order::with(['user', 'voucher', 'orderDetails.productVariant.product'])
             ->orderBy('id', 'desc');
 
@@ -40,12 +42,21 @@ class OrderController extends Controller
     public function detail($order_id)
     {
         $order = Order::with(['user', 'voucher', 'orderDetails'])->findOrFail($order_id);
+
+        if (Gate::denies('view', $order)) {
+            return back()->with('warning', 'Bạn không có quyền xem đơn hàng này!');
+        }
+
         return view('admin.layout.order.detail', compact('order'));
     }
 
     public function confirmOrder($order_id)
     {
         $order = Order::findOrFail($order_id);
+
+        if (Gate::denies('confirm', $order)) {
+            return back()->with('warning', 'Bạn không có quyền xác nhận đơn hàng này!');
+        }
 
         if ($order->status == 1) {
             $order->status = 2; // Chuyển sang "Chờ lấy hàng"
@@ -60,6 +71,10 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($order_id);
 
+        if (Gate::denies('ship', $order)) {
+            return back()->with('warning', 'Bạn không có quyền giao hàng cho đơn hàng này!');
+        }
+
         if ($order->status == 2) {
             $order->status = 3; // Chuyển sang "Đang giao hàng"
             $order->save();
@@ -72,6 +87,10 @@ class OrderController extends Controller
     public function confirmShipping($order_id)
     {
         $order = Order::findOrFail($order_id);
+
+        if (Gate::denies('confirmShipping', $order)) {
+            return back()->with('warning', 'Bạn không có quyền xác nhận giao hàng!');
+        }
 
         if ($order->status == 3) {
             $order->status = 4; // Chuyển sang "Giao hàng thành công"
@@ -86,6 +105,10 @@ class OrderController extends Controller
     public function cancelOrder($order_id)
     {
         $order = Order::find($order_id);
+
+        if (Gate::denies('cancel', $order)) {
+            return back()->with('warning', 'Bạn không có quyền hủy đơn hàng này!');
+        }
 
         if ($order->status == 5) {
             $order->status = 6;
@@ -108,6 +131,10 @@ class OrderController extends Controller
         $order = Order::with(['user', 'voucher', 'orderDetails'])
             ->where('order_code', $checkout_code)
             ->firstOrFail();
+
+        if (Gate::denies('print', $order)) {
+            return back()->with('warning', 'Bạn không có quyền in hóa đơn cho đơn hàng này!');
+        }
 
         if ($order->status == 2 || $order->status == 4) {
             $data = [

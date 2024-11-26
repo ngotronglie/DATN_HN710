@@ -5,11 +5,16 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Models\Product;
+use Illuminate\Support\Facades\Gate;
 
 class CommentController extends Controller
 {
     public function index()
     {
+        if (Gate::denies('viewAny', Comment::class)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
+
         $products = Product::withCount([
             'comments', // Đếm tổng số bình luận
             'comments as active_comments_count' => function ($query) {
@@ -43,6 +48,10 @@ class CommentController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
+        if (Gate::denies('view', $comments->first())) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
+
         if ($comments->isEmpty()) {
             return back()->with('warning', 'Không có bình luận nào cho sản phẩm này');
         }
@@ -56,6 +65,10 @@ class CommentController extends Controller
             ->where('parent_id', $id)
             ->orderBy('created_at', 'desc')
             ->get();
+
+        if (Gate::denies('view', $childComments->first())) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
 
         if ($childComments->isEmpty()) {
             return back()->with('warning', 'Không có bình luận con nào cho bình luận cha này');

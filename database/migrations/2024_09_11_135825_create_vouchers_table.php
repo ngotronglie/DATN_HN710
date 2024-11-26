@@ -21,7 +21,6 @@ return new class extends Migration
             $table->decimal('min_money', 10, 2);
             $table->decimal('max_money', 10, 2);
             $table->boolean('is_active')->default(true);
-            $table->softDeletes();
             $table->timestamps(); 
         });
     }

@@ -12,9 +12,9 @@
                     </div>
                     <div class="info">
                         <div class="small-banner-content">
-                            <h4 class="sub-title">Sun Hat</h4>
-                            <h3 class="title">Get Offer <br />For Summer</h3>
-                            <a href="shop-grid.html" class="btn btn-dark btn-sm">Shop Now</a>
+                            <h4 class="sub-title">Mũ Nắng</h4>
+                            <h3 class="title">Nhận Ưu Đãi <br />Dành Cho Mùa Hè</h3>
+                            <a href="#" class="btn btn-dark btn-sm">Mua ngay</a>
                         </div>
                     </div>
                 </div>
@@ -30,9 +30,9 @@
                     </div>
                     <div class="info">
                         <div class="small-banner-content">
-                            <h4 class="sub-title">Ladies Bag</h4>
-                            <h3 class="title">Buy One <br />Get One Free</h3>
-                            <a href="shop-grid.html" class="btn btn-dark btn-sm">Shop Now</a>
+                            <h4 class="sub-title">Túi Xách Nữ</h4>
+                            <h3 class="title">Mua Một <br />Tặng Một</h3>
+                            <a href="#" class="btn btn-dark btn-sm">Mua ngay</a>
                         </div>
                     </div>
                 </div>
@@ -48,9 +48,9 @@
                     </div>
                     <div class="info">
                         <div class="small-banner-content">
-                            <h4 class="sub-title">Smart Watch</h4>
-                            <h3 class="title">20% Off <br />Smart Watch</h3>
-                            <a href="shop-grid.html" class="btn btn-dark btn-sm">Shop Now</a>
+                            <h4 class="sub-title">Đồng Hồ Thông Minh</h4>
+                            <h3 class="title">Giảm Giá 20% <br />Cho Đồng Hồ Thông Minh</h3>
+                            <a href="#" class="btn btn-dark btn-sm">Mua ngay</a>
                         </div>
                     </div>
                 </div>

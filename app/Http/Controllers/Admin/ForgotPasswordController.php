@@ -28,6 +28,15 @@ class ForgotPasswordController extends Controller
         if (!$user) {
             return back()->withErrors(['email' => 'Email không tồn tại trong hệ thống']);
         }
+
+        if ($user->email_verified_at == null) {
+            return back()->withErrors(['email' => 'Email chưa được xác minh']);
+        }
+
+        if ($user->is_active == 0) {
+            return back()->withErrors(['email' => 'Tài khoản của bạn đã bị khóa']);
+        }
+
         if ($user->email_verification_expires_at && Carbon::now()->lessThan($user->email_verification_expires_at)) {
             return back()->withErrors(['email' => 'Link xác thực đã được gửi trước đó. Vui lòng kiểm tra email của bạn hoặc thử lại sau 30 phút']);
         }

@@ -16,31 +16,22 @@ class Kernel extends ConsoleKernel
      */
     //  protected function schedule(Schedule $schedule): void
     //  {
-    //     // $schedule->command('inspire')->hourly();
+    //     $schedule->command('inspire')->hourly();
+    //  }
 
-    //     // Xóa các tài khoản chưa xác thực sau 7 ngày
-    //     // $schedule->call(function () {
-    //     //     $expirationDate = now()->subDays(7); 
+    protected function schedule(Schedule $schedule)
+    {
+        $schedule->call(function () {
+            // Cập nhật trạng thái "expired" cho các voucher đã hết hạn
+            UserVoucher::whereHas('voucher', function ($query) {
+                // Kiểm tra ngày hết hạn của voucher
+                $query->where('end_date', '<', Carbon::now()); // Ngày hết hạn trước ngày hiện tại
+            })
+            ->where('status', '!=', 'expired') // Kiểm tra nếu trạng thái chưa phải là "expired"
+            ->update(['status' => 'expired']); // Cập nhật trạng thái thành "expired"
+        })->daily(); // Chạy mỗi ngày
+    }
 
-    //     //     User::whereNull('email_verified_at') 
-    //     //         ->where('created_at', '<', $expirationDate) 
-    //     //         ->delete(); //forceDelete()
-    //     // })->daily(); 
-    //}
-    
-    // protected function schedule(Schedule $schedule)
-    // {
-    //     $schedule->call(function () {
-    //         // Cập nhật trạng thái "expired" cho các voucher đã hết hạn
-    //         UserVoucher::whereHas('voucher', function ($query) {
-    //             // Kiểm tra ngày hết hạn của voucher
-    //             $query->where('end_date', '<', Carbon::now()); // Ngày hết hạn trước ngày hiện tại
-    //         })
-    //         ->where('status', '!=', 'expired') // Kiểm tra nếu trạng thái chưa phải là "expired"
-    //         ->update(['status' => 'expired']); // Cập nhật trạng thái thành "expired"
-    //     })->daily(); // Chạy mỗi ngày
-    // }
-    
 
     /**
      * Register the commands for the application.

@@ -19,7 +19,6 @@ class VoucherController extends Controller
             return back()->with('warning', 'Bạn không có quyền!');
         }
         $vouchers = Voucher::orderBy('id', 'desc')->get();
-        $trashedVouchers = Voucher::onlyTrashed()->count();
         $currentDate = Carbon::now()->startOfDay(); // Đảm bảo rằng bạn so sánh ngày mà không có giờ
 
         foreach ($vouchers as $voucher) {
@@ -38,7 +37,7 @@ class VoucherController extends Controller
             $voucher->save();
         }
 
-        return view(self::PATH_VIEW . 'index', compact('vouchers', 'trashedVouchers'));
+        return view(self::PATH_VIEW . 'index', compact('vouchers'));
     }
 
     public function create()
@@ -85,43 +84,5 @@ class VoucherController extends Controller
         $voucher->update($data);
 
         return redirect()->route('admin.vouchers.index')->with('success', 'Sửa Voucher thành công');
-    }
-
-    public function destroy(Voucher $voucher)
-    {
-        if (Gate::denies('delete', $voucher)) {
-            return back()->with('warning', 'Bạn không có quyền!');
-        }
-        $voucher->delete();
-        return redirect()->route('admin.vouchers.index')->with('success', 'Xóa Voucher thành công');
-    }
-
-    public function trashed()
-    {
-        if (Gate::denies('viewTrashed', Voucher::class)) {
-            return back()->with('warning', 'Bạn không có quyền!');
-        }
-        $vouchers = Voucher::onlyTrashed()->get();
-        return view(self::PATH_VIEW . 'trashed', compact('vouchers'));
-    }
-
-    public function restore($id)
-    {
-        $voucher = Voucher::onlyTrashed()->findOrFail($id);
-        if (Gate::denies('restore', $voucher)) {
-            return back()->with('warning', 'Bạn không có quyền!');
-        }
-        $voucher->restore();
-        return redirect()->route('admin.vouchers.trashed')->with('success', 'Voucher đã được khôi phục');
-    }
-
-    public function forceDelete($id)
-    {
-        $vouchers = Voucher::withTrashed()->findOrFail($id);
-        if (Gate::denies('forceDelete', $vouchers)) {
-            return back()->with('warning', 'Bạn không có quyền!');
-        }
-        $vouchers->forceDelete();
-        return redirect()->route('admin.vouchers.trashed')->with('success', 'Vouchers đã bị xóa vĩnh viễn');
     }
 }

@@ -46,7 +46,7 @@
                     <div class="card-body">
                         <table class="table table-bordered">
                             <tbody>
-                                <tr>giảm giá
+                                <tr>
                                     <th>Mã Voucher</th>
                                     <td>{{ $voucher->code }}</td>
                                 </tr>
