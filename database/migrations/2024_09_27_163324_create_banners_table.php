@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('link');
             $table->string('description');
             $table->foreignIdFor(User::class)->constrained()->onDelete('restrict');
-            $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('restrict');
             $table->boolean('is_active')->default(true);
             $table->softDeletes();
             $table->timestamps();

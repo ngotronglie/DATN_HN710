@@ -80,7 +80,6 @@
                                     <th>Tiêu đề</th>
                                     <th>Hình ảnh</th>
                                     <th>Người tạo</th>
-                                    <th>Người sửa</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
@@ -92,7 +91,6 @@
                                     <th>Tiêu đề</th>
                                     <th>Hình ảnh</th>
                                     <th>Người tạo</th>
-                                    <th>Ngời sửa</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
@@ -109,14 +107,8 @@
                                         <img src="{{ Storage::url($item->image) }}" class="img-fluid" style="max-height: 100px; width: 100%; object-fit: contain; border: 1px solid #ddd;" alt="Banner Image">
                                     </td>
                                     <td>
-                                        {{ $item->creator->name }}
-                                        @if (!$item->creator->is_active)
-                                        <div style="color: red;">(Bị khóa)</div>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        {{ $item->updater->name ?? 'Chưa có sửa đổi' }}
-                                        @if ($item->updater && !$item->updater->is_active)
+                                        {{ $item->user->name }}
+                                        @if (!$item->user->is_active)
                                         <div style="color: red;">(Bị khóa)</div>
                                         @endif
                                     </td>

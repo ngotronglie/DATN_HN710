@@ -47,17 +47,8 @@
                                 <tr>
                                     <th>Người thêm</th>
                                     <td>
-                                        {{ $banner->creator->name }}
-                                        @if (!$banner->creator->is_active)
-                                        <span style="color: red;">(Bị khóa)</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Người sửa lần cuối</th>
-                                    <td>
-                                        {{ $banner->updater->name ?? 'Chưa có sửa đổi' }}
-                                        @if ($banner->updater && !$banner->updater->is_active)
+                                        {{ $banner->user->name }}
+                                        @if (!$banner->user->is_active)
                                         <span style="color: red;">(Bị khóa)</span>
                                         @endif
                                     </td>

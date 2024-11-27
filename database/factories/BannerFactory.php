@@ -23,7 +23,6 @@ class BannerFactory extends Factory
             'link' => fake()->url(),
             'description' => fake()->sentence(),
             'user_id' => User::inRandomOrder()->first()->id,
-            'updated_by' => User::inRandomOrder()->first()->id ?? null,
         ];
     }
 }

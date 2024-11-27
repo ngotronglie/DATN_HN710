@@ -67,7 +67,7 @@ class BannerController extends Controller
             return back()->with('warning', 'Bạn không có quyền!');
         }
 
-        $banner->load(['creator', 'updater']);
+        $banner->load('user');
         return view(self::PATH_VIEW . __FUNCTION__, compact('banner'));
     }
 
@@ -93,7 +93,6 @@ class BannerController extends Controller
         }
 
         $data = $request->except('image');
-        $data['updated_by'] = Auth::id();
         if ($request->hasFile('image')) {
             $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
             if (!empty($banner->image) && Storage::exists($banner->image)) {
