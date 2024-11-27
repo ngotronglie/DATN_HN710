@@ -18,24 +18,8 @@ class VoucherController extends Controller
         if (Gate::denies('viewAny', Voucher::class)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
+        
         $vouchers = Voucher::orderBy('id', 'desc')->get();
-        $currentDate = Carbon::now()->startOfDay(); // Đảm bảo rằng bạn so sánh ngày mà không có giờ
-
-        foreach ($vouchers as $voucher) {
-            // Chuyển đổi giá trị ngày tháng từ cơ sở dữ liệu thành đối tượng Carbon
-            $startDate = Carbon::parse($voucher->start_date)->startOfDay();
-            $endDate = Carbon::parse($voucher->end_date)->endOfDay();
-
-            // Xác định trạng thái của voucher
-            if ($currentDate->lessThan($startDate) || $currentDate->greaterThan($endDate)) {
-                $voucher->is_active = 0; // Không hoạt động nếu hiện tại trước ngày bắt đầu hoặc sau ngày kết thúc
-            } else {
-                $voucher->is_active = 1; // Hoạt động nếu hiện tại nằm trong khoảng thời gian, bao gồm ngày kết thúc
-            }
-
-            // Lưu lại thay đổi vào cơ sở dữ liệu
-            $voucher->save();
-        }
 
         return view(self::PATH_VIEW . 'index', compact('vouchers'));
     }

@@ -266,15 +266,6 @@ class AccountController extends Controller
             return redirect()->route('login');
         }
 
-        // $now = Carbon::now();
-        // UserVoucher::with('voucher')
-        //     ->where('user_id', $user->id)
-        //     ->whereHas('voucher', function ($query) use ($now) {
-        //         $query->where('is_active', false)
-        //             ->orWhere('end_date', '<', $now);
-        //     })
-        //     ->update(values: ['status' => 'expired']);
-
         $vouchers = UserVoucher::with('voucher')->where('user_id', $user->id)->get();
 
         $bills = Order::query()->where('user_id', $user->id)->with('voucher')->orderBy('id', 'desc')->get();
