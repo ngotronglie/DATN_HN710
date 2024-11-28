@@ -24,20 +24,37 @@ use Illuminate\Support\Facades\Session;
 
 class CheckoutController extends Controller
 {
-
-    public function index(Request $request)
+    public function storeData(Request $request)
     {
+        $items = $request->input('items');
+        $total = $request->input('total');
 
+        session(['user_cart' => [
+            'cart_items' => $items,
+            'cart_total' => $total
+        ]]);
+
+        return response()->json(['success' => true, 'message' => 'Data stored in session']);
+    }
+    public function index()
+    {
         $user = auth()->user();
         $validVouchers = collect();
         session()->forget(['discount', 'totalAmountWithDiscount', 'voucher_id']);
-        $items = json_decode($request->input('item'), true);
+
+        $cartData = session('user_cart');
+
+        if (!$cartData) {
+            return redirect()->back()->with('error', 'Không có sản phẩm nào trong giỏ hàng.');
+        }
+
+        $items = $cartData['cart_items'];
+        $total = $cartData['cart_total'];
 
         if (empty($items)) {
             return redirect()->back()->with('error', 'Không có sản phẩm nào được chọn.');
         }
 
-        $total = $request->input('totalMyprd');  // Tổng tiền từ frontend
         $ids = array_column($items, 'id');  // Lấy mảng các id từ items
         $productVariants = ProductVariant::whereIn('id', $ids)->get();
 
@@ -46,7 +63,6 @@ class CheckoutController extends Controller
         }
 
         $products = $productVariants->map(function ($variant) use ($items) {
-
             foreach ($items as $item) {
                 if ($variant->id == $item['id']) {
                     $variant->name = $variant->product->name;
@@ -72,11 +88,13 @@ class CheckoutController extends Controller
                         ->where('max_money', '>=', $total);
                 })
                 ->get();
+
             session(['totalAmount' => $total]);
         }
 
         return view('client.pages.checkouts.show_checkout', ['products' => $products, 'total' => $total, 'validVouchers' => $validVouchers]);
     }
+
 
     function generateUniqueOrderCode()
     {
@@ -156,7 +174,7 @@ class CheckoutController extends Controller
                 $discount=$voucher->discount;
                 $voucher->decrement('quantity', 1);
             }
-    
+
             $order = Order::create([
                 'user_id' => $user ? $user->id : null,
                 'user_name' => $request->input('name'),

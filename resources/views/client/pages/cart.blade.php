@@ -158,14 +158,16 @@
                         <!-- Cart Calculate Items End -->
                         <!-- Cart Checktout Button Start -->
                         <div class="checkout-button-container text-center mt-4">
-                            <form action="{{ route('checkout') }}" method="post">
+
+                            {{-- <form action="{{ route('checkout') }}" method="post">
                                 @csrf
                                 <input type="hidden" class="hidenInput" name="item" id="item"> <br>
                                 <input type="hidden" class="hidenInput" name="totalMyprd" id="totalMyprd">
                                 <button type="submit" class="btn btn-dark btn-hover-primary rounded-0 w-100">
                                     Thanh toán
                                 </button>
-                            </form>
+                            </form> --}}
+<a class="btn btn-dark btn-hover-primary rounded-0 w-100" href="{{route('checkout')}}">thanh toan</a>
                         </div>
                         {{-- <a href="checkout.html" class="btn btn-dark btn-hover-primary rounded-0 w-100">Thanh toán</a> --}}
                         <!-- Cart Checktout Button End -->

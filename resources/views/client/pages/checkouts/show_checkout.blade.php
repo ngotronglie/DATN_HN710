@@ -58,11 +58,11 @@
                                                                 @php
                                                                     $minMoney = $voucher->min_money;
                                                                     $maxMoney = $voucher->max_money;
-                                                                    $formattedMinMoney =  $minMoney >= 1_000_000 ? number_format ( $minMoney / 1_000_000, 0, ',','', ) 
-                                                                    . 'tr' : number_format( $minMoney / 1_000, 0,',','',) . 'k';        
+                                                                    $formattedMinMoney =  $minMoney >= 1_000_000 ? number_format ( $minMoney / 1_000_000, 0, ',','', )
+                                                                    . 'tr' : number_format( $minMoney / 1_000, 0,',','',) . 'k';
                                                                     $formattedMaxMoney =
                                                                         $maxMoney >= 1_000_000 ? number_format( $maxMoney / 1_000_000, 0,',','', )
-                                                                    . 'tr' : number_format(   $maxMoney / 1_000, 0,',', '', ) . 'k';                    
+                                                                    . 'tr' : number_format(   $maxMoney / 1_000, 0,',', '', ) . 'k';
                                                                 @endphp
                                                                 <small>Tối thiểu: {{ $formattedMinMoney }} - Tối đa:
                                                                     {{ $formattedMaxMoney }}</small>
@@ -98,7 +98,7 @@
                 </div>
 
             </div>
-            <form id="checkoutForm" action="{{ route('placeOrder') }}" method="post">
+            <form action="{{ route('placeOrder') }}" method="post">
                 @csrf
                 <div class="row mb-n4">
 
@@ -134,6 +134,9 @@
                                         <label>Địa chỉ <span class="required">*</span></label>
                                         <input placeholder="Nhập địa chỉ giao hàng" type="text" name="address"
                                             value="{{ old('address', Auth::user()->address ?? '') }}">
+                                            @error('address')
+                                            <small>{{$message}}</small>
+                                            @enderror
                                     </div>
                                 </div>
                                 <!-- Address Input End -->
@@ -365,7 +368,7 @@
                     copyIcon.style.color = "green";
                     copyIcon.title = "Đã sao chép!";
 
-                    // Reset lại biểu tượng 
+                    // Reset lại biểu tượng
                     setTimeout(() => {
                         copyIcon.className = "fa fa-copy";
                         copyIcon.style.color = "blue";
@@ -375,99 +378,7 @@
             }
 
             // checkout
-            $('#checkoutForm').on('submit', function(e) {
-                e.preventDefault();
 
-                var formData = $(this).serialize();
-                
-                Swal.fire({
-                    title: 'Đang xử lý...',
-                    text: 'Vui lòng đợi trong giây lát.',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
-
-                $.ajax({
-                    url: '{{ route('placeOrder') }}',
-                    type: 'POST',
-                    data: formData,
-                    success: function(response) {
-                        $('.header-action-num').html(response.count);
-                        Swal.close();
-
-                        if (response.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Đặt hàng thành công!',
-                                html: `<p style="font-size: 16px; font-weight: bold;">Mã đơn hàng #<span id="orderCode">${response.order.order_code}</span> 
-                           <i id="copyIcon" title="Sao chép" class="fa fa-copy" 
-                           style="cursor: pointer; color: blue; margin-left: 10px;"></i>
-                       </p>
-                       <hr style="border-top: 1px solid #ddd;">
-                       <p style="font-size: 14px; color: #333;">
-                           <strong>Thông tin giao hàng:</strong><br>
-                           Tên: ${response.order.user_name}<br>
-                           Điện thoại: ${response.order.user_phone}<br>
-                           Địa chỉ: ${response.order.user_address}
-                       </p>
-                       <hr style="border-top: 1px solid #ddd;">
-                       <p style="font-size: 14px; color: #333;">
-                           <strong>Phương thức thanh toán:</strong><br>
-                           ${response.order.payment_method === 'cod' ? 'Thanh toán khi nhận hàng (COD)' : 'Thanh toán trực tuyến'}
-                       </p>`,
-                                showCancelButton: true,
-                                cancelButtonText: 'Tiếp tục mua hàng',
-                                confirmButtonText: 'Tra cứu đơn hàng',
-                                showConfirmButton: true,
-                                allowOutsideClick: false,
-                                allowEscapeKey: false,
-                                didOpen: () => {
-                                    // Gán sự kiện cho nút sao chép sau khi SweetAlert được mở
-                                    document.getElementById('copyIcon')
-                                        .addEventListener('click', function() {
-                                            copyToClipboard(response.order
-                                                .order_code);
-                                        });
-                                }
-                            }).then((result) => {
-                                if (result.dismiss === Swal.DismissReason.cancel) {
-                                    const redirectRoute = '{{ route('home') }}';
-                                    window.location.href = redirectRoute;
-                                } else if (result.isConfirmed) {
-                                    const trackOrderRoute =
-                                        '{{ route('bill.search') }}';
-                                    window.location.href = trackOrderRoute;
-                                }
-                            });
-
-                            $('#checkoutForm')[0].reset();
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Đặt hàng thất bại!',
-                                html: response.message ?
-                                    `<p style="font-size: 14px; color: #666;">${response.message}</p>` :
-                                    `<p style="font-size: 14px; color: #666;">${response.errors.join('<br>')}</p>`,
-                                confirmButtonText: 'Thử lại',
-                                allowOutsideClick: false,
-                                allowEscapeKey: false
-                            });
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Lỗi',
-                            html: `<p style="font-size: 14px; color: #666;">Vui lòng xem lại</p>`,
-                            confirmButtonText: 'Thử lại',
-                            allowOutsideClick: false,
-                            allowEscapeKey: false
-                        });
-                    }
-                });
-            });
 
             //  mô tả phương thức thanh toán
             document.querySelectorAll('input[name="payment_method"]').forEach((elem) => {

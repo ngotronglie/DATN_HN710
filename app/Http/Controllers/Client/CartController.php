@@ -15,6 +15,8 @@ class CartController extends Controller
 
     public function index()
     {
+        session()->forget('user_cart');
+
         $user = auth()->user();
 
         if ($user) {

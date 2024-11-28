@@ -88,7 +88,8 @@ Route::get('/contact', function () {
     return view('client.pages.contact');
 });
 // Checkout
- Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+ Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+ Route::post('/store-session-data', [CheckoutController::class, 'storeData']);
 
  Route::post('/place-order', [CheckoutController::class, 'placeOrder'])->name('placeOrder');
  Route::post('/apply-voucher', [CheckoutController::class, 'applyVoucher'])->name('voucher.apply');
