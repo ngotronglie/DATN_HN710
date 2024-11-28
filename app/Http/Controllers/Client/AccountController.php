@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Voucher;
 use Carbon\Carbon;
 use App\Mail\VerifyEmail;
 use Illuminate\Http\Request;
@@ -268,8 +269,22 @@ class AccountController extends Controller
 
         $vouchers = UserVoucher::with('voucher')->where('user_id', $user->id)->get();
 
+        // $voucherPoint = Voucher::where('points_required', '>', 0)
+        //     ->doesntHave('users')  // Điều kiện để loại bỏ các voucher đã tồn tại trong bảng UserVoucher
+        //     ->get();
+
+        $voucherPoint = Voucher::where('points_required', '>', 0)
+         ->with('users')
+         ->get();
+
+
+//dd($vouchers);
+        //$voucherPoint = Voucher::where('points_required', '>', 0)->get();
+
+        //dd($vouchers);
+
         $bills = Order::query()->where('user_id', $user->id)->with('voucher')->orderBy('id', 'desc')->get();
-        return view('client.pages.account.my_account.my-account', compact('user', 'bills', 'vouchers'));
+        return view('client.pages.account.my_account.my-account', compact('user', 'bills', 'vouchers', 'voucherPoint'));
     }
 
     public function orderBillDetail($id)
@@ -364,6 +379,6 @@ class AccountController extends Controller
         $user->password = Hash::make($request->new_password);
         $user->save();
         Auth::logout();
-        return redirect()->route('login')->with('success',  'Đổi mật khẩu thành công. Vui lòng đăng nhập lại');
+        return redirect()->route('login')->with('success', 'Đổi mật khẩu thành công. Vui lòng đăng nhập lại');
     }
 }

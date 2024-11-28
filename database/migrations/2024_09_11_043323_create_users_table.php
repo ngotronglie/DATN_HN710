@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->string('password');
             $table->enum('role', [0, 1, 2])->default(0);
+            $table->integer('points')->default(0);
             $table->boolean('is_active')->default(true);
             $table->date('date_of_birth')->nullable();
             $table->timestamp('email_verified_at')->nullable();

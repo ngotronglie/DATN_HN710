@@ -44,6 +44,8 @@
                                             class="fa fa-solid fa-lock"></i> Đổi mật khẩu</a>
                                     <a href="#payment-method" data-bs-toggle="tab" data-bs-target="#payment-method"><i
                                             class="fa fa-credit-card"></i> Mã giảm giá của tôi</a>
+                                    <a href="#point" data-bs-toggle="tab" data-bs-target="#point"><i
+                                            class="fa fa-credit-card"></i> Đổi điểm</a>
                                 </div>
                             </div>
                             <!-- My Account Tab Menu End -->
@@ -335,7 +337,7 @@
                                                                 <i class="fa fa-tags"></i>
                                                             </div>
                                                             <div class="voucher-details flex-grow-1">
-                                                                <h6 class="mb-1 text-dark fw-bold">{{ $uservoucher->voucher->code }}</h6>
+                                                                {{-- <h6 class="mb-1 text-dark fw-bold">{{ $uservoucher->voucher->code }}</h6> --}}
                                                                 <small class="text-muted">Giảm giá: {{ $uservoucher->voucher->discount ?? 0 }}%</small>
                                                                 <br>
                                                                 @php
@@ -375,6 +377,71 @@
                                         </div>
                                     </div>
                                     <!-- Single Tab Content End -->
+                                    <div class="tab-pane fade" id="point" role="tabpanel">
+                                        <div class="myaccount-content">
+                                            @php $user = Auth::user() @endphp
+                                            <div style="display: flex;justify-content: space-between">
+                                                <h3 class="title">Tất cả mã giảm giá</h3>
+                                                <h6 id="my-point">Điểm của bạn: {{$user->points}} </h6>
+                                            </div>
+
+                                            <div class="row" id="voucher-container2">
+                                                @if ($voucherPoint->isNotEmpty())
+                                                    @foreach ($voucherPoint as $item)
+                                                        <div class="col-md-4 mb-3 voucher-card" data-status="{{ $item->status }}">
+                                                            <div class="card shadow-sm border-0">
+                                                                <div class="card-body d-flex align-items-center">
+                                                                    <div class="voucher-icon text-primary me-3" style="font-size: 24px;">
+                                                                        <i class="fa fa-tags"></i>
+                                                                    </div>
+                                                                    <div class="voucher-details flex-grow-1">
+                                                                        <small class="text-muted">Giảm giá: {{ $item->discount ?? 0 }}%</small><br>
+                                                                        @php
+                                                                            $minMoney = $item->min_money;
+                                                                            $maxMoney = $item->max_money;
+                                                                            $formattedMinMoney = $minMoney >= 1_000_000
+                                                                                ? number_format($minMoney / 1_000_000, 0, ',', '') . 'tr'
+                                                                                : number_format($minMoney / 1_000, 0, ',', '') . 'k';
+                                                                            $formattedMaxMoney = $maxMoney >= 1_000_000
+                                                                                ? number_format($maxMoney / 1_000_000, 0, ',', '') . 'tr'
+                                                                                : number_format($maxMoney / 1_000, 0, ',', '') . 'k';
+                                                                        @endphp
+                                                                        <small>Áp dụng: {{ $formattedMinMoney }} - {{ $formattedMaxMoney }}</small><br>
+                                                                        <small>HSD: {{ \Carbon\Carbon::parse($item->end_date)->format('d/m/Y') }}</small><br>
+                                                                        <small>Điểm: {{ $item->points_required }}</small> <br>
+
+                                                                        @if($item->end_date < now())
+                                                                        <span class="badge bg-danger">
+                                                                            Hết hạn
+                                                                        </span>
+                                                                        @endif
+                                                                        @php
+                                                                            $voucherClaimed = false;
+                                                                            foreach ($item->users as $user) {
+                                                                                if ($user->pivot->voucher_id == $item->id) {
+                                                                                    $voucherClaimed = true;
+                                                                                    break;
+                                                                                }
+                                                                            }
+                                                                        @endphp
+
+                                                                        @if ($voucherClaimed)
+                                                                            <span class="done-get">Đã đổi</span>
+                                                                        @elseif ($item->end_date < now())
+                                                                        @else
+                                                                            <span class="get-voucher un-get" data-id="{{ $item->id }}">Đổi</span>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                @else
+                                                    <p>Không có mã giảm giá nào.</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </div>
                             </div> <!-- My Account Tab Content End -->
@@ -390,6 +457,7 @@
 @endsection
 
 @section('script')
+<script src="{{ asset('plugins/js/getVoucher.js') }}"></script>
 <script>
     function togglePassword(inputId, iconId) {
         var passwordInput = document.getElementById(inputId);

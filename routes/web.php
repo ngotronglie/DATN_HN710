@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\Ajax\ShopAjaxController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\FavoriteController;
+use App\Http\Controllers\Client\PointController;
 use App\Http\Controllers\ContactController;
 
 use App\Http\Controllers\Ajax\DeleteController;
@@ -105,6 +106,10 @@ Route::middleware('guest')->group(function () {
     Route::get('user/password/reset/{token}', [AccountController::class, 'showResetForm'])->name('user.password.reset');
     Route::post('user/password/reset', [AccountController::class, 'reset'])->name('user.password.update');
 });
+
+//Đổi điểm
+Route::get('/ajax/getVoucher', [PointController::class, 'redeemVoucher']);
+
 
 Route::middleware('auth')->group(function () {
     Route::post('user/logout', [AccountController::class, 'logout'])->name('user.logout');
