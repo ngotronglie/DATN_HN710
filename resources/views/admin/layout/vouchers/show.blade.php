@@ -74,6 +74,21 @@
                                         <td>{{ number_format($voucher->max_money, 0, ',', '.') }} VNĐ</td>
                                     </tr>
                                     <tr>
+                                        <th>Loại</th>
+                                        <td>
+                                            @if ($voucher->points_required == null)
+                                            <span class="badge bg-warning text-white">Thường</span>
+                                            @else
+                                            <span class="badge bg-primary text-white">Đổi điểm</span>
+                                            @endif                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Điểm đổi</th>
+                                        <td>
+                                            {{ $voucher->points_required ?? 0 }}
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <th>Thời gian tạo</th>
                                         <td>{{ \Carbon\Carbon::parse($voucher->created_at)->format('d/m/Y H:i') }}</td>
                                     </tr>
@@ -89,12 +104,6 @@
                                             @elseif ($voucher->is_active == 0)
                                                 <span class="badge bg-danger text-white">Không hoạt động</span>
                                             @endif
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>Điểm đổi</th>
-                                        <td>
-                                            {{ $voucher->points_required }}
                                         </td>
                                     </tr>
                                 </tbody>

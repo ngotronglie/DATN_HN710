@@ -12,59 +12,74 @@ class PointController extends Controller
 {
     public function redeemVoucher(Request $request)
     {
+        $user = Auth::user();
+
+        // Tìm mã giảm giá và kiểm tra điều kiện
         $voucher = Voucher::where('id', $request->id)
             ->where('is_active', true)
             ->whereDate('start_date', '<=', now())
             ->whereDate('end_date', '>=', now())
             ->firstOrFail();
 
-        $user = Auth::user();
+        if ($voucher->quantity == 0) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Mã giảm giá này đã hết lượt đổi',
+            ]);
+        }
 
         if ($user->points < $voucher->points_required) {
             return response()->json([
                 'status' => false,
-                'message' => 'Bạn không đủ điểm để đổi voucher này.',
+                'message' => 'Bạn không đủ điểm để đổi mã giảm giá này',
             ]);
         }
 
-        $user->points -= $voucher->points_required;
-        $user->save();
-
-        $point = $user->points;
-
+        // Kiểm tra nếu người dùng đã nhận mã giảm giá này rồi
         $userVoucher = UserVoucher::where('user_id', $user->id)
             ->where('voucher_id', $voucher->id)
-            ->first();
+            ->exists(); // Chỉ cần kiểm tra sự tồn tại, không cần tải dữ liệu
 
         if ($userVoucher) {
             return response()->json([
                 'status' => false,
-                'message' => 'Bạn đã nhận voucher này rồi.'
-            ]);
-        } else {
-            UserVoucher::create([
-                'user_id' => $user->id,
-                'voucher_id' => $voucher->id,
-                'status' => 'not_used',
-            ]);
-
-            $vouchers = UserVoucher::with('voucher')->where('user_id', $user->id)->get();
-
-            $html = $this->html($vouchers);
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Đổi voucher thành công.',
-                'voucher' => $voucher,
-                'point' => $point,
-                'html' => $html,
+                'message' => 'Bạn đã nhận mã giảm giá này rồi',
             ]);
         }
 
+        // Cập nhật số lượng mã giảm giá và điểm của người dùng
+        $voucher->decrement('quantity'); // Giảm số lượng mã giảm giá
+        $user->decrement('points', $voucher->points_required); // Giảm điểm người dùng
+
+        // Tạo bản ghi UserVoucher mới
+        UserVoucher::create([
+            'user_id' => $user->id,
+            'voucher_id' => $voucher->id,
+            'status' => 'not_used',
+        ]);
+
+        // Lấy lại số điểm của người dùng sau khi trừ đi
+        $point = $user->points;
+
+        // Lấy danh sách các mã giảm giá của người dùng
+        $vouchers = UserVoucher::with('voucher')->where('user_id', $user->id)->get();
+        $countVoucher = $voucher->quantity;
+
+        // Tạo HTML cho danh sách mã giảm giá
+        $html = $this->html($vouchers);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Đã đổi mã giảm giá thành công',
+            'countVoucher' => $countVoucher,
+            'point' => $point,
+            'html' => $html,
+        ]);
     }
 
 
-    private function html($uservouchers) {
+    private function html($uservouchers)
+    {
         $html = '';
 
         foreach ($uservouchers as $uservoucher) {
@@ -93,13 +108,13 @@ class PointController extends Controller
                                 <small>HSD: ' . \Carbon\Carbon::parse($uservoucher->voucher->end_date)->format('d/m/Y') . '</small>
                                 <br>
                                 <span class="badge ' .
-                                    ($uservoucher->status === 'used' ? 'bg-success' :
-                                    ($uservoucher->status === 'not_used' ? 'bg-primary' :
-                                    ($uservoucher->status === 'expired' ? 'bg-danger' : ''))) . '">
+                ($uservoucher->status === 'used' ? 'bg-success' :
+                    ($uservoucher->status === 'not_used' ? 'bg-primary' :
+                        ($uservoucher->status === 'expired' ? 'bg-danger' : ''))) . '">
                                     ' .
-                                    ($uservoucher->status === 'used' ? 'Đã dùng' :
-                                    ($uservoucher->status === 'not_used' ? 'Chưa dùng' :
-                                    ($uservoucher->status === 'expired' ? 'Hết hạn' : ''))) . '
+                ($uservoucher->status === 'used' ? 'Đã dùng' :
+                    ($uservoucher->status === 'not_used' ? 'Chưa dùng' :
+                        ($uservoucher->status === 'expired' ? 'Hết hạn' : ''))) . '
                                 </span>
                             </div>
                         </div>

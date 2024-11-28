@@ -410,11 +410,7 @@
                                                                         <small>HSD: {{ \Carbon\Carbon::parse($item->end_date)->format('d/m/Y') }}</small><br>
                                                                         <small>Điểm: {{ $item->points_required }}</small> <br>
 
-                                                                        @if($item->end_date < now())
-                                                                        <span class="badge bg-danger">
-                                                                            Hết hạn
-                                                                        </span>
-                                                                        @endif
+                                                                        <small class="quantityAl-{{$item->id}}">Còn lại: {{ $item->quantity }}</small> <br>
                                                                         @php
                                                                             $voucherClaimed = false;
                                                                             foreach ($item->users as $user) {
@@ -427,9 +423,10 @@
 
                                                                         @if ($voucherClaimed)
                                                                             <span class="done-get">Đã đổi</span>
-                                                                        @elseif ($item->end_date < now())
+                                                                        @elseif ($item->quantity == 0)
+                                                                        <span class="done-get">Đã hết</span>
                                                                         @else
-                                                                            <span class="get-voucher un-get" data-id="{{ $item->id }}">Đổi</span>
+                                                                            <span class="get-voucher un-get" data-id="{{$item->id}}">Đổi</span>
                                                                         @endif
                                                                     </div>
                                                                 </div>

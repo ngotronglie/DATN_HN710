@@ -154,9 +154,13 @@ class CheckoutController extends Controller
                 }
 
                 $discount=$voucher->discount;
-                $voucher->decrement('quantity', 1);
+                if ($voucher->points_required == null) {
+                    $voucher->decrement('quantity', 1);
+                } else {
+                }
+
             }
-    
+
             $order = Order::create([
                 'user_id' => $user ? $user->id : null,
                 'user_name' => $request->input('name'),

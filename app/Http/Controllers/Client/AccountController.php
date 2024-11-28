@@ -274,14 +274,11 @@ class AccountController extends Controller
         //     ->get();
 
         $voucherPoint = Voucher::where('points_required', '>', 0)
+        ->where('is_active', 1)
          ->with('users')
+         ->orderBy('id', 'desc')
          ->get();
 
-
-//dd($vouchers);
-        //$voucherPoint = Voucher::where('points_required', '>', 0)->get();
-
-        //dd($vouchers);
 
         $bills = Order::query()->where('user_id', $user->id)->with('voucher')->orderBy('id', 'desc')->get();
         return view('client.pages.account.my_account.my-account', compact('user', 'bills', 'vouchers', 'voucherPoint'));

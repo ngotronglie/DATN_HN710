@@ -22,6 +22,7 @@
 
                     if (res?.status) {
                         swalSuccess(mes);
+                        $('.quantityAl-'+ id).html(`Còn lại: ${res?.countVoucher}`);
                         $('#my-point').html(`Điểm của bạn: ${res?.point}`);
                         _this.empty()
                             .html('Đã đổi')

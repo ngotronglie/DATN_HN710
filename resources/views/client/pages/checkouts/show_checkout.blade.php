@@ -58,11 +58,11 @@
                                                                 @php
                                                                     $minMoney = $voucher->min_money;
                                                                     $maxMoney = $voucher->max_money;
-                                                                    $formattedMinMoney =  $minMoney >= 1_000_000 ? number_format ( $minMoney / 1_000_000, 0, ',','', ) 
-                                                                    . 'tr' : number_format( $minMoney / 1_000, 0,',','',) . 'k';        
+                                                                    $formattedMinMoney =  $minMoney >= 1_000_000 ? number_format ( $minMoney / 1_000_000, 0, ',','', )
+                                                                    . 'tr' : number_format( $minMoney / 1_000, 0,',','',) . 'k';
                                                                     $formattedMaxMoney =
                                                                         $maxMoney >= 1_000_000 ? number_format( $maxMoney / 1_000_000, 0,',','', )
-                                                                    . 'tr' : number_format(   $maxMoney / 1_000, 0,',', '', ) . 'k';                    
+                                                                    . 'tr' : number_format(   $maxMoney / 1_000, 0,',', '', ) . 'k';
                                                                 @endphp
                                                                 <small>Tối thiểu: {{ $formattedMinMoney }} - Tối đa:
                                                                     {{ $formattedMaxMoney }}</small>
@@ -242,7 +242,16 @@
                                                 </strong>
                                             </td>
                                         </tr>
-
+                                        @php
+                                             $pointsToAdd = floor($total / 100000) * 10;
+                                        @endphp
+                                        <tr class="cart-subtotal">
+                                            <th class="text-start ps-0" style="font-size: 17px">Nhận điểm</th>
+                                            <td class="text-end pe-0">
+                                                    <span class="amount">+{{$pointsToAdd}} điểm sau khi đơn hàng được giao thành công
+                                                    </span>
+                                            </td>
+                                        </tr>
                                     </tfoot>
                                 </table>
                             </div>
@@ -365,7 +374,7 @@
                     copyIcon.style.color = "green";
                     copyIcon.title = "Đã sao chép!";
 
-                    // Reset lại biểu tượng 
+                    // Reset lại biểu tượng
                     setTimeout(() => {
                         copyIcon.className = "fa fa-copy";
                         copyIcon.style.color = "blue";
@@ -379,7 +388,7 @@
                 e.preventDefault();
 
                 var formData = $(this).serialize();
-                
+
                 Swal.fire({
                     title: 'Đang xử lý...',
                     text: 'Vui lòng đợi trong giây lát.',
@@ -401,8 +410,8 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Đặt hàng thành công!',
-                                html: `<p style="font-size: 16px; font-weight: bold;">Mã đơn hàng #<span id="orderCode">${response.order.order_code}</span> 
-                           <i id="copyIcon" title="Sao chép" class="fa fa-copy" 
+                                html: `<p style="font-size: 16px; font-weight: bold;">Mã đơn hàng #<span id="orderCode">${response.order.order_code}</span>
+                           <i id="copyIcon" title="Sao chép" class="fa fa-copy"
                            style="cursor: pointer; color: blue; margin-left: 10px;"></i>
                        </p>
                        <hr style="border-top: 1px solid #ddd;">

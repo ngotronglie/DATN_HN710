@@ -127,8 +127,8 @@ class BlogController extends Controller
             ->where('end_date', '>=', Carbon::now()->startOfDay())
             ->where('quantity', '>', 0)
             ->inRandomOrder()
+            ->where('points_required', '=', null)
             ->first();
-
 
         $blog->increment('view');
 

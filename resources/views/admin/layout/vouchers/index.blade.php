@@ -72,6 +72,7 @@
                                     <th>STT</th>
                                     <th>Mã</th>
                                     <th>Giảm giá</th>
+                                    <th>Loại</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
@@ -82,6 +83,7 @@
                                     <th>STT</th>
                                     <th>Mã</th>
                                     <th>Giảm giá</th>
+                                    <th>Loại</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
@@ -95,6 +97,13 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->code }}</td>
                                     <td>{{ $item->discount }}%</td>
+                                    <td>
+                                        @if ($item->points_required == null)
+                                        <span class="badge bg-warning text-white">Thường</span>
+                                        @else
+                                        <span class="badge bg-primary text-white">Đổi điểm</span>
+                                        @endif
+                                    </td>
                                     <td style="width: 12%" class="text-center">
                                         <input type="checkbox" class="js-switch active " data-model="{{ $item->is_active }}"
                                             {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"
