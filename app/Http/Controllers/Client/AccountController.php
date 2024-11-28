@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateMyAccountRequest;
+use App\Models\District;
+use App\Models\Province;
 use App\Models\User;
+use App\Models\Ward;
 use Carbon\Carbon;
 use App\Mail\VerifyEmail;
 use Illuminate\Http\Request;
@@ -261,15 +265,23 @@ class AccountController extends Controller
     public function myAccount()
     {
         $user = Auth::user();
-
+//dd($user);
         if (!$user) {
             return redirect()->route('login');
         }
 
+        $address = $user->address; // "duong 1, Phường Trúc Bạch, Quận Ba Đình, Thành phố Hà Nội"
+
+// Tách địa chỉ thành các thành phần bằng cách sử dụng hàm explode()
+        $addressParts = explode(',', $address);
+
         $vouchers = UserVoucher::with('voucher')->where('user_id', $user->id)->get();
 
+        $provinces = Province::all();
+
         $bills = Order::query()->where('user_id', $user->id)->with('voucher')->orderBy('id', 'desc')->get();
-        return view('client.pages.account.my_account.my-account', compact('user', 'bills', 'vouchers'));
+
+        return view('client.pages.account.my_account.my-account', compact('user', 'bills', 'vouchers', 'provinces', 'addressParts'));
     }
 
     public function orderBillDetail($id)
@@ -300,42 +312,33 @@ class AccountController extends Controller
         }
     }
 
-    public function updateMyAcount(request $request, $id)
-    {
-        $request->validate([
-            'address' => 'required|string|max:255',
-            'phone' => 'required|string|regex:/^[0-9]{10}$/',
-            'date_of_birth' => 'required|date|before:today',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ], [
-            'address.required' => 'Địa chỉ là bắt buộc.',
-            'address.max' => 'Tối đa 255 kí tự.',
-            'phone.required' => 'Số điện thoại là bắt buộc.',
-            'phone.regex' => 'Số điện thoại không hợp lệ.',
-            'date_of_birth.required' => 'Ngày sinh là bắt buộc.',
-            'date_of_birth.date' => 'Ngày sinh không hợp lệ.',
-            'date_of_birth.before' => 'Ngày sinh không được là ngày hiện tại.',
-            'avatar.image' => 'Tệp tải lên phải là hình ảnh.',
-            'avatar.mimes' => 'Ảnh đại diện phải có định dạng: jpeg, png, jpg, gif.',
-            'avatar.max' => 'Ảnh đại diện không được lớn hơn 2MB.',
-        ]);
+    public function updateMyAcount(UpdateMyAccountRequest $request, $id)
+{
+    $user = User::findOrFail($id);
+    $province_code = $request->input('provinces');
+    $district_code = $request->input('districs');
+    $ward_code = $request->input('wards');
+    $address = $request->input('address');
 
-        $user = User::findOrFail($id);
+    $full_address = $address . ', ' . $ward_code . ', ' . $district_code . ', ' . $province_code;
+dd($full_address);
+    $data = $request->only(['phone', 'date_of_birth']);
+    $data['address'] = $full_address;
 
-        $data = $request->only(['phone', 'address', 'date_of_birth']);
-
-        if ($request->hasFile('avatar')) {
-
-            $data['avatar'] = Storage::put('users', $request->file('avatar'));
-            if (!empty($user->avatar) && Storage::exists($user->avatar)) {
-                Storage::delete($user->avatar);
-            }
-        } else {
-            $data['image'] = $user->avatar;
+    if ($request->hasFile('avatar')) {
+        $data['avatar'] = Storage::put('users', $request->file('avatar'));
+        if (!empty($user->avatar) && Storage::exists($user->avatar)) {
+            Storage::delete($user->avatar);
         }
-        $user->update($data);
-        return redirect()->route('my_account')->with('success', 'Cập nhật thông tin thành công');
+    } else {
+        $data['avatar'] = $user->avatar;
     }
+
+    $user->update($data);
+
+    return redirect()->route('my_account')->with('success', 'Cập nhật thông tin thành công');
+}
+
 
     public function updatePassword(Request $request, $id)
     {

@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\StatisticsController;
+use App\Http\Controllers\Ajax\LocationController;
 use App\Http\Controllers\Ajax\ShopAjaxController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\FavoriteController;
@@ -49,6 +50,11 @@ use Illuminate\Support\Facades\Route;
 
 // Trang chủ
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+
+//ajax get location
+Route::get('ajax/location/getDistrics', [LocationController::class, 'getDistrics']);
+Route::get('ajax/location/getWards', [LocationController::class, 'getWards']);
 
 // Shop
 Route::get('/shops', [ShopController::class, 'index'])->name('shops.index');
