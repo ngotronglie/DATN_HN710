@@ -23,7 +23,7 @@ use App\Http\Controllers\ContactController;
 
 use App\Http\Controllers\Ajax\DeleteController;
 use App\Http\Controllers\Ajax\ChangeActiveController;
-
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\BlogController as ClientBlogController;
 use App\Http\Controllers\Client\ShopController;
@@ -91,6 +91,7 @@ Route::get('/contact', function () {
  Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 
  Route::post('/place-order', [CheckoutController::class, 'placeOrder'])->name('placeOrder');
+ Route::get('/payment-return', [CheckoutController::class, 'paymentReturn'])->name('paymentReturn');
  Route::post('/apply-voucher', [CheckoutController::class, 'applyVoucher'])->name('voucher.apply');
  Route::get('/billSearch', [CheckoutController::class, 'billSearch'])->name('bill.search');
 // Tài khoản
