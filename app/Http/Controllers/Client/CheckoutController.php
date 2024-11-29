@@ -24,19 +24,37 @@ use Illuminate\Support\Facades\Session;
 
 class CheckoutController extends Controller
 {
+    public function storeData(Request $request)
+    {
+        $items = $request->input('items');
+        $total = $request->input('total');
 
-    public function index(Request $request)
+        session(['user_cart' => [
+            'cart_items' => $items,
+            'cart_total' => $total
+        ]]);
+
+        return response()->json(['success' => true, 'message' => 'Data stored in session']);
+    }
+    public function index()
     {
         $user = auth()->user();
         $validVouchers = collect();
         session()->forget(['discount', 'totalAmountWithDiscount', 'voucher_id']);
-        $items = json_decode($request->input('item'), true);
+
+        $cartData = session('user_cart');
+
+        if (!$cartData) {
+            return redirect()->back()->with('error', 'Không có sản phẩm nào trong giỏ hàng.');
+        }
+
+        $items = $cartData['cart_items'];
+        $total = $cartData['cart_total'];
 
         if (empty($items)) {
             return redirect()->back()->with('error', 'Không có sản phẩm nào được chọn.');
         }
 
-        $total = $request->input('totalMyprd');  // Tổng tiền từ frontend
         $ids = array_column($items, 'id');  // Lấy mảng các id từ items
         $productVariants = ProductVariant::whereIn('id', $ids)->get();
 
@@ -45,7 +63,6 @@ class CheckoutController extends Controller
         }
 
         $products = $productVariants->map(function ($variant) use ($items) {
-
             foreach ($items as $item) {
                 if ($variant->id == $item['id']) {
                     $variant->name = $variant->product->name;
@@ -71,11 +88,13 @@ class CheckoutController extends Controller
                         ->where('max_money', '>=', $total);
                 })
                 ->get();
+
             session(['totalAmount' => $total]);
         }
 
         return view('client.pages.checkouts.show_checkout', ['products' => $products, 'total' => $total, 'validVouchers' => $validVouchers]);
     }
+
 
     function generateUniqueOrderCode()
     {
@@ -339,7 +358,7 @@ class CheckoutController extends Controller
             $totalAmountWithDiscount = $totalAmount + $shippingFee;
         }
 
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'phone' => 'required|string|regex:/^0[0-9]{9}$/',
@@ -357,13 +376,6 @@ class CheckoutController extends Controller
             'payment_method.required' => 'Vui lòng chọn phương thức thanh toán.',
             'payment_method.in' => 'Phương thức thanh toán không hợp lệ.',
         ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors()->all()
-            ]);
-        }
 
         try {
             DB::beginTransaction();
@@ -406,7 +418,7 @@ class CheckoutController extends Controller
                     'discount' => $discount,
                     'total_amount' => $totalAmountWithDiscount,
                     'payment_method' => $request->input('payment_method'),
-                    'payment_status' => $request->input('payment_method') === 'cod' ? 'unpaid' : 'paid',
+                    'payment_status' => 'unpaid',
                     'order_code' => $this->generateUniqueOrderCode(),
                     'note' => $request->input('note', ''),
                 ]);
@@ -484,35 +496,137 @@ class CheckoutController extends Controller
                 if ($admin) {
                     Notification::send($admin, new OrderPlacedNotification($order));
                 }
-
             } elseif ($request->payment_method == "online") {
                 $order_code = $this->generateUniqueOrderCode();
+                $discount = null;
+                if ($voucherId) {
+                    $voucher = Voucher::lockForUpdate()->find($voucherId);
+                    if (!$voucher || $voucher->quantity < 1) {
+                        throw new \Exception('Voucher này đã hết số lượng sử dụng.');
+                    }
+
+                    if ($user) {
+                        $usedVoucher = DB::table('user_vouchers')
+                            ->where('user_id', $user->id)
+                            ->where('voucher_id', $voucher->id)
+                            ->where('status', 'used')
+                            ->first();
+
+                        if ($usedVoucher) {
+                            throw new \Exception('Bạn đã sử dụng voucher này trước đây.');
+                        }
+
+                        DB::table('user_vouchers')
+                            ->where('user_id', $user->id)
+                            ->where('voucher_id', $voucher->id)
+                            ->update(['status' => 'used']);
+                    }
+
+                    $discount = $voucher->discount;
+                    $voucher->decrement('quantity', 1);
+                }
+
+                $order = Order::create([
+                    'user_id' => $user ? $user->id : null,
+                    'user_name' => $request->input('name'),
+                    'user_email' => $request->input('email'),
+                    'user_phone' => $request->input('phone'),
+                    'user_address' => $request->input('address'),
+                    'voucher_id' => $voucherId,
+                    'discount' => $discount,
+                    'total_amount' => $totalAmountWithDiscount,
+                    'payment_method' => $request->input('payment_method'),
+                    'payment_status' => 'unpaid',
+                    'order_code' => $order_code,
+                    'note' => $request->input('note', ''),
+                ]);
+
+                // Xử lý các sản phẩm trong đơn hàng
+                foreach ($request->input('product_name') as $index => $productName) {
+                    $sizeName = $request->input('size_name')[$index];
+                    $colorName = $request->input('color_name')[$index];
+                    $quantity = $request->input('quantity')[$index];
+                    $price = $request->input('price')[$index];
+
+                    $productVariant = ProductVariant::whereHas('product', function ($query) use ($productName) {
+                        $query->where('name', $productName);
+                    })->whereHas('size', function ($query) use ($sizeName) {
+                        $query->where('name', $sizeName);
+                    })->whereHas('color', function ($query) use ($colorName) {
+                        $query->where('name', $colorName);
+                    })->first();
+
+                    if ($productVariant) {
+                        if ($productVariant->quantity < $quantity) {
+                            throw new \Exception("Sản phẩm không đủ số lượng trong kho.");
+                        }
+
+                        $order->orderDetails()->create([
+                            'product_variant_id' => $productVariant->id,
+                            'quantity' => $quantity,
+                            'price' => $price,
+                            'product_name' => $productName,
+                            'size_name' => $sizeName,
+                            'color_name' => $colorName,
+                        ]);
+
+                        $productVariant->decrement('quantity', $quantity);
+                    }
+                }
+
+                // Xóa sản phẩm đã đặt khỏi giỏ hàng
+                $productVariantIds = $request->input('product_variant_ids', []);
+                if (!empty($productVariantIds)) {
+                    if ($user) {
+                        $cart = Cart::where('user_id', $user->id)->first();
+                        if ($cart) {
+                            foreach ($productVariantIds as $productVariantId) {
+                                $cartItem = $cart->items()->where('product_variant_id', $productVariantId)->first();
+                                if ($cartItem) {
+                                    $cartItem->delete();
+                                }
+                            }
+                        }
+
+                        $count = CartItem::whereHas('cart', function ($query) use ($user) {
+                            $query->where('user_id', $user->id);
+                        })
+                            ->distinct('product_variant_id')
+                            ->count('product_variant_id');
+                    } else {
+                        $cart = Session::get('cart', []);
+                        $updatedItems = collect($cart['items'])->filter(function ($item) use ($productVariantIds) {
+                            return !in_array($item['product_variant_id'], $productVariantIds);
+                        })->values()->toArray();
+                        $cart['items'] = $updatedItems;
+                        session()->put('cart', $cart);
+
+                        $count = count($updatedItems);
+                    }
+                }
+
+                session()->forget('voucher_id');
+
+                DB::commit();
+
                 return $this->vnpay($totalAmountWithDiscount, $order_code);
             }
 
             DB::commit();
 
-            return response()->json([
-                'success' => true,
-                'order' => $order,
-                'count' => $count,
-            ]);
-            
+            return view('client.pages.checkouts.success', compact('order'))->with('success', 'Đặt hàng thành công');
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ]);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
     public function vnpay($total_amount, $order_code)
     {
-        $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"; // URL để gửi yêu cầu thanh toán đến VNPAY
-        $vnp_Returnurl = "http://datn_hn710.test/payment-return"; // Đường dẫn trả về sau khi thanh toán thành công (người dùng sẽ được chuyển tới trang này)
-        $vnp_TmnCode = "2T9UE2DJ"; //Mã website tại VNPAY
-        $vnp_HashSecret = "O784PFF5TJIP111QHSFZ96VDL6CKN5DG"; //Chuỗi bí mật
+        $vnp_TmnCode = config('vnpayment.tmn_code');
+        $vnp_HashSecret = config('vnpayment.hash_secret');
+        $vnp_Returnurl = config('vnpayment.return_url');
+        $vnp_Url = config('vnpayment.url');
 
         $vnp_TxnRef = $order_code; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
         $vnp_OrderInfo = 'Thanh toan don hang qua VNPAY'; // Mô tả ngắn về đơn hàng, gửi cho VNPAY
@@ -623,50 +737,29 @@ class CheckoutController extends Controller
     {
         // Lấy các tham số trả về từ VNPAY
         $vnp_TxnRef = $request->input('vnp_TxnRef'); // Mã đơn hàng
-        $vnp_SecureHash = $request->input('vnp_SecureHash'); // Mã bảo mật
         $vnp_ResponseCode = $request->input('vnp_ResponseCode'); // Mã phản hồi từ VNPAY
-        $vnp_Amount = $request->input('vnp_Amount'); // Số tiền thanh toán
-        $vnp_OrderInfo = $request->input('vnp_OrderInfo'); // Thông tin đơn hàng
-        $vnp_TransactionNo = $request->input('vnp_TransactionNo'); // Mã giao dịch
-        $vnp_CurrCode = $request->input('vnp_CurrCode'); // Mã tiền tệ
 
-        // Chuỗi thông tin dùng để tạo mã bảo mật
-        $hashdata = '';
-        foreach ($request->all() as $key => $value) {
-            if ($key != 'vnp_SecureHash' && $key != 'vnp_SecureHashType') {
-                $hashdata .= urlencode($key) . "=" . urlencode($value) . '&';
+        $order = Order::where('order_code', $vnp_TxnRef)->first();
+
+        if ($vnp_ResponseCode == '00') {
+            // Thanh toán thành công
+            if ($order) {
+                $order->payment_status = 'paid'; // Cập nhật trạng thái đơn hàng thành "Đã thanh toán"
+                $order->save();
+
+                // Gửi email
+                Mail::to($order->user_email)->send(new InvoiceMail($order));
+
+                $admin = User::whereIn('role', ['1', '2'])->get();
+                if ($admin) {
+                    Notification::send($admin, new OrderPlacedNotification($order));
+                }
             }
-        }
 
-        // Mã bí mật của VNPAY
-        $vnp_HashSecret = "O784PFF5TJIP111QHSFZ96VDL6CKN5DG"; // Cần thay đổi thành mã bí mật của bạn
-
-        // Tính toán mã bảo mật (hash) từ các tham số đã gửi
-        $vnpSecureHashCheck = hash_hmac('sha512', rtrim($hashdata, '&'), $vnp_HashSecret);
-
-        // Kiểm tra xem mã bảo mật có khớp không
-        if ($vnpSecureHashCheck == $vnp_SecureHash) {
-            // Nếu mã bảo mật hợp lệ, kiểm tra mã phản hồi
-            if ($vnp_ResponseCode == '00') {
-                // Thanh toán thành công
-                // Cập nhật trạng thái đơn hàng trong cơ sở dữ liệu (đã thanh toán thành công)
-                // $order = Order::where('order_code', $vnp_TxnRef)->first();
-                // if ($order) {
-                //     $order->status = 'paid'; // Cập nhật trạng thái đơn hàng thành "Đã thanh toán"
-                //     $order->transaction_no = $vnp_TransactionNo;
-                //     $order->save();
-                // }
-
-                // Thông báo thanh toán thành công và chuyển hướng người dùng
-                return view('client.pages.checkouts.success'); // Điều hướng tới trang thành công
-            } else {
-                // Thanh toán không thành công
-                // Thực hiện hành động khi thanh toán không thành công (cập nhật trạng thái, thông báo lỗi, v.v.)
-                return view('client.pages.checkouts.fail'); // Điều hướng tới trang thất bại
-            }
+            return view('client.pages.checkouts.success', compact('order'));
         } else {
-            // Nếu mã bảo mật không hợp lệ
-            return view('client.pages.checkouts.fail'); // Điều hướng tới trang lỗi
+            // Thanh toán không thành công
+            return view('client.pages.checkouts.fail');
         }
     }
 }

@@ -137,8 +137,48 @@
         });
     };
 
-    $(document).on('change', '.checkBoxItem, .checkCart', function () {
+    // $(document).on('change', '.checkBoxItem, .checkCart', function () {
 
+    //     if ($(this).hasClass('checkCart')) {
+    //         let isCheckAll = $(this).prop('checked');
+    //         $('.checkBoxItem').prop('checked', isCheckAll);
+    //     }
+
+    //     updateCheckedItemsAndTotal();
+    // });
+
+    // function updateCheckedItemsAndTotal() {
+    //     let total = 0;
+    //     let items = [];
+
+    //     $('.checkBoxItem:checked').each(function () {
+    //         let checkbox = $(this);
+
+    //         let price = parseFloat(checkbox.attr('data-total')) || 0;
+    //         total += price;
+
+    //         let item = {
+    //             id: checkbox.attr('data-id'),
+    //             quantity: checkbox.attr('data-quantity')
+    //         };
+    //         items.push(item);
+    //     });
+
+    //     let formatTotal = new Intl.NumberFormat('vi-VN').format(total) + ' đ';
+    //     let formatTotalShip = new Intl.NumberFormat('vi-VN').format(total + 30000) + ' đ';
+
+    //     if (total > 0) {
+    //         $('.totalAll').html(formatTotal);
+    //         $('.total-amount').html(formatTotalShip);
+    //     } else {
+    //         $('.totalAll').html('0 đ');
+    //         $('.total-amount').html('0 đ');
+    //     }
+    //     $('#item').val(JSON.stringify(items));
+    //     $('#totalMyprd').val(total);
+    // }
+
+    $(document).on('change', '.checkBoxItem, .checkCart', function () {
         if ($(this).hasClass('checkCart')) {
             let isCheckAll = $(this).prop('checked');
             $('.checkBoxItem').prop('checked', isCheckAll);
@@ -153,7 +193,6 @@
 
         $('.checkBoxItem:checked').each(function () {
             let checkbox = $(this);
-
             let price = parseFloat(checkbox.attr('data-total')) || 0;
             total += price;
 
@@ -176,7 +215,24 @@
         }
         $('#item').val(JSON.stringify(items));
         $('#totalMyprd').val(total);
+
+        $.ajax({
+            url: '/store-session-data',
+            method: 'POST',
+            data: {
+                items: items,
+                total: total,
+                _token: $('meta[name="csrf-token"]').attr('content') 
+            },
+            success: function(response) {
+                console.log('Session data stored successfully');
+            },
+            error: function(xhr, status, error) {
+                console.error('Failed to store session data:', error);
+            }
+        });
     }
+
 
     $(document).ready(function () {
         HT.upQuatity();

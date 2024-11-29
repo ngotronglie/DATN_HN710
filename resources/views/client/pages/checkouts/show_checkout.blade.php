@@ -58,11 +58,11 @@
                                                                 @php
                                                                     $minMoney = $voucher->min_money;
                                                                     $maxMoney = $voucher->max_money;
-                                                                    $formattedMinMoney =  $minMoney >= 1_000_000 ? number_format ( $minMoney / 1_000_000, 0, ',','', ) 
-                                                                    . 'tr' : number_format( $minMoney / 1_000, 0,',','',) . 'k';        
+                                                                    $formattedMinMoney =  $minMoney >= 1_000_000 ? number_format ( $minMoney / 1_000_000, 0, ',','', )
+                                                                    . 'tr' : number_format( $minMoney / 1_000, 0,',','',) . 'k';
                                                                     $formattedMaxMoney =
                                                                         $maxMoney >= 1_000_000 ? number_format( $maxMoney / 1_000_000, 0,',','', )
-                                                                    . 'tr' : number_format(   $maxMoney / 1_000, 0,',', '', ) . 'k';                    
+                                                                    . 'tr' : number_format(   $maxMoney / 1_000, 0,',', '', ) . 'k';
                                                                 @endphp
                                                                 <small>Tối thiểu: {{ $formattedMinMoney }} - Tối đa:
                                                                     {{ $formattedMaxMoney }}</small>
@@ -98,7 +98,7 @@
                 </div>
 
             </div>
-            <form id="checkoutForm" action="{{ route('placeOrder') }}" method="post">
+            <form action="{{ route('placeOrder') }}" method="post">
                 @csrf
                 <div class="row mb-n4">
 
@@ -114,6 +114,9 @@
                                         <label>Tên người nhận</label>
                                         <input placeholder="Nhập tên người nhận" type="text" name="name"
                                             value="{{ old('name', Auth::user()->name ?? '') }}">
+                                        @error('name')
+                                            <small class="text-danger">{{$message}}</small>
+                                        @enderror
                                     </div>
                                 </div>
                                 <!-- Name Input End -->
@@ -124,6 +127,9 @@
                                         <label>Email <span class="required">*</span></label>
                                         <input placeholder="Nhập email" type="email" name="email"
                                             value="{{ old('email', Auth::user()->email ?? '') }}">
+                                        @error('email')
+                                            <small class="text-danger">{{$message}}</small>
+                                        @enderror
                                     </div>
                                 </div>
                                 <!-- Email Input End -->
@@ -134,6 +140,9 @@
                                         <label>Địa chỉ <span class="required">*</span></label>
                                         <input placeholder="Nhập địa chỉ giao hàng" type="text" name="address"
                                             value="{{ old('address', Auth::user()->address ?? '') }}">
+                                        @error('address')
+                                            <small class="text-danger">{{$message}}</small>
+                                        @enderror
                                     </div>
                                 </div>
                                 <!-- Address Input End -->
@@ -144,6 +153,9 @@
                                         <label>Điện thoại <span class="required">*</span></label>
                                         <input placeholder="Nhập số điện thoại" type="text" name="phone"
                                             value="{{ old('phone', Auth::user()->phone ?? '') }}">
+                                        @error('phone')
+                                            <small class="text-danger">{{$message}}</small>
+                                        @enderror
                                     </div>
                                 </div>
                                 <!-- Phone Input End -->
@@ -251,6 +263,9 @@
                             <!-- Payment Options Start -->
                             <div class="payment-accordion-order-button">
                                 <div class="payment-options">
+                                    @error('payment_method')
+                                        <small class="text-danger">{{$message}}</small>
+                                    @enderror
                                     <div class="form-check mb-3">
                                         <input class="form-check-input" type="radio" name="payment_method"
                                             id="bankTransfer" value="cod" checked>
@@ -279,8 +294,7 @@
 
 
                                 <div class="order-button-payment">
-                                    <button type="submit" class="btn btn-dark btn-hover-primary rounded-0 w-100">Thanh
-                                        toán</button>
+                                    <button type="submit" class="btn btn-dark btn-hover-primary rounded-0 w-100">Đặt hàng</button>
                                 </div>
                             </div>
                             <!-- Payment Options End -->
@@ -345,125 +359,6 @@
                             icon: 'error',
                             title: 'Lỗi',
                             text: 'Đã xảy ra lỗi khi áp dụng mã giảm giá.',
-                        });
-                    }
-                });
-            });
-
-            // sao chép mã đơn hàng
-            function copyToClipboard(text) {
-                var tempInput = document.createElement("input");
-                tempInput.value = text;
-                document.body.appendChild(tempInput);
-                tempInput.select();
-                document.execCommand("copy");
-                document.body.removeChild(tempInput);
-
-                var copyIcon = document.getElementById("copyIcon");
-                if (copyIcon) {
-                    copyIcon.className = "fa fa-check";
-                    copyIcon.style.color = "green";
-                    copyIcon.title = "Đã sao chép!";
-
-                    // Reset lại biểu tượng 
-                    setTimeout(() => {
-                        copyIcon.className = "fa fa-copy";
-                        copyIcon.style.color = "blue";
-                        copyIcon.title = "Sao chép";
-                    }, 3000);
-                }
-            }
-
-            // checkout
-            $('#checkoutForm').on('submit', function(e) {
-                e.preventDefault();
-
-                var formData = $(this).serialize();
-                
-                Swal.fire({
-                    title: 'Đang xử lý...',
-                    text: 'Vui lòng đợi trong giây lát.',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
-
-                $.ajax({
-                    url: '{{ route('placeOrder') }}',
-                    type: 'POST',
-                    data: formData,
-                    success: function(response) {
-                        $('.header-action-num').html(response.count);
-                        Swal.close();
-
-                        if (response.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Đặt hàng thành công!',
-                                html: `<p style="font-size: 16px; font-weight: bold;">Mã đơn hàng #<span id="orderCode">${response.order.order_code}</span> 
-                           <i id="copyIcon" title="Sao chép" class="fa fa-copy" 
-                           style="cursor: pointer; color: blue; margin-left: 10px;"></i>
-                       </p>
-                       <hr style="border-top: 1px solid #ddd;">
-                       <p style="font-size: 14px; color: #333;">
-                           <strong>Thông tin giao hàng:</strong><br>
-                           Tên: ${response.order.user_name}<br>
-                           Điện thoại: ${response.order.user_phone}<br>
-                           Địa chỉ: ${response.order.user_address}
-                       </p>
-                       <hr style="border-top: 1px solid #ddd;">
-                       <p style="font-size: 14px; color: #333;">
-                           <strong>Phương thức thanh toán:</strong><br>
-                           ${response.order.payment_method === 'cod' ? 'Thanh toán khi nhận hàng (COD)' : 'Thanh toán trực tuyến'}
-                       </p>`,
-                                showCancelButton: true,
-                                cancelButtonText: 'Tiếp tục mua hàng',
-                                confirmButtonText: 'Tra cứu đơn hàng',
-                                showConfirmButton: true,
-                                allowOutsideClick: false,
-                                allowEscapeKey: false,
-                                didOpen: () => {
-                                    // Gán sự kiện cho nút sao chép sau khi SweetAlert được mở
-                                    document.getElementById('copyIcon')
-                                        .addEventListener('click', function() {
-                                            copyToClipboard(response.order
-                                                .order_code);
-                                        });
-                                }
-                            }).then((result) => {
-                                if (result.dismiss === Swal.DismissReason.cancel) {
-                                    const redirectRoute = '{{ route('home') }}';
-                                    window.location.href = redirectRoute;
-                                } else if (result.isConfirmed) {
-                                    const trackOrderRoute =
-                                        '{{ route('bill.search') }}';
-                                    window.location.href = trackOrderRoute;
-                                }
-                            });
-
-                            $('#checkoutForm')[0].reset();
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Đặt hàng thất bại!',
-                                html: response.message ?
-                                    `<p style="font-size: 14px; color: #666;">${response.message}</p>` :
-                                    `<p style="font-size: 14px; color: #666;">${response.errors.join('<br>')}</p>`,
-                                confirmButtonText: 'Thử lại',
-                                allowOutsideClick: false,
-                                allowEscapeKey: false
-                            });
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Lỗi',
-                            html: `<p style="font-size: 14px; color: #666;">Vui lòng xem lại</p>`,
-                            confirmButtonText: 'Thử lại',
-                            allowOutsideClick: false,
-                            allowEscapeKey: false
                         });
                     }
                 });

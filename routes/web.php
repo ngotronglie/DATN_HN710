@@ -19,11 +19,9 @@ use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\Ajax\ShopAjaxController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\FavoriteController;
-use App\Http\Controllers\ContactController;
 
 use App\Http\Controllers\Ajax\DeleteController;
 use App\Http\Controllers\Ajax\ChangeActiveController;
-use App\Http\Controllers\BankController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\BlogController as ClientBlogController;
 use App\Http\Controllers\Client\ShopController;
@@ -88,7 +86,8 @@ Route::get('/contact', function () {
     return view('client.pages.contact');
 });
 // Checkout
- Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+ Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+ Route::post('/store-session-data', [CheckoutController::class, 'storeData']);
 
  Route::post('/place-order', [CheckoutController::class, 'placeOrder'])->name('placeOrder');
  Route::get('/payment-return', [CheckoutController::class, 'paymentReturn'])->name('paymentReturn');
