@@ -29,11 +29,36 @@ class LocationController extends Controller
         return response()->json($response);
     }
 
+    public function getDistricts(Request $request)
+    {
+        $cityCode = $request->input('city_code');
+
+        if (!$cityCode) {
+            return response()->json([], 400);
+        }
+
+        $districts = District::where('province_code', $cityCode)->get(['code', 'full_name']);
+        return response()->json($districts, 200);
+    }
+
+    public function getWardLoad(Request $request)
+    {
+        $districtsCode = $request->input('districtsCode');
+
+        if (!$districtsCode) {
+            return response()->json([], 400);
+        }
+
+        $districts = Ward::where('district_code', $districtsCode)->get(['code', 'full_name']);
+        return response()->json($districts, 200);
+    }
+
+
     public function renderDisHtml($value)
     {
         $html = '<option value="0">[Chọn Quận/Huyện]</option>';
-        foreach ($value as $value) {
-            $html .= '<option value="' . $value->code . '">' . $value->name . '</option>';
+        foreach ($value as $item) {
+            $html .= '<option value="' . $item->code . '">' . $item->name . '</option>';
         }
         return $html;
     }
@@ -41,8 +66,8 @@ class LocationController extends Controller
     public function renderWardHtml($value)
     {
         $html = '<option value="0">[Chọn Phường/Xã]</option>';
-        foreach ($value as $value) {
-            $html .= '<option value="' . $value->code . '">' . $value->name . '</option>';
+        foreach ($value as $item) {
+            $html .= '<option value="' . $item->code . '">' . $item->name . '</option>';
         }
         return $html;
     }

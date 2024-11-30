@@ -32,9 +32,9 @@
                     <!-- My Account Page Start -->
                     <div class="myaccount-page-wrapper">
                         <!-- My Account Tab Menu Start -->
-                        
+
                             <!-- My Account Tab Menu End -->
-            
+
                             <!-- My Account Tab Content Start -->
                             <div class="container">
                                 <div class="tab-content" id="myaccountContent">
@@ -45,17 +45,17 @@
                                             <div style="display: flex; justify-content: center; align-items: center; position: relative; margin-bottom: 20px;">
                                                 <!-- Title -->
                                                 <h3 style="font-size: 24px; font-weight: bold; text-align: center; margin: 0;">Chi tiết đơn hàng #{{ $order->order_code }}</h3>
-                                                
+
                                                 <!-- Close Icon -->
-                                                <a href="{{ route('my_account') }}" 
+                                                <a href="{{ route('my_account') }}"
                                                    style="position: absolute; right: 0; text-decoration: none; color: #8ed4f7; font-weight: 500; font-size: 24px; display: flex; align-items: center; transition: color 0.3s ease;"
                                                    onmouseover="this.style.color='#0056b3'" onmouseout="this.style.color='#8ed4f7'">
                                                     <i class="fa fa-times-circle" style="font-size: 24px;"></i>
                                                 </a>
                                             </div>
-                                            
-                                            
-            
+
+
+
                                             <!-- Receiver Info -->
                                             <div class="bill-card-body">
                                                 <div class="bill-info" style="display: flex; flex-direction: column; gap: 12px;">
@@ -69,7 +69,17 @@
                                                         <strong style="font-weight: 600;">Điện thoại:</strong> <span>{{ $order->user_phone }}</span>
                                                     </div>
                                                     <div class="info-row" style="display: flex; justify-content: space-between;">
-                                                        <strong style="font-weight: 600;">Địa chỉ:</strong> <span>{{ $order->user_address }}</span>
+                                                        <strong style="font-weight: 600;">Địa chỉ:</strong>
+                                                        <span>
+                                                            {{ implode(', ', array_filter([
+                                                                $addressData['addressDetail'],
+                                                                $addressData['ward'],
+                                                                $addressData['district'],
+                                                                $addressData['province']
+                                                            ], function($value) {
+                                                                return !is_null($value) && $value !== '';
+                                                            })) }}
+                                                        </span>
                                                     </div>
                                                     <!-- Total Amount Before Discount -->
                                                     <div class="info-row" style="display: flex; justify-content: space-between;">
@@ -103,10 +113,10 @@
                                                     </div>
                                                 </div>
                                             </div>
-            
+
                                             <!-- Horizontal Divider -->
                                             <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
-            
+
                                             <!-- Order Details -->
                                             <div class="myaccount-table"
                                                  style="display: grid; grid-template-columns: {{ $order->orderDetails->count() === 1 ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))' }}; gap: 20px;">
@@ -150,14 +160,14 @@
                                     </div>
                                 </div>
                             </div> <!-- My Account Tab Content End -->
-                      
+
                     </div>
                     <!-- My Account Page End -->
                 </div>
             </div>
-            
+
 
         </div>
     </div>
-   
+
 @endsection

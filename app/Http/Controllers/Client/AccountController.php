@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateMyAccountRequest;
 use App\Models\District;
+use App\Models\OrderDetail;
 use App\Models\Province;
 use App\Models\User;
 use App\Models\Ward;
@@ -265,14 +266,13 @@ class AccountController extends Controller
     public function myAccount()
     {
         $user = Auth::user();
-//dd($user);
+
         if (!$user) {
             return redirect()->route('login');
         }
 
-        $address = $user->address; // "duong 1, Phường Trúc Bạch, Quận Ba Đình, Thành phố Hà Nội"
+        $address = $user->address;
 
-// Tách địa chỉ thành các thành phần bằng cách sử dụng hàm explode()
         $addressParts = explode(',', $address);
 
         $vouchers = UserVoucher::with('voucher')->where('user_id', $user->id)->get();
@@ -295,7 +295,18 @@ class AccountController extends Controller
             ->where('user_id', $user->id)
             ->firstOrFail();
 
-        return view('client.pages.account.my_account.bill-detail', compact('user', 'order'));
+        $address = $order->user_address;
+
+        $addressParts = explode(',', $address);
+
+        $addressData = [
+            'province' => isset($addressParts[3]) ? Province::where('code', trim($addressParts[3]))->value('full_name') : null,
+            'district' => isset($addressParts[2]) ? District::where('code', trim($addressParts[2]))->value('full_name') : null,
+            'ward' => isset($addressParts[1]) ? Ward::where('code', trim($addressParts[1]))->value('full_name') : null,
+            'addressDetail' => isset($addressParts[0]) ? $addressParts[0] : null,
+        ];
+
+        return view('client.pages.account.my_account.bill-detail', compact('user', 'order', 'addressData'));
     }
 
     public function cancelOrder($id)
@@ -321,7 +332,7 @@ class AccountController extends Controller
     $address = $request->input('address');
 
     $full_address = $address . ', ' . $ward_code . ', ' . $district_code . ', ' . $province_code;
-dd($full_address);
+
     $data = $request->only(['phone', 'date_of_birth']);
     $data['address'] = $full_address;
 

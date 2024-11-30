@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 
 use App\Models\CartItem;
+use App\Models\Province;
 use App\Notifications\OrderPlacedNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
@@ -75,7 +76,10 @@ class CheckoutController extends Controller
             session(['totalAmount' => $total]);
         }
 
-        return view('client.pages.checkouts.show_checkout', ['products' => $products, 'total' => $total, 'validVouchers' => $validVouchers]);
+        $provinces = Province::all();
+
+
+        return view('client.pages.checkouts.show_checkout', ['products' => $products, 'total' => $total, 'validVouchers' => $validVouchers, 'provinces' => $provinces]);
     }
 
     function generateUniqueOrderCode()
@@ -156,7 +160,7 @@ class CheckoutController extends Controller
                 $discount=$voucher->discount;
                 $voucher->decrement('quantity', 1);
             }
-    
+
             $order = Order::create([
                 'user_id' => $user ? $user->id : null,
                 'user_name' => $request->input('name'),

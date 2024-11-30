@@ -14,28 +14,37 @@ class UpdateMyAccountRequest extends FormRequest
     public function rules()
     {
         return [
-            'provinces' => 'required',
-            'districs' => 'required',
-            'wards' => 'required',
-            'address' => 'required|string|max:255',
-            'phone' => 'required|string|regex:/^[0-9]{10}$/',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'provinces' => 'required|exists:provinces,code', // Tỉnh/thành phố phải tồn tại trong bảng provinces
+            'districs' => 'required|exists:districts,code',   // Quận/huyện phải tồn tại trong bảng districs
+            'wards' => 'required|exists:wards,code',         // Phường/xã phải tồn tại trong bảng wards
+            'address' => 'required|string|max:255',        // Địa chỉ tối đa 255 ký tự
+            'phone' => [
+                'required',
+                'string',
+                'regex:/^(0|\+84)[0-9]{9}$/', // Số điện thoại bắt đầu bằng 0 hoặc +84 và dài 10 chữ số
+            ],
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Ảnh đại diện
         ];
     }
 
     public function messages()
-    {
-        return [
-            'provinces.required' => 'Vui lòng chọn tỉnh/thành phố.',
-            'districs.required' => 'Vui lòng chọn quận/huyện.',
-            'wards.required' => 'Vui lòng chọn phường/xã.',
-            'address.required' => 'Địa chỉ là bắt buộc.',
-            'address.max' => 'Tối đa 255 kí tự.',
-            'phone.required' => 'Số điện thoại là bắt buộc.',
-            'phone.regex' => 'Số điện thoại không hợp lệ.',
-            'avatar.image' => 'Tệp tải lên phải là hình ảnh.',
-            'avatar.mimes' => 'Ảnh đại diện phải có định dạng: jpeg, png, jpg, gif.',
-            'avatar.max' => 'Ảnh đại diện không được lớn hơn 2MB.',
-        ];
-    }
+{
+    return [
+        'provinces.required' => 'Vui lòng chọn tỉnh/thành phố',
+        'provinces.exists' => 'Vui lòng chọn tỉnh/thành phố',
+        'districs.required' => 'Vui lòng chọn quận/huyện',
+        'districs.exists' => 'Vui lòng chọn quận/huyện.',
+        'wards.required' => 'Vui lòng chọn phường/xã',
+        'wards.exists' => 'Vui lòng chọn phường/xã',
+        'address.required' => 'Địa chỉ là bắt buộc.',
+        'address.max' => 'Địa chỉ không được vượt quá 255 ký tự.',
+        'phone.required' => 'Số điện thoại là bắt buộc.',
+        'phone.regex' => 'Số điện thoại không hợp lệ. Số điện thoại phải bắt đầu bằng 0 hoặc +84 và bao gồm 10 chữ số.',
+        'phone.unique' => 'Số điện thoại này đã được sử dụng.',
+        'avatar.image' => 'Ảnh đại diện phải là tệp hình ảnh.',
+        'avatar.mimes' => 'Ảnh đại diện phải có định dạng: jpeg, png, jpg, gif, svg.',
+        'avatar.max' => 'Ảnh đại diện không được lớn hơn 2MB.',
+    ];
+}
+
 }

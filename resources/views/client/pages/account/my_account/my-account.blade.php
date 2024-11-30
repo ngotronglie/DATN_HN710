@@ -1,5 +1,50 @@
 @extends('client.index')
+@section('style')
+<style>
 
+.select2-container--default .select2-selection--single {
+    height: calc(2.25rem + 2px);
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #495057;
+    line-height: 1.5;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 100%;
+    top: 0;
+    right: 10px;
+    width: 2rem;
+}
+
+.select2-container .select2-dropdown {
+    border-radius: 0.25rem;
+    border: 1px solid #ced4da;
+}
+
+.select2-results__option--highlighted[aria-selected] {
+    background-color: #007bff;
+    color: white;
+}
+
+.input_address{
+    outline: none;
+    height: 39px;
+    border-radius: 0.25rem;
+    border: 1px solid #c4c2c2 !important;
+}
+
+</style>
+@endsection
 @section('main')
     <!-- my account wrapper start -->
     <div class="section">
@@ -59,16 +104,19 @@
                                                 <form action="{{ route('updateMyAcount', $user->id) }}" method="post"
                                                     enctype="multipart/form-data">
                                                     @csrf
+
                                                     <div class="single-input-item mb-3">
                                                         @if ($user->avatar)
                                                             <div class="avatar-container">
-                                                                <img class="avatar-image"
-                                                                    src="{{ Storage::url($user->avatar) }}" alt="Avatar">
+                                                                <img class="avatar-image" id="preview-avatar" src="{{ Storage::url($user->avatar) }}" alt="Avatar">
+                                                            </div>
+                                                        @else
+                                                            <div class="avatar-container" id="preview-container" style="display: none;">
+                                                                <img class="avatar-image" id="preview-avatar" alt="Preview">
                                                             </div>
                                                         @endif
                                                         <label for="avatar" class="required mb-1">Avatar</label>
-                                                        <input type="file" id="avatar" name="avatar"
-                                                            placeholder="Ảnh đại diện">
+                                                        <input type="file" id="avatar" name="avatar" placeholder="Ảnh đại diện">
                                                         @error('avatar')
                                                             <small class="text-danger">
                                                                 {{ $message }}
@@ -127,24 +175,28 @@
                                                     </div>
 
                                                     @php
-                                                        // Tách địa chỉ thành các phần bằng dấu phẩy
+                                                    if (!empty($user->address)) {
                                                         $addressParts = explode(',', $user->address);
-
-                                                        // Gán thành phố, quận và phường dựa trên chỉ số trong mảng
-                                                        $city = trim(end($addressParts)); // Thành phố, ví dụ: "Thành phố Hà Nội"
-                                                        $district = trim($addressParts[count($addressParts) - 2]); // Quận, ví dụ: "Quận Ba Đình"
-                                                        $ward = trim($addressParts[count($addressParts) - 3]); // Phường, ví dụ: "Phường Trúc Bạch"
-                                                    @endphp
+                                                        $city = isset($addressParts[count($addressParts) - 1]) ? trim($addressParts[count($addressParts) - 1]) : null;
+                                                        $district = isset($addressParts[count($addressParts) - 2]) ? trim($addressParts[count($addressParts) - 2]) : null;
+                                                        $ward = isset($addressParts[count($addressParts) - 3]) ? trim($addressParts[count($addressParts) - 3]) : null;
+                                                        $adressDetail = isset($addressParts[count($addressParts) - 4]) ? trim($addressParts[count($addressParts) - 4]) : null;
+                                                    } else {
+                                                        $city = $district = $ward = $adressDetail= null;
+                                                    }
+                                                @endphp
 
                                                     <h3 class="title">Địa chỉ</h3>
                                                     <div class="row">
                                                         <div class="col-lg-6">
                                                             <div class="single-input-item mb-3">
-                                                                <label for="province" class="required mb-1">Thành phố</label>
-                                                                <select class="select2 province" name="provinces">
+                                                                <label for="province" class="required mb-1">Tỉnh/Thành
+                                                                    phố</label>
+                                                                <select class="select2 province" data-id="{{$city}}" name="provinces">
                                                                     <option value="">[Chọn thành phố]</option>
                                                                     @foreach ($provinces as $item)
-                                                                        <option value="{{ $item->code }}" {{ old('provinces', $user->province_code) == $item->code ? 'selected' : '' }}>
+                                                                        <option value="{{ $item->code }}"
+                                                                            {{ $city == $item->code ? 'selected' : '' }}>
                                                                             {{ $item->name }}
                                                                         </option>
                                                                     @endforeach
@@ -159,7 +211,7 @@
                                                             <div class="single-input-item mb-3">
                                                                 <label for="district"
                                                                     class="required mb-1">Quận/huyện</label>
-                                                                <select class="select2 districts" name="districs">
+                                                                <select class="select2 districts" data-id="{{$district}}" name="districs">
                                                                     <option value="">[Chọn Quận/Huyện]</option>
                                                                 </select>
                                                                 @error('districs')
@@ -176,7 +228,7 @@
                                                             <div class="single-input-item mb-3">
                                                                 <label for="ward"
                                                                     class="required mb-1">Phường/xã</label>
-                                                                <select class="select2 wards" name="wards">
+                                                                <select class="select2 wards" data-id="{{$ward}}" name="wards">
                                                                     <option value="">[Chọn Phường/Xã]</option>
                                                                 </select>
                                                                 @error('wards')
@@ -191,9 +243,9 @@
                                                             <div class="single-input-item mb-3">
                                                                 <label for="address" class="required mb-1">Tên đường/tòa
                                                                     nhà/số nhà</label>
-                                                                <input class="input_address" type="text"
+                                                                <input style="color: rgb(112, 110, 110)" class="input_address" type="text"
                                                                     placeholder="Tên đường/tòa nhà/số nhà" name="address"
-                                                                    value="{{ old('address', $user->address) }}">
+                                                                    value="{{ old('address', $adressDetail) }}">
                                                                 @error('address')
                                                                     <small class="text-danger">
                                                                         {{ $message }}
@@ -529,6 +581,22 @@
 @section('script')
     <script src="{{ asset('plugins/js/location.js') }}"></script>
     <script>
+        $(document).ready(function() {
+    $('#avatar').on('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $('#preview-avatar').attr('src', e.target.result);
+                $('#preview-container').show(); // Hiển thị container chứa ảnh đã chọn
+            };
+            reader.readAsDataURL(file);
+        } else {
+            $('#preview-container').hide(); // Ẩn container nếu không có ảnh nào được chọn
+        }
+    });
+});
+
         function togglePassword(inputId, iconId) {
             var passwordInput = document.getElementById(inputId);
             var eyeIcon = document.getElementById(iconId);
@@ -619,20 +687,5 @@
                 });
             });
         });
-    </script>
-    <script>
-        // Hiển thị ảnh đã chọn
-        function previewImage() {
-            var file = document.getElementById("avatar").files[0];
-            var reader = new FileReader();
-
-            reader.onloadend = function() {
-                document.getElementById("profile-image").src = reader.result;
-            }
-
-            if (file) {
-                reader.readAsDataURL(file);
-            }
-        }
     </script>
 @endsection

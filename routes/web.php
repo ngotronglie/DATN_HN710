@@ -55,6 +55,10 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 //ajax get location
 Route::get('ajax/location/getDistrics', [LocationController::class, 'getDistrics']);
 Route::get('ajax/location/getWards', [LocationController::class, 'getWards']);
+Route::get('/api/districts', [LocationController::class, 'getDistricts']);
+Route::get('/api/wards', [LocationController::class, 'getWardLoad']);
+
+
 
 // Shop
 Route::get('/shops', [ShopController::class, 'index'])->name('shops.index');
