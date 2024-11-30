@@ -405,7 +405,9 @@ class CheckoutController extends Controller
                     }
 
                     $discount = $voucher->discount;
-                    $voucher->decrement('quantity', 1);
+                    if ($voucher->points_required == null) {
+                        $voucher->decrement('quantity', 1);
+                    }
                 }
 
                 $order = Order::create([
@@ -523,7 +525,9 @@ class CheckoutController extends Controller
                     }
 
                     $discount = $voucher->discount;
-                    $voucher->decrement('quantity', 1);
+                    if ($voucher->points_required == null) {
+                        $voucher->decrement('quantity', 1);
+                    }
                 }
 
                 $order = Order::create([

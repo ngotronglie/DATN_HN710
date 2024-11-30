@@ -106,6 +106,12 @@
                                 @enderror
                             </div>
 
+                            <div class="form-group">
+                                <label for="max_money" class="form-control-label">Điểm đổi</label>
+                                <input type="number" id="points" name="points_required" value="{{ old('points_required', $voucher->points_required) }}"
+                                    class="form-control" min="0">
+                            </div>
+
                             <button type="submit" class="btn btn-success mb-1">Cập nhật</button>
                         </form>
                     </div>

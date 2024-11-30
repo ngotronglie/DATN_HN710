@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Gate;
@@ -90,6 +91,14 @@ class OrderController extends Controller
 
         if (Gate::denies('confirmShipping', $order)) {
             return back()->with('warning', 'Bạn không có quyền xác nhận giao hàng!');
+        }
+
+        $user = User::where('id', $order->user_id)->first();
+
+        if ($user) {
+            $pointsToAdd = floor($order->total_amount / 100000) * 10;
+            $user->points += $pointsToAdd;
+            $user->save();
         }
 
         if ($order->status == 3) {

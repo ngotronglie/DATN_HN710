@@ -105,3 +105,39 @@
     color: #ff4545 !important;
     padding-left: 5px !important;
 }
+
+.get-voucher {
+    width: 60px;
+    background-color: orangered;
+    color: white;
+    border: none;
+    padding: 5px;
+    text-align: center;
+    display: inline-block;
+    font-weight: 500;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    float: right;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.done-get{
+    width: 60px;
+    background-color: rgb(63, 61, 60);
+    color: white;
+    border: none;
+    padding: 5px;
+    text-align: center;
+    display: inline-block;
+    font-weight: 500;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    float: right;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.card-body{
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.2);
+}

@@ -102,6 +102,12 @@
                                 @enderror
                             </div>
 
+                            <div class="form-group">
+                                <label for="max_money" class="form-control-label">Điểm đổi</label>
+                                <input type="number" id="points" name="points_required" value="{{ old('points_required') }}"
+                                    class="form-control" min="0">
+                            </div>
+
                             <!-- Phần trạng thái đã được loại bỏ. Nếu cần thiết, có thể thêm lại sau -->
                             <button type="submit" class="btn btn-success mb-1">Thêm Voucher</button>
 

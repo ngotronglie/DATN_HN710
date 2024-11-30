@@ -254,7 +254,16 @@
                                                 </strong>
                                             </td>
                                         </tr>
-
+                                        @php
+                                             $pointsToAdd = floor($total / 100000) * 10;
+                                        @endphp
+                                        <tr class="cart-subtotal">
+                                            <th class="text-start ps-0" style="font-size: 17px">Nhận điểm</th>
+                                            <td class="text-end pe-0">
+                                                    <span class="amount">+{{$pointsToAdd}} điểm sau khi đơn hàng được giao thành công
+                                                    </span>
+                                            </td>
+                                        </tr>
                                     </tfoot>
                                 </table>
                             </div>
