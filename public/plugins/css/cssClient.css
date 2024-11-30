@@ -141,3 +141,20 @@
 .card-body{
     box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.2);
 }
+
+.avatar-container {
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 15px;
+}
+
+.avatar-image {
+    width: 190px;
+    height: 190px;
+    object-fit: cover;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    padding: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}

@@ -1,5 +1,76 @@
 @extends('client.index')
+@section('style')
+    <style>
+        .checkbox-form {
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+        }
 
+        .checkbox-form .title {
+            margin-top: 9px !important;
+
+            margin-bottom: 42px !important;
+            color: #333;
+        }
+
+        .checkout-form-list label {
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .checkout-form-list {
+            margin-bottom: 24px !important;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 6px rgba(0, 123, 255, 0.2);
+        }
+
+        /* Select2 Styles */
+        .select2-container--default .select2-selection--single {
+            height: 40px !important;
+            border: 1px solid #dfdcdc !important;
+            border-radius: 4px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 40px !important;
+            font-size: 14px;
+            color: #716f6f !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 40px !important;
+        }
+
+        .select2-container--default .select2-selection--single:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 6px rgba(0, 123, 255, 0.2);
+        }
+
+        textarea.form-control {
+            resize: none;
+        }
+
+        .required {
+            color: rgb(247, 49, 49);
+        }
+    </style>
 @section('main')
     <!-- Breadcrumb Section Start -->
     <div class="section">
@@ -104,51 +175,127 @@
 
                     <div class="col-lg-6 col-12 mb-4">
                         <!-- User Information Form Start -->
-
                         <div class="checkbox-form">
                             <h3 class="title">Thông tin người nhận</h3>
                             <div class="row">
                                 <!-- Name Input Start -->
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="checkout-form-list">
-                                        <label>Tên người nhận</label>
-                                        <input placeholder="Nhập tên người nhận" type="text" name="name"
-                                            value="{{ old('name', Auth::user()->name ?? '') }}">
+                                        <label for="name">Tên người nhận <span class="required">(*)</span></label>
+                                        <input id="name" placeholder="Nhập tên người nhận" type="text" name="name"
+                                            value="{{ old('name', Auth::user()->name ?? '') }}" class="form-control">
                                         @error('name')
                                             <small class="text-danger">{{$message}}</small>
                                         @enderror
                                     </div>
                                 </div>
-                                <!-- Name Input End -->
 
-                                <!-- Email Input Start -->
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="checkout-form-list">
-                                        <label>Email <span class="required">*</span></label>
-                                        <input placeholder="Nhập email" type="email" name="email"
-                                            value="{{ old('email', Auth::user()->email ?? '') }}">
+                                        <label for="email">Email <span class="required">(*)</span></label>
+                                        <input id="email" placeholder="Nhập email" type="email" name="email"
+                                            value="{{ old('email', Auth::user()->email ?? '') }}" class="form-control">
                                         @error('email')
                                             <small class="text-danger">{{$message}}</small>
                                         @enderror
                                     </div>
                                 </div>
-                                <!-- Email Input End -->
 
-                                <!-- Address Input Start -->
                                 <div class="col-md-12">
                                     <div class="checkout-form-list">
-                                        <label>Địa chỉ <span class="required">*</span></label>
-                                        <input placeholder="Nhập địa chỉ giao hàng" type="text" name="address"
-                                            value="{{ old('address', Auth::user()->address ?? '') }}">
-                                        @error('address')
+                                        <label for="phone">Điện thoại <span class="required">(*)</span></label>
+                                        <input id="phone" type="text" name="phone" placeholder="Nhập số điện thoại"
+                                            value="{{ old('phone', Auth::user()->phone ?? '') }}" class="form-control">
+                                        @error('phone')
                                             <small class="text-danger">{{$message}}</small>
                                         @enderror
                                     </div>
                                 </div>
-                                <!-- Address Input End -->
 
-                                <!-- Phone Input Start -->
-                                <div class="col-md-12">
+                                @php
+                                    $user = Auth::user();
+                                    if (!empty($user->address)) {
+                                        $addressParts = explode(',', $user->address);
+                                        $city = isset($addressParts[count($addressParts) - 1])
+                                            ? trim($addressParts[count($addressParts) - 1])
+                                            : null;
+                                        $district = isset($addressParts[count($addressParts) - 2])
+                                            ? trim($addressParts[count($addressParts) - 2])
+                                            : null;
+                                        $ward = isset($addressParts[count($addressParts) - 3])
+                                            ? trim($addressParts[count($addressParts) - 3])
+                                            : null;
+                                        $adressDetail = isset($addressParts[count($addressParts) - 4])
+                                            ? trim($addressParts[count($addressParts) - 4])
+                                            : null;
+                                    } else {
+                                        $city = $district = $ward = $adressDetail = null;
+                                    }
+                                @endphp
+
+                                <div class="col-md-6">
+                                    <div class="checkout-form-list">
+                                        <label for="province">Tỉnh/Thành phố <span class="required">(*)</span></label>
+                                        <select  class="form-control province select2" data-id="{{$city}}" name="provinces">
+                                            <option value="">[Chọn thành phố]</option>
+                                            @foreach ($provinces as $item)
+                                                <option value="{{ $item->code }}"
+                                                    {{ $city == $item->code ? 'selected' : '' }}>
+                                                    {{ $item->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('provinces')
+                                            <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="checkout-form-list">
+                                        <label for="district">Quận/Huyện <span class="required">(*)</span></label>
+                                        <select class="form-control districts select2" data-id="{{$district}}" name="districs">
+                                            <option value="">[Chọn Quận/Huyện]</option>
+                                        </select>
+                                        @error('districs')
+                                            <small class="text-danger">
+                                                {{ $message }}
+                                            </small>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="checkout-form-list">
+                                        <label for="ward">Phường/Xã <span class="required">(*)</span></label>
+                                        <select class="form-control wards select2" data-id="{{$ward}}" name="wards">
+                                            <option value="">[Chọn Phường/Xã]</option>
+                                        </select>
+                                        @error('wards')
+                                        <small class="text-danger">
+                                            {{ $message }}
+                                        </small>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="checkout-form-list">
+                                        <label for="address">Tên đường/tòa nhà/số nhà <span
+                                                class="required">(*)</span></label>
+                                        <input id="address" type="text" name="address" class="form-control"
+                                            placeholder="Tên đường/tòa nhà/số nhà"
+                                            value="{{ old('address', $adressDetail) }}">
+                                            @error('address')
+                                            <small class="text-danger">
+                                                {{ $message }}
+                                            </small>
+                                            @enderror
+                                    </div>
+                                </div>
+
+                                {{-- <div class="col-md-12">
                                     <div class="checkout-form-list">
                                         <label>Điện thoại <span class="required">*</span></label>
                                         <input placeholder="Nhập số điện thoại" type="text" name="phone"
@@ -158,21 +305,21 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <!-- Phone Input End -->
+                                <!-- Phone Input End --> --}}
 
                                 <!-- Notes Input Start -->
                                 <div class="order-notes mt-3 mb-n2">
                                     <div class="checkout-form-list checkout-form-list-2">
-                                        <label>Ghi chú</label>
-                                        <textarea id="checkout-mess" cols="30" rows="10" placeholder="Ghi chú về đơn hàng của bạn" name="note">{{ old('note') }}</textarea>
+                                        <label for="note">Ghi chú</label>
+                                        <textarea id="note" name="note" class="form-control" placeholder="Ghi chú về đơn hàng của bạn">{{ old('note') }}</textarea>
                                     </div>
                                 </div>
                                 <!-- Notes Input End -->
                             </div>
                         </div>
-
                         <!-- User Information Form End -->
                     </div>
+
 
                     <div class="col-lg-6 col-12 mb-4">
                         <!-- Order Summary Start -->
@@ -206,10 +353,12 @@
 
                                             <input type="hidden" name="product_name[]" value="{{ $product->name }}">
                                             <input type="hidden" name="size_name[]" value="{{ $product->size->name }}">
-                                            <input type="hidden" name="color_name[]" value="{{ $product->color->name }}">
+                                            <input type="hidden" name="color_name[]"
+                                                value="{{ $product->color->name }}">
                                             <input type="hidden" name="quantity[]" value="{{ $product->quantity }}">
                                             <input type="hidden" name="price[]" value="{{ $product->price }}">
-                                            <input type="hidden" name="product_variant_ids[]" value="{{ $product->id }}">
+                                            <input type="hidden" name="product_variant_ids[]"
+                                                value="{{ $product->id }}">
                                         @endforeach
 
                                         <input type="hidden" name="total_amount" value="{{ $total }}">
@@ -321,6 +470,7 @@
 
 @endsection
 @section('script')
+    <script src="{{ asset('plugins/js/location.js') }}"></script>
     <script>
         $(document).ready(function() {
             //Aps vourcher

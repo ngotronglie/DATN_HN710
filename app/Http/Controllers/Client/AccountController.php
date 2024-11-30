@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateMyAccountRequest;
+use App\Models\District;
+use App\Models\OrderDetail;
+use App\Models\Province;
 use App\Models\User;
 use App\Models\Voucher;
+use App\Models\Ward;
 use Carbon\Carbon;
 use App\Mail\VerifyEmail;
 use Illuminate\Http\Request;
@@ -267,6 +272,10 @@ class AccountController extends Controller
             return redirect()->route('login');
         }
 
+        $address = $user->address;
+
+        $addressParts = explode(',', $address);
+
         $vouchers = UserVoucher::with('voucher')->where('user_id', $user->id)->get();
 
         // $voucherPoint = Voucher::where('points_required', '>', 0)
@@ -279,9 +288,10 @@ class AccountController extends Controller
          ->orderBy('id', 'desc')
          ->get();
 
+        $provinces = Province::all();
 
         $bills = Order::query()->where('user_id', $user->id)->with('voucher')->orderBy('id', 'desc')->get();
-        return view('client.pages.account.my_account.my-account', compact('user', 'bills', 'vouchers', 'voucherPoint'));
+        return view('client.pages.account.my_account.my-account', compact('user', 'bills', 'vouchers', 'voucherPoint', 'addressParts', 'provinces'));
     }
 
     public function orderBillDetail($id)
@@ -295,7 +305,18 @@ class AccountController extends Controller
             ->where('user_id', $user->id)
             ->firstOrFail();
 
-        return view('client.pages.account.my_account.bill-detail', compact('user', 'order'));
+        $address = $order->user_address;
+
+        $addressParts = explode(',', $address);
+
+        $addressData = [
+            'province' => isset($addressParts[3]) ? Province::where('code', trim($addressParts[3]))->value('full_name') : null,
+            'district' => isset($addressParts[2]) ? District::where('code', trim($addressParts[2]))->value('full_name') : null,
+            'ward' => isset($addressParts[1]) ? Ward::where('code', trim($addressParts[1]))->value('full_name') : null,
+            'addressDetail' => isset($addressParts[0]) ? $addressParts[0] : null,
+        ];
+
+        return view('client.pages.account.my_account.bill-detail', compact('user', 'order', 'addressData'));
     }
 
     public function cancelOrder($id)
@@ -312,42 +333,33 @@ class AccountController extends Controller
         }
     }
 
-    public function updateMyAcount(request $request, $id)
-    {
-        $request->validate([
-            'address' => 'required|string|max:255',
-            'phone' => 'required|string|regex:/^[0-9]{10}$/',
-            'date_of_birth' => 'required|date|before:today',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ], [
-            'address.required' => 'Địa chỉ là bắt buộc.',
-            'address.max' => 'Tối đa 255 kí tự.',
-            'phone.required' => 'Số điện thoại là bắt buộc.',
-            'phone.regex' => 'Số điện thoại không hợp lệ.',
-            'date_of_birth.required' => 'Ngày sinh là bắt buộc.',
-            'date_of_birth.date' => 'Ngày sinh không hợp lệ.',
-            'date_of_birth.before' => 'Ngày sinh không được là ngày hiện tại.',
-            'avatar.image' => 'Tệp tải lên phải là hình ảnh.',
-            'avatar.mimes' => 'Ảnh đại diện phải có định dạng: jpeg, png, jpg, gif.',
-            'avatar.max' => 'Ảnh đại diện không được lớn hơn 2MB.',
-        ]);
+    public function updateMyAcount(UpdateMyAccountRequest $request, $id)
+{
+    $user = User::findOrFail($id);
+    $province_code = $request->input('provinces');
+    $district_code = $request->input('districs');
+    $ward_code = $request->input('wards');
+    $address = $request->input('address');
 
-        $user = User::findOrFail($id);
+    $full_address = $address . ', ' . $ward_code . ', ' . $district_code . ', ' . $province_code;
 
-        $data = $request->only(['phone', 'address', 'date_of_birth']);
+    $data = $request->only(['phone', 'date_of_birth']);
+    $data['address'] = $full_address;
 
-        if ($request->hasFile('avatar')) {
-
-            $data['avatar'] = Storage::put('users', $request->file('avatar'));
-            if (!empty($user->avatar) && Storage::exists($user->avatar)) {
-                Storage::delete($user->avatar);
-            }
-        } else {
-            $data['image'] = $user->avatar;
+    if ($request->hasFile('avatar')) {
+        $data['avatar'] = Storage::put('users', $request->file('avatar'));
+        if (!empty($user->avatar) && Storage::exists($user->avatar)) {
+            Storage::delete($user->avatar);
         }
-        $user->update($data);
-        return redirect()->route('my_account')->with('success', 'Cập nhật thông tin thành công');
+    } else {
+        $data['avatar'] = $user->avatar;
     }
+
+    $user->update($data);
+
+    return redirect()->route('my_account')->with('success', 'Cập nhật thông tin thành công');
+}
+
 
     public function updatePassword(Request $request, $id)
     {

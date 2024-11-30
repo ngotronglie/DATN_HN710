@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\InvoiceMail;
 use App\Models\OrderDetail;
+use App\Models\Province;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
@@ -36,6 +37,7 @@ class CheckoutController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Data stored in session']);
     }
+
     public function index()
     {
         $user = auth()->user();
@@ -92,7 +94,9 @@ class CheckoutController extends Controller
             session(['totalAmount' => $total]);
         }
 
-        return view('client.pages.checkouts.show_checkout', ['products' => $products, 'total' => $total, 'validVouchers' => $validVouchers]);
+        $provinces = Province::all();
+
+        return view('client.pages.checkouts.show_checkout', ['products' => $products, 'total' => $total, 'validVouchers' => $validVouchers, 'provinces' => $provinces]);
     }
 
 
