@@ -50,7 +50,16 @@
                                 </tr>
                                 <tr>
                                 <th>Địa chỉ</th>
-                                <td>{{ $account->address }}</td>
+                                <td>
+                                    {{ implode(', ', array_filter([
+                                        $addressData['addressDetail'],
+                                        $addressData['ward'],
+                                        $addressData['district'],
+                                        $addressData['province']
+                                    ], function($value) {
+                                        return !is_null($value) && $value !== '';
+                                    })) }}
+                                </td>
                                 </tr>
                                 <tr>
                                 <th>Điện Thoại</th>
@@ -65,7 +74,7 @@
                                     <span>Chưa cập nhật</span>
                                     @endif
                                 </td>
-                                
+
                                 </tr>
                                 <tr>
                                     <th>Xác thực</th>
@@ -83,7 +92,7 @@
                                 </tr>
                                 <tr>
 
-                               
+
                                 <th>Chức vụ</th>
                                 <td>
                                     @php

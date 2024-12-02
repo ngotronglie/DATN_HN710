@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ $title }}</title>
-    
+
     <style>
         body {
             font-family: DejaVu Sans;
@@ -156,7 +156,7 @@
                     <td colspan="5"><strong>Giảm giá {{ $order->discount }}%</strong></td>
                     <td>
                         @if($order->discount)
-                        {{ '- ' . number_format(($totalPrice * $order->discount) / 100, 0, ',', '.') }} VND 
+                        {{ '- ' . number_format(($totalPrice * $order->discount) / 100, 0, ',', '.') }} VND
                         @elseif(!$order->discount)
                         Không áp dụng voucher
                         @endif()

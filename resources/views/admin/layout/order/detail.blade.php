@@ -63,7 +63,14 @@
                                         <th>Địa chỉ</th>
                                         <td>
                                             @if($order->user->address)
-                                            {{ $order->user->address }}
+                                            {{ implode(', ', array_filter([
+                                                        $addressData['addressDetail'],
+                                                        $addressData['ward'],
+                                                        $addressData['district'],
+                                                        $addressData['province']
+                                                    ], function($value) {
+                                                        return !is_null($value) && $value !== '';
+                                                    })) }}
                                             @else
                                             Chưa cập nhật!
                                             @endif
@@ -102,7 +109,14 @@
                                     </tr>
                                     <tr>
                                         <th>Địa chỉ</th>
-                                        <td>{{ $order->user_address }}</td>
+                                        <td>{{ implode(', ', array_filter([
+                                            $addressData['addressDetail'],
+                                            $addressData['ward'],
+                                            $addressData['district'],
+                                            $addressData['province']
+                                        ], function($value) {
+                                            return !is_null($value) && $value !== '';
+                                        })) }}</td>
                                     </tr>
                                     <tr>
                                         <th>Đơn hàng</th>
@@ -158,7 +172,7 @@
                                         @if($order->note)
                                         <td>{{ $order->note }}</td>
                                         @else
-                                          <td>Không có ghi chú!</td>  
+                                          <td>Không có ghi chú!</td>
                                         @endif
                                     </tr>
                                     <tr>
@@ -216,7 +230,7 @@
                                             <td>{{ $orderDetail->color_name }}</td>
                                             <td>{{ $orderDetail->quantity }}</td>
                                             <td>{{ number_format($orderDetail->price, 0, ',', '.') }} VND</td>
-                                            <td>{{ number_format($orderDetail->quantity * $orderDetail->price, 0, ',', '.')  }} VND</td> 
+                                            <td>{{ number_format($orderDetail->quantity * $orderDetail->price, 0, ',', '.')  }} VND</td>
                                         </tr>
                                     @endforeach
                                     <tr>
@@ -240,7 +254,7 @@
                                         </td>
                                         <td colspan="3" class="text-center">
                                             @if($order->discount)
-                                            {{ '- ' . number_format(($totalPrice * $order->discount) / 100, 0, ',', '.') }} VND 
+                                            {{ '- ' . number_format(($totalPrice * $order->discount) / 100, 0, ',', '.') }} VND
                                             @else
                                                 Không áp dụng voucher
                                             @endif
@@ -265,9 +279,9 @@
                                 </tbody>
                             </table>
                             <div class="d-flex justify-content-between align-items-center">
-                            <p><strong>Mã Voucher:</strong> 
+                            <p><strong>Mã Voucher:</strong>
                                 @if($order->voucher_id && $order->discount)
-                                    {{ $order->voucher->code ?? 'Không xác định' }} 
+                                    {{ $order->voucher->code ?? 'Không xác định' }}
                                     ({{ $order->voucher->discount ?? 'N/A' }}% giảm giá)
                                 @elseif(!$order->voucher_id && !$order->discount)
                                     Không áp dụng voucher

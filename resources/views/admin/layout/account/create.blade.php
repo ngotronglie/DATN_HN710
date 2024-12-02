@@ -58,15 +58,6 @@
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label for="address" class=" form-control-label">Địa chỉ</label>
-                                <input type="text" id="address" name="address"
-                                    placeholder="Nhập địa chỉ" class="form-control"
-                                    value="{{ old('address') }}" requied>
-                                @error('address')
-                                <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-                            <div class="form-group">
                                 <label for="phone" class=" form-control-label">Điện thoại</label>
                                 <input type="text" id="phone" name="phone"
                                     placeholder="Nhập số điện thoại" class="form-control"
@@ -109,6 +100,39 @@
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
+                            <div class="form-group">
+                                <label for="date_of_birth" class=" form-control-label">Chọn Tỉnh/Thành phố</label>
+                                <select class="select2 province form-control"  name="provinces">
+                                    <option value="">[Chọn Tỉnh/Thành phố]</option>
+                                    @foreach ($provinces as $item)
+                                        <option value="{{ $item->code }}">
+                                          {{ $item->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="date_of_birth" class=" form-control-label">Chọn Quận/Huyện</label>
+                                <select class="select2 districts form-control"  name="districs">
+                                    <option value="">[Chọn Quận/Huyện]</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="date_of_birth" class=" form-control-label">Chọn Phường/Xã</label>
+                                <select class="select2 wards form-control" name="wards">
+                                    <option value="">[Chọn Phường/Xã]</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="address" class=" form-control-label">Tên đường/tòa nhà/số nhà</label>
+                                <input type="text" id="address" name="address"
+                                    placeholder="Nhập Tên đường/tòa nhà/số nhà" class="form-control" requied>
+                                    @if($errors->has('provinces') || $errors->has('address') || $errors->has('wards') || $errors->has('districs'))
+                                    <small class="text-danger mt-5">Vui lòng nhập đầy đủ các trường địa chỉ.</small>
+                                    @endif
+                            </div>
+
                             <input type="hidden" value="1" name="role">
 
                             <button type="submit" class="btn btn-success mb-1">Thêm mới</button>
@@ -122,6 +146,7 @@
 @endsection
 
 @section('script')
+<script src="{{ asset('plugins/js/location.js') }}"></script>
 <script>
     jQuery(document).ready(function() {
     jQuery('#avatar').on('change', function(e) {

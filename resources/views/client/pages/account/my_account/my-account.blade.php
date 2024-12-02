@@ -186,7 +186,7 @@
                                                     } else {
                                                         $city = $district = $ward = $adressDetail= null;
                                                     }
-                                                @endphp
+                                                    @endphp
 
                                                     <h3 class="title">Địa chỉ</h3>
                                                     <div class="row">
@@ -197,15 +197,11 @@
                                                                 <select class="select2 province" data-id="{{$city}}" name="provinces">
                                                                     <option value="">[Chọn thành phố]</option>
                                                                     @foreach ($provinces as $item)
-                                                                        <option value="{{ $item->code }}"
-                                                                            {{ $city == $item->code ? 'selected' : '' }}>
-                                                                            {{ $item->name }}
+                                                                        <option value="{{ $item->code }}" {{ $city == $item->code ? 'selected' : '' }}>
+                                                                          {{ $item->name }}
                                                                         </option>
                                                                     @endforeach
                                                                 </select>
-                                                                @error('provinces')
-                                                                    <small class="text-danger">{{ $message }}</small>
-                                                                @enderror
                                                             </div>
                                                         </div>
 
@@ -216,11 +212,6 @@
                                                                 <select class="select2 districts" data-id="{{$district}}" name="districs">
                                                                     <option value="">[Chọn Quận/Huyện]</option>
                                                                 </select>
-                                                                @error('districs')
-                                                                    <small class="text-danger">
-                                                                        {{ $message }}
-                                                                    </small>
-                                                                @enderror
                                                             </div>
                                                         </div>
                                                     </div>
@@ -233,11 +224,6 @@
                                                                 <select class="select2 wards" data-id="{{$ward}}" name="wards">
                                                                     <option value="">[Chọn Phường/Xã]</option>
                                                                 </select>
-                                                                @error('wards')
-                                                                    <small class="text-danger">
-                                                                        {{ $message }}
-                                                                    </small>
-                                                                @enderror
                                                             </div>
                                                         </div>
 
@@ -248,16 +234,15 @@
                                                                 <input style="color: rgb(112, 110, 110)" class="input_address" type="text"
                                                                     placeholder="Tên đường/tòa nhà/số nhà" name="address"
                                                                     value="{{ old('address', $adressDetail) }}">
-                                                                @error('address')
-                                                                    <small class="text-danger">
-                                                                        {{ $message }}
-                                                                    </small>
-                                                                @enderror
                                                             </div>
                                                         </div>
                                                     </div>
 
-                                                    <div class="single-input-item single-item-button">
+                                                    @if($errors->has('provinces') || $errors->has('address') || $errors->has('wards') || $errors->has('districs'))
+                                                    <small class="text-danger">Vui lòng nhập đầy đủ các trường địa chỉ</small>
+                                                    @endif
+
+                                                    <div class="single-input-item single-item-button mt-4">
                                                         <button class="btn btn-dark btn-hover-primary rounded-0">Cập
                                                             nhật</button>
                                                     </div>

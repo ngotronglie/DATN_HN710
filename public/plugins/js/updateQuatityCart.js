@@ -222,10 +222,9 @@
             data: {
                 items: items,
                 total: total,
-                _token: $('meta[name="csrf-token"]').attr('content') 
+                _token: $('meta[name="csrf-token"]').attr('content')
             },
             success: function(response) {
-                console.log('Session data stored successfully');
             },
             error: function(xhr, status, error) {
                 console.error('Failed to store session data:', error);

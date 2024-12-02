@@ -5,7 +5,7 @@
     <div class="breadcrumb-area bg-light">
         <div class="container-fluid">
             <div class="breadcrumb-content text-center">
-                <h1 class="title">Thanh toán</h1>
+                <h1 class="title">Thanh toánsss</h1>
                 <ul>
                     <li><a href="{{ route('home') }}">Trang chủ</a></li>
                     <li class="active">Thanh toán</li>
@@ -34,7 +34,34 @@
                                 <strong>Thông tin giao hàng:</strong><br>
                                 Tên: {{ $order->user_name }}<br>
                                 Điện thoại: {{ $order->user_phone }}<br>
-                                Địa chỉ: {{ $order->user_address }}
+                                 @php
+                                use App\Models\Province;
+                                use App\Models\District;
+                                use App\Models\Ward;
+
+                                $addressParts = explode(',', $order->user_address);
+                                $addressData = [
+                                    'province' => isset($addressParts[3])
+                                        ? Province::where('code', trim($addressParts[3]))->value('full_name')
+                                        : null,
+                                    'district' => isset($addressParts[2])
+                                        ? District::where('code', trim($addressParts[2]))->value('full_name')
+                                        : null,
+                                    'ward' => isset($addressParts[1])
+                                        ? Ward::where('code', trim($addressParts[1]))->value('full_name')
+                                        : null,
+                                    'addressDetail' => isset($addressParts[0]) ? $addressParts[0] : null,
+                                ];
+                            @endphp
+                                Địa chỉ: {{ implode(
+                                    ', ',
+                                    array_filter(
+                                        [$addressData['addressDetail'], $addressData['ward'], $addressData['district'], $addressData['province']],
+                                        function ($value) {
+                                            return !is_null($value) && $value !== '';
+                                        }
+                                    )
+                                ) }}
                             </p>
                             <p class="text-muted">
                                 <strong>Phương thức thanh toán:</strong><br>
@@ -54,6 +81,8 @@
         </div>
     </div>
 </div>
+
+
 
 @endsection
 

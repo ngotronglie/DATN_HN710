@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\District;
+use App\Models\Province;
 use App\Models\User;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Controllers\Controller;
+use App\Models\Ward;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
@@ -47,7 +50,9 @@ class UserController extends Controller
         if (Gate::denies('create', User::class)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
-        return view(self::PATH_VIEW . __FUNCTION__);
+        $provinces = Province::all();
+
+        return view(self::PATH_VIEW . __FUNCTION__, compact('provinces'));
     }
 
     /**
@@ -61,6 +66,13 @@ class UserController extends Controller
         $data = $request->except('avatar');
         $data['password'] = Hash::make($request->input('password'));
 
+        $province_code = $request->input('provinces');
+        $ward_code = $request->input('wards');
+        $address = $request->input('address');
+        $district_code = $request->input('districs');
+
+        $full_address = $address . ', ' . $ward_code . ', ' . $district_code . ', ' . $province_code;
+        $data['address'] = $full_address;
         if ($request->hasFile('avatar')) {
             $data['avatar'] = Storage::put('users', $request->file('avatar'));
         } else {
@@ -68,6 +80,7 @@ class UserController extends Controller
         }
 
         $data['email_verified_at'] = now();
+
         User::create($data);
         return redirect()->route('admin.accounts.index')->with('success', 'Thêm mới thành công');
     }
@@ -82,7 +95,17 @@ class UserController extends Controller
         if (Gate::denies('view', $account)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
-        return view(self::PATH_VIEW . __FUNCTION__, compact('account'));
+        $address = $account->address;
+
+        $addressParts = explode(',', $address);
+
+        $addressData = [
+            'province' => isset($addressParts[3]) ? Province::where('code', trim($addressParts[3]))->value('full_name') : null,
+            'district' => isset($addressParts[2]) ? District::where('code', trim($addressParts[2]))->value('full_name') : null,
+            'ward' => isset($addressParts[1]) ? Ward::where('code', trim($addressParts[1]))->value('full_name') : null,
+            'addressDetail' => isset($addressParts[0]) ? $addressParts[0] : null,
+        ];
+        return view(self::PATH_VIEW . __FUNCTION__, compact('account', 'addressData'));
     }
 
 
@@ -117,21 +140,31 @@ class UserController extends Controller
 
     public function myAccount()
     {
-        return view('admin.layout.account.my_account');
+        $provinces = Province::all();
+        return view('admin.layout.account.my_account', compact('provinces'));
     }
 
     public function updateMyAcount(request $request)
     {
         $request->validate(
             [
+                'provinces' => 'required|exists:provinces,code', // Tỉnh/thành phố phải tồn tại trong bảng provinces
+                'districs' => 'required|exists:districts,code',   // Quận/huyện phải tồn tại trong bảng districs
+                'wards' => 'required|exists:wards,code',
                 'address' => 'required|string|max:255',
                 'phone' => 'required|string|regex:/^[0-9]{10}$/',
                 'date_of_birth' => 'required|date|before:today',
                 'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ],
             [
-                'address.required' => 'Địa chỉ là bắt buộc',
-                'address.max' => 'Tối đa 255 kí tự',
+                'provinces.required' => 'Vui lòng chọn tỉnh/thành phố',
+                'districs.required' => 'Vui lòng chọn quận/huyện',
+                'districs.exists' => 'Vui lòng chọn quận/huyện.',
+                'wards.required' => 'Vui lòng chọn phường/xã',
+                'wards.exists' => 'Vui lòng chọn phường/xã',
+                'address.required' => 'Địa chỉ là bắt buộc.',
+                'address.max' => 'Địa chỉ không được vượt quá 255 ký tự.',
+                'provinces.exists' => 'Vui lòng chọn tỉnh/thành phố',
                 'phone.required' => 'Số điện thoại là bắt buộc',
                 'phone.regex' => 'Số điện thoại không hợp lệ',
                 'avatar.image' => 'Tệp tải lên phải là hình ảnh',
@@ -144,7 +177,15 @@ class UserController extends Controller
         );
         $user = User::findOrFail(auth()->user()->id);
 
+        $province_code = $request->input('provinces');
+        $ward_code = $request->input('wards');
+        $address = $request->input('address');
+        $district_code = $request->input('districs');
+
+        $full_address = $address . ', ' . $ward_code . ', ' . $district_code . ', ' . $province_code;
         $data = $request->only(['phone', 'address', 'date_of_birth']);
+        $data['address'] = $full_address;
+
         if ($request->hasFile('avatar')) {
 
             $data['avatar'] = Storage::put('users', $request->file('avatar'));

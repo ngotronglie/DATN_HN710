@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\District;
 use App\Models\Order;
+use App\Models\Province;
+use App\Models\Ward;
 use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
@@ -23,12 +26,23 @@ class NotificationController extends Controller
         $user = Auth::user();
         $order = Order::with(['user', 'voucher', 'orderDetails'])->findOrFail($order_id);
 
+        $address = $order->user_address;
+
+        $addressParts = explode(',', $address);
+
+        $addressData = [
+            'province' => isset($addressParts[3]) ? Province::where('code', trim($addressParts[3]))->value('full_name') : null,
+            'district' => isset($addressParts[2]) ? District::where('code', trim($addressParts[2]))->value('full_name') : null,
+            'ward' => isset($addressParts[1]) ? Ward::where('code', trim($addressParts[1]))->value('full_name') : null,
+            'addressDetail' => isset($addressParts[0]) ? $addressParts[0] : null,
+        ];
+
         $notification = $user->notifications()->find($id);
         if ($notification) {
             $notification->markAsRead();
         }
 
-        return view('admin.layout.order.notificationOrder', compact('order'));
+        return view('admin.layout.order.notificationOrder', compact('order', 'addressData'));
     }
 
     public function delete($id)

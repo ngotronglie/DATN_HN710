@@ -51,7 +51,16 @@
                                                 <p><strong>Tên:</strong> {{ $bill->user_name }}</p>
                                                 <p><strong>Số điện thoại:</strong> {{ $bill->user_phone }}</p>
                                                 <p><strong>Email:</strong> {{ $bill->user_email }}</p>
-                                                <p><strong>Địa chỉ:</strong> {{ $bill->user_address }}</p>
+                                                <p><strong>Địa chỉ:</strong>
+                                                    {{ implode(', ', array_filter([
+                                                        $addressData['addressDetail'],
+                                                        $addressData['ward'],
+                                                        $addressData['district'],
+                                                        $addressData['province']
+                                                    ], function($value) {
+                                                        return !is_null($value) && $value !== '';
+                                                    })) }}
+                                                </p>
                                                 <hr style="border-top: 2px solid #2c2727; margin: 20px 0;">
                                                 <p><strong>Trạng thái:</strong>
                                                     @if ($bill->status == 1)

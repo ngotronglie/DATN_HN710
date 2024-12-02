@@ -1,5 +1,13 @@
 @extends('admin.dashboard')
-
+@section('style')
+<style>
+    th, td {
+        width: 20%;
+        text-align: center;
+        vertical-align: middle !important;
+    }
+</style>
+@endsection
 @section('content')
 <div class="breadcrumbs mb-5">
     <div class="breadcrumbs-inner">
@@ -42,15 +50,15 @@
                             <tbody>
                                 <tr>
                                     <th>Tên danh mục</th>
-                                    <td>{{ $category->name }}</td>
+                                    <td colspan="3">{{ $category->name }}</td>
                                 </tr>
                                 <tr>
                                     <th>Số lượng sản phẩm</th>
-                                    <td>{{ $productCount }}</td>
+                                    <td colspan="3">{{ $productCount }}</td>
                                 </tr>
                                 <tr>
                                     <th>Trạng thái</th>
-                                    <td>
+                                    <td colspan="3">
                                         @if($category->is_active)
                                         <span class="badge badge-success">Hoạt động</span>
                                         @else
@@ -60,19 +68,30 @@
                                 </tr>
                                 <tr>
                                     <th>Thời gian tạo</th>
-                                    <td>{{ $category->created_at }}</td>
+                                    <td colspan="3">{{ $category->created_at }}</td>
                                 </tr>
                                 <tr>
                                     <th>Thời gian sửa</th>
-                                    <td>{{ $category->updated_at }}</td>
+                                    <td colspan="3">{{ $category->updated_at }}</td>
                                 </tr>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Sản phẩm</th>
+                                    <th>Ảnh</th>
+                                    <th>Số lượng</th>
+                                </tr>
+                                @foreach ($products as $index => $item)
+                                <tr>
+                                    <td>{{$index+1}}</td>
+                                    <td>{{$item->name}}</td>
+                                    <td>
+                                        <img src="{{ Storage::url($item->img_thumb) }}" alt="{{ $item->name }}" style="width: 100px; height: 150px; object-fit: contain;">
+                                    </td>
+                                    <td>Tổng: {{ $item->total_quantity }}</td>
+                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
-                    </div>
-                    <div class="card-footer">
-                        <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-warning btn-icon-split">
-                                <i class="fa fa-edit"></i> Sửa
-                        </a>
                     </div>
                 </div>
             </div>

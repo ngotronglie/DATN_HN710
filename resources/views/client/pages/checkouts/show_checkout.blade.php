@@ -182,10 +182,11 @@
                                 <div class="col-md-6">
                                     <div class="checkout-form-list">
                                         <label for="name">Tên người nhận <span class="required">(*)</span></label>
-                                        <input id="name" placeholder="Nhập tên người nhận" type="text" name="name"
-                                            value="{{ old('name', Auth::user()->name ?? '') }}" class="form-control">
+                                        <input id="name" placeholder="Nhập tên người nhận" type="text"
+                                            name="name" value="{{ old('name', Auth::user()->name ?? '') }}"
+                                            class="form-control">
                                         @error('name')
-                                            <small class="text-danger">{{$message}}</small>
+                                            <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
                                 </div>
@@ -196,7 +197,7 @@
                                         <input id="email" placeholder="Nhập email" type="email" name="email"
                                             value="{{ old('email', Auth::user()->email ?? '') }}" class="form-control">
                                         @error('email')
-                                            <small class="text-danger">{{$message}}</small>
+                                            <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
                                 </div>
@@ -207,7 +208,7 @@
                                         <input id="phone" type="text" name="phone" placeholder="Nhập số điện thoại"
                                             value="{{ old('phone', Auth::user()->phone ?? '') }}" class="form-control">
                                         @error('phone')
-                                            <small class="text-danger">{{$message}}</small>
+                                            <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
                                 </div>
@@ -236,7 +237,8 @@
                                 <div class="col-md-6">
                                     <div class="checkout-form-list">
                                         <label for="province">Tỉnh/Thành phố <span class="required">(*)</span></label>
-                                        <select  class="form-control province select2" data-id="{{$city}}" name="provinces">
+                                        <select class="form-control province select2" data-id="{{ $city }}"
+                                            name="provinces">
                                             <option value="">[Chọn thành phố]</option>
                                             @foreach ($provinces as $item)
                                                 <option value="{{ $item->code }}"
@@ -245,9 +247,6 @@
                                                 </option>
                                             @endforeach
                                         </select>
-                                        @error('provinces')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
                                         </select>
                                     </div>
                                 </div>
@@ -255,28 +254,20 @@
                                 <div class="col-md-6">
                                     <div class="checkout-form-list">
                                         <label for="district">Quận/Huyện <span class="required">(*)</span></label>
-                                        <select class="form-control districts select2" data-id="{{$district}}" name="districs">
+                                        <select class="form-control districts select2" data-id="{{ $district }}"
+                                            name="districs">
                                             <option value="">[Chọn Quận/Huyện]</option>
                                         </select>
-                                        @error('districs')
-                                            <small class="text-danger">
-                                                {{ $message }}
-                                            </small>
-                                        @enderror
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="checkout-form-list">
                                         <label for="ward">Phường/Xã <span class="required">(*)</span></label>
-                                        <select class="form-control wards select2" data-id="{{$ward}}" name="wards">
+                                        <select class="form-control wards select2" data-id="{{ $ward }}"
+                                            name="wards">
                                             <option value="">[Chọn Phường/Xã]</option>
                                         </select>
-                                        @error('wards')
-                                        <small class="text-danger">
-                                            {{ $message }}
-                                        </small>
-                                        @enderror
                                     </div>
                                 </div>
 
@@ -285,15 +276,14 @@
                                         <label for="address">Tên đường/tòa nhà/số nhà <span
                                                 class="required">(*)</span></label>
                                         <input id="address" type="text" name="address" class="form-control"
-                                            placeholder="Tên đường/tòa nhà/số nhà"
-                                            value="{{ old('address', $adressDetail) }}">
-                                            @error('address')
-                                            <small class="text-danger">
-                                                {{ $message }}
-                                            </small>
-                                            @enderror
+                                            placeholder="Tên đường/tòa nhà/số nhà" value="{{ $adressDetail }}">
                                     </div>
                                 </div>
+
+                                @if ($errors->has('provinces') || $errors->has('address') || $errors->has('wards') || $errors->has('districs'))
+                                    <small class="text-danger">Vui lòng nhập đầy đủ các trường địa chỉ</small>
+                                @endif
+
 
                                 {{-- <div class="col-md-12">
                                     <div class="checkout-form-list">
@@ -404,13 +394,14 @@
                                             </td>
                                         </tr>
                                         @php
-                                             $pointsToAdd = floor($total / 100000) * 10;
+                                            $pointsToAdd = floor($total / 100000) * 10;
                                         @endphp
                                         <tr class="cart-subtotal">
                                             <th class="text-start ps-0" style="font-size: 17px">Nhận điểm</th>
                                             <td class="text-end pe-0">
-                                                    <span class="amount">+{{$pointsToAdd}} điểm sau khi đơn hàng được giao thành công
-                                                    </span>
+                                                <span class="amount">+{{ $pointsToAdd }} điểm sau khi đơn hàng được giao
+                                                    thành công
+                                                </span>
                                             </td>
                                         </tr>
                                     </tfoot>
@@ -422,7 +413,7 @@
                             <div class="payment-accordion-order-button">
                                 <div class="payment-options">
                                     @error('payment_method')
-                                        <small class="text-danger">{{$message}}</small>
+                                        <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                     <div class="form-check mb-3">
                                         <input class="form-check-input" type="radio" name="payment_method"
@@ -452,7 +443,8 @@
 
 
                                 <div class="order-button-payment">
-                                    <button type="submit" class="btn btn-dark btn-hover-primary rounded-0 w-100">Đặt hàng</button>
+                                    <button type="submit" class="btn btn-dark btn-hover-primary rounded-0 w-100">Đặt
+                                        hàng</button>
                                 </div>
                             </div>
                             <!-- Payment Options End -->

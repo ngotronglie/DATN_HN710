@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Client;
 
 
 use App\Models\CartItem;
+use App\Models\District;
+use App\Models\Ward;
 use App\Notifications\OrderPlacedNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
@@ -35,7 +37,7 @@ class CheckoutController extends Controller
             'cart_total' => $total
         ]]);
 
-        return response()->json(['success' => true, 'message' => 'Data stored in session']);
+        return response()->json(['success' => true]);
     }
 
     public function index()
@@ -47,14 +49,14 @@ class CheckoutController extends Controller
         $cartData = session('user_cart');
 
         if (!$cartData) {
-            return redirect()->back()->with('error', 'Không có sản phẩm nào trong giỏ hàng.');
+            return redirect()->back()->with('error', 'Không có sản phẩm nào được chọn');
         }
 
         $items = $cartData['cart_items'];
         $total = $cartData['cart_total'];
 
         if (empty($items)) {
-            return redirect()->back()->with('error', 'Không có sản phẩm nào được chọn.');
+            return redirect()->back()->with('error', 'Không có sản phẩm nào được chọn');
         }
 
         $ids = array_column($items, 'id');  // Lấy mảng các id từ items
@@ -335,6 +337,22 @@ class CheckoutController extends Controller
             ->where('order_code', $orderCode)
             ->get();
 
+        $addressOd = Order::with('voucher')
+        ->where('order_code', $orderCode)
+        ->select('user_address')
+        ->first();
+
+        $address = $addressOd->user_address;
+
+        $addressParts = explode(',', $address);
+
+        $addressData = [
+            'province' => isset($addressParts[3]) ? Province::where('code', trim($addressParts[3]))->value('full_name') : null,
+            'district' => isset($addressParts[2]) ? District::where('code', trim($addressParts[2]))->value('full_name') : null,
+            'ward' => isset($addressParts[1]) ? Ward::where('code', trim($addressParts[1]))->value('full_name') : null,
+            'addressDetail' => isset($addressParts[0]) ? $addressParts[0] : null,
+        ];
+
         if ($bills->isEmpty()) {
             return view('client.pages.checkouts.order_tracking', [
                 'message' => 'Không tìm thấy đơn hàng nào với mã đơn hàng này.'
@@ -347,7 +365,7 @@ class CheckoutController extends Controller
             ->with('productVariant')
             ->get();
 
-        return view('client.pages.checkouts.order_tracking', compact('bills', 'billDetails'));
+        return view('client.pages.checkouts.order_tracking', compact('bills', 'billDetails', 'addressData'));
     }
 
     public function placeOrder(Request $request)
@@ -363,6 +381,9 @@ class CheckoutController extends Controller
         }
 
         $request->validate([
+            'provinces' => 'required|exists:provinces,code', // Tỉnh/thành phố phải tồn tại trong bảng provinces
+            'districs' => 'required|exists:districts,code',   // Quận/huyện phải tồn tại trong bảng districs
+            'wards' => 'required|exists:wards,code',
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'phone' => 'required|string|regex:/^0[0-9]{9}$/',
@@ -371,6 +392,12 @@ class CheckoutController extends Controller
             'payment_method' => 'required|in:cod,online',
             'note' => 'nullable|string|max:500',
         ], [
+            'provinces.required' => 'Vui lòng chọn tỉnh/thành phố',
+            'provinces.exists' => 'Vui lòng chọn tỉnh/thành phố',
+            'districs.required' => 'Vui lòng chọn quận/huyện',
+            'districs.exists' => 'Vui lòng chọn quận/huyện.',
+            'wards.required' => 'Vui lòng chọn phường/xã',
+            'wards.exists' => 'Vui lòng chọn phường/xã',
             'name.required' => 'Tên không được bỏ trống.',
             'email.required' => 'Email không được bỏ trống.',
             'email.email' => 'Email không đúng định dạng.',
@@ -380,6 +407,13 @@ class CheckoutController extends Controller
             'payment_method.required' => 'Vui lòng chọn phương thức thanh toán.',
             'payment_method.in' => 'Phương thức thanh toán không hợp lệ.',
         ]);
+
+        $province_code = $request->input('provinces');
+        $district_code = $request->input('districs');
+        $ward_code = $request->input('wards');
+        $address = $request->input('address');
+
+        $full_address = $address . ', ' . $ward_code . ', ' . $district_code . ', ' . $province_code;
 
         try {
             DB::beginTransaction();
@@ -419,7 +453,7 @@ class CheckoutController extends Controller
                     'user_name' => $request->input('name'),
                     'user_email' => $request->input('email'),
                     'user_phone' => $request->input('phone'),
-                    'user_address' => $request->input('address'),
+                    'user_address' => $full_address,
                     'voucher_id' => $voucherId,
                     'discount' => $discount,
                     'total_amount' => $totalAmountWithDiscount,
@@ -539,7 +573,7 @@ class CheckoutController extends Controller
                     'user_name' => $request->input('name'),
                     'user_email' => $request->input('email'),
                     'user_phone' => $request->input('phone'),
-                    'user_address' => $request->input('address'),
+                    'user_address' => $full_address,
                     'voucher_id' => $voucherId,
                     'discount' => $discount,
                     'total_amount' => $totalAmountWithDiscount,

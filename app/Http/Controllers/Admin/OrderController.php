@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\District;
 use App\Models\Order;
+use App\Models\Province;
 use App\Models\User;
+use App\Models\Ward;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Gate;
@@ -48,7 +51,18 @@ class OrderController extends Controller
             return back()->with('warning', 'Bạn không có quyền xem đơn hàng này!');
         }
 
-        return view('admin.layout.order.detail', compact('order'));
+        $address = $order->user_address;
+
+        $addressParts = explode(',', $address);
+
+        $addressData = [
+            'province' => isset($addressParts[3]) ? Province::where('code', trim($addressParts[3]))->value('full_name') : null,
+            'district' => isset($addressParts[2]) ? District::where('code', trim($addressParts[2]))->value('full_name') : null,
+            'ward' => isset($addressParts[1]) ? Ward::where('code', trim($addressParts[1]))->value('full_name') : null,
+            'addressDetail' => isset($addressParts[0]) ? $addressParts[0] : null,
+        ];
+
+        return view('admin.layout.order.detail', compact('order', 'addressData'));
     }
 
     public function confirmOrder($order_id)
@@ -144,6 +158,27 @@ class OrderController extends Controller
         if (Gate::denies('print', $order)) {
             return back()->with('warning', 'Bạn không có quyền in hóa đơn cho đơn hàng này!');
         }
+
+        $address = $order->user_address;
+
+        $addressParts = explode(',', $address);
+
+        $addressData = [
+            'province' => isset($addressParts[3]) ? Province::where('code', trim($addressParts[3]))->value('full_name') : null,
+            'district' => isset($addressParts[2]) ? District::where('code', trim($addressParts[2]))->value('full_name') : null,
+            'ward' => isset($addressParts[1]) ? Ward::where('code', trim($addressParts[1]))->value('full_name') : null,
+            'addressDetail' => isset($addressParts[0]) ? $addressParts[0] : null,
+        ];
+         $fulladdress =implode(', ', array_filter([
+            $addressData['addressDetail'],
+            $addressData['ward'],
+            $addressData['district'],
+            $addressData['province']
+        ], function($value) {
+            return !is_null($value) && $value !== '';
+        }));
+
+        $order['user_address'] = $fulladdress;
 
         if ($order->status == 2 || $order->status == 4) {
             $data = [
