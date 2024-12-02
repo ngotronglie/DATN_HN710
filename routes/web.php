@@ -19,18 +19,16 @@ use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\Ajax\ShopAjaxController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\FavoriteController;
-use App\Http\Controllers\ContactController;
-
 use App\Http\Controllers\Ajax\DeleteController;
 use App\Http\Controllers\Ajax\ChangeActiveController;
-
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\BlogController as ClientBlogController;
 use App\Http\Controllers\Client\ShopController;
 use App\Http\Controllers\Client\AccountController;
 use App\Http\Controllers\Client\CheckoutController;
 use App\Http\Controllers\Client\CommentController as ClientCommentController;
-
+use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -118,6 +116,14 @@ Route::middleware('auth')->group(function () {
 
 });
 Route::get('/verify/{token}', [AccountController::class, 'verify'])->name('verify');
+Route::middleware('auth')->group(function () {
+    Route::get('/chats', [ChatController::class, 'index'])->name('chat.index');
+    Route::get('/chats/create', [ChatController::class, 'createRoom'])->name('chat.createRoom');
+    Route::get('/chats/{chat}', [ChatController::class, 'show'])->name('chat.show');
+    Route::post('/chats/{chat}/send', [ChatController::class, 'sendMessage'])->name('chat.sendMessage');
+});
+
+
 
 
 
