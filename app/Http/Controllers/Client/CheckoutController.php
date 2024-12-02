@@ -656,7 +656,7 @@ class CheckoutController extends Controller
 
             DB::commit();
 
-            return view('client.pages.checkouts.success', compact('order'))->with('success', 'Đặt hàng thành công');
+            return view('client.pages.checkouts.success', compact('order'));
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());

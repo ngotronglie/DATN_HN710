@@ -5,7 +5,7 @@
     <div class="breadcrumb-area bg-light">
         <div class="container-fluid">
             <div class="breadcrumb-content text-center">
-                <h1 class="title">Thanh toánsss</h1>
+                <h1 class="title">Thanh toán</h1>
                 <ul>
                     <li><a href="{{ route('home') }}">Trang chủ</a></li>
                     <li class="active">Thanh toán</li>
