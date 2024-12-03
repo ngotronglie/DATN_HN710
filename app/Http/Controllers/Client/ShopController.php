@@ -13,6 +13,8 @@ class ShopController extends Controller
 {
     public function index()
     {
+        session()->forget('user_cart');
+
         $condition = function ($query) {
             $query->where('is_active', 1)
                 ->whereNull('deleted_at');
@@ -79,6 +81,8 @@ class ShopController extends Controller
 
     public function showByCategory($id)
     {
+        session()->forget('user_cart');
+
         $condition = function ($query) {
             $query->where('is_active', 1)
                 ->whereNull('deleted_at');
@@ -125,6 +129,8 @@ class ShopController extends Controller
 
     public function show($slug)
     {
+        session()->forget('user_cart');
+
         $product = Product::where('slug', $slug)
             ->where('is_active', 1)
             ->whereHas('category', function ($query) {
@@ -188,6 +194,8 @@ class ShopController extends Controller
 
     public function search(Request $request)
     {
+        session()->forget('user_cart');
+
         $input = $request->input('searchProduct');
 
         $condition = function ($query) {
@@ -227,6 +235,8 @@ class ShopController extends Controller
 
     public function filter(Request $request)
     {
+        session()->forget('user_cart');
+
         $condition = function ($query) {
             $query->where('is_active', 1)
                 ->whereNull('deleted_at');

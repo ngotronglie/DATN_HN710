@@ -15,6 +15,8 @@ class BlogController extends Controller
 {
     public function index()
     {
+        session()->forget('user_cart');
+
         $blogQuery = Blog::with('user', 'categoryBlog')
             ->where('is_active', 1)
             ->whereHas('categoryBlog', function ($query) {
@@ -47,6 +49,7 @@ class BlogController extends Controller
 
     public function getBlogCategory($id)
     {
+        session()->forget('user_cart');
 
         $hotblogs = Blog::with('user', 'categoryBlog')
             ->where('is_active', 1)
@@ -116,6 +119,8 @@ class BlogController extends Controller
 
     public function show($id)
     {
+        session()->forget('user_cart');
+
         $blog = Blog::with(['categoryBlog', 'user'])->where('is_active', 1)
             ->whereHas('categoryBlog', function ($query) {
                 $query->where('is_active', 1)
@@ -193,6 +198,8 @@ class BlogController extends Controller
 
     public function search(Request $request)
     {
+        session()->forget('user_cart');
+
         $input = $request->input('searchBlog');
 
         $blogQuery = Blog::with('user', 'categoryBlog')

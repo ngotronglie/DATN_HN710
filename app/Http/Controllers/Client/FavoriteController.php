@@ -16,6 +16,7 @@ class FavoriteController extends Controller
         $user = auth()->user();
 
         if ($user) {
+            session()->forget('user_cart');
 
             $favoriteProductData = $this->getFavoriteProductItemsData($user->id);
             $favoriteProducts = $favoriteProductData['favoriteProducts'];
