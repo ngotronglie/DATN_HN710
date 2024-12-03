@@ -38,12 +38,13 @@
                         </a>
                     </div>
                     <div class="card-body card-block">
-                        <form action="{{ route('admin.accounts.store') }}" method="post" enctype="multipart/form-data">
+                        <form id="addressForm" action="{{ route('admin.accounts.store') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <label for="name" class=" form-control-label">Tên người dùng</label>
                                 <input type="text" id="name" name="name" placeholder="Nhập tên"
-                                    class="form-control" value="{{ old('name') }}" requied>
+                                    class="form-control nameUser" value="{{ old('name') }}" requied>
+                                    <small class="error-message text-danger"></small>
                                 @error('name')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -51,17 +52,19 @@
                             <div class="form-group">
                                 <label for="email" class=" form-control-label">Email</label>
                                 <input type="text" id="email" name="email"
-                                    placeholder="Nhập email" class="form-control"
+                                    placeholder="Nhập email" class="form-control userEmail"
                                     value="{{ old('email') }}" requied>
+                                    <small class="error-message text-danger"></small>
                                 @error('email')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label for="phone" class=" form-control-label">Điện thoại</label>
+                                <label for="phone" class=" form-control-label">Số điện thoại</label>
                                 <input type="text" id="phone" name="phone"
-                                    placeholder="Nhập số điện thoại" class="form-control"
+                                    placeholder="Nhập số điện thoại" class="form-control userPhone"
                                     value="{{ old('phone') }}" requied>
+                                    <small class="error-message text-danger"></small>
                                 @error('phone')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -69,7 +72,8 @@
                             <div class="form-group">
                                 <label for="avatar" class="form-control-label">Ảnh</label>
                                 <input type="file" id="avatar" name="avatar"
-                                    class="form-control" requied accept="image/*">
+                                    class="form-control userAvt" requied accept="image/*">
+                                    <small class="error-message text-danger"></small>
                                     <div style="margin-top: 10px;">
                                         <img id="preview-avatar" src="#" alt="Ảnh xem trước" style="display: none; width: 200px; height: 200px; border-radius: 50%; object-fit: cover;">
                                     </div>
@@ -81,13 +85,14 @@
                                 <label for="password" class=" form-control-label">Mật khẩu</label>
                                 <div class="input-group">
                                 <input type="password" id="password" name="password"
-                                    placeholder="Nhập mật khẩu" class="form-control" requied>
+                                    placeholder="Nhập mật khẩu" class="form-control userPass" requied>
                                     <div class="input-group-append">
                                         <span class="input-group-text" onclick="togglePassword()">
                                             <i class="fa fa-eye" id="eyeIcon"></i>
                                         </span>
                                     </div>
                                 </div>
+                                <small class="passErr text-danger"></small>
                                 @error('password')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -95,7 +100,8 @@
                             <div class="form-group">
                                 <label for="date_of_birth" class=" form-control-label">Ngày sinh</label>
                                 <input type="date" id="date_of_birth" name="date_of_birth"
-                                    class="form-control" value="{{ old('date_of_birth') }}" requied>
+                                    class="form-control userBirth" value="{{ old('date_of_birth') }}" requied>
+                                    <small class="error-message text-danger"></small>
                                 @error('date_of_birth')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -110,24 +116,28 @@
                                         </option>
                                     @endforeach
                                 </select>
+                                <small class="error-message-province text-danger"></small>
                             </div>
                             <div class="form-group">
                                 <label for="date_of_birth" class=" form-control-label">Chọn Quận/Huyện</label>
                                 <select class="select2 districts form-control"  name="districs">
                                     <option value="">[Chọn Quận/Huyện]</option>
                                 </select>
+                                <small class="error-message-districts text-danger"></small>
                             </div>
                             <div class="form-group">
                                 <label for="date_of_birth" class=" form-control-label">Chọn Phường/Xã</label>
                                 <select class="select2 wards form-control" name="wards">
                                     <option value="">[Chọn Phường/Xã]</option>
                                 </select>
+                                <small class="error-message-wards text-danger"></small>
                             </div>
 
                             <div class="form-group">
                                 <label for="address" class=" form-control-label">Tên đường/tòa nhà/số nhà</label>
                                 <input type="text" id="address" name="address"
-                                    placeholder="Nhập Tên đường/tòa nhà/số nhà" class="form-control" requied>
+                                    placeholder="Nhập Tên đường/tòa nhà/số nhà" class="form-control input_address" requied>
+                                    <small class="error-message text-danger"></small>
                                     @if($errors->has('provinces') || $errors->has('address') || $errors->has('wards') || $errors->has('districs'))
                                     <small class="text-danger mt-5">Vui lòng nhập đầy đủ các trường địa chỉ.</small>
                                     @endif

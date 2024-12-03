@@ -169,7 +169,7 @@
                 </div>
 
             </div>
-            <form action="{{ route('placeOrder') }}" method="post">
+            <form id="addressForm" action="{{ route('placeOrder') }}" method="post">
                 @csrf
                 <div class="row mb-n4">
 
@@ -184,7 +184,8 @@
                                         <label for="name">Tên người nhận <span class="required">(*)</span></label>
                                         <input id="name" placeholder="Nhập tên người nhận" type="text"
                                             name="name" value="{{ old('name', Auth::user()->name ?? '') }}"
-                                            class="form-control">
+                                            class="form-control userName">
+                                        <small class="error-message text-danger"></small>
                                         @error('name')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
@@ -195,8 +196,9 @@
                                     <div class="checkout-form-list">
                                         <label for="email">Email <span class="required">(*)</span></label>
                                         <input id="email" placeholder="Nhập email" type="email" name="email"
-                                            value="{{ old('email', Auth::user()->email ?? '') }}" class="form-control">
-                                        @error('email')
+                                            value="{{ old('email', Auth::user()->email ?? '') }}" class="form-control userEmail">
+                                            <small class="error-message text-danger"></small>
+                                            @error('email')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
@@ -204,10 +206,11 @@
 
                                 <div class="col-md-12">
                                     <div class="checkout-form-list">
-                                        <label for="phone">Điện thoại <span class="required">(*)</span></label>
+                                        <label for="phone">Số điện thoại <span class="required">(*)</span></label>
                                         <input id="phone" type="text" name="phone" placeholder="Nhập số điện thoại"
-                                            value="{{ old('phone', Auth::user()->phone ?? '') }}" class="form-control">
-                                        @error('phone')
+                                            value="{{ old('phone', Auth::user()->phone ?? '') }}" class="form-control userPhone">
+                                            <small class="error-message text-danger"></small>
+                                            @error('phone')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
@@ -247,7 +250,7 @@
                                                 </option>
                                             @endforeach
                                         </select>
-                                        </select>
+                                        <small class="error-message-province text-danger"></small>
                                     </div>
                                 </div>
 
@@ -258,6 +261,7 @@
                                             name="districs">
                                             <option value="">[Chọn Quận/Huyện]</option>
                                         </select>
+                                        <small class="error-message-districts text-danger"></small>
                                     </div>
                                 </div>
 
@@ -268,6 +272,7 @@
                                             name="wards">
                                             <option value="">[Chọn Phường/Xã]</option>
                                         </select>
+                                        <small class="error-message-wards text-danger"></small>
                                     </div>
                                 </div>
 
@@ -275,8 +280,9 @@
                                     <div class="checkout-form-list">
                                         <label for="address">Tên đường/tòa nhà/số nhà <span
                                                 class="required">(*)</span></label>
-                                        <input id="address" type="text" name="address" class="form-control"
+                                        <input id="address" type="text" name="address" class="form-control input_address"
                                             placeholder="Tên đường/tòa nhà/số nhà" value="{{ $adressDetail }}">
+                                            <small class="error-message text-danger"></small>
                                     </div>
                                 </div>
 
@@ -284,18 +290,6 @@
                                     <small class="text-danger">Vui lòng nhập đầy đủ các trường địa chỉ</small>
                                 @endif
 
-
-                                {{-- <div class="col-md-12">
-                                    <div class="checkout-form-list">
-                                        <label>Điện thoại <span class="required">*</span></label>
-                                        <input placeholder="Nhập số điện thoại" type="text" name="phone"
-                                            value="{{ old('phone', Auth::user()->phone ?? '') }}">
-                                        @error('phone')
-                                            <small class="text-danger">{{$message}}</small>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <!-- Phone Input End --> --}}
 
                                 <!-- Notes Input Start -->
                                 <div class="order-notes mt-3 mb-n2">

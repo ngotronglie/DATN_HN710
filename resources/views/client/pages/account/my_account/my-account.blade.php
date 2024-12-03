@@ -103,7 +103,7 @@
                                         <div class="myaccount-content">
                                             <h3 class="title">Thông tin cá nhân</h3>
                                             <div class="account-details-form">
-                                                <form action="{{ route('updateMyAcount', $user->id) }}" method="post"
+                                                <form id="addressForm" action="{{ route('updateMyAcount', $user->id) }}" method="post"
                                                     enctype="multipart/form-data">
                                                     @csrf
 
@@ -202,6 +202,7 @@
                                                                         </option>
                                                                     @endforeach
                                                                 </select>
+                                                                <small class="error-message-province text-danger"></small>
                                                             </div>
                                                         </div>
 
@@ -212,6 +213,7 @@
                                                                 <select class="select2 districts" data-id="{{$district}}" name="districs">
                                                                     <option value="">[Chọn Quận/Huyện]</option>
                                                                 </select>
+                                                                <small class="error-message-districts text-danger"></small>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -224,6 +226,7 @@
                                                                 <select class="select2 wards" data-id="{{$ward}}" name="wards">
                                                                     <option value="">[Chọn Phường/Xã]</option>
                                                                 </select>
+                                                                <small class="error-message-wards text-danger"></small>
                                                             </div>
                                                         </div>
 
@@ -234,6 +237,7 @@
                                                                 <input style="color: rgb(112, 110, 110)" class="input_address" type="text"
                                                                     placeholder="Tên đường/tòa nhà/số nhà" name="address"
                                                                     value="{{ old('address', $adressDetail) }}">
+                                                                    <small class="error-message text-danger"></small>
                                                             </div>
                                                         </div>
                                                     </div>
