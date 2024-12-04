@@ -42,6 +42,19 @@
                                 </div>
                             </div>
 
+                            <div class="form-group row">
+                                <label for="image" class="col-sm-3 col-form-label">Ảnh đại diện</label>
+                                <div class="col-sm-9">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="avatar" name="avatar" onchange="previewImage()" accept="image/*">
+                                        <label class="custom-file-label" for="avatar">Chọn ảnh...</label>
+                                        @error('avatar')
+                                        <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Số điện thoại -->
                             <div class="form-group row">
                                 <label for="phone" class="col-sm-3 col-form-label">Số điện thoại</label>
