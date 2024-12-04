@@ -154,9 +154,10 @@
                                                             <div class="single-input-item mb-3">
                                                                 <label for="phone" class="required mb-1">Điện
                                                                     thoại</label>
-                                                                <input type="text" id="phone"
+                                                                <input type="text" id="phone" class="userPhone"
                                                                     placeholder="Điện thoại" name="phone"
                                                                     value="{{ old('phone', $user->phone) }}">
+                                                                    <small class="error-message text-danger"></small>
                                                                 @error('phone')
                                                                     <small class="text-danger">
                                                                         {{ $message }}
@@ -195,7 +196,7 @@
                                                                 <label for="province" class="required mb-1">Tỉnh/Thành
                                                                     phố</label>
                                                                 <select class="select2 province" data-id="{{$city}}" name="provinces">
-                                                                    <option value="">[Chọn thành phố]</option>
+                                                                    <option value="">[Chọn Thành Phố]</option>
                                                                     @foreach ($provinces as $item)
                                                                         <option value="{{ $item->code }}" {{ $city == $item->code ? 'selected' : '' }}>
                                                                           {{ $item->name }}
@@ -209,7 +210,7 @@
                                                         <div class="col-lg-6">
                                                             <div class="single-input-item mb-3">
                                                                 <label for="district"
-                                                                    class="required mb-1">Quận/huyện</label>
+                                                                    class="required mb-1">Quận/Huyện</label>
                                                                 <select class="select2 districts" data-id="{{$district}}" name="districs">
                                                                     <option value="">[Chọn Quận/Huyện]</option>
                                                                 </select>
@@ -222,7 +223,7 @@
                                                         <div class="col-lg-6">
                                                             <div class="single-input-item mb-3">
                                                                 <label for="ward"
-                                                                    class="required mb-1">Phường/xã</label>
+                                                                    class="required mb-1">Phường/Xã</label>
                                                                 <select class="select2 wards" data-id="{{$ward}}" name="wards">
                                                                     <option value="">[Chọn Phường/Xã]</option>
                                                                 </select>
@@ -237,7 +238,7 @@
                                                                 <input style="color: rgb(112, 110, 110)" class="input_address" type="text"
                                                                     placeholder="Tên đường/tòa nhà/số nhà" name="address"
                                                                     value="{{ old('address', $adressDetail) }}">
-                                                                    <small class="error-message text-danger"></small>
+                                                                    <small class="error-address text-danger"></small>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -605,6 +606,28 @@
 <script src="{{ asset('plugins/js/location.js') }}"></script>
     <script>
         $(document).ready(function() {
+            $('.userPhone').on('input', function () {
+                $('.userPhone').next('.error-message').html('');
+            });
+
+            $('#addressForm').submit(function (event) {
+                let isValid = true;
+
+                $('.error-message').text('');
+
+                if ($('.userPhone').val() == '') {
+                    $('.userPhone').next('.error-message').html('Vui lòng nhập số điện thoại.');
+                    isValid = false;
+                } else if (!/^(0(3[2-9]|5[2689]|7[0-9]|8[1-9]|9[0-9]))[0-9]{7}$/.test($('.userPhone').val())) {
+                    $('.userPhone').next('.error-message').html('Vui lòng nhập số điện thoại di động hợp lệ.');
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    event.preventDefault();
+                }
+            });
+
             $('#avatar').on('change', function(event) {
                 const file = event.target.files[0];
                 if (file) {

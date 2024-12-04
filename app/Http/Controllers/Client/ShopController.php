@@ -11,7 +11,46 @@ use Illuminate\Http\Request;
 
 class ShopController extends Controller
 {
-    public function index()
+    // public function index()
+    // {
+    //     session()->forget('user_cart');
+
+    //     $condition = function ($query) {
+    //         $query->where('is_active', 1)
+    //             ->whereNull('deleted_at');
+    //     };
+
+    //     $categories = $this->getCategori();
+
+    //     $calculatePriceRange = $this->getPriceProduct();
+
+    //     $products = Product::where('is_active', 1)
+    //         ->whereHas('category', $condition)
+    //         ->with([
+    //             'variants' => function ($query) {
+    //                 $query->whereHas('size', function ($query) {
+    //                     $query->whereNull('deleted_at');
+    //                 })->whereHas('color', function ($query) {
+    //                     $query->whereNull('deleted_at');
+    //                 });
+    //             }
+
+    //         ])
+    //         ->orderBy('id', 'desc')
+    //         ->paginate(6);
+
+    //     $producthot = $this->productHot();
+
+    //     $products->getCollection()->transform($calculatePriceRange);
+    //     $producthot->transform($calculatePriceRange);
+
+    //     $maxPrice = $this->getMaxPrice();
+
+    //     return view('client.pages.products.shop', compact('products', 'categories', 'producthot', 'maxPrice'));
+    // }
+
+
+    public function index(Request $request)
     {
         session()->forget('user_cart');
 
@@ -21,10 +60,11 @@ class ShopController extends Controller
         };
 
         $categories = $this->getCategori();
-
         $calculatePriceRange = $this->getPriceProduct();
+        $perPage = $request->input('perPage', 6);
+        $sort = $request->input('sort', 'newest');
 
-        $products = Product::where('is_active', 1)
+        $query = Product::where('is_active', 1)
             ->whereHas('category', $condition)
             ->with([
                 'variants' => function ($query) {
@@ -34,49 +74,32 @@ class ShopController extends Controller
                         $query->whereNull('deleted_at');
                     });
                 }
+            ]);
 
-            ])
-            ->orderBy('id', 'desc')
-            ->paginate(6);
+        if ($sort == 'price_asc') {
+            $query->orderBy(\DB::raw("(SELECT MIN(price_sale) FROM product_variants WHERE product_id = products.id)"), 'asc');
+        } elseif ($sort == 'price_desc') {
+            $query->orderBy(\DB::raw("(SELECT MIN(price_sale) FROM product_variants WHERE product_id = products.id)"), 'desc');
+        } else {
+            $query->orderBy('id', 'desc');
+        }
 
         $producthot = $this->productHot();
 
-        $products->getCollection()->transform($calculatePriceRange);
         $producthot->transform($calculatePriceRange);
 
         $maxPrice = $this->getMaxPrice();
-
+        if ($perPage != 'all') {
+            $products = $query->paginate($perPage);
+            $products->getCollection()->transform($calculatePriceRange);
         return view('client.pages.products.shop', compact('products', 'categories', 'producthot', 'maxPrice'));
-    }
-
-    private function getMaxPrice()
-    {
-        $condition = function ($query) {
-            $query->where('is_active', 1)
-                ->whereNull('deleted_at');
-        };
-
-        $calculatePriceRange = $this->getPriceProduct();
-
-        $products = Product::where('is_active', 1)
-            ->whereHas('category', $condition)
-            ->with([
-                'variants' => function ($query) {
-                    $query->whereHas('size', function ($query) {
-                        $query->whereNull('deleted_at');
-                    })->whereHas('color', function ($query) {
-                        $query->whereNull('deleted_at');
-                    });
-                }
-            ])
-            ->orderBy('id', 'desc')
-            ->get();
-
-        $products->transform($calculatePriceRange);
-
-        $maxPrice = $products->pluck('max_price_sale')->max();
-
-        return $maxPrice;
+        } else {
+            $products = $query->get();
+            $products->transform($calculatePriceRange);
+            $total = $products->count();
+            $lastItem = $products->last();
+        return view('client.pages.products.shop', compact('products', 'categories', 'producthot', 'maxPrice','total','lastItem'));
+        }
     }
 
     public function showByCategory($id)
@@ -179,9 +202,11 @@ class ShopController extends Controller
         $comments = Comment::where('product_id', $product->id)
             ->where('is_active', 1)
             ->whereNull('parent_id')
-            ->with(['children' => function ($query) {
-                $query->orderBy('created_at', 'desc');
-            }])
+            ->with([
+                'children' => function ($query) {
+                    $query->orderBy('created_at', 'desc');
+                }
+            ])
             ->orderBy('created_at', 'desc')
             ->paginate(2);
 
@@ -285,6 +310,35 @@ class ShopController extends Controller
         ));
     }
 
+    private function getMaxPrice()
+    {
+        $condition = function ($query) {
+            $query->where('is_active', 1)
+                ->whereNull('deleted_at');
+        };
+
+        $calculatePriceRange = $this->getPriceProduct();
+
+        $products = Product::where('is_active', 1)
+            ->whereHas('category', $condition)
+            ->with([
+                'variants' => function ($query) {
+                    $query->whereHas('size', function ($query) {
+                        $query->whereNull('deleted_at');
+                    })->whereHas('color', function ($query) {
+                        $query->whereNull('deleted_at');
+                    });
+                }
+            ])
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $products->transform($calculatePriceRange);
+
+        $maxPrice = $products->pluck('max_price_sale')->max();
+
+        return $maxPrice;
+    }
 
     private function getPriceProduct()
     {
@@ -328,90 +382,9 @@ class ShopController extends Controller
                 }
             ])
             ->orderBy('view', 'desc')
-            ->take(7)
+            ->take(6)
             ->get();
 
         return $producthot;
     }
-
-
-
-    // public function getSizePrice(Request $request)
-    // {
-    //     $productId = $request->input('idProduct');
-    //     $colorId = $request->input('idColor');
-
-    //     $variants = ProductVariant::where('product_id', $productId)
-    //         ->where('color_id', $colorId)
-    //         ->with('size')
-    //         ->get();
-
-    //     $minPrice = $variants->min('price_sale');
-    //     $maxPrice = $variants->max('price_sale');
-
-    //     $response = [];
-    //     $sizesSeen = [];
-
-    //     foreach ($variants as $variant) {
-
-    //         if (!in_array($variant->size->name, $sizesSeen)) {
-    //             $response[] = [
-    //                 'id' => $variant->id,
-    //                 'size' => $variant->size->name,
-    //                 'price' => $variant->price,
-    //                 'price_sale' => $variant->price_sale,
-    //                 'product_id' => $variant->product_id,
-    //                 'quantity' => $variant->quantity
-    //             ];
-
-    //             $sizesSeen[] = $variant->size->name;
-    //         }
-    //     }
-
-    //     return response()->json([
-    //         'variants' => $response,
-    //         'min_price' => $minPrice,
-    //         'max_price' => $maxPrice
-    //     ]);
-    // }
-
-
-    // public function getSizePriceDetail(Request $request)
-    // {
-    //     Route::get('/check-db', function () {
-    //         try {
-    //             DB::connection()->getPdo();
-    //             return 'Kết nối thành công!';
-    //         } catch (\Exception $e) {
-    //             return 'Không thể kết nối: ' . $e->getMessage();
-    //         }
-    //     });
-    //     $productId = $request->input('idProduct');
-    //     $colorId = $request->input('idColor');
-
-    //     $variants = ProductVariant::where('product_id', $productId)
-    //         ->where('color_id', $colorId)
-    //         ->with('size')
-    //         ->get();
-
-    //     $minPrice = $variants->min('price_sale');
-    //     $maxPrice = $variants->max('price_sale');
-
-    //     $response = [];
-    //     foreach ($variants as $variant) {
-    //         $response[] = [
-    //             'id' => $variant->id,
-    //             'size' => $variant->size->name,
-    //             'price' => $variant->price,
-    //             'price_sale' => $variant->price_sale,
-    //             'quantity' => $variant->quantity
-    //         ];
-    //     }
-
-    //     return response()->json([
-    //         'variants' => $response,
-    //         'min_price' => $minPrice,
-    //         'max_price' => $maxPrice
-    //     ]);
-    // }
 }

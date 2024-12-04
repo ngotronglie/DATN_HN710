@@ -9,6 +9,7 @@
 
             $('.districts').html('<option value="">[Chọn Quận/Huyện]</option>');
             $('.wards').html('<option value="">[Chọn Phường/Xã]</option>');
+            $('.input_address').val('');
 
             $.ajax({
                 type: 'get',
@@ -33,6 +34,8 @@
             let _this = $(this)
             let district_id = _this.val()
 
+            $('.input_address').val('');
+
             $.ajax({
                 type: 'get',
                 url: 'ajax/location/getWards',
@@ -50,6 +53,10 @@
 
         })
     }
+
+    $(document).on('change', '.wards', function () {
+        $('.input_address').val('');
+    })
 
     $(document).ready(function () {
         let selectedCity = $('.province').attr('data-id');
@@ -133,91 +140,6 @@
 
     $(document).ready(function () {
 
-        $('#addressForm').submit(function (event) {
-            let isValid = true;
-
-            $('.error-message').text('');
-
-            if ($('.userName').val() == '') {
-                $('.userName').next('.error-message').html('Vui lòng nhập tên người nhận.');
-                isValid = false;
-            }
-
-            if ($('.nameUser').val() == '') {
-                $('.nameUser').next('.error-message').html('Vui lòng nhập tên người dùng.');
-                isValid = false;
-            }
-
-            if ($('.userEmail').val() == '') {
-                $('.userEmail').next('.error-message').html('Vui lòng nhập email.');
-                isValid = false;
-            }else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test($('.userEmail').val())) {
-                $('.userEmail').next('.error-message').html('Vui lòng nhập email hợp lệ.');
-                isValid = false;
-            }
-
-            if ($('.userPhone').val() == '') {
-                $('.userPhone').next('.error-message').html('Vui lòng nhập số điện thoại.');
-                isValid = false;
-            }
-
-            if ($('.userAvt').val() == '') {
-                $('.userAvt').next('.error-message').html('Vui lòng chọn ảnh đại diện.');
-                isValid = false;
-            }
-
-            if ($('.userPass').val() == '') {
-                $('.passErr').html('Vui lòng nhập mật khẩu.');
-                isValid = false;
-            } else {
-                const userPassValue = $('.userPass').val();
-
-                if (userPassValue && userPassValue.split('').length < 8) {
-                    $('.passErr').text('Mật khẩu phải có ít nhất 8 ký tự.');
-                    isValid = false;
-                }
-
-                if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/.test(userPassValue)) {
-                    $('.passErr').text('Mật khẩu phải chứa ít nhất một chữ cái in hoa, một chữ cái in thường và một số.');
-                    isValid = false;
-                }
-            }
-
-            let birthDate = new Date($('.userBirth').val());
-            let age = new Date().getFullYear() - birthDate.getFullYear();
-            if ($('.userBirth').val() == '') {
-                $('.userBirth').next('.error-message').html('Vui lòng chọn ngày sinh và người dùng phải đủ 18 tuổi.');
-                isValid = false;
-            } else if (age < 18) {
-                $('.userBirth').next('.error-message').html('Bạn phải đủ 18 tuổi.');
-                isValid = false;
-            }
-
-            if ($('.province').val() == '') {
-                $('.error-message-province').html('Vui lòng chọn tỉnh/thành phố.');
-                isValid = false;
-            }
-
-            if ($('.districts').val() == '') {
-                $('.error-message-districts').html('Vui lòng chọn quận/huyện.');
-                isValid = false;
-            }
-
-            if ($('.wards').val() == '') {
-                $('.error-message-wards').html('Vui lòng chọn phường/xã.');
-                isValid = false;
-            }
-
-            if ($('.input_address').val() == '') {
-                $('.input_address').next('.error-message').html('Vui lòng nhập tên đường/tòa nhà/số nhà.');
-                isValid = false;
-            }
-
-            if (!isValid) {
-                event.preventDefault();
-            }
-        });
-
         $('.province').change(function () {
             $('.error-message-province').html('');
         });
@@ -231,36 +153,39 @@
         });
 
         $('.input_address').on('input', function () {
-            $('.input_address').next('.error-message').html('');
+            $('.error-address').html('');
         });
 
-        $('.userName').on('input', function () {
-            $('.userName').next('.error-message').html('');
+        $('#addressForm').submit(function (event) {
+            let isValid = true;
+
+            $('.error-message').text('');
+
+            if ($('.province').val() == '') {
+                $('.error-message-province').html('Vui lòng chọn tỉnh/thành phố.');
+                isValid = false;
+            }
+
+            if ($('.districts').val() == '' || $('.districts').val() == 0) {
+                $('.error-message-districts').html('Vui lòng chọn quận/huyện.');
+                isValid = false;
+            }
+
+            if ($('.wards').val() == '') {
+                $('.error-message-wards').html('Vui lòng chọn phường/xã.');
+                isValid = false;
+            }
+
+            if ($('.input_address').val() == '') {
+                $('.error-address').html('Vui lòng nhập tên đường/tòa nhà/số nhà.');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+            }
         });
 
-        $('.nameUser').on('input', function () {
-            $('.nameUser').next('.error-message').html('');
-        });
-
-        $('.userEmail').on('input', function () {
-            $('.userEmail').next('.error-message').html('');
-        });
-
-        $('.userPhone').on('input', function () {
-            $('.userPhone').next('.error-message').html('');
-        });
-
-        $('.userAvt').on('input', function () {
-            $('.userAvt').next('.error-message').html('');
-        });
-
-        $('.userPass').on('input', function () {
-            $('.passErr').html('');
-        });
-
-        $('.userBirth').on('input', function () {
-            $('.userBirth').next('.error-message').html('');
-        });
     });
 
     $(document).ready(function () {

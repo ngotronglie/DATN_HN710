@@ -123,7 +123,7 @@
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control input_address" placeholder="Tên đường/tòa nhà/số nhà"
                                         id="address-detail" name="address" value="{{ old('address', $adressDetail) }}">
-                                        <small class="error-message text-danger"></small>
+                                        <small class="error-address text-danger"></small>
                                         @if($errors->has('provinces') || $errors->has('address') || $errors->has('wards') || $errors->has('districs'))
                                         <span class="text-danger mt-5">Vui lòng nhập đầy đủ các trường địa chỉ.</span>
                                         @endif

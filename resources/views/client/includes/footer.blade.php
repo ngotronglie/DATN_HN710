@@ -10,7 +10,7 @@
                         <!-- Contact Address Start -->
                         <ul class="widget-address">
                             <li><span>Địa chỉ: </span> 132 Xuân Phương, Hà Nội</li>
-                            <li><span>Gọi đến: </span> <a href="#"> 0376900771</a></li>
+                            <li><span>Gọi đến: </span> <a href="#"> 0376 900 771</a></li>
                             <li><span>Gửi mail đến: </span> <a href="#"> yourmail@example.com</a></li>
                         </ul>
                         <!-- Contact Address End -->
@@ -91,9 +91,10 @@
             <div class="row align-items-center">
                 <div class="col-12 text-center">
                     <div class="copyright-content">
-                        <p class="mb-0">© 2024 <strong>Destry </strong> Thiết kế với <i
-                            class="fa fa-heart text-danger"></i> bởi <a
-                            href="#">Team.</a></p>
+                        <p class="mb-0">© 2024 <strong>Fashion Wave </strong> Thiết kế với bởi <a
+                            href="#"><i
+                            class="fa fa-heart text-danger"></i>
+                            Team WD_116.</a></p>
                     </div>
                 </div>
             </div>

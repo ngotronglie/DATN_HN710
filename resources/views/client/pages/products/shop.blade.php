@@ -28,41 +28,51 @@
 
                         <div class="shop-top-bar-left mb-md-0 mb-2">
                             <div class="shop-top-show">
-                                {{-- <span>Showing 1–{{$totalPages}} of 39 results</span> --}}
-                                <span>Hiển thị 6/40 của 40 sản phẩm</span>
-
+                                @if (request('perPage') != 'all')
+                                <span>Hiển thị {{ $products->firstItem() }} - {{ $products->lastItem() }} của tổng cộng {{ $products->total() }} sản phẩm</span>
+                                @else
+                                <span>Hiển thị {{ $lastItem ? $products->search($lastItem) + 1 : $total }}/{{ $total }} sản phẩm</span>
+                                @endif
                             </div>
                         </div>
 
                         <div class="shop-top-bar-right">
+
                             <div class="shop-short-by mr-4">
-                                <select class="nice-select" aria-label=".form-select-sm example">
-                                    <option selected>Hiển thị 6</option>
-                                    <option value="1">Show 12</option>
-                                    <option value="2">Show 24</option>
-                                    <option value="3">Hiển thị tất cả</option>
-                                </select>
+                                <form method="GET" action="{{ route('shops.index') }}">
+                                    <div class="form-group">
+                                        <select name="perPage" class="nice-select" aria-label=".form-select-sm example" onchange="this.form.submit()">
+                                            <option value="6" {{ request('perPage') == 6 ? 'selected' : '' }}>Hiển thị 6</option>
+                                            <option value="12" {{ request('perPage') == 12 ? 'selected' : '' }}>Hiển thị 12</option>
+                                            <option value="24" {{ request('perPage') == 24 ? 'selected' : '' }}>Hiển thị 24</option>
+                                            <option value="all" {{ request('perPage') == 'all' ? 'selected' : '' }}>Hiển thị tất cả</option>
+                                        </select>
+                                    </div>
+                                    <input type="hidden" name="sort" value="{{ request('sort') == null ? 'newest' : request('sort')}}">
+                                </form>
                             </div>
 
                             <div class="shop-short-by mr-4">
-                                <select class="nice-select" aria-label=".form-select-sm example">
-                                    <option selected>Mới nhất</option>
-                                    <option value="1">Giá thấp đến cao</option>
-                                    <option value="2">Giá cao đến thấp</option>
-                                </select>
+                                <form method="GET" action="{{ route('shops.index') }}">
+                                    <select name="sort" class="nice-select" aria-label="Select sort order" onchange="this.form.submit()">
+                                        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Mới nhất</option>
+                                        <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Giá thấp đến cao</option>
+                                        <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Giá cao đến thấp</option>
+                                    </select>
+                                    <input type="hidden" name="perPage" value="{{ request('perPage') == null ? 6 : request('perPage') }}">
+                                </form>
                             </div>
 
                             <div class="shop_toolbar_btn">
-                                <button data-role="grid_3" type="button" class="active btn-grid-4" title="Grid"><i
-                                        class="fa fa-th"></i></button>
-                                <button data-role="grid_list" type="button" class="btn-list" title="List"><i
-                                        class="fa fa-th-list"></i></button>
+                                <button data-role="grid_3" type="button" class="active btn-grid-4" title="Grid"><i class="fa fa-th"></i></button>
+                                <button data-role="grid_list" type="button" class="btn-list" title="List"><i class="fa fa-th-list"></i></button>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="row shop_wrapper grid_3">
-                        {{-- Product --}}
+
                         @if ($products->isEmpty())
                             <h1 class="text-center">Hiện không có sản phẩm!</h1>
                             <span class="show-price maxPrice"data-maxPrice="{{ $maxPrice }}">
@@ -78,10 +88,7 @@
                                                 <img class="second-image" src="{{ Storage::url($item->first_image) }}"
                                                     alt="Product" />
                                             </a>
-                                            <span class="badges">
-                                                <span class="sale">Mới</span>
-                                            </span>
-                                            {{-- lam tu day them san pham vao db san pham yeu thich --}}
+
                                             <div class="actions">
                                                 <span class="action addFavorite" data-slug="{{ $item->slug }}"
                                                     data-id="{{ $item->id }}">
@@ -111,18 +118,6 @@
                                                                 : number_format($item->min_price_sale, 0, ',', '.') . 'đ - ' . number_format($item->max_price_sale, 0, ',', '.') . ' đ' }}
                                                             </span>
                                                     </span>
-
-                                                    {{-- <div class="price price-options">
-                                                        <span id="product-price-sale-{{ $item->id }}"
-                                                            class="show-price maxPrice" data-filpro="{{$item->id ?? 0}}" data-maxPrice="{{$maxPrice}}">
-                                                            {{ $item->min_price_sale == $item->max_price_sale
-                                                                ? number_format($item->min_price_sale) . ' đ'
-                                                                : number_format($item->min_price_sale).' đ' . ' - ' . number_format($item->max_price_sale) . ' đ' }}
-                                                        </span>
-                                                        <span id="old-price" class="old-price-{{ $item->id }}"></span>
-
-                                                    </div> --}}
-
                                                 </div>
                                             </div>
 
@@ -131,11 +126,6 @@
                                                     class="btn btn-sm btn-outline-dark btn-hover-primary wishlist addFavorite"
                                                     data-slug="{{ $item->slug }}" data-id="{{ $item->id }}"><i
                                                         class="fa fa-heart"></i></span>
-                                                {{-- <button id="addcart-{{$item->id}}"
-                                                    data-id="{{$item->id}}"
-                                                    class="btn btn-sm btn-outline-dark btn-hover-primary"
-                                                    title="Thêm vào giỏ hàng">Thêm vào giỏ hàng
-                                                </button> --}}
                                                 <button class="btn btn-sm btn-outline-dark btn-hover-primary showProduct"
                                                     data-slug="{{ $item->slug }}" data-bs-toggle="modal"
                                                     data-bs-target="#exampleModalCenter">Thêm vào giỏ
@@ -157,19 +147,24 @@
                     <div class="shop_toolbar_wrapper mt-10">
                         <div class="shop-top-bar-left">
                             <div class="shop-short-by mr-4">
-                                <select class="nice-select rounded-0" aria-label=".form-select-sm example">
-                                    <option selected>Hiển thị 6</option>
-                                    <option value="1">Hiển thị 12</option>
-                                    <option value="2">Hiển thị 24</option>
-                                    <option value="3">Hiển thị tất cả</option>
-                                </select>
+                                <form method="GET" action="{{ route('shops.index') }}">
+                                    <div class="form-group">
+                                        <select name="perPage" class="nice-select" aria-label=".form-select-sm example" onchange="this.form.submit()">
+                                            <option value="6" {{ request('perPage') == 6 ? 'selected' : '' }}>Hiển thị 6</option>
+                                            <option value="12" {{ request('perPage') == 12 ? 'selected' : '' }}>Hiển thị 12</option>
+                                            <option value="24" {{ request('perPage') == 24 ? 'selected' : '' }}>Hiển thị 24</option>
+                                            <option value="all" {{ request('perPage') == 'all' ? 'selected' : '' }}>Hiển thị tất cả</option>
+                                        </select>
+                                    </div>
+                                </form>
                             </div>
                         </div>
 
+                        @if (request('perPage') != 'all')
                         <div class="shop-top-bar-right">
                             <nav>
                                 <ul class="pagination">
-                                    <!-- Previous Page Link -->
+
                                     @if ($products->onFirstPage())
                                         <li class="page-item disabled">
                                             <a class="page-link" href="#" aria-label="Previous">
@@ -186,7 +181,6 @@
                                         </li>
                                     @endif
 
-                                    <!-- Page Number Links -->
                                     @for ($i = 1; $i <= $products->lastPage(); $i++)
                                         <li class="page-item {{ $products->currentPage() == $i ? 'active' : '' }}">
                                             <a class="page-link"
@@ -196,7 +190,6 @@
                                         </li>
                                     @endfor
 
-                                    <!-- Next Page Link -->
                                     @if ($products->hasMorePages())
                                         <li class="page-item">
                                             <a class="page-link"
@@ -215,12 +208,37 @@
                                 </ul>
                             </nav>
                         </div>
+                        @else
+                        <div class="shop-top-bar-right">
+                            <nav>
+                                <ul class="pagination">
+                                    <li style="cursor: pointer;" class="page-item disabled">
+                                        <span class="page-link" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </span>
+                                    </li>
+
+                                    <li style="cursor: pointer;" class="page-item active">
+                                        <span class="page-link">1</span>
+                                    </li>
+
+
+                                    <li style="cursor: pointer;" class="page-item">
+                                        <span class="page-link" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </span>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+
+                        @endif
 
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-12 col-custom">
-                    <!-- Sidebar Widget Start -->
+
                     <aside class="sidebar_widget mt-10 mt-lg-0">
                         <div class="widget_inner aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
                             <div class="widget-list mb-10">
@@ -236,48 +254,8 @@
                                 </form>
                             </div>
 
-                            {{-- <div class="widget-list mb-10">
-                                <h3 class="widget-title mb-5">Lọc giá</h3>
-                                <form action="{{ route('shop.filter') }}" method="GET">
-                                    <div id="slider-range"
-                                        class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
-                                        <div class="ui-slider-range ui-corner-all ui-widget-header"
-                                            style="left: 0%; width: 100%;"></div>
-                                        <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"
-                                            style="left: 0%;"></span>
-                                        <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"
-                                            style="left: 100%;"></span>
-                                    </div>
-                                    <input class="slider-range-amount" type="text" id="amount" readonly
-                                        value="₫{{ request('min_price', 0) }} - ₫{{ request('max_price', $maxPrice) }}">
-                                    <input type="hidden" name="min_price" id="min-price"
-                                        value="{{ request('min_price', 0) }}">
-                                    <input type="hidden" name="max_price" id="max-price"
-                                        value="{{ request('max_price', $maxPrice) }}">
-
-                                    <button class="slider-range-submit" type="submit">Lọc</button>
-                                </form>
-                            </div> --}}
-
                             <div class="widget-list mb-10">
                                 <h3 class="widget-title mb-5">Lọc giá</h3>
-                                {{-- <form action="{{ route('shop.filter') }}" method="GET">
-                                    <div id="slider-range"
-                                        class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
-                                        <div class="ui-slider-range ui-corner-all ui-widget-header"></div>
-                                        <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"
-                                            aria-label="Minimum price handle"></span>
-                                        <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"
-                                            aria-label="Maximum price handle"></span>
-                                    </div>
-                                    <input class="slider-range-amount max_fil" type="text" id="amount" readonly
-                                        value="₫{{ request('min_price', 0) }} - ₫{{ request('max_price', $maxPrice) }}" data-max_fil="{{$maxPrice}}">
-                                    <input type="hidden" name="min_price" id="min-price"
-                                        value="{{ request('min_price', 0) }}">
-                                    <input type="hidden" name="max_price" id="max-price"
-                                        value="{{ request('max_price', $maxPrice) }}">
-                                    <button class="slider-range-submit" type="submit">Lọc</button>
-                                </form> --}}
                                 <form action="{{ route('shop.filter') }}" method="GET">
                                     <div id="slider-range"
                                         class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
@@ -295,8 +273,6 @@
                                         value="{{ request('max_price', $maxPrice) }}">
                                     <button class="slider-range-submit" type="submit">Lọc</button>
                                 </form>
-
-
                             </div>
 
 
@@ -318,12 +294,11 @@
                                             thêm</p>
                                     @endif
                                 </div>
-
                             </div>
 
 
                             <div class="widget-list">
-                                <h3 class="widget-title mb-4">Sản phẩm hot</h3>
+                                <h3 class="widget-title mb-4">Sản phẩm nổi bật</h3>
                                 <div class="sidebar-body product-list-wrapper mb-n6">
                                     @foreach ($producthot as $index => $item)
                                         <div class="single-product-list product-hover mb-6">
@@ -340,11 +315,6 @@
                                                     <a
                                                         href="{{ route('shops.show', $item->slug) }}">{{ $item->name }}</a>
                                                 </h5>
-                                                {{-- <span style="font-size: 0.9rem" id="product-price-sale-{{ $item->id }}" class="show-price">
-                                                    {{ $item->min_price_sale == $item->max_price_sale
-                                                        ? number_format($item->min_price_sale) . ' đ'
-                                                        : number_format($item->min_price_sale) .' đ' . ' - ' . number_format($item->max_price_sale) . ' đ' }}
-                                                </span> --}}
                                                 <span class="price">
                                                     <span class="new">
                                                         {{ $item->min_price_sale == $item->max_price_sale
@@ -358,7 +328,6 @@
                             </div>
                         </div>
                     </aside>
-                    <!-- Sidebar Widget End -->
                 </div>
             </div>
         </div>

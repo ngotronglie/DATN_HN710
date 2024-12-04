@@ -282,7 +282,7 @@
                                                 class="required">(*)</span></label>
                                         <input id="address" type="text" name="address" class="form-control input_address"
                                             placeholder="Tên đường/tòa nhà/số nhà" value="{{ $adressDetail }}">
-                                            <small class="error-message text-danger"></small>
+                                            <small class="error-address text-danger"></small>
                                     </div>
                                 </div>
 
@@ -390,6 +390,7 @@
                                         @php
                                             $pointsToAdd = floor($total / 100000) * 10;
                                         @endphp
+                                        @if (Auth::check())
                                         <tr class="cart-subtotal">
                                             <th class="text-start ps-0" style="font-size: 17px">Nhận điểm</th>
                                             <td class="text-end pe-0">
@@ -398,6 +399,16 @@
                                                 </span>
                                             </td>
                                         </tr>
+                                        @else
+                                        <tr class="cart-subtotal">
+                                            <th class="text-start ps-0" style="font-size: 17px">Nhận điểm</th>
+                                            <td class="text-end pe-0">
+                                                <a style="color: #de1d1d;" href="/login">Đăng nhập</a>
+                                                <span class="amount"> để nhận +{{ $pointsToAdd }} điểm và đổi lấy ưu đãi hấp dẫn
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        @endif
                                     </tfoot>
                                 </table>
                             </div>
@@ -458,6 +469,52 @@
 @section('script')
     <script src="{{ asset('plugins/js/location.js') }}"></script>
     <script>
+
+        $(document).ready(function () {
+            $('.userName').on('input', function () {
+                $('.userName').next('.error-message').html('');
+            });
+
+            $('.userEmail').on('input', function () {
+                $('.userEmail').next('.error-message').html('');
+            });
+
+            $('.userPhone').on('input', function () {
+                $('.userPhone').next('.error-message').html('');
+            });
+
+            $('#addressForm').submit(function (event) {
+                let isValid = true;
+
+                $('.error-message').text('');
+
+                if ($('.userName').val() == '') {
+                    $('.userName').next('.error-message').html('Vui lòng nhập tên người nhận.');
+                    isValid = false;
+                }
+
+                if ($('.userEmail').val() == '') {
+                    $('.userEmail').next('.error-message').html('Vui lòng nhập email.');
+                    isValid = false;
+                }else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test($('.userEmail').val())) {
+                     $('.userEmail').next('.error-message').html('Vui lòng nhập email hợp lệ.');
+                     isValid = false;
+                }
+
+                if ($('.userPhone').val() == '') {
+                    $('.userPhone').next('.error-message').html('Vui lòng nhập số điện thoại.');
+                    isValid = false;
+                } else if (!/^(0(3[2-9]|5[2689]|7[0-9]|8[1-9]|9[0-9]))[0-9]{7}$/.test($('.userPhone').val())) {
+                    $('.userPhone').next('.error-message').html('Vui lòng nhập số điện thoại di động hợp lệ.');
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    event.preventDefault();
+                }
+            });
+        });
+
         $(document).ready(function() {
             //Aps vourcher
             $(document).on('click', '.use-voucher', function() {
