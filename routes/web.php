@@ -82,9 +82,17 @@ Route::get('/blogs-search', [ClientBlogController::class, 'search'])->name('blog
 Route::post('/voucher/apply-code', [ClientBlogController::class, 'applyVoucher'])->name('voucher.apply_code');
 
 // Contact
-Route::get('/contact', function () {
-    return view('client.pages.contact');
+Route::get('/support', function () {
+    return view('client.pages.support');
 });
+Route::middleware('auth')->group(function () {
+    Route::get('/chats', [ChatController::class, 'index'])->name('chat.index');
+    Route::get('/chats/create', [ChatController::class, 'createRoom'])->name('chat.createRoom');
+    Route::get('/chats/{chat}', [ChatController::class, 'show'])->name('chat.show');
+    Route::post('/chats/{chat}/send', [ChatController::class, 'sendMessage'])->name('chat.sendMessage');
+    Route::delete('/chats/{chat}', [ChatController::class, 'delete'])->name('chat.delete');
+});
+
 // Checkout
  Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 
@@ -116,12 +124,6 @@ Route::middleware('auth')->group(function () {
 
 });
 Route::get('/verify/{token}', [AccountController::class, 'verify'])->name('verify');
-Route::middleware('auth')->group(function () {
-    Route::get('/chats', [ChatController::class, 'index'])->name('chat.index');
-    Route::get('/chats/create', [ChatController::class, 'createRoom'])->name('chat.createRoom');
-    Route::get('/chats/{chat}', [ChatController::class, 'show'])->name('chat.show');
-    Route::post('/chats/{chat}/send', [ChatController::class, 'sendMessage'])->name('chat.sendMessage');
-});
 
 
 

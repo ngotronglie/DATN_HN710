@@ -10,15 +10,15 @@ use Illuminate\Support\Facades\Auth;
 
 class ChatController extends Controller
 {
-    public function index()
-    {
-        $user = Auth::user(); // Lấy người dùng đang đăng nhập
+    // public function index()
+    // {
+    //     $user = Auth::user(); // Lấy người dùng đang đăng nhập
     
-        // Lấy tất cả các phòng chat mà người dùng đang tham gia
-        $chats = Chat::where('user_id', $user->id)->orWhere('staff_id', $user->id)->with(['user', 'staff'])->get();
+    //     // Lấy tất cả các phòng chat mà người dùng đang tham gia
+    //     $chats = Chat::where('user_id', $user->id)->orWhere('staff_id', $user->id)->with(['user', 'staff'])->get();
     
-        return view('chats.index', compact('chats'));
-    }
+    //     return view('chats.index', compact('chats'));
+    // }
     
 
     public function createRoom()
@@ -67,7 +67,7 @@ class ChatController extends Controller
         $chat = Chat::find($chat->id);
 
         $messages = ChatDetail::where('chat_id', $chat->id)->with('sender')->get();
-        return view('chats.show', compact('chat', 'messages'));
+        return view('client.pages.chat', compact('chat', 'messages'));
     }
 
     public function sendMessage(Request $request, Chat $chat)
@@ -89,6 +89,10 @@ class ChatController extends Controller
             'log'   => 'success'
         ], 201);
     }
-
+    public function delete(Chat $chat) {
+        $chat->delete(); // Xóa chat đã được truyền
+        return redirect()->route('support'); // Chuyển hướng về danh sách chat
+    }
+    
    
 }

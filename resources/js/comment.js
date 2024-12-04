@@ -59,9 +59,11 @@ let contentBlock = document.querySelector('.contentBlock')
 function updateUiMessage(event) {
     let classAuth = event.sender_id == userSignIn ? "text-end" : ""
     let currentTime = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+    
     let UI = `
+   
     <p class="${classAuth}">
-       ${event.userName}: ${event.content}
+       Bạn: ${event.content}
         <span style="font-size: 10px; color: gray;">(${currentTime})</span>
     </p>
 `;
