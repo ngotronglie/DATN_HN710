@@ -22,7 +22,7 @@
                                     style="width: 150px; height: 150px; object-fit: cover;">
                             @endif
                         </div>
-                        <form action="{{ route('admin.accounts.updateMyAccount') }}" method="POST" enctype="multipart/form-data">
+                        <form id="addressForm" action="{{ route('admin.accounts.updateMyAccount') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
 
@@ -39,6 +39,19 @@
                                 <label class="col-sm-3 col-form-label">Email</label>
                                 <div class="col-sm-9">
                                     <p class="form-control-plaintext">{{ auth()->user()->email }}</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="image" class="col-sm-3 col-form-label">Ảnh đại diện</label>
+                                <div class="col-sm-9">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="avatar" name="avatar" onchange="previewImage()" accept="image/*">
+                                        <label class="custom-file-label" for="avatar">Chọn ảnh...</label>
+                                        @error('avatar')
+                                        <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
 
@@ -91,6 +104,7 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                    <small class="error-message-province text-danger"></small>
                                 </div>
                             </div>
 
@@ -101,6 +115,7 @@
                                     <select class="select2 districts form-control" data-id="{{$district}}" name="districs">
                                         <option value="">[Chọn Quận/Huyện]</option>
                                     </select>
+                                    <small class="error-message-districts text-danger"></small>
                                 </div>
                             </div>
 
@@ -111,6 +126,7 @@
                                     <select class="select2 wards form-control" data-id="{{$ward}}" name="wards">
                                         <option value="">[Chọn Phường/Xã]</option>
                                     </select>
+                                    <small class="error-message-wards text-danger"></small>
                                 </div>
                             </div>
 
@@ -118,8 +134,9 @@
                             <div class="form-group row">
                                 <label for="address-detail" class="col-sm-3 col-form-label">Tên đường/tòa nhà/số nhà</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" placeholder="Tên đường/tòa nhà/số nhà"
+                                    <input type="text" class="form-control input_address" placeholder="Tên đường/tòa nhà/số nhà"
                                         id="address-detail" name="address" value="{{ old('address', $adressDetail) }}">
+                                        <small class="error-address text-danger"></small>
                                         @if($errors->has('provinces') || $errors->has('address') || $errors->has('wards') || $errors->has('districs'))
                                         <span class="text-danger mt-5">Vui lòng nhập đầy đủ các trường địa chỉ.</span>
                                         @endif

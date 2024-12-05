@@ -8,7 +8,7 @@
                     <li class="nav-item" data-aos="fade-up" data-aos-delay="300"><a class="nav-link active mt-3"
                             data-bs-toggle="tab" href="#tab-product-all">Sản phẩm mới</a></li>
                     <li class="nav-item" data-aos="fade-up" data-aos-delay="400"><a class="nav-link mt-3"
-                            data-bs-toggle="tab" href="#tab-product-clothings">Sản phẩm hot</a></li>
+                            data-bs-toggle="tab" href="#tab-product-clothings">Sản phẩm nổi bật</a></li>
                     <li class="nav-item" data-aos="fade-up" data-aos-delay="500"><a class="nav-link mt-3"
                             data-bs-toggle="tab" href="#tab-product-best-sellers">Bán chạy</a></li>
                 </ul>
@@ -132,7 +132,7 @@
                                                                 alt="Product" />
                                                         </a>
                                                         <span class="badges">
-                                                            <span class="sale">Hot</span>
+                                                            <span class="sale">Nổi bật</span>
                                                         </span>
                                                         <div class="actions">
                                                             <span class="action addFavorite"

@@ -50,14 +50,14 @@ class CheckoutController extends Controller
         $cartData = session('user_cart');
 
         if (!$cartData) {
-            return redirect()->back()->with('error', 'Không có sản phẩm nào được chọn');
+            return redirect()->back()->with('error', 'Vui lòng chọn sản phẩm trong giỏ hàng trước khi thanh toán');
         }
 
         $items = $cartData['cart_items'];
         $total = $cartData['cart_total'];
 
         if (empty($items)) {
-            return redirect()->back()->with('error', 'Không có sản phẩm nào được chọn');
+            return redirect()->back()->with('error', 'Vui lòng chọn sản phẩm trong giỏ hàng trước khi thanh toán');
         }
 
         $ids = array_column($items, 'id');  // Lấy mảng các id từ items
@@ -154,6 +154,8 @@ class CheckoutController extends Controller
 
     public function billSearch(Request $request)
     {
+        session()->forget('user_cart');
+
         $orderCode = $request->input('order_code');
 
         if (!$orderCode) {

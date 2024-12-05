@@ -10,6 +10,8 @@ class HomeController extends Controller
 {
     public function index()
     {
+        session()->forget('user_cart');
+
         $banners = Banner::where('is_active', 1)
             ->orderBy('id', 'desc')
             ->get();
