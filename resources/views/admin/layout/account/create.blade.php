@@ -7,7 +7,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Dashboard</h1>
+                        <h1>Thêm tài khoản</h1>
                     </div>
                 </div>
             </div>
@@ -15,7 +15,7 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
+                            <li><a href="#">Bảng điều khiển</a></li>
                             <li><a href="{{ route('admin.accounts.index') }}">Quản lí tài khoản</a></li>
                             <li class="active">Thêm tài khoản</li>
                         </ol>
@@ -58,16 +58,7 @@
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label for="address" class=" form-control-label">Địa chỉ</label>
-                                <input type="text" id="address" name="address"
-                                    placeholder="Nhập địa chỉ" class="form-control"
-                                    value="{{ old('address') }}" requied>
-                                @error('address')
-                                <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label for="phone" class=" form-control-label">Điện thoại</label>
+                                <label for="phone" class=" form-control-label">Số điện thoại</label>
                                 <input type="text" id="phone" name="phone"
                                     placeholder="Nhập số điện thoại" class="form-control"
                                     value="{{ old('phone') }}" requied>
@@ -80,7 +71,7 @@
                                 <input type="file" id="avatar" name="avatar"
                                     class="form-control" requied accept="image/*">
                                     <div style="margin-top: 10px;">
-                                        <img id="preview-avatar" src="#" alt="Ảnh xem trước" style="display: none; max-width: 200px; height: auto; border-radius: 50%; border: 2px solid #ccc;">
+                                        <img id="preview-avatar" src="#" alt="Ảnh xem trước" style="display: none; width: 200px; height: 200px; border-radius: 50%; object-fit: cover;">
                                     </div>
                                 @error('avatar')
                                 <small class="text-danger">{{ $message }}</small>
@@ -109,6 +100,39 @@
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
+                            <div class="form-group">
+                                <label for="date_of_birth" class=" form-control-label">Chọn Tỉnh/Thành phố</label>
+                                <select class="select2 province form-control"  name="provinces">
+                                    <option value="">[Chọn Tỉnh/Thành phố]</option>
+                                    @foreach ($provinces as $item)
+                                        <option value="{{ $item->code }}">
+                                          {{ $item->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="date_of_birth" class=" form-control-label">Chọn Quận/Huyện</label>
+                                <select class="select2 districts form-control"  name="districs">
+                                    <option value="">[Chọn Quận/Huyện]</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="date_of_birth" class=" form-control-label">Chọn Phường/Xã</label>
+                                <select class="select2 wards form-control" name="wards">
+                                    <option value="">[Chọn Phường/Xã]</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="address" class=" form-control-label">Tên đường/tòa nhà/số nhà</label>
+                                <input type="text" id="address" name="address"
+                                    placeholder="Nhập Tên đường/tòa nhà/số nhà" class="form-control input_address" requied>
+                                    @if($errors->has('provinces') || $errors->has('address') || $errors->has('wards') || $errors->has('districs'))
+                                    <small class="text-danger mt-5">Vui lòng nhập đầy đủ các trường địa chỉ.</small>
+                                    @endif
+                            </div>
+
                             <input type="hidden" value="1" name="role">
 
                             <button type="submit" class="btn btn-success mb-1">Thêm mới</button>
@@ -122,19 +146,20 @@
 @endsection
 
 @section('script')
+<script src="{{ asset('plugins/js/location.js') }}"></script>
 <script>
     jQuery(document).ready(function() {
-    jQuery('#avatar').on('change', function(e) {
-        var input = this;
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                jQuery('#preview-avatar').attr('src', e.target.result).show();
+        jQuery('#avatar').on('change', function(e) {
+            var input = this;
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    jQuery('#preview-avatar').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(input.files[0]);
             }
-            reader.readAsDataURL(input.files[0]); // Đọc file ảnh
-        }
+        });
     });
-});
 </script>
 <script>
     function togglePassword() {

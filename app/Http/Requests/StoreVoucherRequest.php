@@ -24,10 +24,11 @@ class StoreVoucherRequest extends FormRequest
         return [
             'code' => 'required|string|max:255|unique:vouchers,code',
             'discount' => 'required|numeric|min:0|max:100',
-            'quantity' => 'required|integer',
+            'quantity' => 'required|integer|min:1',
             'start_date' => 'required|date|after_or_equal:today|before_or_equal:end_date',
-            'end_date' => 'required|date',
-            'min_money' => 'required|numeric',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'min_money' => 'required|numeric|min:0|lt:max_money',
+            'max_money' => 'required|numeric|min:0',
         ];
     }
 
@@ -45,6 +46,7 @@ class StoreVoucherRequest extends FormRequest
 
             'quantity.required' => 'Số lượng là bắt buộc',
             'quantity.integer' => 'Số lượng phải là số nguyên',
+            'quantity.min' => 'Số lượng phải lớn hơn hoặc bằng 1',
 
             'start_date.required' => 'Ngày bắt đầu là bắt buộc',
             'start_date.date' => 'Ngày bắt đầu phải là ngày hợp lệ',
@@ -53,11 +55,16 @@ class StoreVoucherRequest extends FormRequest
 
             'end_date.required' => 'Ngày kết thúc là bắt buộc',
             'end_date.date' => 'Ngày kết thúc phải là ngày hợp lệ',
+            'end_date.after_or_equal' => 'Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu',
 
             'min_money.required' => 'Số tiền tối thiểu là bắt buộc',
             'min_money.numeric' => 'Số tiền tối thiểu phải là số',
+            'min_money.min' => 'Số tiền phải lớn hơn hoặc bằng 0',
+            'min_money.lt' => 'Số tiền tối thiểu phải nhỏ hơn số tiền tối đa',
+
+            'max_money.required' => 'Số tiền tối đa là bắt buộc',
+            'max_money.numeric' => 'Số tiền tối đa phải là số',
+            'max_money.min' => 'Số tiền phải lớn hơn hoặc bằng 0',
         ];
     }
-
-
 }

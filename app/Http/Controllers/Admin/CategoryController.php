@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use App\Models\Product;
 use Illuminate\Support\Facades\Gate;
 
 class CategoryController extends Controller
@@ -19,7 +20,9 @@ class CategoryController extends Controller
         if (Gate::denies('viewAny', Category::class)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
-        $categories = Category::orderBy('id', 'desc')->get();
+        $categories = Category::withCount(['products' => function ($query) {
+            $query->whereNull('deleted_at');
+        }])->orderBy('id', 'desc')->get();
         $trashedCount = Category::onlyTrashed()->count();
         return view(self::PATH_VIEW . __FUNCTION__, compact('categories', 'trashedCount'));
     }
@@ -52,12 +55,26 @@ class CategoryController extends Controller
      * Display the specified resource.
      */
     public function show(Category $category)
-    {
-        if (Gate::denies('view', $category)) {
-            return back()->with('warning', 'Bạn không có quyền!');
-        }
-        return view(self::PATH_VIEW . __FUNCTION__, compact('category'));
+{
+    if (Gate::denies('view', $category)) {
+        return back()->with('warning', 'Bạn không có quyền!');
     }
+
+    $products = Product::with(['variants' => function ($query) {
+        $query->whereHas('size', function ($q) {
+            $q->whereNull('deleted_at');
+        })->whereHas('color', function ($q) {
+            $q->whereNull('deleted_at');
+        });
+    }])->where('category_id', $category->id)
+        ->whereNull('deleted_at')
+        ->orderBy('id', 'desc')
+        ->get();
+
+    $productCount = $products->count();
+
+    return view(self::PATH_VIEW . __FUNCTION__, compact('category', 'productCount', 'products'));
+}
 
     /**
      * Show the form for editing the specified resource.

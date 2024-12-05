@@ -32,7 +32,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Dashboard</h1>
+                        <h1>Danh sách thùng rác</h1>
                     </div>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
+                            <li><a href="#">Bảng điều khiển</a></li>
                             <li><a href="{{ route('admin.blogs.index') }}">Danh sách bài viết</a></li>
                             <li class="active">Thùng rác</li>
                         </ol>
@@ -177,4 +177,11 @@
 <script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.print.min.js') }}"></script>
 <script src="{{ asset('theme/admin/assets/js/lib/data-table/buttons.colVis.min.js') }}"></script>
 <script src="{{ asset('theme/admin/assets/js/init/datatables-init.js') }}"></script>
+
+<script>
+    // Loại bỏ padding-right khi modal đóng
+    jQuery(document).on('hidden.bs.modal', function () {
+        jQuery('body').css('padding-right', '0');
+    });
+</script>
 @endsection

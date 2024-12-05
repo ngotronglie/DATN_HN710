@@ -1,5 +1,13 @@
 @extends('admin.dashboard')
-
+@section('style')
+<style>
+    th, td {
+        width: 1%;
+        text-align: center;
+        vertical-align: middle !important;
+    }
+</style>
+@endsection
 @section('content')
 <div class="breadcrumbs mb-5">
     <div class="breadcrumbs-inner">
@@ -15,7 +23,7 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
+                            <li><a href="#">Bảng điều khiển</a></li>
                             <li><a href="{{ route('admin.category_blogs.index') }}">Danh sách danh mục</a></li>
                             <li class="active">Chi tiết danh mục</li>
                         </ol>
@@ -42,11 +50,15 @@
                             <tbody>
                                 <tr>
                                     <th>Tên danh mục bài viết</th>
-                                    <td>{{ $categoryBlog->name }}</td>
+                                    <td colspan="2">{{ $categoryBlog->name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Số lượng bài viết</th>
+                                    <td colspan="2">{{ $blogCount }}</td>
                                 </tr>
                                 <tr>
                                     <th>Trạng thái</th>
-                                    <td>
+                                    <td colspan="2">
                                         @if($categoryBlog->is_active)
                                         <span class="badge badge-success">Hoạt động</span>
                                         @else
@@ -56,12 +68,26 @@
                                 </tr>
                                 <tr>
                                     <th>Thời gian tạo</th>
-                                    <td>{{ $categoryBlog->created_at }}</td>
+                                    <td colspan="2">{{ $categoryBlog->created_at }}</td>
                                 </tr>
                                 <tr>
                                     <th>Thời gian sửa</th>
-                                    <td>{{ $categoryBlog->updated_at }}</td>
+                                    <td colspan="2">{{ $categoryBlog->updated_at }}</td>
                                 </tr>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tiêu đề</th>
+                                    <th>Ảnh</th>
+                                </tr>
+                                @foreach ($data as $index => $item)
+                                <tr>
+                                    <td>{{$index+1}}</td>
+                                    <td>{{$item->title}}</td>
+                                    <td>
+                                        <img src="{{ Storage::url($item->img_avt) }}" alt="{{ $item->name }}" style="width: 100px; height: 150px; object-fit: contain;">
+                                    </td>
+                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

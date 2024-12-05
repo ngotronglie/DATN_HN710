@@ -4,7 +4,7 @@
             <div class="col-12" data-aos="fade-up" data-aos-delay="300">
                 <div class="banner">
                     <div class="banner-image">
-                        <a href="shop-grid.html"><img
+                        <a href="#"><img
                                 src="{{ asset('theme/client/assets/images/banner/big-banner.jpg') }}"
                                 alt="Banner"></a>
                     </div>

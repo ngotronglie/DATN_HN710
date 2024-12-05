@@ -19,10 +19,10 @@ return new class extends Migration
             $table->date('end_date');
             $table->integer('quantity');
             $table->decimal('min_money', 10, 2);
+            $table->decimal('max_money', 10, 2);
             $table->boolean('is_active')->default(true);
-            $table->softDeletes();
-            $table->timestamps(); 
-            
+            $table->integer('points_required')->nullable();
+            $table->timestamps();
         });
     }
 

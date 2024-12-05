@@ -6,10 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\Banner;
 use App\Models\Category;
-use App\Models\Color;
-use App\Models\Size;
 use App\Models\User;
 use App\Models\CategoryBlog;
+use App\Models\Comment;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -23,7 +22,7 @@ class ChangeActiveController extends Controller
 
         $category = Category::find($id);
         if (!$category) {
-            return response()->json(['status' => false, 'message' => 'Danh mục không tìm thấy'], 404);
+            return response()->json(['status' => false, 'message' => 'Danh mục không tìm thấy']);
         }
 
         // Cập nhật trạng thái is_active
@@ -34,21 +33,18 @@ class ChangeActiveController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Cập nhật trạng thái danh mục thành công',
-                'newStatus' => $newActive,
-                'category' => $category
-            ], 200);
+            ]);
         } else {
-            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại'], 500);
+            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại']);
         }
     }
 
     public function changeActiveAllCategory(Request $request)
     {
-        $id = $request->id; // Lấy ID từ request
+        $id = $request->id;
         $active = $request->is_active;
-        // Kiểm tra xem có ID nào không
         if (empty($id) || !is_array($id)) {
-            return response()->json(['status' => false, 'message' => 'ID không hợp lệ'], 400);
+            return response()->json(['status' => false, 'message' => 'ID không hợp lệ']);
         }
 
         $newActive = $active == 0 ? 1 : 0;
@@ -60,11 +56,11 @@ class ChangeActiveController extends Controller
                 'status' => true,
                 'message' => 'Cập nhật trạng thái danh mục thành công',
                 'newStatus' => $newActive,
-                'updatedCount' => $updated // Trả về số lượng category được cập nhật
-            ], 200);
+                'updatedCount' => $updated
+            ]);
         }
 
-        return response()->json(['status' => false, 'message' => 'Không có danh mục nào được cập nhật'], 404);
+        return response()->json(['status' => false, 'message' => 'Không có danh mục nào được cập nhật']);
     }
 
     // Product
@@ -75,7 +71,7 @@ class ChangeActiveController extends Controller
 
         $product = Product::find($id);
         if (!$product) {
-            return response()->json(['status' => false, 'message' => 'Sản phẩm không tìm thấy'], 404);
+            return response()->json(['status' => false, 'message' => 'Sản phẩm không tìm thấy']);
         }
 
         $newActive = $isActive == 1 ? 0 : 1;
@@ -86,10 +82,10 @@ class ChangeActiveController extends Controller
                 'status' => true,
                 'message' => 'Cập nhật trạng thái sản phẩm thành công',
                 'newStatus' => $newActive,
-                'category' => $product
-            ], 200);
+                'product' => $product
+            ]);
         } else {
-            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại'], 500);
+            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại']);
         }
     }
 
@@ -98,7 +94,7 @@ class ChangeActiveController extends Controller
         $id = $request->id;
         $active = $request->is_active;
         if (empty($id) || !is_array($id)) {
-            return response()->json(['status' => false, 'message' => 'ID không hợp lệ'], 400);
+            return response()->json(['status' => false, 'message' => 'ID không hợp lệ']);
         }
 
         $newActive = $active == 0 ? 1 : 0;
@@ -111,10 +107,10 @@ class ChangeActiveController extends Controller
                 'message' => 'Cập nhật trạng thái sản phẩm thành công',
                 'newStatus' => $newActive,
                 'updatedCount' => $updated
-            ], 200);
+            ]);
         }
 
-        return response()->json(['status' => false, 'message' => 'Không có sản phẩm nào được cập nhật'], 404);
+        return response()->json(['status' => false, 'message' => 'Không có sản phẩm nào được cập nhật']);
     }
 
     // Account
@@ -125,7 +121,7 @@ class ChangeActiveController extends Controller
 
         $account = User::find($id);
         if (!$account) {
-            return response()->json(['status' => false, 'message' => 'Tài khoản không tìm thấy'], 404);
+            return response()->json(['status' => false, 'message' => 'Tài khoản không tìm thấy']);
         }
 
         $newActive = $isActive == 1 ? 0 : 1;
@@ -136,10 +132,10 @@ class ChangeActiveController extends Controller
                 'status' => true,
                 'message' => 'Cập nhật trạng thái tài khoản thành công',
                 'newStatus' => $newActive,
-                'category' => $account
-            ], 200);
+                'account' => $account
+            ]);
         } else {
-            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại'], 500);
+            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại']);
         }
     }
 
@@ -148,7 +144,7 @@ class ChangeActiveController extends Controller
         $id = $request->id;
         $active = $request->is_active;
         if (empty($id) || !is_array($id)) {
-            return response()->json(['status' => false, 'message' => 'ID không hợp lệ'], 400);
+            return response()->json(['status' => false, 'message' => 'ID không hợp lệ']);
         }
 
         $newActive = $active == 0 ? 1 : 0;
@@ -161,10 +157,10 @@ class ChangeActiveController extends Controller
                 'message' => 'Cập nhật trạng thái tài khoản thành công',
                 'newStatus' => $newActive,
                 'updatedCount' => $updated
-            ], 200);
+            ]);
         }
 
-        return response()->json(['status' => false, 'message' => 'Không có tài khoản nào được cập nhật'], 404);
+        return response()->json(['status' => false, 'message' => 'Không có tài khoản nào được cập nhật']);
     }
 
     // Category blog
@@ -175,7 +171,7 @@ class ChangeActiveController extends Controller
 
         $categoryBlog = CategoryBlog::find($id);
         if (!$categoryBlog) {
-            return response()->json(['status' => false, 'message' => 'Danh mục bài viết không tìm thấy'], 404);
+            return response()->json(['status' => false, 'message' => 'Danh mục bài viết không tìm thấy']);
         }
 
         $newActive = $isActive == 1 ? 0 : 1;
@@ -186,10 +182,10 @@ class ChangeActiveController extends Controller
                 'status' => true,
                 'message' => 'Cập nhật trạng thái danh mục bài viết thành công',
                 'newStatus' => $newActive,
-                'category' => $categoryBlog
-            ], 200);
+                'categoryBlog' => $categoryBlog
+            ]);
         } else {
-            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại'], 500);
+            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại']);
         }
     }
 
@@ -198,7 +194,7 @@ class ChangeActiveController extends Controller
         $id = $request->id;
         $active = $request->is_active;
         if (empty($id) || !is_array($id)) {
-            return response()->json(['status' => false, 'message' => 'ID không hợp lệ'], 400);
+            return response()->json(['status' => false, 'message' => 'ID không hợp lệ']);
         }
 
         $newActive = $active == 0 ? 1 : 0;
@@ -211,10 +207,10 @@ class ChangeActiveController extends Controller
                 'message' => 'Cập nhật trạng thái danh mục bài viết thành công',
                 'newStatus' => $newActive,
                 'updatedCount' => $updated
-            ], 200);
+            ]);
         }
 
-        return response()->json(['status' => false, 'message' => 'Không có danh mục bài viết nào được cập nhật'], 404);
+        return response()->json(['status' => false, 'message' => 'Không có danh mục bài viết nào được cập nhật']);
     }
 
     // blog
@@ -225,7 +221,7 @@ class ChangeActiveController extends Controller
 
         $blog = Blog::find($id);
         if (!$blog) {
-            return response()->json(['status' => false, 'message' => 'Bài viết không tìm thấy'], 404);
+            return response()->json(['status' => false, 'message' => 'Bài viết không tìm thấy']);
         }
 
         $newActive = $isActive == 1 ? 0 : 1;
@@ -237,9 +233,9 @@ class ChangeActiveController extends Controller
                 'message' => 'Cập nhật trạng thái bài viết thành công',
                 'newStatus' => $newActive,
                 'blog' => $blog
-            ], 200);
+            ]);
         } else {
-            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại'], 500);
+            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại']);
         }
     }
 
@@ -248,7 +244,7 @@ class ChangeActiveController extends Controller
         $id = $request->id;
         $active = $request->is_active;
         if (empty($id) || !is_array($id)) {
-            return response()->json(['status' => false, 'message' => 'ID không hợp lệ'], 400);
+            return response()->json(['status' => false, 'message' => 'ID không hợp lệ']);
         }
 
         $newActive = $active == 0 ? 1 : 0;
@@ -261,10 +257,10 @@ class ChangeActiveController extends Controller
                 'message' => 'Cập nhật trạng thái danh mục bài viết thành công',
                 'newStatus' => $newActive,
                 'updatedCount' => $updated
-            ], 200);
+            ]);
         }
 
-        return response()->json(['status' => false, 'message' => 'Không có danh mục bài viết nào được cập nhật'], 404);
+        return response()->json(['status' => false, 'message' => 'Không có danh mục bài viết nào được cập nhật']);
     }
 
     // Banner
@@ -275,7 +271,7 @@ class ChangeActiveController extends Controller
 
         $banner = Banner::find($id);
         if (!$banner) {
-            return response()->json(['status' => false, 'message' => 'Banner không tìm thấy'], 404);
+            return response()->json(['status' => false, 'message' => 'không tìm thấy']);
         }
 
         $newActive = $isActive == 1 ? 0 : 1;
@@ -284,12 +280,12 @@ class ChangeActiveController extends Controller
         if ($updated) {
             return response()->json([
                 'status' => true,
-                'message' => 'Cập nhật trạng thái banner thành công',
+                'message' => 'Cập nhật trạng thái biểu ngữ thành công',
                 'newStatus' => $newActive,
-                'category' => $banner
-            ], 200);
+                'banner' => $banner
+            ]);
         } else {
-            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại'], 500);
+            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại']);
         }
     }
 
@@ -298,7 +294,7 @@ class ChangeActiveController extends Controller
         $id = $request->id;
         $active = $request->is_active;
         if (empty($id) || !is_array($id)) {
-            return response()->json(['status' => false, 'message' => 'ID không hợp lệ'], 400);
+            return response()->json(['status' => false, 'message' => 'ID không hợp lệ']);
         }
 
         $newActive = $active == 0 ? 1 : 0;
@@ -308,13 +304,67 @@ class ChangeActiveController extends Controller
         if ($updated) {
             return response()->json([
                 'status' => true,
-                'message' => 'Cập nhật trạng thái banner thành công',
+                'message' => 'Cập nhật trạng thái biểu ngữ thành công',
                 'newStatus' => $newActive,
                 'updatedCount' => $updated
-            ], 200);
+            ]);
         }
 
-        return response()->json(['status' => false, 'message' => 'Không có banner nào được cập nhật'], 404);
+        return response()->json(['status' => false, 'message' => 'Không có biểu ngữ nào được cập nhật']);
+    }
+
+    // Comment
+    public function changeActiveComment(Request $request)
+    {
+        $id = $request->id;
+        $isActive = $request->is_active;
+
+        $comment = Comment::find($id);
+        if (!$comment) {
+            return response()->json(['status' => false, 'message' => 'Comment không tìm thấy']);
+        }
+
+        $newActive = $isActive == 1 ? 0 : 1;
+        $updated = $comment->update(['is_active' => $newActive]);
+
+        if ($updated) {
+            if ($comment->parent_id === null) {
+                Comment::where('parent_id', $id)->update(['is_active' => $newActive]);
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Cập nhật trạng thái comment thành công',
+                'newStatus' => $newActive,
+                'comment' => $comment
+            ]);
+        } else {
+            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại']);
+        }
+    }
+
+    public function changeActiveAllComment(Request $request)
+    {
+        $id = $request->id;
+        $active = $request->is_active;
+        if (empty($id) || !is_array($id)) {
+            return response()->json(['status' => false, 'message' => 'ID không hợp lệ']);
+        }
+
+        $newActive = $active == 0 ? 1 : 0;
+
+        $updated = Comment::whereIn('id', $id)->update(['is_active' => $newActive]);
+
+        Comment::whereIn('parent_id', $id)->update(['is_active' => $newActive]);
+
+        if ($updated) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Cập nhật trạng thái comment thành công',
+                'newStatus' => $newActive,
+                'updatedCount' => $updated
+            ]);
+        }
+
+        return response()->json(['status' => false, 'message' => 'Không có comment nào được cập nhật']);
     }
 }
-

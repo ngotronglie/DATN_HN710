@@ -18,27 +18,10 @@ class VoucherController extends Controller
         if (Gate::denies('viewAny', Voucher::class)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
+        
         $vouchers = Voucher::orderBy('id', 'desc')->get();
-        $trashedVouchers = Voucher::onlyTrashed()->count();
-        $currentDate = Carbon::now()->startOfDay(); // Đảm bảo rằng bạn so sánh ngày mà không có giờ
 
-        foreach ($vouchers as $voucher) {
-            // Chuyển đổi giá trị ngày tháng từ cơ sở dữ liệu thành đối tượng Carbon
-            $startDate = Carbon::parse($voucher->start_date)->startOfDay();
-            $endDate = Carbon::parse($voucher->end_date)->endOfDay();
-
-            // Xác định trạng thái của voucher
-            if ($currentDate->lessThan($startDate) || $currentDate->greaterThan($endDate)) {
-                $voucher->is_active = 0; // Không hoạt động nếu hiện tại trước ngày bắt đầu hoặc sau ngày kết thúc
-            } else {
-                $voucher->is_active = 1; // Hoạt động nếu hiện tại nằm trong khoảng thời gian, bao gồm ngày kết thúc
-            }
-
-            // Lưu lại thay đổi vào cơ sở dữ liệu
-            $voucher->save();
-        }
-
-        return view(self::PATH_VIEW . 'index', compact('vouchers', 'trashedVouchers'));
+        return view(self::PATH_VIEW . 'index', compact('vouchers'));
     }
 
     public function create()
@@ -85,43 +68,5 @@ class VoucherController extends Controller
         $voucher->update($data);
 
         return redirect()->route('admin.vouchers.index')->with('success', 'Sửa Voucher thành công');
-    }
-
-    public function destroy(Voucher $voucher)
-    {
-        if (Gate::denies('delete', $voucher)) {
-            return back()->with('warning', 'Bạn không có quyền!');
-        }
-        $voucher->delete();
-        return redirect()->route('admin.vouchers.index')->with('success', 'Xóa Voucher thành công');
-    }
-
-    public function trashed()
-    {
-        if (Gate::denies('viewTrashed', Voucher::class)) {
-            return back()->with('warning', 'Bạn không có quyền!');
-        }
-        $vouchers = Voucher::onlyTrashed()->get();
-        return view(self::PATH_VIEW . 'trashed', compact('vouchers'));
-    }
-
-    public function restore($id)
-    {
-        $voucher = Voucher::onlyTrashed()->findOrFail($id);
-        if (Gate::denies('restore', $voucher)) {
-            return back()->with('warning', 'Bạn không có quyền!');
-        }
-        $voucher->restore();
-        return redirect()->route('admin.vouchers.trashed')->with('success', 'Voucher đã được khôi phục');
-    }
-
-    public function forceDelete($id)
-    {
-        $vouchers = Voucher::withTrashed()->findOrFail($id);
-        if (Gate::denies('forceDelete', $vouchers)) {
-            return back()->with('warning', 'Bạn không có quyền!');
-        }
-        $vouchers->forceDelete();
-        return redirect()->route('admin.vouchers.trashed')->with('success', 'Vouchers đã bị xóa vĩnh viễn');
     }
 }

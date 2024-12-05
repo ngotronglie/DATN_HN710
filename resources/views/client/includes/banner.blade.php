@@ -33,7 +33,7 @@
                                     {{ $secondLine }}
                                 </h2>
                                 <p>{{ $item->description }}</p>
-                                <a href="{{ $item->link }}" class="btn btn-lg btn-primary btn-hover-dark">Shop Now</a>
+                                <a href="{{ $item->link }}" class="btn btn-lg btn-primary btn-hover-dark">Mua ngay</a>
                             </div>
                         </div>
                         <!-- Hero Slider Content End -->

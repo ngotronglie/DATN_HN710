@@ -19,9 +19,18 @@
 <script src="{{ asset('theme/client/assets/js/plugins/lightgallery-all.min.js') }}"></script>
 <script src="{{ asset('theme/client/assets/js/plugins/thia-sticky-sidebar.min.js') }}"></script>
 
+<!-- Thêm SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.0/dist/sweetalert2.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 
 
 <!--Main JS-->
+<script src="{{ asset('plugins/js/alertSwal.js') }}"></script>
 <script src="{{ asset('theme/client/assets/js/main.js') }}"></script>
+<script src="{{ asset('plugins/js/deleteCartCheckFavorite.js') }}"></script>
+<script src="{{ asset('plugins/js/select2.js') }}"></script>
+
+
 
 @yield('script')

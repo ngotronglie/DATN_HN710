@@ -7,7 +7,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Dashboard</h1>
+                        <h1>Sửa size</h1>
                     </div>
                 </div>
             </div>
@@ -15,8 +15,8 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
-                            <li><a href="{{ route('admin.sizes.index') }}">Danh sách size</a></li>
+                            <li><a href="#">Bảng điều khiển</a></li>
+                            <li><a href="{{ route('admin.sizes.index') }}">Danh sách kích cỡ</a></li>
                             <li class="active">Sửa size</li>
                         </ol>
                     </div>
@@ -32,7 +32,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong>Sửa size</strong>
+                        <strong>Sửa kích cỡ</strong>
                         <a href="{{ route('admin.sizes.index') }}" class="btn btn-primary">
                             <i class="fa fa-arrow-left mr-1"></i> Quay lại
                         </a>
@@ -42,12 +42,11 @@
                             @csrf
                             @method('PUT')
                             <div class="form-group">
-                                <label for="name" class=" form-control-label">Tên size</label><input type="text" id="name" name="name" placeholder="Nhập tên size" class="form-control" value="{{ old('name', $size->name) }}" required>
+                                <label for="name" class=" form-control-label">Kích cỡ</label><input type="text" id="name" name="name" placeholder="Nhập tên size" class="form-control" value="{{ old('name', $size->name) }}" required>
                                 @error('name')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-
                             <button type="submit" class="btn btn-success mb-1">Cập nhật</button>
                         </form>
                     </div>

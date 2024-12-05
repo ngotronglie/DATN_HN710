@@ -9,46 +9,36 @@
                             <div class="swiper-wrapper">
 
                                 <!-- Single Brand Logo Start -->
-                                <div class="swiper-slide single-brand-logo" data-aos="fade-up"
-                                    data-aos-delay="300">
-                                    <a href="#"><img
-                                            src="{{ asset('theme/client/assets/images/brand-logo/1.png') }}"
+                                <div class="swiper-slide single-brand-logo" data-aos="fade-up" data-aos-delay="300">
+                                    <a href="#"><img src="{{ asset('theme/client/assets/images/brand-logo/1.png') }}"
                                             alt="Brand Logo"></a>
                                 </div>
                                 <!-- Single Brand Logo End -->
 
                                 <!-- Single Brand Logo Start -->
-                                <div class="swiper-slide single-brand-logo" data-aos="fade-up"
-                                    data-aos-delay="400">
-                                    <a href="#"><img
-                                            src="{{ asset('theme/client/assets/images/brand-logo/2.png') }}"
+                                <div class="swiper-slide single-brand-logo" data-aos="fade-up" data-aos-delay="400">
+                                    <a href="#"><img src="{{ asset('theme/client/assets/images/brand-logo/2.png') }}"
                                             alt="Brand Logo"></a>
                                 </div>
                                 <!-- Single Brand Logo End -->
 
                                 <!-- Single Brand Logo Start -->
-                                <div class="swiper-slide single-brand-logo" data-aos="fade-up"
-                                    data-aos-delay="500">
-                                    <a href="#"><img
-                                            src="{{ asset('theme/client/assets/images/brand-logo/3.png') }}"
+                                <div class="swiper-slide single-brand-logo" data-aos="fade-up" data-aos-delay="500">
+                                    <a href="#"><img src="{{ asset('theme/client/assets/images/brand-logo/3.png') }}"
                                             alt="Brand Logo"></a>
                                 </div>
                                 <!-- Single Brand Logo End -->
 
                                 <!-- Single Brand Logo Start -->
-                                <div class="swiper-slide single-brand-logo" data-aos="fade-up"
-                                    data-aos-delay="600">
-                                    <a href="#"><img
-                                            src="{{ asset('theme/client/assets/images/brand-logo/4.png') }}"
+                                <div class="swiper-slide single-brand-logo" data-aos="fade-up" data-aos-delay="600">
+                                    <a href="#"><img src="{{ asset('theme/client/assets/images/brand-logo/4.png') }}"
                                             alt="Brand Logo"></a>
                                 </div>
                                 <!-- Single Brand Logo End -->
 
                                 <!-- Single Brand Logo Start -->
-                                <div class="swiper-slide single-brand-logo" data-aos="fade-up"
-                                    data-aos-delay="700">
-                                    <a href="#"><img
-                                            src="{{ asset('theme/client/assets/images/brand-logo/5.png') }}"
+                                <div class="swiper-slide single-brand-logo" data-aos="fade-up" data-aos-delay="700">
+                                    <a href="#"><img src="{{ asset('theme/client/assets/images/brand-logo/5.png') }}"
                                             alt="Brand Logo"></a>
                                 </div>
                                 <!-- Single Brand Logo End -->

@@ -15,7 +15,7 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
+                            <li><a href="#">Bảng điều khiển</a></li>
                             <li><a href="{{ route('admin.blogs.index') }}">Danh sách bài viết</a></li>
                             <li class="active">Chi tiết bài viết</li>
                         </ol>
@@ -66,7 +66,7 @@
                                     <th>Ảnh đại diện</th>
                                     <td>
                                         @if($blog->img_avt)
-                                        <img src="{{ Storage::url($blog->img_avt) }}" alt="Blog Image" style="max-width: 200px; height: auto;">
+                                        <img src="{{ Storage::url($blog->img_avt) }}" alt="Blog Image" style="width: 200px; height: 130px; object-fit: contain;">
                                         @else
                                         <span>Không có hình ảnh</span>
                                         @endif

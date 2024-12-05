@@ -7,7 +7,6 @@ use App\Models\Blog;
 use App\Http\Requests\StoreBlogRequest;
 use App\Http\Requests\UpdateBlogRequest;
 use App\Models\CategoryBlog;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -24,9 +23,6 @@ class BlogController extends Controller
         }
         $data = Blog::with('user', 'categoryBlog')
             ->whereHas('categoryBlog', function ($query) {
-                $query->whereNull('deleted_at');
-            })
-            ->whereHas('user', function ($query) {
                 $query->whereNull('deleted_at');
             })
             ->orderBy('id', 'DESC')
@@ -70,11 +66,7 @@ class BlogController extends Controller
             return back()->with('warning', 'Bạn không có quyền!');
         }
 
-        if (!$blog->categoryBlog || $blog->categoryBlog->trashed()) {
-            abort(404);
-        }
-
-        if (!$blog->user || $blog->user->trashed()) {
+        if (!$blog->categoryBlog) {
             abort(404);
         }
 
@@ -91,11 +83,7 @@ class BlogController extends Controller
             return back()->with('warning', 'Bạn không có quyền!');
         }
 
-        if (!$blog->categoryBlog || $blog->categoryBlog->trashed()) {
-            abort(404);
-        }
-
-        if (!$blog->user || $blog->user->trashed()) {
+        if (!$blog->categoryBlog) {
             abort(404);
         }
         
@@ -160,7 +148,6 @@ class BlogController extends Controller
         $trashedCount = Blog::onlyTrashed()->count();
         return response()->json(['trashedCount' => $trashedCount]);
     }
-
 
     /**
      * Khôi phục danh mục đã bị xóa mềm.

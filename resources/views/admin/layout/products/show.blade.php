@@ -15,7 +15,7 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
+                            <li><a href="#">Bảng điều khiển</a></li>
                             <li><a href="{{ route('admin.products.index') }}">Danh sách sản phẩm</a></li>
                             <li class="active">Chi tiết sản phẩm</li>
                         </ol>
@@ -52,7 +52,7 @@
                                     <th>Ảnh đại diện</th>
                                     <td>
                                         @if($product->img_thumb)
-                                        <img src="{{ Storage::url($product->img_thumb) }}" alt="Product Image" style="max-width: 200px; height: auto;">
+                                        <img src="{{ Storage::url($product->img_thumb) }}" alt="Product Image" style="width: 200px; height: 250px; object-fit: contain;">
                                         @else
                                         <span>Không có hình ảnh</span>
                                         @endif
@@ -116,7 +116,7 @@
                         <div class="row">
                             @foreach($product->galleries as $gallery)
                                 <div class="col-md-3 mb-3">
-                                    <img src="{{ Storage::url($gallery->image) }}" alt="Gallery Image" class="img-thumbnail" style="width: 100%; height: auto;">
+                                    <img src="{{ Storage::url($gallery->image) }}" alt="Gallery Image" style="width: 200px; height: 250px; object-fit: contain;">
                                 </div>
                             @endforeach
                         </div>
@@ -152,8 +152,8 @@
                                                 <span>{{ $variant->color->hex_code }}</span> <span class="ml-1">({{ $variant->color->name }})</span>
                                             </div>
                                         </td>
-                                        <td>{{ number_format($variant->price) }} VND</td>
-                                        <td>{{ number_format($variant->price_sale) }} VND</td>
+                                        <td>{{ number_format($variant->price, 0, ',', '.') }} VND</td>
+                                        <td>{{ number_format($variant->price_sale, 0, ',', '.') }} VND</td>
                                         <td>{{ $variant->quantity }}</td>
                                     </tr>
                                 @endforeach

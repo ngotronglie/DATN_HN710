@@ -15,7 +15,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Dashboard</h1>
+                        <h1>Danh sách sản phẩm</h1>
                     </div>
                 </div>
             </div>
@@ -23,9 +23,9 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
-                            <li><a href="#">Quản lí danh mục</a></li>
-                            <li class="active">Danh sách danh mục</li>
+                            <li><a href="#">Bảng điều khiển</a></li>
+                            <li><a href="#">Quản lí sản phẩm</a></li>
+                            <li class="active">Danh sách sản phẩm</li>
                         </ol>
                     </div>
                 </div>
@@ -43,13 +43,13 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong class="card-title">Danh sách danh mục</strong>
+                        <strong class="card-title">Danh sách sản phẩm</strong>
                         <div class="d-flex">
                             <a class="btn btn-primary mr-2" href="{{ route('admin.products.create') }}">
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
                             <a class="btn btn-danger" href="{{ route('admin.products.trashed') }}">
-                                <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
+                                <i class="fa fa-trash"></i> Thùng rác <span class="countTrash">({{ $trashedCount }})</span>
                             </a>
                             <div class="dropdown float-right ml-2">
                                 <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -62,7 +62,7 @@
                                     <a class="dropdown-item activeAll" data-is_active="1" href="#">
                                         <i class="fa fa-toggle-off text-danger"></i> Tắt các mục đã chọn
                                     </a>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item deleteAll" href="#">
                                         <i class="fa fa-trash text-danger"></i> Xóa các mục đã chọn
                                     </a>
                                 </div>
@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table id="bootstrap-data-table" class="table table-striped table-bordered">
+                        <table id="bootstrap-data-table" class="table table-striped table-bordered" data-disable-sort="false">
                             <thead>
                                 <tr>
                                     <th>
@@ -99,7 +99,7 @@
                                     <th>Chức năng</th>
                                 </tr>
                             </tfoot>
-                            <tbody>
+                            <tbody class="null_Table">
                                 @foreach ($products as $key => $item)
                                 <tr>
                                     <td>
@@ -113,7 +113,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <img src="{{ Storage::url($item->img_thumb) }}" alt="{{ $item->name }}" style="width: 100px; height: auto;">
+                                        <img src="{{ Storage::url($item->img_thumb) }}" alt="{{ $item->name }}" style="width: 100px; height: 150px; object-fit: contain;">
                                     </td>
                                     <td>
                                         {{ $item->category->name }}
@@ -148,7 +148,7 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                Bạn có chắc chắn muốn xóa danh mục "{{ $item->name }}" không?
+                                                Bạn có chắc chắn muốn xóa sản phẩm "{{ $item->name }}" không?
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
@@ -194,4 +194,14 @@
 <script src="{{asset('plugins/js/changeActive/Product/changeAllActiveProduct.js')}}"></script>
 
 <script src="{{asset('plugins/js/changeActive/Product/changeActiveProduct.js')}}"></script>
+
+<script src="{{asset('plugins/js/ChangeActive/Product/deleteCheckedPrd.js')}}"></script>
+
+
+<script>
+    // Loại bỏ padding-right khi modal đóng
+    jQuery(document).on('hidden.bs.modal', function () {
+        jQuery('body').css('padding-right', '0');
+    });
+</script>
 @endsection

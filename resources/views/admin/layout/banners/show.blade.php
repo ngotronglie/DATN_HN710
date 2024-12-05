@@ -15,7 +15,7 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
+                            <li><a href="#">Bảng điều khiển</a></li>
                             <li><a href="{{ route('admin.banners.index') }}">Danh sách banner</a></li>
                             <li class="active">Chi tiết banner</li>
                         </ol>
@@ -47,17 +47,8 @@
                                 <tr>
                                     <th>Người thêm</th>
                                     <td>
-                                        {{ $banner->creator->name }}
-                                        @if (!$banner->creator->is_active)
-                                        <span style="color: red;">(Bị khóa)</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Người sửa lần cuối</th>
-                                    <td>
-                                        {{ $banner->updater->name ?? 'Chưa có sửa đổi' }}
-                                        @if ($banner->updater && !$banner->updater->is_active)
+                                        {{ $banner->user->name }}
+                                        @if (!$banner->user->is_active)
                                         <span style="color: red;">(Bị khóa)</span>
                                         @endif
                                     </td>
@@ -70,7 +61,7 @@
                                     <th>Hình ảnh</th>
                                     <td>
                                         @if($banner->image)
-                                        <img src="{{ Storage::url($banner->image) }}" alt="Banner Image" style="max-width: 200px; height: auto;">
+                                        <img src="{{ Storage::url($banner->image) }}" alt="Banner Image" style="max-width: 300px; height: auto; object-fit: contain;">
                                         @else
                                         <span>Không có hình ảnh</span>
                                         @endif

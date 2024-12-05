@@ -12,13 +12,29 @@
 
 
     $(document).ready(function () {
+        var disableSort = $('#bootstrap-data-table').data('disable-sort');
         // Khởi tạo DataTable
         var table = $('#bootstrap-data-table').DataTable({
             lengthMenu: [[10, 20, 50, -1], [10, 20, 50, "All"]],
             stateSave: true,
-            columnDefs: [
-                { orderable: false, targets: 0 } // Vô hiệu hóa sắp xếp cho cột đầu tiên (checkbox)
-            ],
+            columnDefs: disableSort ? [] : [{ orderable: false, targets: 0 }],
+            language: {
+                "sProcessing":   "Đang xử lý...",
+                "sLengthMenu":   "Hiển thị _MENU_ mục",
+                "sZeroRecords":  "Không tìm thấy dòng nào phù hợp",
+                "sInfo":         "Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ mục",
+                "sInfoEmpty":    "Hiển thị 0 đến 0 của 0 mục",
+                "sInfoFiltered": "(được lọc từ _MAX_ mục)",
+                "sInfoPostFix":  "",
+                "sSearch":       "Tìm kiếm:",
+                "sUrl":          "",
+                "oPaginate": {
+                    "sFirst":    "Đầu",
+                    "sPrevious": "Trước",
+                    "sNext":     "Tiếp",
+                    "sLast":     "Cuối"
+                }
+            },
 
             // Sự kiện khi DataTable được vẽ lại (ví dụ khi phân trang)
             drawCallback: function () {

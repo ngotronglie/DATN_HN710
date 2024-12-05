@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ForgotPasswordController;
 use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SizeController;
 use App\Http\Controllers\Admin\VoucherController;
@@ -10,17 +12,24 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\CategoryBlogController;
+use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ProductController;
-
-use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Admin\StatisticsController;
+use App\Http\Controllers\Ajax\LocationController;
+use App\Http\Controllers\Ajax\ShopAjaxController;
+use App\Http\Controllers\Client\CartController;
+use App\Http\Controllers\Client\FavoriteController;
+use App\Http\Controllers\Client\PointController;
 
 use App\Http\Controllers\Ajax\DeleteController;
 use App\Http\Controllers\Ajax\ChangeActiveController;
-
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\BlogController as ClientBlogController;
 use App\Http\Controllers\Client\ShopController;
 use App\Http\Controllers\Client\AccountController;
+use App\Http\Controllers\Client\CheckoutController;
+use App\Http\Controllers\Client\CommentController as ClientCommentController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -38,87 +47,126 @@ use Illuminate\Support\Facades\Route;
 
 // ----------------------------CLIENT ROUTES--------------------------------
 
-
-Route::get('/wishlist', function () {
-    return view('client.pages.wishlist');
-});
-Route::get('/cart', function () {
-    return view('client.pages.cart');
-});
-Route::get('/checkout', function () {
-    return view('client.pages.checkout');
-});
-
-Route::get('/about', function () {
-    return view('client.pages.about');
-});
 // Trang chủ
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+
+//ajax get location
+Route::get('ajax/location/getDistrics', [LocationController::class, 'getDistrics']);
+Route::get('ajax/location/getWards', [LocationController::class, 'getWards']);
+Route::get('/api/districts', [LocationController::class, 'getDistricts']);
+Route::get('/api/wards', [LocationController::class, 'getWardLoad']);
+
+
 
 // Shop
 Route::get('/shops', [ShopController::class, 'index'])->name('shops.index');
 Route::get('/shops/category/{id}', [ShopController::class, 'showByCategory'])->name('shops.category');
 Route::get('/shops/{slug}', [ShopController::class, 'show'])->name('shops.show');
-Route::get('shop/ajax/getSizePrice', [ShopController::class, 'getSizePrice']);
+Route::get('/ajax/shops/{slug}', [ShopAjaxController::class, 'showAjax']);
+//Route::get('shop/ajax/getSizePrice', [ShopController::class, 'getSizePrice']);
+Route::get('shop/ajax/getSizePriceDetail', [ShopAjaxController::class, 'getSizePriceDetail']);
+Route::get('shop/ajax/getSizePriceDetail2', [ShopAjaxController::class, 'getSizePriceDetail']);
+Route::get('/shop-search', [ShopController::class, 'search'])->name('shop.search');
+Route::get('/shop-filter', [ShopController::class, 'filter'])->name('shop.filter');
+
+//cart
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/ajax/addToCart', [CartController::class, 'addToCart']);
+Route::delete('/ajax/deleteToCartHeader', [CartController::class, 'deleteToCart']);
+Route::post('/ajax/updateQuantityCart', [CartController::class, 'updateQuantity']);
+
+//sản phẩm yêu thích
+Route::get('/san-pham-yeu-thich', [FavoriteController::class, 'index'])->name('favorite_Prd.index');
+Route::post('/ajax/addToCart', [CartController::class, 'addToCart']);
+Route::post('/ajax/addToFavorite', [FavoriteController::class, 'addToFavorite']);
+Route::delete('/ajax/deleteToFavorite', [FavoriteController::class, 'deleteToFavorite']);
+
+// Comment
+Route::post('comments/store', [ClientCommentController::class, 'store'])->name('comments.store');
 
 // Blog
 Route::get('/blogs', [ClientBlogController::class, 'index'])->name('blogs.index');
+Route::get('/blogs/category/{id}', [ClientBlogController::class, 'getBlogCategory'])->name('blogs.category');
 Route::get('/blogs/{id}', [ClientBlogController::class, 'show'])->name('blogs.show');
+Route::get('/blogs-search', [ClientBlogController::class, 'search'])->name('blogs.search');
+Route::post('/voucher/apply-code', [ClientBlogController::class, 'applyVoucher'])->name('voucher.apply_code');
 
 // Contact
 Route::get('/contact', function () {
     return view('client.pages.contact');
 });
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+// Checkout
+ Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+ Route::post('/store-session-data', [CheckoutController::class, 'storeData']);
 
+ Route::post('/place-order', [CheckoutController::class, 'placeOrder'])->name('placeOrder');
+ Route::get('/payment-return', [CheckoutController::class, 'paymentReturn'])->name('paymentReturn');
+ Route::get('/thanks/{order_code}', [CheckoutController::class, 'thanks'])->name('thanks');
+ Route::get('/fail', [CheckoutController::class, 'fail'])->name('fail');
+ Route::post('/apply-voucher', [CheckoutController::class, 'applyVoucher'])->name('voucher.apply');
+ Route::get('/billSearch', [CheckoutController::class, 'billSearch'])->name('bill.search');
 // Tài khoản
-Route::get('/login', [AccountController::class, 'loginForm'])->name('login');
-Route::post('/login', [AccountController::class, 'login'])->name('login');
-Route::post('user/logout', [AccountController::class, 'logout'])->name('user.logout');
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AccountController::class, 'loginForm'])->name('login');
+    Route::post('/login', [AccountController::class, 'login'])->name('login');
+    Route::get('/register', [AccountController::class, 'registerForm']);
+    Route::post('/register', [AccountController::class, 'register'])->name('register');
+    Route::get('/forgot', [AccountController::class, 'forgotForm'])->name('forgot');
+    Route::post('/forgot', [AccountController::class, 'forgot'])->name('forgot.password');
+    Route::get('verify-email/{token}', [AccountController::class, 'verifyEmail'])->name('verify.email');
+    Route::get('user/password/reset/{token}', [AccountController::class, 'showResetForm'])->name('user.password.reset');
+    Route::post('user/password/reset', [AccountController::class, 'reset'])->name('user.password.update');
+});
+
+//Đổi điểm
+Route::get('/ajax/getVoucher', [PointController::class, 'redeemVoucher']);
+
+
+Route::middleware('auth')->group(function () {
+    Route::post('user/logout', [AccountController::class, 'logout'])->name('user.logout');
+    Route::get('/my_account', [AccountController::class, 'myAccount'])->name('my_account');
+    Route::post('/my_acount/update/{id}', [AccountController::class, 'updateMyAcount'])->name('updateMyAcount');
+    Route::post('/my_acount/update-password/{id}', [AccountController::class, 'updatePassword'])->name('user.updatePassword');
+    Route::get('/my_acount/{id}/bill_detail', [AccountController::class, 'orderBillDetail'])->name('viewBillDetail');
+    Route::get('my_acount/orders/cancel/{id}', [AccountController::class, 'cancelOrder'])->name('cancelOrder');
+    // Route::get('/orders/status/{status?}', [AccountController::class, 'getOrdersByStatus'])->name('orders.byStatus');
+    // Route::get('/voucher/status/{status?}', [AccountController::class, 'getVouchersByStatus'])->name('voucher.byStatus');
+
+});
 Route::get('/verify/{token}', [AccountController::class, 'verify'])->name('verify');
-Route::get('/register', [AccountController::class, 'registerForm']);
-Route::post('/register', [AccountController::class, 'register'])->name('register');
 
-Route::get('/forgot', [AccountController::class, 'forgotForm'])->name('forgot');
-Route::post('/forgot', [AccountController::class, 'forgot'])->name('forgot.password');
-Route::get('verify-email/{token}', [AccountController::class, 'verifyEmail'])->name('verify.email');
-Route::get('user/password/reset/{token}', [AccountController::class, 'showResetForm'])->name('user.password.reset');
-Route::post('user/password/reset', [AccountController::class, 'reset'])->name('user.password.update');
-
-Route::get('/my_account', [AccountController::class, 'myAccount'])->name('my_account');
-Route::post('/my_acount/update/{id}',[AccountController::class,'updateMyAcount'])->name('updateMyAcount');
-Route::post('/my_acount/update-password/{id}', [AccountController::class, 'updatePassword'])->name('user.updatePassword');
 
 
 // ----------------------------END CLIENT ROUTES--------------------------------
 
-
-Route::get('admin/login', [LoginController::class, 'loginForm'])->name('admin.loginForm');
-Route::post('admin/checkLogin', [LoginController::class, 'login'])->name('admin.checkLogin');
-Route::post('/logout', [LoginController::class, 'logout'])->name('admin.logout');
-
-Route::get('admin/forgot', [ForgotPasswordController::class, 'forgotForm'])->name('admin.forgot');
-Route::post('admin/forgot', [ForgotPasswordController::class, 'forgot'])->name('admin.forgot.password');
+Route::middleware('guest')->group(function () {
+    Route::get('admin/login', [LoginController::class, 'loginForm'])->name('admin.loginForm');
+    Route::post('admin/checkLogin', [LoginController::class, 'login'])->name('admin.checkLogin');
+    Route::get('admin/forgot', [ForgotPasswordController::class, 'forgotForm'])->name('admin.forgot');
+    Route::post('admin/forgot', [ForgotPasswordController::class, 'forgot'])->name('admin.forgot.password');
+    Route::get('admin/password/reset/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('admin.password.reset');
+    Route::post('password/reset', [ForgotPasswordController::class, 'reset'])->name('admin.password.update');
+});
+Route::middleware(['auth', 'isAdmin'])->group(function () {
+    Route::post('/logout', [LoginController::class, 'logout'])->name('admin.logout');
+});
 Route::get('verify-email/{token}', [ForgotPasswordController::class, 'verifyEmail'])->name('verify.email');
 
-Route::get('admin/password/reset/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('admin.password.reset');
-Route::post('password/reset', [ForgotPasswordController::class, 'reset'])->name('admin.password.update');
-
-//->middleware('isAdmin')
-Route::prefix('admin')->as('admin.')->group(function () {
-    Route::get('/', function () {
-        return view('admin.layout.yeld');
-    })->name('dashboard');
+//
+Route::prefix('admin')->as('admin.')->middleware(['auth', 'isAdmin'])->group(function () {
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     // Các route tùy chỉnh
     Route::get('/accounts/my_account', [UserController::class, 'myAccount'])->name('accounts.myAccount');
-    Route::delete('/accounts/{id}/forceDelete', [UserController::class, 'forceDelete'])->name('accounts.forceDelete');
-    Route::get('accounts/trashed', [UserController::class, 'trashed'])->name('accounts.trashed');
-    Route::post('accounts/{user}/restore', [UserController::class, 'restore'])->name('accounts.restore');
+    Route::put('accounts/my_account', [UserController::class, 'updateMyAcount'])->name('accounts.updateMyAccount');
+    Route::get('/accounts/change-password', [UserController::class, 'showChangePasswordForm'])->name('accounts.showChangePasswordForm');
+    Route::put('/accounts/change-password', [UserController::class, 'updatePassword'])->name('accounts.updatePassword');
+
     Route::get('accounts/listUser', [UserController::class, 'listUser'])->name('accounts.listUser');
 
-    // Các route resource cho accounts
-    Route::resource('accounts', UserController::class);
+    // Quản lí tài khoản
+    Route::resource('accounts', UserController::class)->except(['destroy']);
 
     // Quản lý các size đã bị xóa mềm
     Route::get('sizes/trashed', [SizeController::class, 'trashed'])->name('sizes.trashed');
@@ -135,11 +183,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::resource('colors', ColorController::class);
 
     // Vouchers
-    Route::get('/vouchers/trashed', [VoucherController::class, 'trashed'])->name('vouchers.trashed');
-    Route::delete('vouchers/forceDelete/{id}', [VoucherController::class, 'forceDelete'])->name('vouchers.forceDelete');
-    Route::put('vouchers/restore/{id}', [VoucherController::class, 'restore'])->name('vouchers.restore');
-
-    Route::resource('vouchers', VoucherController::class);
+    Route::resource('vouchers', VoucherController::class)->except(['destroy']);;
 
     // Quản lý các danh mục đã bị xóa mềm
     Route::get('categories/trashed', [CategoryController::class, 'trashed'])->name('categories.trashed');
@@ -159,8 +203,8 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('category_blogs/trashed', [CategoryBlogController::class, 'trashed'])->name('category_blogs.trashed');
     Route::put('category_blogs/restore/{id}', [CategoryBlogController::class, 'restore'])->name('category_blogs.restore');
     Route::delete('category_blogs/forceDelete/{id}', [CategoryBlogController::class, 'forceDelete'])->name('category_blogs.forceDelete');
-
     Route::resource('category_blogs', CategoryBlogController::class);
+
 
     //Quản lý bài viết xóa mềm
     Route::get('blogs/trashed', [BlogController::class, 'trashed'])->name('blogs.trashed');
@@ -174,7 +218,36 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::put('banners/restore/{id}', [BannerController::class, 'restore'])->name('banners.restore');
     Route::delete('banners/forceDelete/{id}', [BannerController::class, 'forceDelete'])->name('banners.forceDelete');
 
+    // Danh sách bình luận
+    Route::get('comments', [CommentController::class, 'index'])->name('comments.index');
+
+    // Chi tiết bình luận
+    Route::get('comments/{id}', [CommentController::class, 'show'])->name('comments.show');
+    Route::get('comments/{parent_id}/children', [CommentController::class, 'showChildren'])->name('comments.showChildren');
+
+    // Quản lí banner
     Route::resource('banners', BannerController::class);
+
+
+    //Quản lý đơn hàng
+    Route::get('order', [OrderController::class, 'index'])->name('order.index');
+    Route::get('order/{order_id}/order-detail', [OrderController::class, 'detail'])->name('order.detail');
+    Route::get('order/confirm/{order_id}', [OrderController::class, 'confirmOrder'])->name('order.confirmOrder');
+    Route::get('order/ship/{order_id}', [OrderController::class, 'shipOrder'])->name('order.shipOrder');
+    Route::get('order/confirm-shipping/{order_id}', [OrderController::class, 'confirmShipping'])->name('order.confirmShipping');
+    Route::get('order/cancel/{order_id}', [OrderController::class, 'cancelOrder'])->name('order.cancelOrder');
+    Route::get('order-print/{checkout_code}', [OrderController::class, 'print_order'])->name('order.printOrder');
+
+    //Thông báo
+    Route::get('notification', [NotificationController::class, 'notification'])->name('notification');
+    Route::get('order/{order_id}/order-detail-notication/{noti_id}', [NotificationController::class, 'detailNotication'])->name('order.detailNotication');
+    Route::delete('notication/{id}', [NotificationController::class, 'delete'])->name('deleteNoti');
+    Route::get('deleteNoticationRead', [NotificationController::class, 'deleteAllNotiRead'])->name('deleteAllNotiRead');
+    Route::get('deleteNotication', [NotificationController::class, 'deleteAllNoti'])->name('deleteAllNoti');
+
+    // Thống kê
+    Route::get('statistics', [StatisticsController::class, 'index'])->name('statistics.index');
+    Route::post('statistics/show', [StatisticsController::class, 'showStatistics'])->name('statistics.show');
 });
 
 //ajax category
@@ -198,6 +271,9 @@ Route::get('categoryBlogs/ajax/trashedCount', [CategoryBlogController::class, 't
 //ajax banner
 Route::post('banners/ajax/changeActiveBanner', [ChangeActiveController::class, 'changeActiveBanner']);
 Route::post('banners/ajax/changeAllActiveBanner', [ChangeActiveController::class, 'changeActiveAllBanner']);
+//ajax comment
+Route::post('comments/ajax/changeActiveComment', [ChangeActiveController::class, 'changeActiveComment']);
+Route::post('comments/ajax/changeAllActiveComment', [ChangeActiveController::class, 'changeActiveAllComment']);
 //ajax blog
 Route::post('blogs/ajax/changeActiveBlog', [ChangeActiveController::class, 'changeActiveBlog']);
 Route::post('blogs/ajax/changeAllActiveBlog', [ChangeActiveController::class, 'changeActiveAllBlog']);
@@ -205,3 +281,15 @@ Route::post('blogs/ajax/changeAllActiveBlog', [ChangeActiveController::class, 'c
 Route::delete('blogs/ajax/deleteAllBlog', [DeleteController::class, 'deleteAllBlog']);
 //update count thung rac
 Route::get('blogs/ajax/trashedCount', [BlogController::class, 'trashedCount']);
+//ajax delete notification
+Route::delete('notification/ajax/deleteNoti', [DeleteController::class, 'deleteCheckedNoti'])->name('deleteNoti');
+//ajax delete categorie
+Route::delete('categori/ajax/deleteCheckedCategori', [DeleteController::class, 'deleteCheckedCategori']);
+//ajax delete product
+Route::delete('product/ajax/deleteCheckedProduct', [DeleteController::class, 'deleteCheckeProduct']);
+//ajax delete size
+Route::delete('/size/ajax/deleteCheckedSize', [DeleteController::class, 'deleteCheckeSize']);
+//ajax delete color
+Route::delete('/color/ajax/deleteCheckedColor', [DeleteController::class, 'deleteCheckeColor']);
+//ajax delete banner
+Route::delete('/banner/ajax/deleteCheckedBanner', [DeleteController::class, 'deleteCheckeBanner']);

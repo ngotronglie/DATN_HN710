@@ -16,7 +16,7 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
+                            <li><a href="#">Bảng điều khiển</a></li>
                             <li><a href="{{ route('admin.vouchers.index') }}">Quản lí Vouchers</a></li>
                             <li class="active">Thêm Voucher</li>
                         </ol>
@@ -42,7 +42,7 @@
                         <form action="{{ route('admin.vouchers.store') }}" method="POST">
                             @csrf
                             <div class="form-group">
-                                <label for="code" class="form-control-label">Mã Voucher</label>
+                                <label for="code" class="form-control-label">Mã giảm giá</label>
                                 <input type="text" id="code" name="code" value="{{ old('code') }}" class="form-control" required>
                                 @error('code')
                                 <small class="form-text text-danger">{{ $message }}</small>
@@ -85,12 +85,27 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="min_money" class="form-control-label">Tiền bắt đầu giảm giá</label>
+                                <label for="min_money" class="form-control-label">Số tiền tối thiểu</label>
                                 <input type="number" id="min_money" name="min_money" value="{{ old('min_money') }}"
                                     class="form-control" min="0" required>
                                 @error('min_money')
                                 <small class="form-text text-danger">{{ $message }}</small>
                                 @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="max_money" class="form-control-label">Số tiền tối đa</label>
+                                <input type="number" id="max_money" name="max_money" value="{{ old('max_money') }}"
+                                    class="form-control" min="0" required>
+                                @error('max_money')
+                                <small class="form-text text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="max_money" class="form-control-label">Điểm đổi</label>
+                                <input type="number" id="points" name="points_required" value="{{ old('points_required') }}"
+                                    class="form-control" min="0">
                             </div>
 
                             <!-- Phần trạng thái đã được loại bỏ. Nếu cần thiết, có thể thêm lại sau -->

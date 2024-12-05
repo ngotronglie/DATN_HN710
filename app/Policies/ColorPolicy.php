@@ -13,7 +13,7 @@ class ColorPolicy
      */
     public function viewAny(User $user): bool
     {
-        return in_array($user->role, [1, 2]);
+        return $user->role == 2;
     }
 
     public function viewTrashed(User $user): bool
@@ -26,7 +26,7 @@ class ColorPolicy
      */
     public function view(User $user, Color $color): bool
     {
-        return in_array($user->role, [1, 2]);
+        return $user->role == 2;
     }
 
     /**

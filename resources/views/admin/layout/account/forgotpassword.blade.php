@@ -43,8 +43,8 @@
                     <form action="{{route('admin.forgot.password')}}" method="post">
                         @csrf
                         <div class="form-group">
-                            <label>Email address</label>
-                            <input type="email" name="email" class="form-control" placeholder="Email" required>
+                            <label>Email</label>
+                            <input type="email" name="email" class="form-control" placeholder="Email" required  value="{{ old('email') }}">
                             @error('email')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror

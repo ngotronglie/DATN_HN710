@@ -31,7 +31,7 @@ class UpdateProductRequest extends FormRequest
             'name' => 'required|string|max:255|unique:products,name,' . $id,
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
-            'img_thumb' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'img_thumb' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             // Thêm validation cho biến thể
             'variants.*.size_id' => 'required|exists:sizes,id',
             'variants.*.color_id' => 'required|exists:colors,id',
@@ -39,7 +39,7 @@ class UpdateProductRequest extends FormRequest
             'variants.*.price_sale' => 'required|numeric|min:0|lt:variants.*.price',
             'variants.*.quantity' => 'required|integer|min:1',
             // Thư viện ảnh
-            'product_galleries.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'product_galleries.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ];
     }
 
@@ -79,11 +79,11 @@ class UpdateProductRequest extends FormRequest
             'category_id.required' => 'Danh mục sản phẩm là bắt buộc',
             'category_id.exists' => 'Danh mục đã chọn không tồn tại',
             'img_thumb.image' => 'Ảnh đại diện phải là tệp hình ảnh',
-            'img_thumb.mimes' => 'Ảnh đại diện phải có định dạng jpeg, png, jpg, gif, hoặc svg',
+            'img_thumb.mimes' => 'Ảnh đại diện phải có định dạng jpeg, png, jpg, gif, webp hoặc svg',
             'img_thumb.max' => 'Ảnh đại diện không được vượt quá 2MB',
             // Thư viện ảnh
             'product_galleries.*.image' => 'Tất cả các tệp trong thư viện ảnh phải là hình ảnh',
-            'product_galleries.*.mimes' => 'Tất cả các tệp trong thư viện ảnh phải có định dạng jpeg, png, jpg, gif, hoặc svg',
+            'product_galleries.*.mimes' => 'Tất cả các tệp trong thư viện ảnh phải có định dạng jpeg, png, jpg, gif, webp hoặc svg',
             'product_galleries.*.max' => 'Mỗi ảnh trong thư viện không được vượt quá 2MB',
             // Thông báo lỗi cho biến thể
             'variants.*.size_id.required' => 'Kích thước là bắt buộc',

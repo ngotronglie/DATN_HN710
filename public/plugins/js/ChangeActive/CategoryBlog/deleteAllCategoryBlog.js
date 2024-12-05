@@ -6,6 +6,8 @@
     HT.deleteall = () => {
         if ($('.deleteAll').length) {
             $(document).on('click', '.deleteAll', function (e) {
+                e.preventDefault();
+
                 let id = [];
                 $('.checkBoxItem').each(function () {
                     let checkbox = $(this);
@@ -15,7 +17,7 @@
                 });
 
                 if (id.length === 0) {
-                    alert('Vui lòng chọn ít nhất một mục');
+                    swalErrorAd('Vui lòng chọn ít nhất một mục');
                     return;
                 }
 
@@ -24,49 +26,47 @@
                     '_token': token
                 };
 
-                $.ajax({
-                    type: 'DELETE',
-                    url: '/categoryBlogs/ajax/deleteAllCategoryBlog',
-                    data: option,
-                    dataType: 'json',
-                    success: function (res) {
-                        if (res.status) {
-                            alert(res.message);
-
-                            id.forEach(function (deletedId) {
-                                $('input[data-id="' + deletedId + '"]').closest('tr').remove();
-                            });
-
-                            $.ajax({
-                                type: 'GET',
-                                url: '/categoryBlogs/ajax/trashedCount',
-                                dataType: 'json',
-                                success: function (res) {
-                                    if (res.trashedCount !== undefined) {
-                                        // Cập nhật số lượng trong nút "Thùng rác"
-                                        $('.countTrash').html('<i class="fa fa-trash"></i> Thùng rác (' + res.trashedCount + ')');
+                Swal.fire({
+                    title: 'Bạn có chắc chắn',
+                    text: "Hành động này sẽ xóa tất cả danh mục bài viết đã chọn",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Xóa',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'DELETE',
+                            url: '/categoryBlogs/ajax/deleteAllCategoryBlog',
+                            data: option,
+                            dataType: 'json',
+                            success: function (res) {
+                                if (res.totalCountAfter > 0) {
+                                    if (res.status) {
+                                        swalSuccessAd(res.message);
+                                        id.forEach(function (deletedId) {
+                                            $('input[data-id="' + deletedId + '"]').closest('tr').remove();
+                                        });
+                                        $('.countTrashBlog').html('('+res.trashedCount+')');
+                                        HT.recalculateSTT();
+                                    }else{
+                                        swalErrorAd(res.message);
                                     }
-                                    return false;
-                                },
-                                error: function (xhr, status, error) {
-                                    alert('Đã xảy ra lỗi khi cập nhật số lượng thùng rác.');
-                                    return false;
-
+                                }else{
+                                    swalSuccessAd(res.message);
+                                    $('#checkAllTable').prop('checked', false);
+                                    $('.null_Table').html('<tr><td valign="top" colspan="6" class="dataTables_empty">Không tìm thấy dòng nào phù hợp</td></tr>');
+                                    $('.countTrashBlog').html('('+res.trashedCount+')');
                                 }
-                            });
-
-                            //cập nhật lại key(số thứ tự)
-                            HT.recalculateSTT();
-                        } else {
-                            alert('Xóa không thành công.');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        let message = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : error;
-                        alert('Đã xảy ra lỗi: ' + message);
-                    }
+                            },
+                            error: function (xhr, status, error) {
+                                let message = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : error;
+                                alert('Đã xảy ra lỗi: ' + message);
+                            }
+                        });                    }
                 });
-                e.preventDefault();
             });
         }
     }

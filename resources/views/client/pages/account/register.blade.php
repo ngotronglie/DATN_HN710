@@ -8,12 +8,12 @@
     <div class="breadcrumb-area bg-light">
         <div class="container-fluid">
             <div class="breadcrumb-content text-center">
-                <h1 class="title">Register</h1>
+                <h1 class="title">Đăng ký</h1>
                 <ul>
                     <li>
-                        <a href="/">Home </a>
+                        <a href="/">Trang chủ </a>
                     </li>
-                    <li class="active">Register</li>
+                    <li class="active">Đăng ký</li>
                 </ul>
             </div>
         </div>

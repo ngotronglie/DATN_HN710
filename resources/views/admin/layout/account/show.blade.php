@@ -15,7 +15,7 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
+                            <li><a href="#">Bảng điều khiển</a></li>
                             <li><a href="{{ route('admin.accounts.index') }}">Danh sách tài khoản</a></li>
                             <li class="active">Chi tiết tài khoản</li>
                         </ol>
@@ -48,27 +48,51 @@
                                     <th>Email</th>
                                     <td>{{ $account->email }}</td>
                                 </tr>
-                                <th>Địa chỉ</th>
-                                <td>{{ $account->address }}</td>
                                 <tr>
+                                <th>Địa chỉ</th>
+                                <td>
+                                    {{ implode(', ', array_filter([
+                                        $addressData['addressDetail'],
+                                        $addressData['ward'],
+                                        $addressData['district'],
+                                        $addressData['province']
+                                    ], function($value) {
+                                        return !is_null($value) && $value !== '';
+                                    })) }}
+                                </td>
                                 </tr>
+                                <tr>
                                 <th>Điện Thoại</th>
                                 <td>{{ $account->phone }}</td>
-                                <tr>
                                 </tr>
+                                <tr>
                                 <th>Ảnh</th>
                                 <td>
                                     @if($account->avatar)
-                                    <img src="{{ Storage::url($account->avatar) }}" alt="Avatar" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;">
+                                    <img src="{{ Storage::url($account->avatar) }}" alt="Avatar" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;">
                                     @else
                                     <span>Chưa cập nhật</span>
                                     @endif
                                 </td>
-                                <tr>
+
                                 </tr>
+                                <tr>
+                                    <th>Xác thực</th>
+                                <td>
+                                    @if($account->email_verified_at ==null)
+                                    <span class="badge badge-danger">Chưa xác thực</span>
+                                    @else
+                                    <span class="badge badge-success">Đã xác thực</span>
+                                    @endif
+                                </td>
+                                </tr>
+                                <tr>
                                 <th>Ngày sinh</th>
                                 <td>{{ \Carbon\Carbon::parse($account->date_of_birth)->format('d/m/Y') }}</td>                                <tr>
                                 </tr>
+                                <tr>
+
+
                                 <th>Chức vụ</th>
                                 <td>
                                     @php
@@ -83,6 +107,7 @@
                                     @endphp
                                     {{ $role }}
                                 </td>
+                            </tr>
                                 <tr>
                                     <th>Thời gian tạo</th>
                                     <td>{{ \Carbon\Carbon::parse($account->created_at)->format('d/m/Y H:i:s') }}</td>

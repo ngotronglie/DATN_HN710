@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\District;
+use App\Models\Province;
 use App\Models\User;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Controllers\Controller;
+use App\Models\Ward;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+
 
 class UserController extends Controller
 {
@@ -24,9 +29,8 @@ class UserController extends Controller
             return back()->with('warning', 'Bạn không có quyền!');
         }
         $data = User::whereIn('role', ['1', '2'])->orderBy('role', 'desc')->orderBy('id', 'desc')->get();
-        $trashedCount = User::onlyTrashed()->count();
         $users = User::where('role', '0')->count();
-        return view(self::PATH_VIEW . __FUNCTION__, compact('data', 'trashedCount', 'users'));
+        return view(self::PATH_VIEW . __FUNCTION__, compact('data', 'users'));
     }
 
     public function listUser()
@@ -46,7 +50,9 @@ class UserController extends Controller
         if (Gate::denies('create', User::class)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
-        return view(self::PATH_VIEW . __FUNCTION__);
+        $provinces = Province::all();
+
+        return view(self::PATH_VIEW . __FUNCTION__, compact('provinces'));
     }
 
     /**
@@ -59,13 +65,22 @@ class UserController extends Controller
         }
         $data = $request->except('avatar');
         $data['password'] = Hash::make($request->input('password'));
-        
+
+        $province_code = $request->input('provinces');
+        $ward_code = $request->input('wards');
+        $address = $request->input('address');
+        $district_code = $request->input('districs');
+
+        $full_address = $address . ', ' . $ward_code . ', ' . $district_code . ', ' . $province_code;
+        $data['address'] = $full_address;
         if ($request->hasFile('avatar')) {
             $data['avatar'] = Storage::put('users', $request->file('avatar'));
         } else {
             $data['avatar'] = '';
         }
+
         $data['email_verified_at'] = now();
+
         User::create($data);
         return redirect()->route('admin.accounts.index')->with('success', 'Thêm mới thành công');
     }
@@ -80,7 +95,17 @@ class UserController extends Controller
         if (Gate::denies('view', $account)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
-        return view(self::PATH_VIEW . __FUNCTION__, compact('account'));
+        $address = $account->address;
+
+        $addressParts = explode(',', $address);
+
+        $addressData = [
+            'province' => isset($addressParts[3]) ? Province::where('code', trim($addressParts[3]))->value('full_name') : null,
+            'district' => isset($addressParts[2]) ? District::where('code', trim($addressParts[2]))->value('full_name') : null,
+            'ward' => isset($addressParts[1]) ? Ward::where('code', trim($addressParts[1]))->value('full_name') : null,
+            'addressDetail' => isset($addressParts[0]) ? $addressParts[0] : null,
+        ];
+        return view(self::PATH_VIEW . __FUNCTION__, compact('account', 'addressData'));
     }
 
 
@@ -104,57 +129,112 @@ class UserController extends Controller
             return redirect()->route('admin.accounts.index')->with('warning', 'Bạn không có quyền!');
         }
         $data = $request->all();
+        if ($account->email_verified_at == null) {
+            $data['email_verified_at'] = now();
+        } else {
+            $data['email_verified_at'] = $account->email_verified_at;
+        }
         $account->update($data);
         return redirect()->route('admin.accounts.index')->with('success', 'Sửa thành công');
     }
 
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $account)
+    public function myAccount()
     {
-        if (Gate::denies('delete', $account)) {
-            return back()->with('warning', 'Bạn không có quyền!');
-        }
-        $account->delete();
-        return redirect()->route('admin.accounts.index')->with('success', 'Xóa mềm thành công');
+        $provinces = Province::all();
+        return view('admin.layout.account.my_account', compact('provinces'));
     }
 
-    public function trashed()
+    public function updateMyAcount(request $request)
     {
-        if (Gate::denies('viewTrashed', User::class)) {
-            return back()->with('warning', 'Bạn không có quyền!');
+        $request->validate(
+            [
+                'provinces' => 'required|exists:provinces,code', // Tỉnh/thành phố phải tồn tại trong bảng provinces
+                'districs' => 'required|exists:districts,code',   // Quận/huyện phải tồn tại trong bảng districs
+                'wards' => 'required|exists:wards,code',
+                'address' => 'required|string|max:255',
+                'phone' => 'required|string|regex:/^[0-9]{10}$/',
+                'date_of_birth' => 'required|date|before:today',
+                'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ],
+            [
+                'provinces.required' => 'Vui lòng chọn tỉnh/thành phố',
+                'districs.required' => 'Vui lòng chọn quận/huyện',
+                'districs.exists' => 'Vui lòng chọn quận/huyện.',
+                'wards.required' => 'Vui lòng chọn phường/xã',
+                'wards.exists' => 'Vui lòng chọn phường/xã',
+                'address.required' => 'Địa chỉ là bắt buộc.',
+                'address.max' => 'Địa chỉ không được vượt quá 255 ký tự.',
+                'provinces.exists' => 'Vui lòng chọn tỉnh/thành phố',
+                'phone.required' => 'Số điện thoại là bắt buộc',
+                'phone.regex' => 'Số điện thoại không hợp lệ',
+                'avatar.image' => 'Tệp tải lên phải là hình ảnh',
+                'avatar.mimes' => 'Ảnh đại diện phải có định dạng: jpeg, png, jpg, gif',
+                'avatar.max' => 'Ảnh đại diện không được lớn hơn 2MB',
+                'date_of_birth.required' => 'Ngày sinh là bắt buộc',
+                'date_of_birth.date' => 'Ngày sinh không hợp lệ',
+                'date_of_birth.before' => 'Ngày sinh không được là ngày hiện tại',
+            ]
+        );
+        $user = User::findOrFail(auth()->user()->id);
+
+        $province_code = $request->input('provinces');
+        $ward_code = $request->input('wards');
+        $address = $request->input('address');
+        $district_code = $request->input('districs');
+
+        $full_address = $address . ', ' . $ward_code . ', ' . $district_code . ', ' . $province_code;
+        $data = $request->only(['phone', 'address', 'date_of_birth']);
+        $data['address'] = $full_address;
+
+        if ($request->hasFile('avatar')) {
+
+            $data['avatar'] = Storage::put('users', $request->file('avatar'));
+            if (!empty($user->avatar) && Storage::exists($user->avatar)) {
+                Storage::delete($user->avatar);
+            }
+        } else {
+            $data['avatar'] = $user->avatar;
         }
-        $trashedUsers = User::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
-        return view('admin.layout.account.trashed', compact('trashedUsers'));
+
+        $user->update($data);
+        return redirect()->route('admin.accounts.myAccount')->with('success', 'Cập nhật thông tin thành công');
     }
 
-    public function restore($id)
+    public function showChangePasswordForm()
     {
-        $user = User::withTrashed()->find($id);
-        if (Gate::denies('restore', $user)) {
-            return back()->with('warning', 'Bạn không có quyền!');
-        }
-        $user->restore();
-        return redirect()->route('admin.accounts.trashed')->with('success', 'Khôi phục thành công');
+        return view('admin.layout.account.change-password');
     }
 
-    public function forceDelete($id)
+    public function updatePassword(Request $request)
     {
-        $user = User::withTrashed()->find($id);
-        if (Gate::denies('forceDelete', $user)) {
-            return back()->with('warning', 'Bạn không có quyền!');
-        }
-        if ($user->avatar) {
-            Storage::delete($user->avatar);
-        }
-        $user->forceDelete();
-        return redirect()->route('admin.accounts.trashed')->with('success', 'Tài khoản đã được xóa vĩnh viễn');
-    }
+        $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => ['required', 'string', 'min:8', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'confirmed'],
+            'new_password_confirmation' => 'required|string',
+        ], [
+            'current_password.required' => 'Vui lòng nhập mật khẩu hiện tại',
+            'new_password.required' => 'Vui lòng nhập mật khẩu mới',
+            'new_password.regex' => 'Mật khẩu bao gồm chữ in hoa, chữ cái thường và số',
+            'new_password.min' => 'Mật khẩu mới phải ít nhất 8 ký tự',
+            'new_password.confirmed' => 'Mật khẩu mới không trùng khớp',
+            'new_password_confirmation.required' => 'Vui lòng không bỏ trống',
+        ]);
 
-    public function myAccount(){
-        $user = Auth::user();
-        return view('admin.layout.account.my_account',compact('user'));
+        // Kiểm tra mật khẩu hiện tại
+        if (!Hash::check($request->current_password, auth()->user()->password)) {
+            return back()->withErrors(['current_password' => 'Mật khẩu hiện tại không chính xác']);
+        }
+
+        if (Hash::check($request->new_password, auth()->user()->password)) {
+            return back()->withErrors(['new_password' => 'Mật khẩu mới không được giống với mật khẩu hiện tại']);
+        }
+
+        // Cập nhật mật khẩu mới
+        $user = User::findOrFail(auth()->user()->id);
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+        Auth::logout();
+
+        return redirect()->route('admin.loginForm')->with('success', 'Cập nhật mật khẩu thành công. Vui lòng đăng nhập lại');
     }
 }

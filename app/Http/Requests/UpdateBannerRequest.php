@@ -26,7 +26,7 @@ class UpdateBannerRequest extends FormRequest
 
         return [
             'title' => 'required|string|min:3|max:255|unique:banners,title,'.$id,
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'link' => 'required|url|max:255',
             'description' => 'required|string|max:500',
         ];
@@ -41,7 +41,7 @@ class UpdateBannerRequest extends FormRequest
             'title.unique' => 'Tiêu đề banner này đã tồn tại trong hệ thống',
 
             'image.image' => 'Tệp tải lên phải là một hình ảnh',
-            'image.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, hoặc gif',
+            'image.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, webp hoặc gif',
             'image.max' => 'Kích thước hình ảnh không được vượt quá 2MB',
 
             'link.required' => 'Liên kết là bắt buộc',

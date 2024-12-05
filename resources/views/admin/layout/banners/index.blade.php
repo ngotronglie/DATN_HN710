@@ -15,7 +15,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Dashboard</h1>
+                        <h1>Danh sách banner</h1>
                     </div>
                 </div>
             </div>
@@ -23,7 +23,7 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
+                            <li><a href="#">Bảng điều khiển</a></li>
                             <li><a href="#">Quản lí banner</a></li>
                             <li class="active">Danh sách banner</li>
                         </ol>
@@ -49,7 +49,7 @@
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
                             <a class="btn btn-danger" href="{{ route('admin.banners.trashed') }}">
-                                <i class="fa fa-trash"></i> Thùng rác ({{ $trashedCount }})
+                                <i class="fa fa-trash"></i> Thùng rác <span class="countTrash">({{ $trashedCount }})</span>
                             </a>
                             <div class="dropdown float-right ml-2">
                                 <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -62,7 +62,7 @@
                                     <a class="dropdown-item activeAll" data-is_active="1" href="#">
                                         <i class="fa fa-toggle-off text-danger"></i> Tắt các mục đã chọn
                                     </a>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item deleteAll" href="#">
                                         <i class="fa fa-trash text-danger"></i> Xóa các mục đã chọn
                                     </a>
                                 </div>
@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table id="bootstrap-data-table" class="table table-striped table-bordered">
+                        <table id="bootstrap-data-table" class="table table-striped table-bordered" data-disable-sort="false">
                             <thead>
                                 <tr>
                                     <th>
@@ -80,7 +80,6 @@
                                     <th>Tiêu đề</th>
                                     <th>Hình ảnh</th>
                                     <th>Người tạo</th>
-                                    <th>Người sửa</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
@@ -92,12 +91,11 @@
                                     <th>Tiêu đề</th>
                                     <th>Hình ảnh</th>
                                     <th>Người tạo</th>
-                                    <th>Ngời sửa</th>
                                     <th>Trạng thái</th>
                                     <th>Chức năng</th>
                                 </tr>
                             </tfoot>
-                            <tbody>
+                            <tbody class="null_Table">
                                 @foreach ($banners as $key => $item)
                                 <tr>
                                     <td>
@@ -106,20 +104,14 @@
                                     <td>{{ $key+1 }}</td>
                                     <td>{{ $item->title }}</td>
                                     <td style="width: 120px;">
-                                        <img src="{{ Storage::url($item->image) }}" class="img-fluid" style="max-height: 100px; width: 100%; object-fit: cover; border: 1px solid #ddd;" alt="Banner Image">
+                                        <img src="{{ Storage::url($item->image) }}" class="img-fluid" style="max-height: 100px; width: 100%; object-fit: contain; border: 1px solid #ddd;" alt="Banner Image">
                                     </td>
                                     <td>
-                                        {{ $item->creator->name }}
-                                        @if (!$item->creator->is_active)
+                                        {{ $item->user->name }}
+                                        @if (!$item->user->is_active)
                                         <div style="color: red;">(Bị khóa)</div>
                                         @endif
-                                    </td>  
-                                    <td>
-                                        {{ $item->updater->name ?? 'Chưa có sửa đổi' }}
-                                        @if ($item->updater && !$item->updater->is_active)
-                                        <div style="color: red;">(Bị khóa)</div>
-                                        @endif
-                                    </td>                                  
+                                    </td>
                                     <td style="width: 12%" class="text-center">
                                         <input type="checkbox" class="js-switch active" data-model="{{ $item->is_active }}"
                                             {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"
@@ -191,4 +183,14 @@
 <script src="{{asset('plugins/js/changeActive/Banner/changeAllActiveBanner.js')}}"></script>
 
 <script src="{{asset('plugins/js/changeActive/Banner/changeActiveBanner.js')}}"></script>
+
+<script src="{{asset('plugins/js/ChangeActive/Banner/deleteCheckedBanner.js')}}"></script>
+
+
+<script>
+    // Loại bỏ padding-right khi modal đóng
+    jQuery(document).on('hidden.bs.modal', function () {
+        jQuery('body').css('padding-right', '0');
+    });
+</script>
 @endsection

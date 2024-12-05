@@ -6,7 +6,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Dashboard</h1>
+                        <h1>Sửa tài khoản</h1>
                     </div>
                 </div>
             </div>
@@ -14,7 +14,7 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
+                            <li><a href="#">Bảng điều khiển</a></li>
                             <li><a href="{{ route('admin.accounts.index') }}">Quản lí tài khoản</a></li>
                             <li class="active">Sửa tài khoản</li>
                         </ol>
@@ -43,7 +43,7 @@
                             <div class="font-weight-bold mb-2">Chức vụ của {{ $account->name }} ({{ $account->role == 0 ? 'Người dùng' : 'Nhân viên' }})</div>
                             <div class="form-group">
                                 <label for="role">Chức vụ</label>
-                                <select name="role" id="role" class="form-control" required>
+                                <select name="role" id="role" class="form-control select2" required>
                                     <option value="">--- Vui lòng chọn ---</option>
                                     <option value="0" {{ (old('role', $account->role) == 0) ? 'selected' : '' }}>Người dùng
                                     </option>
@@ -54,7 +54,7 @@
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            
+
                             <button type="submit" class="btn btn-success mb-1">Cập nhật</button>
                         </form>
                     </div>

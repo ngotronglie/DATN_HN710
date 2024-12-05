@@ -34,7 +34,7 @@ class CategoryBlogPolicy
      */
     public function create(User $user): bool
     {
-        return $user->role == 2;
+        return in_array($user->role, [1, 2]);
     }
 
     /**
@@ -42,7 +42,7 @@ class CategoryBlogPolicy
      */
     public function update(User $user, CategoryBlog $categoryBlog): bool
     {
-        return $user->role == 2;
+        return in_array($user->role, [1, 2]);
     }
 
     /**

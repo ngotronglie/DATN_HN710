@@ -8,7 +8,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Chỉnh sửa Voucher</h1>
+                        <h1>Sửa voucher</h1>
                     </div>
                 </div>
             </div>
@@ -16,9 +16,9 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
-                            <li><a href="{{ route('admin.vouchers.index') }}">Quản lí Vouchers</a></li>
-                            <li class="active">Chỉnh sửa Voucher</li>
+                            <li><a href="#">Bảng điều khiển</a></li>
+                            <li><a href="{{ route('admin.vouchers.index') }}">Quản lí vouchers</a></li>
+                            <li class="active">Sửa voucher</li>
                         </ol>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong>Chỉnh sửa Voucher</strong>
+                        <strong>Sửa Voucher</strong>
                         <a href="{{ route('admin.vouchers.index') }}" class="btn btn-primary">
                             <i class="fa fa-arrow-left mr-1"></i> Quay lại
                         </a>
@@ -44,7 +44,7 @@
                             @method('PUT')
 
                             <div class="form-group">
-                                <label for="code" class="form-control-label">Mã Voucher</label>
+                                <label for="code" class="form-control-label">Mã giảm giá</label>
                                 <input type="text" id="code" name="code" value="{{ old('code', $voucher->code) }}"
                                     class="form-control" required>
                                 @error('code')
@@ -89,12 +89,27 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="min_money" class="form-control-label">Tiền bắt đầu giảm giá</label>
+                                <label for="min_money" class="form-control-label">Số tiền tối thiểu</label>
                                 <input type="number" id="min_money" name="min_money"
-                                    value="{{ old('min_money', $voucher->min_money) }}" class="form-control" min="0" required>
+                                    value="{{ old('min_money', number_format($voucher->min_money, 0, '.', '')) }}" class="form-control" min="0" required>
                                 @error('min_money')
                                 <small class="form-text text-danger">{{ $message }}</small>
                                 @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="max_money" class="form-control-label">Số tiền tối đa</label>
+                                <input type="number" id="max_money" name="max_money"
+                                    value="{{ old('max_money', number_format($voucher->max_money, 0, '.', '')) }}" class="form-control" min="0" required>
+                                @error('max_money')
+                                <small class="form-text text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="max_money" class="form-control-label">Điểm đổi</label>
+                                <input type="number" id="points" name="points_required" value="{{ old('points_required', $voucher->points_required) }}"
+                                    class="form-control" min="0">
                             </div>
 
                             <button type="submit" class="btn btn-success mb-1">Cập nhật</button>

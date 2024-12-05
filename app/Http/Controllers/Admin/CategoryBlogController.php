@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Blog;
 use App\Models\CategoryBlog;
 use App\Http\Requests\StoreCategoryBlogRequest;
 use App\Http\Requests\UpdateCategoryBlogRequest;
@@ -19,7 +20,11 @@ class CategoryBlogController extends Controller
         if (Gate::denies('viewAny', CategoryBlog::class)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
-        $data = CategoryBlog::orderBy('id', 'DESC')->get();
+        $data = CategoryBlog::withCount([
+            'blogs' => function ($query) {
+                $query->whereNull('deleted_at');
+            }
+        ])->orderBy('id', 'DESC')->get();
         $trashedCount = CategoryBlog::onlyTrashed()->count();
         return view(self::PATH_VIEW.__FUNCTION__, compact('data', 'trashedCount'));
     }
@@ -56,8 +61,20 @@ class CategoryBlogController extends Controller
         if (Gate::denies('view', $categoryBlog)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
-        return view(self::PATH_VIEW.__FUNCTION__, compact('categoryBlog'));
+
+        $data = Blog::with('user', 'categoryBlog')
+            ->whereHas('categoryBlog', function ($query) {
+                $query->whereNull('deleted_at');
+            })
+            ->where('category_blog_id', $categoryBlog->id)
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        $blogCount = $data->count();
+
+        return view(self::PATH_VIEW . __FUNCTION__, compact('categoryBlog', 'blogCount', 'data'));
     }
+
 
     /**
      * Show the form for editing the specified resource.

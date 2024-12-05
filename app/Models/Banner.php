@@ -16,20 +16,14 @@ class Banner extends Model
         'link',
         'description',
         'user_id',
-        'updated_by',
         'is_active',
     ];
     protected $casts = [
         'is_active' => 'boolean',
     ];
 
-    public function creator()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'user_id'); // Người tạo
-    }
-
-    public function updater()
-    {
-        return $this->belongsTo(User::class, 'updated_by'); // Người sửa cuối cùng
+        return $this->belongsTo(User::class);
     }
 }

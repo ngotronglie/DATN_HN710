@@ -13,7 +13,7 @@ class VoucherPolicy
      */
     public function viewAny(User $user): bool
     {
-        return in_array($user->role, [1, 2]);
+        return $user->role == 2;
     }
 
     public function viewTrashed(User $user): bool
@@ -26,7 +26,7 @@ class VoucherPolicy
      */
     public function view(User $user, Voucher $voucher): bool
     {
-        return in_array($user->role, [1, 2]);
+        return $user->role == 2;
     }
 
     /**
@@ -48,24 +48,24 @@ class VoucherPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Voucher $voucher): bool
-    {
-        return $user->role == 2;
-    }
+    // public function delete(User $user, Voucher $voucher): bool
+    // {
+    //     //
+    // }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Voucher $voucher): bool
-    {
-        return $user->role == 2;
-    }
+    // public function restore(User $user, Voucher $voucher): bool
+    // {
+    //     //
+    // }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Voucher $voucher): bool
-    {
-        return $user->role == 2;
-    }
+    // public function forceDelete(User $user, Voucher $voucher): bool
+    // {
+    //     //
+    // }
 }

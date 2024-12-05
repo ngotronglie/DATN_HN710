@@ -13,7 +13,7 @@
                 <div class="col-sm-4">
                     <div class="page-header float-left">
                         <div class="page-title">
-                            <h1>Dashboard</h1>
+                            <h1>Danh sách bài viết</h1>
                         </div>
                     </div>
                 </div>
@@ -21,9 +21,9 @@
                     <div class="page-header float-right">
                         <div class="page-title">
                             <ol class="breadcrumb text-right">
-                                <li><a href="#">Dashboard</a></li>
-                                <li><a href="#">Quản lí danh mục</a></li>
-                                <li class="active">Danh sách danh mục</li>
+                                <li><a href="#">Bảng điều khiển</a></li>
+                                <li><a href="#">Quản lí bài viết</a></li>
+                                <li class="active">Danh sách bài viết</li>
                             </ol>
                         </div>
                     </div>
@@ -47,7 +47,7 @@
                                     <i class="fa fa-plus"></i> Thêm mới
                                 </a>
                                 <a class="btn btn-danger countTrash" href="{{ route('admin.blogs.trashed') }}">
-                                    <i class="fa fa-trash "></i>Thùng rác ({{ $trashedCount }})
+                                    <i class="fa fa-trash"></i> Thùng rác <span class="blogCout">({{ $trashedCount }})</span>
                                 </a>
                                 <div class="dropdown float-right ml-2">
                                     <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton"
@@ -70,7 +70,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <table id="bootstrap-data-table" class="table table-striped table-bordered">
+                            <table id="bootstrap-data-table" class="table table-striped table-bordered" data-disable-sort="false">
                                 <thead>
                                     <tr>
                                         <th>
@@ -95,7 +95,7 @@
                                         <th>Chức năng</th>
                                     </tr>
                                 </tfoot>
-                                <tbody>
+                                <tbody class="null_Table">
                                     @foreach ($data as $key => $item)
                                         <tr>
                                             <td>
@@ -104,7 +104,7 @@
                                             <td>{{ $key + 1 }}</td>
                                             <td style="white-space: nowrap">
                                                 <div class="d-flex align-items-end">
-                                                    <img src="{{Storage::url($item->img_avt)}}" alt="Thumbnail" class="img-thumbnail mr-2" style="height: 80px; width: 80px; object-fit: cover;">
+                                                    <img src="{{Storage::url($item->img_avt)}}" alt="Thumbnail" class="mr-2" style="height: 80px; width: 100px; object-fit: cover;">
                                                     <div class="text-truncate" style="max-width: 200px;">
                                                         <span>{{ $item->title }}</span>
                                                         <div>{{ $item->created_at }}</div>
@@ -142,7 +142,6 @@
                                                 </button>
                                             </td>
                                         </tr>
-
                                         <!-- Modal Xóa -->
                                         <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1"
                                             role="dialog" aria-labelledby="deleteModalLabel{{ $item->id }}"
@@ -208,5 +207,12 @@
     <script src="{{ asset('plugins/js/changeActive/Blog/changeActiveBlog.js') }}"></script>
 
     <script src="{{ asset('plugins/js/ChangeActive/Blog/deleteAllBlog.js') }}"></script>
+
+    <script>
+        // Loại bỏ padding-right khi modal đóng
+        jQuery(document).on('hidden.bs.modal', function () {
+            jQuery('body').css('padding-right', '0');
+        });
+    </script>
 
 @endsection

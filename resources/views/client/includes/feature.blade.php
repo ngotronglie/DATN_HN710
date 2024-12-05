@@ -10,8 +10,8 @@
                                 alt="Feature Icon">
                         </div>
                         <div class="content">
-                            <h5 class="title">Free Shipping</h5>
-                            <p>Free shipping on all order</p>
+                            <h5 class="title">Miễn phí vận chuyển</h5>
+                            <p>Miễn phí vận chuyển cho các đơn hàng</p>
                         </div>
                     </div>
                 </div>
@@ -25,8 +25,8 @@
                                 alt="Feature Icon">
                         </div>
                         <div class="content">
-                            <h5 class="title">Support 24/7</h5>
-                            <p>Support 24 hours a day</p>
+                            <h5 class="title">Hỗ trợ 24/7</h5>
+                            <p>Hỗ trợ mọi lúc</p>
                         </div>
                     </div>
                 </div>
@@ -39,8 +39,8 @@
                                 alt="Feature Icon">
                         </div>
                         <div class="content">
-                            <h5 class="title">Money Return</h5>
-                            <p>Back guarantee under 5 days</p>
+                            <h5 class="title">Hoàn tiền</h5>
+                            <p>Trong 5 ngày</p>
                         </div>
                     </div>
                 </div>
@@ -54,8 +54,8 @@
                                 alt="Feature Icon">
                         </div>
                         <div class="content">
-                            <h5 class="title">Order Discount</h5>
-                            <p>Onevery order over $150</p>
+                            <h5 class="title">Giảm giá đơn hàng</h5>
+                            <p>Cho mọi đơn hàng</p>
                         </div>
                     </div>
                 </div>

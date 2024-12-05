@@ -22,11 +22,14 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:users,name',
             'email' => 'required|email|unique:users,email',
+            'provinces' => 'required|exists:provinces,code',
+            'districs' => 'required|exists:districts,code',
+            'wards' => 'required|exists:wards,code',         
             'address' => 'required|string|max:255',
             'phone' => 'required|regex:/^0[0-9]{9}$/',
-            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'password' => ['required', 'string', 'min:8', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/'],
             'date_of_birth' => 'required|date|before:today|before_or_equal:' . now()->subYears(18)->format('Y-m-d'),
         ];
@@ -36,20 +39,27 @@ class StoreUserRequest extends FormRequest
         return [
             'name.required' => 'Tên là bắt buộc',
             'name.max' => 'Tên không được vượt quá 255 ký tự',
+            'name.unique' => 'Tên này đã được sử dụng',
 
             'email.required' => 'Email là bắt buộc',
             'email.email' => 'Email không đúng định dạng',
             'email.unique' => 'Email này đã được sử dụng',
 
-            'address.required' => 'Địa chỉ là bắt buộc',
-            'address.max' => 'Địa chỉ không được vượt quá 255 ký tự',
+            'provinces.required' => 'Vui lòng chọn tỉnh/thành phố',
+            'districs.required' => 'Vui lòng chọn quận/huyện',
+            'districs.exists' => 'Vui lòng chọn quận/huyện.',
+            'wards.required' => 'Vui lòng chọn phường/xã',
+            'wards.exists' => 'Vui lòng chọn phường/xã',
+            'address.required' => 'Địa chỉ là bắt buộc.',
+            'address.max' => 'Địa chỉ không được vượt quá 255 ký tự.',
+            'provinces.exists' => 'Vui lòng chọn tỉnh/thành phố',
 
             'phone.required' => 'Số điện thoại là bắt buộc',
             'phone.regex' => 'Số điện thoại phải bắt đầu bằng số 0 và gồm 10 số',
 
             'avatar.required' => 'Avatar là bắt buộc',
             'avatar.image' => 'Avatar phải là một hình ảnh',
-            'avatar.mimes' => 'Avatar phải có định dạng: jpeg, png, jpg, hoặc gif',
+            'avatar.mimes' => 'Avatar phải có định dạng: jpeg, png, jpg, webp hoặc gif',
             'avatar.max' => 'Kích thước avatar không được vượt quá 2MB',
 
             'password.required' => 'Mật khẩu là bắt buộc',

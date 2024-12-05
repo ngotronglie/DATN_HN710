@@ -7,7 +7,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Dashboard</h1>
+                        <h1>Sửa sản phẩm</h1>
                     </div>
                 </div>
             </div>
@@ -15,9 +15,9 @@
                 <div class="page-header float-right">
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
+                            <li><a href="#">Bảng điều khiển</a></li>
                             <li><a href="{{ route('admin.products.index') }}">Danh sách sản phẩm</a></li>
-                            <li class="active">Cập nhật sản phẩm</li>
+                            <li class="active">Sửa sản phẩm</li>
                         </ol>
                     </div>
                 </div>
@@ -70,7 +70,7 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="category_id" class="form-control-label">Danh mục sản phẩm</label>
-                                <select name="category_id" id="category_id" class="form-control">
+                                <select name="category_id" id="category_id" class="form-control select2">
                                     <option value="">--Vui lòng chọn--</option>
                                     @foreach($categories as $item)
                                     <option value="{{ $item->id }}"
@@ -151,7 +151,7 @@
                                 <div class="form-row align-items-start mb-3" id="variant-{{ $index }}" data-index="{{ $index }}">
                                     <div class="form-group col-md">
                                         <label for="variants[{{ $index }}][size_id]" class="form-control-label">Kích thước</label>
-                                        <select name="variants[{{ $index }}][size_id]" id="variants[{{ $index }}][size_id]" class="form-control">
+                                        <select name="variants[{{ $index }}][size_id]" id="variants[{{ $index }}][size_id]" class="form-control select2">
                                             <option value="">--Chọn kích thước--</option>
                                             @foreach($sizes as $size)
                                             <option value="{{ $size->id }}" {{ ($size->id == ($variant['size_id'] ?? '')) ? 'selected' : '' }}>{{ $size->name }}</option>
@@ -163,7 +163,7 @@
                                     </div>
                                     <div class="form-group col-md">
                                         <label for="variants[{{ $index }}][color_id]" class="form-control-label">Màu sắc</label>
-                                        <select name="variants[{{ $index }}][color_id]" id="variants[{{ $index }}][color_id]" class="form-control">
+                                        <select name="variants[{{ $index }}][color_id]" id="variants[{{ $index }}][color_id]" class="form-control select2">
                                             <option value="">--Chọn màu sắc--</option>
                                             @foreach($colors as $color)
                                             <option value="{{ $color->id }}" {{ $color->id == ($variant['color_id'] ?? '') ? 'selected' : '' }}>{{ $color->name }}</option>
@@ -204,7 +204,7 @@
                                 <div class="form-row align-items-start mb-3" id="variant-0" data-index="0">
                                     <div class="form-group col-md">
                                         <label for="variants[0][size_id]" class="form-control-label">Kích thước</label>
-                                        <select name="variants[0][size_id]" id="variants[0][size_id]" class="form-control">
+                                        <select name="variants[0][size_id]" id="variants[0][size_id]" class="form-control select2">
                                             <option value="">--Chọn kích thước--</option>
                                             @foreach($sizes as $size)
                                             <option value="{{ $size->id }}">{{ $size->name }}</option>
@@ -213,7 +213,7 @@
                                     </div>
                                     <div class="form-group col-md">
                                         <label for="variants[0][color_id]" class="form-control-label">Màu sắc</label>
-                                        <select name="variants[0][color_id]" id="variants[0][color_id]" class="form-control">
+                                        <select name="variants[0][color_id]" id="variants[0][color_id]" class="form-control select2">
                                             <option value="">--Chọn màu sắc--</option>
                                             @foreach($colors as $color)
                                             <option value="{{ $color->id }}">{{ $color->name }}</option>
@@ -243,7 +243,7 @@
                                 <div class="form-row align-items-start mb-3" id="variant-{{ $index }}" data-index="{{ $index }}">
                                     <div class="form-group col-md">
                                         <label for="variants[{{ $index }}][size_id]" class="form-control-label">Kích thước</label>
-                                        <select name="variants[{{ $index }}][size_id]" id="variants[{{ $index }}][size_id]" class="form-control">
+                                        <select name="variants[{{ $index }}][size_id]" id="variants[{{ $index }}][size_id]" class="form-control select2">
                                             <option value="">--Chọn kích thước--</option>
                                             @foreach($sizes as $size)
                                             <option value="{{ $size->id }}" {{ $size->id == $variant->size_id ? 'selected' : '' }}>{{ $size->name }}</option>
@@ -252,7 +252,7 @@
                                     </div>
                                     <div class="form-group col-md">
                                         <label for="variants[{{ $index }}][color_id]" class="form-control-label">Màu sắc</label>
-                                        <select name="variants[{{ $index }}][color_id]" id="variants[{{ $index }}][color_id]" class="form-control">
+                                        <select name="variants[{{ $index }}][color_id]" id="variants[{{ $index }}][color_id]" class="form-control select2">
                                             <option value="">--Chọn màu sắc--</option>
                                             @foreach($colors as $color)
                                             <option value="{{ $color->id }}" {{ $color->id == $variant->color_id ? 'selected' : '' }}>{{ $color->name }}</option>
@@ -261,11 +261,11 @@
                                     </div>
                                     <div class="form-group col-md">
                                         <label for="variants[{{ $index }}][price]" class="form-control-label">Giá</label>
-                                        <input type="number" name="variants[{{ $index }}][price]" id="variants[{{ $index }}][price]" class="form-control" value="{{ $variant->price }}" placeholder="Nhập giá sản phẩm">
+                                        <input type="number" name="variants[{{ $index }}][price]" id="variants[{{ $index }}][price]" class="form-control" value="{{ number_format($variant->price, 0, '.', '') }}" placeholder="Nhập giá sản phẩm">
                                     </div>
                                     <div class="form-group col-md">
                                         <label for="variants[{{ $index }}][price_sale]" class="form-control-label">Giá khuyến mãi</label>
-                                        <input type="number" name="variants[{{ $index }}][price_sale]" id="variants[{{ $index }}][price_sale]" class="form-control" value="{{ $variant->price_sale }}" placeholder="Nhập giá khuyến mãi">
+                                        <input type="number" name="variants[{{ $index }}][price_sale]" id="variants[{{ $index }}][price_sale]" class="form-control" value="{{ number_format($variant->price_sale, 0, '.', '') }}" placeholder="Nhập giá khuyến mãi">
                                     </div>
                                     <div class="form-group col-md">
                                         <label for="variants[{{ $index }}][quantity]" class="form-control-label">Số lượng</label>
@@ -314,7 +314,7 @@
     <div class="form-row align-items-start mb-3" id="variant-${newIndex}" data-index="${newIndex}">
         <div class="form-group col-md">
             <label for="variants[${newIndex}][size_id]" class="form-control-label">Kích thước</label>
-            <select name="variants[${newIndex}][size_id]" id="variants[${newIndex}][size_id]" class="form-control">
+            <select name="variants[${newIndex}][size_id]" id="variants[${newIndex}][size_id]" class="form-control select2">
                 <option value="">--Chọn kích thước--</option>
                 @foreach($sizes as $size)
                 <option value="{{ $size->id }}">{{ $size->name }}</option>
@@ -323,7 +323,7 @@
         </div>
         <div class="form-group col-md">
             <label for="variants[${newIndex}][color_id]" class="form-control-label">Màu sắc</label>
-            <select name="variants[${newIndex}][color_id]" id="variants[${newIndex}][color_id]" class="form-control">
+            <select name="variants[${newIndex}][color_id]" id="variants[${newIndex}][color_id]" class="form-control select2">
                 <option value="">--Chọn màu sắc--</option>
                 @foreach($colors as $color)
                 <option value="{{ $color->id }}">{{ $color->name }}</option>
