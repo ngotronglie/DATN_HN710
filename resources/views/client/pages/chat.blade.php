@@ -27,11 +27,7 @@
                     <!-- Section Title Start -->
                     <div class="section-title">
                         <h2 class="title pb-3">Phòng số ({{$chat->id}}) </h2>
-                        <form action="{{ route('chat.delete', $chat->id) }}" method="post">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Dong</button>
-                        </form>
+                      
                         
                         <span></span>
                         <div class="title-border-bottom"></div>
@@ -53,7 +49,7 @@
                         <input type="text" placeholder="Gửi tin nhắn..." class="form-control" id="inputMessage">
                         <button class="btn btn-success" id="btnSendMessage">Gửi</button>
                     </div>
-                </div>
+                   </div>
                 </div>
 
                 <div class="col-12 col-lg-4 mb-10">
@@ -96,7 +92,6 @@
             </div>
         </div>
     </div>
-    <!-- Contact Us Section End -->
 @endsection
 
 @section('script')

@@ -89,10 +89,7 @@ class ChatController extends Controller
             'log'   => 'success'
         ], 201);
     }
-    public function delete(Chat $chat) {
-        $chat->delete(); // Xóa chat đã được truyền
-        return redirect()->route('support'); // Chuyển hướng về danh sách chat
-    }
+ 
     
    
 }

@@ -10,8 +10,8 @@
         <!-- Header -->
         <div style="background-color: #007bff; color: #ffffff; padding: 20px; text-align: center;">
             <h1 style="margin: 0; font-size: 24px;">Hóa đơn</h1>
-            <p style="margin: 5px 0; font-size: 14px;">Cửa hàng: Tên Cửa Hàng</p>
-            <p style="margin: 5px 0; font-size: 14px;">Địa chỉ: 123 Đường ABC, Quận XYZ, TP.HCM</p>
+            <p style="margin: 5px 0; font-size: 14px;">Cửa hàng: Fashion Wave</p>
+            <p style="margin: 5px 0; font-size: 14px;">Địa chỉ: 132 Xuân Phương - Hà Nội</p>
             <p style="margin: 5px 0; font-size: 14px;">Số điện thoại: 0123 456 789</p>
         </div>
 
@@ -64,8 +64,8 @@
 
         <!-- Footer -->
         <div style="background-color: #f1f1f1; text-align: center; padding: 10px; font-size: 14px; color: #555;">
-            <p style="margin: 0;">Cảm ơn bạn đã mua sắm tại <strong>Tên Cửa Hàng</strong>!</p>
-            <p style="margin: 0;">&copy; {{ date('Y') }} Tên Cửa Hàng. Mọi quyền được bảo lưu.</p>
+            <p style="margin: 0;">Cảm ơn bạn đã mua sắm tại <strong>Fashion Wave</strong>!</p>
+            <p style="margin: 0;">&copy; {{ date('Y') }} Fashion Wave. Mọi quyền được bảo lưu.</p>
         </div>
     </div>
 </body>

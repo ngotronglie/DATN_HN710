@@ -8,7 +8,7 @@
                     <!-- Header Logo Start -->
                     <div class="col-xl-2 col-6">
                         <div class="header-logo">
-                            <a href="/"><img src="{{ asset('theme/client/assets/images/logo/logo.png') }}"
+                            <a href="/"><img style="width: 100px" src="{{ asset('theme/client/assets/images/logo/logo2.jpg') }}"
                                     alt="Site Logo" /></a>
                         </div>
                     </div>

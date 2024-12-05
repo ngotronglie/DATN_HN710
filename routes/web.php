@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\StatisticsController;
+use App\Http\Controllers\Admin\SupportController;
 use App\Http\Controllers\Ajax\ShopAjaxController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\FavoriteController;
@@ -84,14 +85,14 @@ Route::post('/voucher/apply-code', [ClientBlogController::class, 'applyVoucher']
 // Contact
 Route::get('/support', function () {
     return view('client.pages.support');
-});
+})->name('support');
 Route::middleware('auth')->group(function () {
     Route::get('/chats', [ChatController::class, 'index'])->name('chat.index');
     Route::get('/chats/create', [ChatController::class, 'createRoom'])->name('chat.createRoom');
     Route::get('/chats/{chat}', [ChatController::class, 'show'])->name('chat.show');
     Route::post('/chats/{chat}/send', [ChatController::class, 'sendMessage'])->name('chat.sendMessage');
-    Route::delete('/chats/{chat}', [ChatController::class, 'delete'])->name('chat.delete');
 });
+
 
 // Checkout
  Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
@@ -147,7 +148,9 @@ Route::get('verify-email/{token}', [ForgotPasswordController::class, 'verifyEmai
 //
 Route::prefix('admin')->as('admin.')->middleware(['auth', 'isAdmin'])->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::delete('delete/{chat}', [SupportController::class, 'delete'])->name('chat.delete');
 
+    Route::get('support/{chat}', [SupportController::class, 'show'])->name('chat');
     // Các route tùy chỉnh
     Route::get('/accounts/my_account', [UserController::class, 'myAccount'])->name('accounts.myAccount');
     Route::put('accounts/my_account', [UserController::class, 'updateMyAcount'])->name('accounts.updateMyAccount');

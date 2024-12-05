@@ -63,7 +63,7 @@ function updateUiMessage(event) {
     let UI = `
    
     <p class="${classAuth}">
-       Bạn: ${event.content}
+       ${event.userName}: ${event.content}
         <span style="font-size: 10px; color: gray;">(${currentTime})</span>
     </p>
 `;
