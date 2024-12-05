@@ -106,24 +106,25 @@
                                                 <form action="{{ route('updateMyAcount', $user->id) }}" method="post"
                                                     enctype="multipart/form-data">
                                                     @csrf
-
-                                                    <div class="single-input-item mb-3">
-                                                        @if ($user->avatar)
-                                                            <div class="avatar-container">
-                                                                <img class="avatar-image" id="preview-avatar" src="{{ Storage::url($user->avatar) }}" alt="Avatar">
-                                                            </div>
+                                                    <div class="col-lg-12 text-center">
+                                                        <div class="mb-3">
+                                                        @if($user->avatar)
+                                                            <img id="profile-image" src="{{ Storage::url($user->avatar) }}" alt="Avatar" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
                                                         @else
-                                                            <div class="avatar-container" id="preview-container" style="display: none;">
-                                                                <img class="avatar-image" id="preview-avatar" alt="Preview">
-                                                            </div>
+                                                            <img id="profile-image" src="https://via.placeholder.com/150" alt="Avatar" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
                                                         @endif
-                                                        <label for="avatar" class="required mb-1">Avatar</label>
-                                                        <input type="file" id="avatar" name="avatar" placeholder="Ảnh đại diện">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <div class="single-input-item mb-3">
+                                                            <label for="avatar" class="required mb-1">Avatar</label>
+                                                        <input type="file" id="avatar" name="avatar" placeholder="Ảnh đại diện" onchange="previewImage()" accept="image/*">
                                                         @error('avatar')
                                                             <small class="text-danger">
                                                                 {{ $message }}
                                                             </small>
                                                         @enderror
+                                                        </div>
                                                     </div>
 
                                                     <div class="row">
@@ -599,7 +600,7 @@
 @section('script')
 <script src="{{ asset('plugins/js/getVoucher.js') }}"></script>
 <script src="{{ asset('plugins/js/location.js') }}"></script>
-    <script>
+    {{-- <script>
         $(document).ready(function() {
             $('#avatar').on('change', function(event) {
                 const file = event.target.files[0];
@@ -615,7 +616,23 @@
                 }
             });
         });
-    </script>
+    </script> --}}
+
+<script>
+    // Hiển thị ảnh đã chọn
+    function previewImage() {
+        var file = document.getElementById("avatar").files[0];
+        var reader = new FileReader();
+
+        reader.onloadend = function() {
+            document.getElementById("profile-image").src = reader.result;
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
 <script>
     function togglePassword(inputId, iconId) {
         var passwordInput = document.getElementById(inputId);

@@ -44,31 +44,12 @@
                             <a href="{{ route('admin.vouchers.create') }}" class="btn btn-primary mr-1">
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
-                            <div class="dropdown float-right ml-2">
-                                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-cogs"></i> Tùy chọn
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item activeAll" data-is_active="0" href="#">
-                                        <i class="fa fa-toggle-on text-success"></i> Bật các mục đã chọn
-                                    </a>
-                                    <a class="dropdown-item activeAll" data-is_active="1" href="#">
-                                        <i class="fa fa-toggle-off text-danger"></i> Tắt các mục đã chọn
-                                    </a>
-                                    <a class="dropdown-item deleteAll" href="#">
-                                        <i class="fa fa-trash text-danger"></i> Xóa các mục đã chọn
-                                    </a>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="card-body">
                         <table id="bootstrap-data-table" class="table table-striped table-bordered" data-disable-sort="false">
                             <thead>
                                 <tr>
-                                    <th>
-                                        <input id="checkAllTable" type="checkbox">
-                                    </th>
                                     <th>STT</th>
                                     <th>Mã</th>
                                     <th>Giảm giá</th>
@@ -79,7 +60,6 @@
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <th></th>
                                     <th>STT</th>
                                     <th>Mã</th>
                                     <th>Giảm giá</th>
@@ -91,9 +71,6 @@
                             <tbody>
                                 @foreach ($vouchers as $item)
                                 <tr>
-                                    <td>
-                                        <input type="checkbox" class="checkBoxItem" data-id="{{ $item->id }}">
-                                    </td>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->code }}</td>
                                     <td>{{ $item->discount }}%</td>

@@ -206,34 +206,6 @@ class DeleteController extends Controller
         return response()->json(['status' => false, 'message' => 'Không có kích cỡ nào được xóa.']);
     }
 
-    // voucher
-    public function deleteCheckeVoucher(Request $request)
-    {
-        $id = $request->id;
-        if (empty($id) || !is_array($id)) {
-            return response()->json(['status' => false, 'message' => 'ID không hợp lệ']);
-        }
-        $requestRemove = Voucher::whereIn('id', $id)->get();
-        if ($requestRemove->isEmpty()) {
-            return response()->json(['status' => false, 'message' => 'Không tìm thấy mã giảm giá nào']);
-        }
-        $delete = Voucher::whereIn('id', $id)->delete();
-        $trashedCount = Voucher::onlyTrashed()->count();
-        $totalCountAfter = Voucher::count();
-
-        if ($delete) {
-            return response()->json([
-                'status' => true,
-                'message' => 'Xóa mã giảm giá thành công',
-                'trashedCount' => $trashedCount,
-                'totalCountAfter' => $totalCountAfter,
-                'delete' => $delete
-            ]);
-        }
-
-        return response()->json(['status' => false, 'message' => 'Không có mã giảm giá nào được xóa.']);
-    }
-
     // banner
     public function deleteCheckeBanner(Request $request)
     {

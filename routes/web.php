@@ -102,6 +102,8 @@ Route::get('/contact', function () {
 
  Route::post('/place-order', [CheckoutController::class, 'placeOrder'])->name('placeOrder');
  Route::get('/payment-return', [CheckoutController::class, 'paymentReturn'])->name('paymentReturn');
+ Route::get('/thanks/{order_code}', [CheckoutController::class, 'thanks'])->name('thanks');
+ Route::get('/fail', [CheckoutController::class, 'fail'])->name('fail');
  Route::post('/apply-voucher', [CheckoutController::class, 'applyVoucher'])->name('voucher.apply');
  Route::get('/billSearch', [CheckoutController::class, 'billSearch'])->name('bill.search');
 // Tài khoản
@@ -289,7 +291,5 @@ Route::delete('product/ajax/deleteCheckedProduct', [DeleteController::class, 'de
 Route::delete('/size/ajax/deleteCheckedSize', [DeleteController::class, 'deleteCheckeSize']);
 //ajax delete color
 Route::delete('/color/ajax/deleteCheckedColor', [DeleteController::class, 'deleteCheckeColor']);
-//ajax delete voucher
-Route::delete('/voucher/ajax/deleteCheckedVoucher', [DeleteController::class, 'deleteCheckeVoucher']);
 //ajax delete banner
 Route::delete('/banner/ajax/deleteCheckedBanner', [DeleteController::class, 'deleteCheckeBanner']);

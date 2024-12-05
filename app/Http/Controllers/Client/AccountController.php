@@ -283,10 +283,10 @@ class AccountController extends Controller
         //     ->get();
 
         $voucherPoint = Voucher::where('points_required', '>', 0)
-        ->where('is_active', 1)
-         ->with('users')
-         ->orderBy('id', 'desc')
-         ->get();
+            ->where('is_active', 1)
+            ->with('users')
+            ->orderBy('id', 'desc')
+            ->get();
 
         $provinces = Province::all();
 
@@ -334,31 +334,31 @@ class AccountController extends Controller
     }
 
     public function updateMyAcount(UpdateMyAccountRequest $request, $id)
-{
-    $user = User::findOrFail($id);
-    $province_code = $request->input('provinces');
-    $district_code = $request->input('districs');
-    $ward_code = $request->input('wards');
-    $address = $request->input('address');
+    {
+        $user = User::findOrFail($id);
+        $province_code = $request->input('provinces');
+        $district_code = $request->input('districs');
+        $ward_code = $request->input('wards');
+        $address = $request->input('address');
 
-    $full_address = $address . ', ' . $ward_code . ', ' . $district_code . ', ' . $province_code;
+        $full_address = $address . ', ' . $ward_code . ', ' . $district_code . ', ' . $province_code;
 
-    $data = $request->only(['phone', 'date_of_birth']);
-    $data['address'] = $full_address;
+        $data = $request->only(['phone', 'date_of_birth']);
+        $data['address'] = $full_address;
 
-    if ($request->hasFile('avatar')) {
-        $data['avatar'] = Storage::put('users', $request->file('avatar'));
-        if (!empty($user->avatar) && Storage::exists($user->avatar)) {
-            Storage::delete($user->avatar);
+        if ($request->hasFile('avatar')) {
+            $data['avatar'] = Storage::put('users', $request->file('avatar'));
+            if (!empty($user->avatar) && Storage::exists($user->avatar)) {
+                Storage::delete($user->avatar);
+            }
+        } else {
+            $data['avatar'] = $user->avatar;
         }
-    } else {
-        $data['avatar'] = $user->avatar;
+
+        $user->update($data);
+
+        return redirect()->route('my_account')->with('success', 'Cập nhật thông tin thành công');
     }
-
-    $user->update($data);
-
-    return redirect()->route('my_account')->with('success', 'Cập nhật thông tin thành công');
-}
 
 
     public function updatePassword(Request $request, $id)
