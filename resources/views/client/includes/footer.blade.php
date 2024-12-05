@@ -11,7 +11,7 @@
                         <ul class="widget-address">
                             <li><span>Địa chỉ: </span> 132 Xuân Phương, Hà Nội</li>
                             <li><span>Gọi đến: </span> <a href="#"> 0376 900 771</a></li>
-                            <li><span>Gửi mail đến: </span> <a href="#"> yourmail@example.com</a></li>
+                            <li><span>Gửi mail đến: </span> <a href="#"> fashionwave@gmail.com</a></li>
                         </ul>
                         <!-- Contact Address End -->
 

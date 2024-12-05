@@ -23,28 +23,30 @@ class UpdateMyAccountRequest extends FormRequest
                 'string',
                 'regex:/^(0|\+84)[0-9]{9}$/', // Số điện thoại bắt đầu bằng 0 hoặc +84 và dài 10 chữ số
             ],
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Ảnh đại diện
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Ảnh đại diện 
+            'date_of_birth' => 'required|date|before:today',
         ];
     }
 
     public function messages()
-{
-    return [
-        'provinces.required' => 'Vui lòng chọn tỉnh/thành phố',
-        'provinces.exists' => 'Vui lòng chọn tỉnh/thành phố',
-        'districs.required' => 'Vui lòng chọn quận/huyện',
-        'districs.exists' => 'Vui lòng chọn quận/huyện.',
-        'wards.required' => 'Vui lòng chọn phường/xã',
-        'wards.exists' => 'Vui lòng chọn phường/xã',
-        'address.required' => 'Địa chỉ là bắt buộc.',
-        'address.max' => 'Địa chỉ không được vượt quá 255 ký tự.',
-        'phone.required' => 'Số điện thoại là bắt buộc.',
-        'phone.regex' => 'Số điện thoại không hợp lệ. Số điện thoại phải bắt đầu bằng 0 hoặc +84 và bao gồm 10 chữ số.',
-        'phone.unique' => 'Số điện thoại này đã được sử dụng.',
-        'avatar.image' => 'Ảnh đại diện phải là tệp hình ảnh.',
-        'avatar.mimes' => 'Ảnh đại diện phải có định dạng: jpeg, png, jpg, gif, svg.',
-        'avatar.max' => 'Ảnh đại diện không được lớn hơn 2MB.',
-    ];
-}
-
+    {
+        return [
+            'provinces.required' => 'Vui lòng chọn tỉnh/thành phố',
+            'provinces.exists' => 'Vui lòng chọn tỉnh/thành phố',
+            'districs.required' => 'Vui lòng chọn quận/huyện',
+            'districs.exists' => 'Vui lòng chọn quận/huyện.',
+            'wards.required' => 'Vui lòng chọn phường/xã',
+            'wards.exists' => 'Vui lòng chọn phường/xã',
+            'address.required' => 'Địa chỉ là bắt buộc.',
+            'address.max' => 'Địa chỉ không được vượt quá 255 ký tự.',
+            'phone.required' => 'Số điện thoại là bắt buộc.',
+            'phone.regex' => 'Số điện thoại không hợp lệ. Số điện thoại phải bắt đầu bằng 0 hoặc +84 và bao gồm 10 chữ số.',
+            'avatar.image' => 'Ảnh đại diện phải là tệp hình ảnh.',
+            'avatar.mimes' => 'Ảnh đại diện phải có định dạng: jpeg, png, jpg, gif, svg.',
+            'avatar.max' => 'Ảnh đại diện không được lớn hơn 2MB.',
+            'date_of_birth.required' => 'Ngày sinh là bắt buộc.',
+            'date_of_birth.date' => 'Ngày sinh không hợp lệ.',
+            'date_of_birth.before' => 'Ngày sinh không được là ngày hiện tại.',
+        ];
+    }
 }

@@ -469,7 +469,6 @@
 @section('script')
     <script src="{{ asset('plugins/js/location.js') }}"></script>
     <script>
-
         $(document).ready(function () {
             $('.userName').on('input', function () {
                 $('.userName').next('.error-message').html('');

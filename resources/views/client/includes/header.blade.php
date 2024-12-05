@@ -8,7 +8,7 @@
                     <!-- Header Logo Start -->
                     <div class="col-xl-2 col-6">
                         <div class="header-logo">
-                            <a href="/"><img src="{{ asset('theme/client/assets/images/logo/logo.png') }}"
+                            <a href="/"><img width="100px" src="{{ asset('theme/client/assets/images/logo/logo2.jpg') }}"
                                     alt="Site Logo" /></a>
                         </div>
                     </div>
@@ -167,7 +167,7 @@
 
                 <ul class="contact-links">
                     <li><i class="fa fa-phone"></i><a href="#"> 0376900771</a></li>
-                    <li><i class="fa fa-envelope-o"></i><a href="#"> info@example.com</a></li>
+                    <li><i class="fa fa-envelope-o"></i><a href="#"> fashionwave@gmail.com</a></li>
                     <li><i class="fa fa-clock-o"></i> <span>Thứ Hai - Chủ Nhật 9h00 - 18h00</span> </li>
                 </ul>
 

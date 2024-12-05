@@ -7,53 +7,12 @@ use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Product;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 
 class ShopController extends Controller
 {
-    // public function index()
-    // {
-    //     session()->forget('user_cart');
-
-    //     $condition = function ($query) {
-    //         $query->where('is_active', 1)
-    //             ->whereNull('deleted_at');
-    //     };
-
-    //     $categories = $this->getCategori();
-
-    //     $calculatePriceRange = $this->getPriceProduct();
-
-    //     $products = Product::where('is_active', 1)
-    //         ->whereHas('category', $condition)
-    //         ->with([
-    //             'variants' => function ($query) {
-    //                 $query->whereHas('size', function ($query) {
-    //                     $query->whereNull('deleted_at');
-    //                 })->whereHas('color', function ($query) {
-    //                     $query->whereNull('deleted_at');
-    //                 });
-    //             }
-
-    //         ])
-    //         ->orderBy('id', 'desc')
-    //         ->paginate(6);
-
-    //     $producthot = $this->productHot();
-
-    //     $products->getCollection()->transform($calculatePriceRange);
-    //     $producthot->transform($calculatePriceRange);
-
-    //     $maxPrice = $this->getMaxPrice();
-
-    //     return view('client.pages.products.shop', compact('products', 'categories', 'producthot', 'maxPrice'));
-    // }
-
-
     public function index(Request $request)
     {
-        session()->forget('user_cart');
-
         $condition = function ($query) {
             $query->where('is_active', 1)
                 ->whereNull('deleted_at');
@@ -77,9 +36,9 @@ class ShopController extends Controller
             ]);
 
         if ($sort == 'price_asc') {
-            $query->orderBy(\DB::raw("(SELECT MIN(price_sale) FROM product_variants WHERE product_id = products.id)"), 'asc');
+            $query->orderBy(DB::raw("(SELECT MIN(price_sale) FROM product_variants WHERE product_id = products.id)"), 'asc');
         } elseif ($sort == 'price_desc') {
-            $query->orderBy(\DB::raw("(SELECT MIN(price_sale) FROM product_variants WHERE product_id = products.id)"), 'desc');
+            $query->orderBy(DB::raw("(SELECT MIN(price_sale) FROM product_variants WHERE product_id = products.id)"), 'desc');
         } else {
             $query->orderBy('id', 'desc');
         }
@@ -104,8 +63,6 @@ class ShopController extends Controller
 
     public function showByCategory($id)
     {
-        session()->forget('user_cart');
-
         $condition = function ($query) {
             $query->where('is_active', 1)
                 ->whereNull('deleted_at');
@@ -152,8 +109,6 @@ class ShopController extends Controller
 
     public function show($slug)
     {
-        session()->forget('user_cart');
-
         $product = Product::where('slug', $slug)
             ->where('is_active', 1)
             ->whereHas('category', function ($query) {
@@ -219,8 +174,6 @@ class ShopController extends Controller
 
     public function search(Request $request)
     {
-        session()->forget('user_cart');
-
         $input = $request->input('searchProduct');
 
         $condition = function ($query) {
@@ -260,8 +213,6 @@ class ShopController extends Controller
 
     public function filter(Request $request)
     {
-        session()->forget('user_cart');
-
         $condition = function ($query) {
             $query->where('is_active', 1)
                 ->whereNull('deleted_at');

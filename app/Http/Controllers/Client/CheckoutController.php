@@ -154,8 +154,6 @@ class CheckoutController extends Controller
 
     public function billSearch(Request $request)
     {
-        session()->forget('user_cart');
-
         $orderCode = $request->input('order_code');
 
         if (!$orderCode) {

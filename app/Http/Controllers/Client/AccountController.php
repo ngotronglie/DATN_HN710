@@ -266,8 +266,6 @@ class AccountController extends Controller
 
     public function myAccount()
     {
-        session()->forget('user_cart');
-
         $user = Auth::user();
 
         if (!$user) {
@@ -298,7 +296,6 @@ class AccountController extends Controller
 
     public function orderBillDetail($id)
     {
-        session()->forget('user_cart');
 
         if (Auth::check()) {
             $user = Auth::user();

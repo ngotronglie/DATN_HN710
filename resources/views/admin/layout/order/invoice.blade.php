@@ -84,8 +84,8 @@
     <div class="invoice-container">
         <div class="header">
             <h1>HÓA ĐƠN</h1>
-            <p><strong>Website:</strong> www.example.com</p>
-            <p><strong>Email:</strong> support@example.com | <strong>Điện thoại:</strong> 0123456789</p>
+            <p><strong>Website:</strong> www.fashionwave.com</p>
+            <p><strong>Email:</strong> fashionwave@gmail.com | <strong>Điện thoại:</strong> 0376900771</p>
             <p><strong>Ngày tạo:</strong> {{ $date }}</p>
         </div>
 
