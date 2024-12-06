@@ -39,7 +39,8 @@ class CommentEvent implements ShouldBroadcast
         return [
             'sender_id' => $this->content->sender_id,
             'content' => $this->content->content,
-            'userName' => $this->content->sender->name
+            'userName' => $this->content->sender->name,
+            'image'=>$this->content->sender->avatar
         ];
     }
 }

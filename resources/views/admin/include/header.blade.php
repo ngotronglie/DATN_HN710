@@ -51,31 +51,35 @@
 
                 </div>
                
+                
+               
                 <div class="dropdown for-message">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="message"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-envelope"></i>
-                        <span class="count bg-primary">0</span>
+                        <span class="count bg-primary">{{$chat?1:0}}</span>
                     </button>
                     @if($chat)
                     <div class="dropdown-menu" aria-labelledby="message">
-                        <p class="red">Bạn có tin nhắn</p>
-                       
+                        <p class="red">Trò chuyện với</p>
+                      
                        
                 
                         <a class="dropdown-item media" href="{{route('admin.chat',$chat)}}">
-                            <span class="photo media-left"><img alt="avatar" src="images/avatar/1.jpg"></span>
-                            <div class="message media-body">
+                            <span class="photo media-left">
+                                <img alt="avatar" src="{{ Storage::url($chat->user->avatar) }}" style="border-radius: 50%; width: 30px; height: 30px; object-fit: cover;"></span>
+                                                        <div class="message media-body">
                                 <span class="name float-left">{{$chat->user->name}}</span>
-                                {{-- <span class="time float-right">Just now</span>
-                                <p>Hello, this is an example msg</p> --}}
+                              
                             </div>
                         </a>
                        
                     </div>
                    
-                </div>
+                </div> 
                 @endif
+               
+                
             </div>
 
             <div class="user-area dropdown float-right">
@@ -109,4 +113,5 @@
         </div>
     </div>
 </header>
-<!-- /#header -->
+
+

@@ -14,9 +14,7 @@ window.Echo.join('comment' + chatId)
 .joining(user => {
     let UI = `<li class="list-group-item user-${user.id}">${user.name}</li>`;
     userOnline.insertAdjacentHTML('beforebegin', UI);
-    
-    // Hiển thị thông báo khi vào phòng
-    const chatBox = document.querySelector('.contentBlock');
+        const chatBox = document.querySelector('.contentBlock');
     chatBox.insertAdjacentHTML(
         'beforeend', 
         `<p style="text-align: center; font-size: 12px; color: gray;">${user.name} vừa vào phòng chat</p>`
@@ -28,7 +26,6 @@ window.Echo.join('comment' + chatId)
         userDom.remove();
     }
     
-    // Hiển thị thông báo khi rời phòng
     const chatBox = document.querySelector('.contentBlock');
     chatBox.insertAdjacentHTML(
         'beforeend', 
@@ -38,9 +35,9 @@ window.Echo.join('comment' + chatId)
 
 
 .listen('CommentEvent', function (event) {
-console.log(event);
     updateUiMessage(event);
 })
+
 
 let btnSendMessage = document.querySelector('#btnSendMessage')
 let inputMessage = document.querySelector("#inputMessage")
@@ -57,19 +54,20 @@ btnSendMessage.addEventListener('click', function () {
 
 let contentBlock = document.querySelector('.contentBlock')
 function updateUiMessage(event) {
-    let classAuth = event.sender_id == userSignIn ? "text-end" : ""
-    let currentTime = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+    let classAuth = event.sender_id == userSignIn ? "text-end" : "";
     
+    let imageUrl = event.sender_id !== userSignIn && event.image ? 
+                   (event.image.startsWith('http') ? event.image : '/storage/' + event.image) : 
+                   '';
+
     let UI = `
-   
-    <p class="${classAuth}">
-       ${event.userName}: ${event.content}
-        <span style="font-size: 10px; color: gray;">(${currentTime})</span>
+    <p class="${classAuth}" style="color: black;">
+        ${imageUrl ? `<img src="${imageUrl}" alt="User Image" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">` : ''}
+        ${event.content}
     </p>
-`;
+    `;
 
-contentBlock.insertAdjacentHTML('beforeend', UI);
+    contentBlock.insertAdjacentHTML('beforeend', UI);
 
-// Cuộn xuống dưới cùng để xem tin nhắn mới nhất
-contentBlock.scrollTop = contentBlock.scrollHeight;
+    contentBlock.scrollTop = contentBlock.scrollHeight;
 }

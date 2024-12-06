@@ -83,9 +83,7 @@ Route::get('/blogs-search', [ClientBlogController::class, 'search'])->name('blog
 Route::post('/voucher/apply-code', [ClientBlogController::class, 'applyVoucher'])->name('voucher.apply_code');
 
 // Contact
-Route::get('/support', function () {
-    return view('client.pages.support');
-})->name('support');
+Route::get('/support', [ChatController::class, 'index'])->name('support');
 Route::middleware('auth')->group(function () {
     Route::get('/chats', [ChatController::class, 'index'])->name('chat.index');
     Route::get('/chats/create', [ChatController::class, 'createRoom'])->name('chat.createRoom');
@@ -151,6 +149,7 @@ Route::prefix('admin')->as('admin.')->middleware(['auth', 'isAdmin'])->group(fun
     Route::delete('delete/{chat}', [SupportController::class, 'delete'])->name('chat.delete');
 
     Route::get('support/{chat}', [SupportController::class, 'show'])->name('chat');
+    
     // Các route tùy chỉnh
     Route::get('/accounts/my_account', [UserController::class, 'myAccount'])->name('accounts.myAccount');
     Route::put('accounts/my_account', [UserController::class, 'updateMyAcount'])->name('accounts.updateMyAccount');

@@ -39,26 +39,35 @@
                         <div class="contentBlock" style="min-height: 200px">
                      
                         @foreach ($messages as $value)
-                                        <p @if ($value->sender_id == Auth::id()) class="text-end" @endif>{{ $value->sender->name }}:
-                                            {{ $value->content }} </p>
+                        <div style="margin-bottom: 10px; text-align: {{ $value->sender_id == Auth::id() ? 'right' : 'left' }};">
+                             
+                            <img src="{{ Storage::url($value->sender->avatar) }}" alt="User Image" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">
+                     
+                            <span style="display: inline-block; max-width: 80%; line-height: 1.4; font-size: 14px; background-color: #f4f4f4; padding: 5px 10px; border-radius: 10px;">{{ $value->content }}</span>                              
+                            <span style="font-size: 12px; color: gray; margin-top: 5px; align-self: flex-end;">{{ $value->created_at->format('H:i') }}</span>
+                        </div>
                                     @endforeach
                         </div>
                        
                     </div>
                     <div class="d-flex">
                         <input type="text" placeholder="Gửi tin nhắn..." class="form-control" id="inputMessage">
-                        <button class="btn btn-success" id="btnSendMessage">Gửi</button>
+                        <button class="btn btn-dark" id="btnSendMessage">   <i class="fa fa-paper-plane"></i></button>
                     </div>
                    </div>
                 </div>
 
                 <div class="col-12 col-lg-4 mb-10">
+                    
                     <!-- Contact Info Section -->
                     <div class="section-title">
                         <h2 class="title pb-3">Nhân viên hỗ trợ</h2>
                         <span></span>
                         <div class="title-border-bottom"></div>
-                    </div>
+                        <div class="avatar-wrapper" style="display: flex; justify-content: center; align-items: center; margin-top: 15px;">
+                            <img style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #ddd;" src="{{ Storage::url($chat->staff->avatar) }}" alt="Avatar">
+                        </div>                 
+                      </div>
                     <div class="contact-info-wrapper mb-n6">
                         <div class="single-contact-info mb-6">
                             <div class="single-contact-icon">
@@ -92,6 +101,7 @@
             </div>
         </div>
     </div>
+    
 @endsection
 
 @section('script')
@@ -99,7 +109,6 @@
     let chatId="{{$chat->id}}"
     let userSignIn = '{{ Auth::id() }}'
     let routeMessage = "{{ route('chat.sendMessage', $chat) }}"
- 
  </script>
  @vite('resources/js/comment.js')
 @endsection
