@@ -64,15 +64,19 @@
                         <p class="red">Trò chuyện với</p>
                       
                        
-                
-                        <a class="dropdown-item media" href="{{route('admin.chat',$chat)}}">
-                            <span class="photo media-left">
-                                <img alt="avatar" src="{{ Storage::url($chat->user->avatar) }}" style="border-radius: 50%; width: 30px; height: 30px; object-fit: cover;"></span>
-                                                        <div class="message media-body">
-                                <span class="name float-left">{{$chat->user->name}}</span>
-                              
-                            </div>
-                        </a>
+                    
+                            <a class="dropdown-item media" href="{{route('admin.chat',$chat)}}">
+                                <span class="photo media-left" style="display: flex; align-items: center;">
+                                    <img alt="avatar" src="{{$chat->user->avata ? Storage::url($chat->user->avatar) : asset('/theme/client/assets/images/logo/avata.jpg') }}" 
+                                         style="border-radius: 50%; width: 25px; height: 25px; object-fit: cover;">
+                                </span>
+                                <div class="message media-body" style="display: flex; align-items: center;">
+                                    <span class="name float-left" style="margin-left: 10px;">{{$chat->user->name}}</span>
+                                </div>
+                            </a>
+                    
+                        
+                        
                        
                     </div>
                    

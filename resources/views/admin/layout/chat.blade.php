@@ -45,10 +45,10 @@
                             @foreach ($messages as $value)
                             <div style="margin-bottom: 10px; text-align: {{ $value->sender_id == Auth::id() ? 'right' : 'left' }};">
                              
-                                    <img src="{{ Storage::url($value->sender->avatar) }}" alt="User Image" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">
+                                    <img src="{{ $value->sender->avatar ? Storage::url($value->sender->avatar) : asset('/theme/client/assets/images/logo/avata.jpg') }}" alt="User Image" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;margin-right: 5px">
                              
                                     <span style="display: inline-block; max-width: 80%; line-height: 1.4; font-size: 14px; background-color: #f4f4f4; padding: 5px 10px; border-radius: 10px;">{{ $value->content }}</span>                              
-                                    <span style="font-size: 12px; color: gray; margin-top: 5px; align-self: flex-end;">{{ $value->created_at->format('H:i') }}</span>
+                                    <span style="font-size: 10px; color: gray; margin-top: 5px; align-self: flex-end;">{{ $value->created_at->format('H:i') }}</span>
                                 </div>
 
                         @endforeach
