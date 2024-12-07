@@ -30,7 +30,9 @@ use App\Http\Controllers\Client\ShopController;
 use App\Http\Controllers\Client\AccountController;
 use App\Http\Controllers\Client\CheckoutController;
 use App\Http\Controllers\Client\CommentController as ClientCommentController;
-
+use App\Http\Controllers\RoomController;
+use App\Http\Controllers\Admin\SupportController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -93,9 +95,15 @@ Route::get('/blogs-search', [ClientBlogController::class, 'search'])->name('blog
 Route::post('/voucher/apply-code', [ClientBlogController::class, 'applyVoucher'])->name('voucher.apply_code');
 
 // Contact
-Route::get('/contact', function () {
-    return view('client.pages.contact');
+Route::get('/support', [ChatController::class, 'index'])->name('support');
+Route::middleware('auth')->group(function () {
+    Route::get('/chats', [ChatController::class, 'index'])->name('chat.index');
+    Route::get('/chats/create', [ChatController::class, 'createRoom'])->name('chat.createRoom');
+    Route::get('/chats/{chat}', [ChatController::class, 'show'])->name('chat.show');
+    Route::post('/chats/{chat}/send', [ChatController::class, 'sendMessage'])->name('chat.sendMessage');
 });
+
+
 // Checkout
  Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
  Route::post('/store-session-data', [CheckoutController::class, 'storeData']);
@@ -136,8 +144,6 @@ Route::middleware('auth')->group(function () {
 });
 Route::get('/verify/{token}', [AccountController::class, 'verify'])->name('verify');
 
-
-
 // ----------------------------END CLIENT ROUTES--------------------------------
 
 Route::middleware('guest')->group(function () {
@@ -156,7 +162,10 @@ Route::get('verify-email/{token}', [ForgotPasswordController::class, 'verifyEmai
 //
 Route::prefix('admin')->as('admin.')->middleware(['auth', 'isAdmin'])->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::delete('delete/{chat}', [SupportController::class, 'delete'])->name('chat.delete');
 
+    Route::get('support/{chat}', [SupportController::class, 'show'])->name('chat');
+    
     // Các route tùy chỉnh
     Route::get('/accounts/my_account', [UserController::class, 'myAccount'])->name('accounts.myAccount');
     Route::put('accounts/my_account', [UserController::class, 'updateMyAcount'])->name('accounts.updateMyAccount');

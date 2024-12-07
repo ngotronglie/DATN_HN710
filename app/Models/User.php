@@ -59,4 +59,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Voucher::class, 'user_vouchers')->withPivot('status')->withTimestamps();
     }
+    public function staffChats()
+{
+    return $this->hasMany(Chat::class, 'staff_id');
+}
+
+public function userChats()
+{
+    return $this->hasMany(Chat::class, 'user_id');
+}
+
 }
