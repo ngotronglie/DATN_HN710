@@ -8,7 +8,7 @@
     <div class="breadcrumb-area bg-light">
         <div class="container-fluid">
             <div class="breadcrumb-content text-center">
-                <h1 class="title">Login</h1>
+                <h1 class="title">Đăng nhập</h1>
                 <ul>
                     <li>
                         <a href="/">Trang chủ </a>
@@ -62,7 +62,7 @@
                                                         <div class="mb-5" style="position: relative;">
                                                             <div class="input-group">
                                                                 <input type="password" id="password" name="password" class="form-control" 
-                                                                       placeholder="Mật khẩu" required style="padding-right: 40px;">
+                                                                       placeholder="Mật khẩu" style="padding-right: 40px;">
                                                                 <div class="input-group-append" 
                                                                      style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
                                                                     <span class="input-group-text" onclick="togglePassword()" style="background: none; border: none;">

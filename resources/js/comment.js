@@ -54,7 +54,10 @@ btnSendMessage.addEventListener('click', function () {
 
 let contentBlock = document.querySelector('.contentBlock')
 function updateUiMessage(event) {
-    let classAuth = event.sender_id == userSignIn ? "text-end" : "";
+    // Kiểm tra xem tin nhắn có phải của người dùng hiện tại không
+    let classAuthStyle = event.sender_id == userSignIn 
+        ? "text-align: right;" // Căn phải nếu là của người dùng hiện tại
+        : "text-align: left;"; // Căn trái nếu là người khác
 
     let imageUrl = event.sender_id !== userSignIn && event.image ?
         (event.image.startsWith('http') ? event.image : '/storage/' + event.image) :
@@ -67,7 +70,7 @@ function updateUiMessage(event) {
         formattedTime = `${hours}:${minutes}`;
     }
     let UI = `
-    <p class="${classAuth}" >
+    <p style="${classAuthStyle};">
         ${imageUrl ? `<img src="${imageUrl}" alt="User Image" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;margin-right:5px">` : ''}
        <span style="display: inline-block; max-width: 80%; line-height: 1.4; font-size: 14px; background-color: #f4f4f4; padding: 5px 10px; border-radius: 10px;color:black">
         ${event.content}

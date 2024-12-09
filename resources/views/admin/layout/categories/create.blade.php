@@ -41,7 +41,7 @@
                         <form action="{{ route('admin.categories.store') }}" method="post">
                             @csrf
                             <div class="form-group">
-                                <label for="name" class=" form-control-label">Tên danh mục</label><input type="text" id="name" name="name" placeholder="Nhập tên danh mục" class="form-control" value="{{ old('name') }}" required>
+                                <label for="name" class=" form-control-label">Tên danh mục</label><input type="text" id="name" name="name" placeholder="Nhập tên danh mục" class="form-control" value="{{ old('name') }}">
                                 @error('name')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror

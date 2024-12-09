@@ -42,7 +42,7 @@
                             @csrf
                             @method('PUT')
                             <div class="form-group">
-                                <label for="name" class=" form-control-label">Kích cỡ</label><input type="text" id="name" name="name" placeholder="Nhập tên size" class="form-control" value="{{ old('name', $size->name) }}" required>
+                                <label for="name" class=" form-control-label">Kích cỡ</label><input type="text" id="name" name="name" placeholder="Nhập tên size" class="form-control" value="{{ old('name', $size->name) }}">
                                 @error('name')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror

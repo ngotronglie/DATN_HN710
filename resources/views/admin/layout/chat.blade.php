@@ -41,7 +41,7 @@
                         </div>
     
                         <!-- Chat Messages -->
-                        <div class="contentBlock" style="min-height: 300px; overflow-y: auto; padding: 15px; background-color: white; border: 1px solid #ddd; margin-bottom: 10px; border-radius: 8px;">
+                        <div class="contentBlock" style="min-height: 300px; overflow-y: auto; padding: 15px; background-color: white; border: 1px solid #ddd; margin-bottom: 10px; border-radius: 0 0 8px 8px;">
                             @foreach ($messages as $value)
                             <div style="margin-bottom: 10px; text-align: {{ $value->sender_id == Auth::id() ? 'right' : 'left' }};">
                              
@@ -55,7 +55,7 @@
                         
                         </div>
                         <div class="d-flex">
-                            <input type="text" placeholder="Gửi tin nhắn..." class="form-control" id="inputMessage">
+                            <input type="text" placeholder="Gửi tin nhắn..." class="form-control" id="inputMessage" style="margin-right: 10px">
                             <button class="btn btn-dark" id="btnSendMessage">   <i class="fa fa-paper-plane"></i></button>
                         </div>
                     </div>
@@ -67,12 +67,6 @@
 @endsection
 
 @section('script')
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-    </script>
-
     <script>
         let chatId = "{{ $chat->id }}"
         let userSignIn = '{{ Auth::id() }}'

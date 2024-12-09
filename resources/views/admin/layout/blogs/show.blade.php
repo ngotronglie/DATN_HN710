@@ -7,7 +7,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Chi tiết sản phẩm</h1>
+                        <h1>Chi tiết bài viết</h1>
                     </div>
                 </div>
             </div>

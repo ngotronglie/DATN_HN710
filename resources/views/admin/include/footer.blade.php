@@ -3,10 +3,10 @@
     <div class="footer-inner bg-white">
         <div class="row">
             <div class="col-sm-6">
-                Copyright &copy; 2024 by nhom HN_710
+                Bản quyền © 2024 bởi nhóm HN_710
             </div>
             <div class="col-sm-6 text-right">
-                Designed by <a href="">Kien + Thao + Huy + My + Linh + Liem +Ban</a>
+                Thiết kế bởi <a href="">Kien + Thao + Huy + My + Linh + Liem + Ban</a>
             </div>
         </div>
     </div>

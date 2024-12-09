@@ -41,13 +41,13 @@
                         <form action="{{ route('admin.colors.store') }}" method="post">
                             @csrf
                             <div class="form-group">
-                                <label for="name" class=" form-control-label">Tên màu</label><input type="text" id="name" name="name" placeholder="Nhập tên màu" class="form-control" value="{{ old('name') }}" requied>
+                                <label for="name" class=" form-control-label">Tên màu</label><input type="text" id="name" name="name" placeholder="Nhập tên màu" class="form-control" value="{{ old('name') }}">
                                 @error('name')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label for="hex_code">Mã màu</label> <input type="color" id="hex_code" name="hex_code" value="{{ old('hex_code') }}" requied>
+                                <label for="hex_code">Mã màu</label> <input type="color" id="hex_code" name="hex_code" value="{{ old('hex_code') }}">
                                 @error('hex_code')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror

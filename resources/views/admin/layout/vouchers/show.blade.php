@@ -12,7 +12,7 @@
                 <div class="col-sm-4">
                     <div class="page-header float-left">
                         <div class="page-title">
-                            <h1>Chi tiết Voucher</h1>
+                            <h1>Chi tiết khuyến mại</h1>
                         </div>
                     </div>
                 </div>
@@ -21,8 +21,8 @@
                         <div class="page-title">
                             <ol class="breadcrumb text-right">
                                 <li><a href="#">Bảng điều khiển</a></li>
-                                <li><a href="{{ route('admin.vouchers.index') }}">Danh sách Voucher</a></li>
-                                <li class="active">Chi tiết Voucher</li>
+                                <li><a href="{{ route('admin.vouchers.index') }}">Danh sách khuyến mại</a></li>
+                                <li class="active">Chi tiết khuyến mại</li>
                             </ol>
                         </div>
                     </div>
@@ -37,7 +37,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <strong>Chi tiết mã giảm giá</strong>
+                            <strong>Chi tiết khuyến mại</strong>
                             <a href="{{ route('admin.vouchers.index') }}" class="btn btn-primary  ">
                                 <i class="fa fa-arrow-left mr-1"></i> Quay lại
                             </a>
@@ -46,7 +46,7 @@
                             <table class="table table-bordered">
                                 <tbody>
                                     <tr>
-                                        <th>Mã Voucher</th>
+                                        <th>Mã khuyến mại</th>
                                         <td>{{ $voucher->code }}</td>
                                     </tr>
                                     <tr>

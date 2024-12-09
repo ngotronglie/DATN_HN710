@@ -8,7 +8,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Ela Admin - HTML5 Admin Template</title>
+    <title>Bảng điều khiển</title>
     <meta name="description" content="Ela Admin - HTML5 Admin Template">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -47,11 +47,11 @@
                   
                         <div class="form-group">
                             <label>Mật khẩu mới</label>
-                            <input type="password" name="password" class="form-control" placeholder="Mật khẩu mới" required> 
+                            <input type="password" name="password" class="form-control" placeholder="Mật khẩu mới"> 
                         </div>
                         <div class="form-group">
                             <label>Nhập lại mật khẩu</label>
-                            <input type="password" name="password_confirmation" class="form-control" placeholder="Nhập lại mật khẩu" required>
+                            <input type="password" name="password_confirmation" class="form-control" placeholder="Nhập lại mật khẩu">
                         </div>
                         @error('password')
                         <p class="text-danger">

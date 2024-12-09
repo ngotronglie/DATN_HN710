@@ -58,7 +58,7 @@
                     {{-- voucher --}}
                     <li class="menu-item-has-children {{ Request::is('admin/vouchers*') ? 'active' : '' }} dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false"> <i class="menu-icon fa fa-ticket"></i>Quản lý vouchers</a>
+                            aria-expanded="false"> <i class="menu-icon fa fa-ticket"></i>Quản lý khuyến mại</a>
                         <ul class="sub-menu children dropdown-menu">
                             <li></i><a href="{{ route('admin.vouchers.index') }}">Danh sách</a></li>
                             <li></i><a href="{{ route('admin.vouchers.create') }}">Thêm mới</a></li>

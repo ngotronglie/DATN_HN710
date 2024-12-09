@@ -233,7 +233,7 @@
                                                                 <label for="address" class="required mb-1">Tên đường/tòa
                                                                     nhà/số nhà</label>
                                                                 <input style="color: rgb(112, 110, 110)" class="input_address" type="text"
-                                                                    placeholder="Tên đường/tòa nhà/số nhà" name="address">
+                                                                    placeholder="Tên đường/tòa nhà/số nhà" name="address" value="{{ $adressDetail }}">
                                                             </div>
                                                         </div>
                                                     </div>

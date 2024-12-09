@@ -43,7 +43,7 @@
                             <div class="font-weight-bold mb-2">Chức vụ của {{ $account->name }} ({{ $account->role == 0 ? 'Người dùng' : 'Nhân viên' }})</div>
                             <div class="form-group">
                                 <label for="role">Chức vụ</label>
-                                <select name="role" id="role" class="form-control select2" required>
+                                <select name="role" id="role" class="form-control select2">
                                     <option value="">--- Vui lòng chọn ---</option>
                                     <option value="0" {{ (old('role', $account->role) == 0) ? 'selected' : '' }}>Người dùng
                                     </option>

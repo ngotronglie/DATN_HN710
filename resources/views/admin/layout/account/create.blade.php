@@ -43,7 +43,7 @@
                             <div class="form-group">
                                 <label for="name" class=" form-control-label">Tên người dùng</label>
                                 <input type="text" id="name" name="name" placeholder="Nhập tên"
-                                    class="form-control" value="{{ old('name') }}" requied>
+                                    class="form-control" value="{{ old('name') }}">
                                 @error('name')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -52,7 +52,7 @@
                                 <label for="email" class=" form-control-label">Email</label>
                                 <input type="text" id="email" name="email"
                                     placeholder="Nhập email" class="form-control"
-                                    value="{{ old('email') }}" requied>
+                                    value="{{ old('email') }}">
                                 @error('email')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -61,7 +61,7 @@
                                 <label for="phone" class=" form-control-label">Số điện thoại</label>
                                 <input type="text" id="phone" name="phone"
                                     placeholder="Nhập số điện thoại" class="form-control"
-                                    value="{{ old('phone') }}" requied>
+                                    value="{{ old('phone') }}">
                                 @error('phone')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -69,7 +69,7 @@
                             <div class="form-group">
                                 <label for="avatar" class="form-control-label">Ảnh</label>
                                 <input type="file" id="avatar" name="avatar"
-                                    class="form-control" requied accept="image/*">
+                                    class="form-control" accept="image/*">
                                     <div style="margin-top: 10px;">
                                         <img id="preview-avatar" src="#" alt="Ảnh xem trước" style="display: none; width: 200px; height: 200px; border-radius: 50%; object-fit: cover;">
                                     </div>
@@ -81,7 +81,7 @@
                                 <label for="password" class=" form-control-label">Mật khẩu</label>
                                 <div class="input-group">
                                 <input type="password" id="password" name="password"
-                                    placeholder="Nhập mật khẩu" class="form-control" requied>
+                                    placeholder="Nhập mật khẩu" class="form-control">
                                     <div class="input-group-append">
                                         <span class="input-group-text" onclick="togglePassword()">
                                             <i class="fa fa-eye" id="eyeIcon"></i>
@@ -95,7 +95,7 @@
                             <div class="form-group">
                                 <label for="date_of_birth" class=" form-control-label">Ngày sinh</label>
                                 <input type="date" id="date_of_birth" name="date_of_birth"
-                                    class="form-control" value="{{ old('date_of_birth') }}" requied>
+                                    class="form-control" value="{{ old('date_of_birth') }}">
                                 @error('date_of_birth')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -127,9 +127,9 @@
                             <div class="form-group">
                                 <label for="address" class=" form-control-label">Tên đường/tòa nhà/số nhà</label>
                                 <input type="text" id="address" name="address"
-                                    placeholder="Nhập Tên đường/tòa nhà/số nhà" class="form-control input_address" requied>
+                                    placeholder="Nhập Tên đường/tòa nhà/số nhà" class="form-control input_address">
                                     @if($errors->has('provinces') || $errors->has('address') || $errors->has('wards') || $errors->has('districs'))
-                                    <small class="text-danger mt-5">Vui lòng nhập đầy đủ các trường địa chỉ.</small>
+                                    <small class="text-danger mt-5">Vui lòng nhập đầy đủ các trường địa chỉ</small>
                                     @endif
                             </div>
 

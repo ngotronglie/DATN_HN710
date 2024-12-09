@@ -30,7 +30,6 @@ use App\Http\Controllers\Client\ShopController;
 use App\Http\Controllers\Client\AccountController;
 use App\Http\Controllers\Client\CheckoutController;
 use App\Http\Controllers\Client\CommentController as ClientCommentController;
-use App\Http\Controllers\RoomController;
 use App\Http\Controllers\Admin\SupportController;
 use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
@@ -94,7 +93,7 @@ Route::get('/blogs/{id}', [ClientBlogController::class, 'show'])->name('blogs.sh
 Route::get('/blogs-search', [ClientBlogController::class, 'search'])->name('blogs.search');
 Route::post('/voucher/apply-code', [ClientBlogController::class, 'applyVoucher'])->name('voucher.apply_code');
 
-// Contact
+// Chat
 Route::get('/support', [ChatController::class, 'index'])->name('support');
 Route::middleware('auth')->group(function () {
     Route::get('/chats', [ChatController::class, 'index'])->name('chat.index');
@@ -138,9 +137,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/my_acount/update-password/{id}', [AccountController::class, 'updatePassword'])->name('user.updatePassword');
     Route::get('/my_acount/{id}/bill_detail', [AccountController::class, 'orderBillDetail'])->name('viewBillDetail');
     Route::get('my_acount/orders/cancel/{id}', [AccountController::class, 'cancelOrder'])->name('cancelOrder');
-    // Route::get('/orders/status/{status?}', [AccountController::class, 'getOrdersByStatus'])->name('orders.byStatus');
-    // Route::get('/voucher/status/{status?}', [AccountController::class, 'getVouchersByStatus'])->name('voucher.byStatus');
-
 });
 Route::get('/verify/{token}', [AccountController::class, 'verify'])->name('verify');
 
@@ -159,7 +155,6 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
 });
 Route::get('verify-email/{token}', [ForgotPasswordController::class, 'verifyEmail'])->name('verify.email');
 
-//
 Route::prefix('admin')->as('admin.')->middleware(['auth', 'isAdmin'])->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::delete('delete/{chat}', [SupportController::class, 'delete'])->name('chat.delete');
@@ -236,7 +231,6 @@ Route::prefix('admin')->as('admin.')->middleware(['auth', 'isAdmin'])->group(fun
 
     // Quản lí banner
     Route::resource('banners', BannerController::class);
-
 
     //Quản lý đơn hàng
     Route::get('order', [OrderController::class, 'index'])->name('order.index');

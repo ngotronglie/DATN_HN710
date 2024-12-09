@@ -164,6 +164,12 @@ class CheckoutController extends Controller
             ->where('order_code', $orderCode)
             ->get();
 
+        if ($bills->isEmpty()) {
+            return view('client.pages.checkouts.order_tracking', [
+                'message' => 'Không tìm thấy đơn hàng nào với mã đơn hàng này.'
+            ]);
+        }
+
         $addressOd = Order::with('voucher')
             ->where('order_code', $orderCode)
             ->select('user_address')
@@ -179,12 +185,6 @@ class CheckoutController extends Controller
             'ward' => isset($addressParts[1]) ? Ward::where('code', trim($addressParts[1]))->value('full_name') : null,
             'addressDetail' => isset($addressParts[0]) ? $addressParts[0] : null,
         ];
-
-        if ($bills->isEmpty()) {
-            return view('client.pages.checkouts.order_tracking', [
-                'message' => 'Không tìm thấy đơn hàng nào với mã đơn hàng này.'
-            ]);
-        }
 
         $billIds = $bills->pluck('id');
 

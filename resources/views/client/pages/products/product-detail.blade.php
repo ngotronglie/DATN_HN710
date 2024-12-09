@@ -107,7 +107,7 @@
                                             data-productId="{{ $product->id }}" data-max="{{ $product->max_price_sale }}"
                                             data-min="{{ $product->min_price_sale }}"
                                             style="background-color: {{ $variant->color->hex_code }}"
-                                            onclick="HT.selectColor(this, '{{ $variant->color->hex_code }}')">
+                                            onclick="HT.selectColor(this, '{{ $variant->color->hex_code }}')" title="{{ $variant->color->name }}">
                                         </label>
                                     </li>
                                 @endforeach
@@ -197,8 +197,11 @@
                                     @foreach ($comments as $item)
                                     <div class="single-comment-wrap">
                                         <a class="author-thumb" href="#">
-                                            <img
-                                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmhF7UB6jv1t_oyGDzqSb_h0JPspDnfqohVA&sr">
+                                            @if($item->user->avatar)
+                                            <img src="{{ Storage::url($item->user->avatar) }}">
+                                            @else
+                                            <img src="{{ asset('/theme/client/assets/images/logo/avata.jpg') }}">
+                                            @endif
                                         </a>
                                         <div class="comments-info">
                                             <div class="comment-footer d-flex justify-content-between">
@@ -221,8 +224,11 @@
                                     @foreach ($item->children as $child)
                                     <div class="single-comment-wrap mb-4 comment-reply">
                                         <a class="author-thumb" href="#">
-                                            <img
-                                                src="https://tse1.mm.bing.net/th?id=OIP.KdRE7KHqL-46M8nrvOX2CgHaHa&pid=Api&P=0&h=220">
+                                            @if($child->user->avatar)
+                                            <img src="{{ Storage::url($child->user->avatar) }}">
+                                            @else
+                                            <img src="{{ asset('/theme/client/assets/images/logo/avata.jpg') }}">
+                                            @endif
                                         </a>
                                         <div class="comments-info">
                                             <div class="comment-footer d-flex justify-content-between">
@@ -546,11 +552,12 @@ function hideReplyForm(commentId) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                const avatarUrl = data.comment.user.avatar;
                 // Thêm bình luận mới vào danh sách
                 const commentHtml = `
                     <div class="single-comment-wrap">
                         <a class="author-thumb" href="#">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmhF7UB6jv1t_oyGDzqSb_h0JPspDnfqohVA&sr">
+                            <img src="${avatarUrl}">
                         </a>
                         <div class="comments-info">
                             <div class="comment-footer d-flex justify-content-between">
@@ -632,11 +639,12 @@ function hideReplyForm(commentId) {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    const avatarUrl = data.comment.user.avatar;
                     // Thêm trả lời vào dưới bình luận cha
                     const replyHtml = `
                         <div class="single-comment-wrap mb-4 comment-reply">
                             <a class="author-thumb" href="#">
-                                <img src="https://tse1.mm.bing.net/th?id=OIP.KdRE7KHqL-46M8nrvOX2CgHaHa&pid=Api&P=0&h=220">
+                                <img src="${avatarUrl}">
                             </a>
                             <div class="comments-info">
                                 <div class="comment-footer d-flex justify-content-between">
