@@ -17,7 +17,7 @@
 
     function formatCurrency(value) {
         if (isNaN(value)) return "0đ";
-        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " đ";
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " đ";
     }
 
     $(function () {

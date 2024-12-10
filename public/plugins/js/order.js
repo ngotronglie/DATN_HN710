@@ -45,17 +45,17 @@
             $('.error-message, .error-message-province, .error-message-districts, .error-message-wards, .error-address').html('');
 
             if ($('.userName').length && $('.userName').val().trim() === '') {
-                $('.userName').next('.error-message').html('Vui lòng nhập tên người nhận.');
+                $('.userName').next('.error-message').html('Tên không được bỏ trống.');
                 isValid = false;
             }
 
             if ($('.userEmail').length) {
                 let email = $('.userEmail').val().trim();
                 if (email === '') {
-                    $('.userEmail').next('.error-message').html('Vui lòng nhập email.');
+                    $('.userEmail').next('.error-message').html('Email mail không được bỏ trống.');
                     isValid = false;
                 } else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
-                    $('.userEmail').next('.error-message').html('Vui lòng nhập email hợp lệ.');
+                    $('.userEmail').next('.error-message').html('Email không đúng định dạng.');
                     isValid = false;
                 }
             }
@@ -63,10 +63,10 @@
             if ($('.userPhone').length) {
                 let phone = $('.userPhone').val().trim();
                 if (phone === '') {
-                    $('.userPhone').next('.error-message').html('Vui lòng nhập số điện thoại.');
+                    $('.userPhone').next('.error-message').html('Số điện thoại không được bỏ trống.');
                     isValid = false;
                 } else if (!/^(0(3[2-9]|5[2689]|7[0-9]|8[1-9]|9[0-9]))[0-9]{7}$/.test(phone)) {
-                    $('.userPhone').next('.error-message').html('Vui lòng nhập số điện thoại di động hợp lệ.');
+                    $('.userPhone').next('.error-message').html('Số điện thoại không hợp lệ.');
                     isValid = false;
                 }
             }
