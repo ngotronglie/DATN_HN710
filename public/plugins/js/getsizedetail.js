@@ -68,6 +68,7 @@
                                 '<li>' +
                                 '<label id="color-btn" class="color-btn_click color-btn colorGetSize ' + (index === 0 ? 'selectedActive' : '') + '" ' +
                                 'data-id="' + variant.color.id + '" ' +
+                                'title="' + variant.color.name + '"'+
                                 'data-productId="' + idProduct + '" ' +
                                 'data-max="' + maxPrice + '" ' +
                                 'data-min="' + minPrice + '" ' +
@@ -279,6 +280,7 @@
                             '<li>' +
                             '<label class="size_detail size-btn ' + (index === 0 ? 'selected' : '') + '" ' +
                             'data-quantity="' + variant.quantity + '" ' +
+                            'title="' + variant.color.name + '"'+
                             'data-id="' + variant.id + '" ' +
                             'data-price="' + variant.price_sale + '" ' +
                             'onclick="HT.getSize(this, \'' + variant.size + '\', ' + idProduct + ')">' +

@@ -243,6 +243,38 @@ class CheckoutController extends Controller
 
         $full_address = $address . ', ' . $ward_code . ', ' . $district_code . ', ' . $province_code;
 
+        $productVariantIds = $request->input('product_variant_ids', []);
+
+                if (!empty($productVariantIds)) {
+                    if ($user) {
+                        $cart = Cart::where('user_id', $user->id)->first();
+
+                        if ($cart) {
+                            foreach ($productVariantIds as $productVariantId) {
+                                $cartItem = $cart->items()->where('product_variant_id', $productVariantId)->first();
+
+                                if (!$cartItem) {
+
+                                    return back()->with('error', 'Bạn đã thanh toán đơn hàng này rồi.');
+                                }
+                            }
+                        }
+                    } else {
+
+                        $cart = Session::get('cart', []);
+
+                        if (!empty($cart['items'])) {
+                            foreach ($productVariantIds as $productVariantId) {
+
+                                $cartItem = collect($cart['items'])->firstWhere('product_variant_id', $productVariantId);
+
+                                if (!$cartItem) {
+                                    return back()->with('error', 'Bạn đã thanh toán đơn hàng này rồi.');
+                                }
+                            }
+                        }
+                    }
+                }
         try {
             DB::beginTransaction();
             if ($request->payment_method == "cod") {
@@ -324,7 +356,6 @@ class CheckoutController extends Controller
                 }
 
                 // Xóa sản phẩm đã đặt khỏi giỏ hàng
-                $productVariantIds = $request->input('product_variant_ids', []);
                 if (!empty($productVariantIds)) {
                     if ($user) {
                         $cart = Cart::where('user_id', $user->id)->first();
@@ -337,11 +368,11 @@ class CheckoutController extends Controller
                             }
                         }
 
-                        $count = CartItem::whereHas('cart', function ($query) use ($user) {
-                            $query->where('user_id', $user->id);
-                        })
-                            ->distinct('product_variant_id')
-                            ->count('product_variant_id');
+                        // $count = CartItem::whereHas('cart', function ($query) use ($user) {
+                        //     $query->where('user_id', $user->id);
+                        // })
+                        //     ->distinct('product_variant_id')
+                        //     ->count('product_variant_id');
                     } else {
                         $cart = Session::get('cart', []);
                         $updatedItems = collect($cart['items'])->filter(function ($item) use ($productVariantIds) {
@@ -350,7 +381,7 @@ class CheckoutController extends Controller
                         $cart['items'] = $updatedItems;
                         session()->put('cart', $cart);
 
-                        $count = count($updatedItems);
+                        // $count = count($updatedItems);
                     }
                 }
 
