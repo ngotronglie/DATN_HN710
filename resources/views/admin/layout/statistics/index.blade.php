@@ -64,6 +64,7 @@
             </div>
             
 
+            @if(Auth::user()->role == 2)
             <!-- Doanh thu theo khoảng thời gian -->
             <div class="col-md-12">
                 <div class="card">
@@ -240,6 +241,50 @@
                     </div>
                 </div>
             </div>
+            @elseif(Auth::user()->role == 1)
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <strong class="card-title">Sản phẩm không bán chạy</strong>
+                        <div>
+                            <a class="btn btn-primary mr-1" href="#" data-toggle="modal" data-target="{{$leastSellingProducts->isEmpty() ? '' : '#chartModal'}}" onclick="showChart('leastSellingProducts')">
+                                <i class="fa fa-signal"></i> Xem biểu đồ
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table id="" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tên sản phẩm</th>
+                                    <th>Số lượng bán</th>
+                                    <th>Doanh thu</th>
+                                    <th>Phần trăm đóng góp doanh thu</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if($leastSellingProducts->isEmpty())
+                                <tr>
+                                    <td colspan="5" class="text-center"><strong>Không có dữ liệu</strong></td>
+                                </tr>
+                                @else
+                                @foreach($leastSellingProducts as $key => $product)
+                                <tr>
+                                    <td>{{ $key+1 }}</td>
+                                    <td>{{ $product->product_name }}</td>
+                                    <td>{{ $product->total_sold }}</td>
+                                    <td>{{ number_format($product->total_revenue, 0, ',', '.') }} VND</td>
+                                    <td>{{ $product->revenue_percentage }}%</td>
+                                </tr>
+                                @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            @endif
 
             <!-- Modal chung để hiển thị biểu đồ -->
             <div class="modal fade" id="chartModal" tabindex="-1" role="dialog" aria-labelledby="chartModalLabel" aria-hidden="true">

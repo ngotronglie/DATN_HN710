@@ -41,6 +41,10 @@ class ChangeActiveController extends Controller
 
     public function changeActiveAllCategory(Request $request)
     {
+        if (auth()->user()->role != 2) {
+            return response()->json(['status' => false, 'message' => 'Bạn không có quyền']);
+        }
+
         $id = $request->id;
         $active = $request->is_active;
         if (empty($id) || !is_array($id)) {
@@ -91,6 +95,10 @@ class ChangeActiveController extends Controller
 
     public function changeActiveAllProduct(Request $request)
     {
+        if (auth()->user()->role != 2) {
+            return response()->json(['status' => false, 'message' => 'Bạn không có quyền']);
+        }
+
         $id = $request->id;
         $active = $request->is_active;
         if (empty($id) || !is_array($id)) {
@@ -191,6 +199,9 @@ class ChangeActiveController extends Controller
 
     public function changeActiveAllCategoryBlog(Request $request)
     {
+        if (auth()->user()->role != 2) {
+            return response()->json(['status' => false, 'message' => 'Bạn không có quyền']);
+        }
         $id = $request->id;
         $active = $request->is_active;
         if (empty($id) || !is_array($id)) {
@@ -241,6 +252,9 @@ class ChangeActiveController extends Controller
 
     public function changeActiveAllBlog(Request $request)
     {
+        if (auth()->user()->role != 2) {
+            return response()->json(['status' => false, 'message' => 'Bạn không có quyền']);
+        }
         $id = $request->id;
         $active = $request->is_active;
         if (empty($id) || !is_array($id)) {
@@ -291,6 +305,9 @@ class ChangeActiveController extends Controller
 
     public function changeActiveAllBanner(Request $request)
     {
+        if (auth()->user()->role != 2) {
+            return response()->json(['status' => false, 'message' => 'Bạn không có quyền']);
+        }
         $id = $request->id;
         $active = $request->is_active;
         if (empty($id) || !is_array($id)) {

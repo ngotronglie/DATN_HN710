@@ -49,6 +49,7 @@
                                 <a class="btn btn-danger countTrash" href="{{ route('admin.blogs.trashed') }}">
                                     <i class="fa fa-trash"></i> Thùng rác <span class="blogCout">({{ $trashedCount }})</span>
                                 </a>
+                                @if(Auth::user()->role == 2)
                                 <div class="dropdown float-right ml-2">
                                     <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton"
                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -67,6 +68,7 @@
                                         </a>
                                     </div>
                                 </div>
+                                @endif
                             </div>
                         </div>
                         <div class="card-body">
@@ -127,7 +129,7 @@
                                                 <input type="checkbox" class="js-switch active"
                                                     data-model="{{ $item->is_active }}"
                                                     {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"
-                                                    data-modelId="{{ $item->id }}" data-title="{{ $item->title }}" />
+                                                    data-modelId="{{ $item->id }}" data-title="{{ $item->title }}" @if(Auth::user()->role != 2) disabled @endif />
                                             </td>
                                             <td class="d-flex">
                                                 <a class="btn btn-primary mr-2"

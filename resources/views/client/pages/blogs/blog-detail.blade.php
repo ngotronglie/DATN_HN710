@@ -76,7 +76,7 @@
                                             </div>
                                             <div class="content">
                                                 <h5 class="title mt-4"><a
-                                                        href="{{ route('blogs.show', $item) }}">{{ Str::limit(strip_tags($item->content), 36, '...') }}</a>
+                                                        href="{{ route('blogs.show', $item) }}">{!! Str::limit(strip_tags($item->content), 36, '...') !!}</a>
                                                 </h5>
                                             </div>
                                         </div>
@@ -96,7 +96,6 @@
                                 </span>
                                 <span class="meta-item date">{{ \Carbon\Carbon::parse($blog->created_at)->format('d/m/Y') }}</span>
                                 <span class="meta-item comment"><a href="#">{{ $blog->view }} Lượt xem</a></span>
-                                <span class="meta-item comment"><a href="#">03 Bình luận</a></span>
                             </div>
                             <div class="desc content aos-init aos-animate" data-aos="fade-right" data-aos-delay="300">
                                 {!! $blog->content !!}
@@ -129,72 +128,7 @@
                    
                     
                     </div>
-                    
 
-
-
-                    <div class="comment-area-wrapper mt-5 aos-init" data-aos="fade-up" data-aos-delay="400">
-                        <h3 class="title mb-6">5 Bình luận</h3>
-                        <div class="single-comment-wrap mb-10">
-                            <a class="author-thumb" href="#">
-                                <img
-                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmhF7UB6jv1t_oyGDzqSb_h0JPspDnfqohVA&sr">
-                            </a>
-                            <div class="comments-info">
-                                <p class="mb-1">Bình luận 1.</p>
-                                <div class="comment-footer d-flex justify-content-between">
-                                    <span class="author"><a href="#"><strong>Duy</strong></a> - July 30, 2023</span>
-                                    <a href="#" class="btn-reply"><i class="fa fa-reply"></i> Reply</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="single-comment-wrap mb-10 comment-reply">
-                            <a class="author-thumb" href="#">
-                                <img
-                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmhF7UB6jv1t_oyGDzqSb_h0JPspDnfqohVA&sr">
-                            </a>
-                            <div class="comments-info">
-                                <p class="mb-1">Trả lời bình luận 1.</p>
-                                <div class="comment-footer d-flex justify-content-between">
-                                    <span class="author"><a href="#"><strong>Alex</strong></a> - August 30,
-                                        2023</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="blog-comment-form-wrapper mt-10 aos-init" data-aos="fade-up" data-aos-delay="400">
-                        <div class="blog-comment-form-title">
-                            <h2 class="title">Để lại 1 bình luận</h2>
-                        </div>
-                        <div class="comment-box">
-                            <form action="#">
-                                <div class="row">
-                                    <div class="col-12 col-custom">
-                                        <div class="input-item mt-4 mb-4">
-                                            <textarea cols="30" rows="5" name="comment" class="rounded-0 w-100 custom-textarea input-area"
-                                                placeholder="Bình luận"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-custom">
-                                        <div class="input-item mb-4">
-                                            <input class="rounded-0 w-100 input-area name" type="hidden"
-                                                placeholder="Name" fdprocessedid="rg7vs">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-custom">
-                                        <div class="input-item mb-4">
-                                            <input class="rounded-0 w-100 input-area email" type="hidden"
-                                                placeholder="Email" fdprocessedid="7z5f7l">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-custom mt-4">
-                                        <button type="submit" class="btn btn-primary btn-hover-dark"
-                                            fdprocessedid="iu5i8">Bình luận</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

@@ -23,7 +23,36 @@
             <p style="margin: 10px 0;"><strong>Người đặt hàng:</strong> {{ $order->user_name }}</p>
             <p style="margin: 10px 0;"><strong>Email:</strong> {{ $order->user_email }}</p>
             <p style="margin: 10px 0;"><strong>Số điện thoại:</strong> {{ $order->user_phone }}</p>
-            <p style="margin: 10px 0;"><strong>Địa chỉ giao hàng:</strong> {{ $order->user_address }}</p>
+            @php
+            use App\Models\Province;
+            use App\Models\District;
+            use App\Models\Ward;
+
+            $addressParts = explode(',', $order->user_address);
+            $addressData = [
+            'province' => isset($addressParts[3])
+            ? Province::where('code', trim($addressParts[3]))->value('full_name')
+            : null,
+            'district' => isset($addressParts[2])
+            ? District::where('code', trim($addressParts[2]))->value('full_name')
+            : null,
+            'ward' => isset($addressParts[1])
+            ? Ward::where('code', trim($addressParts[1]))->value('full_name')
+            : null,
+            'addressDetail' => isset($addressParts[0]) ? $addressParts[0] : null,
+            ];
+            @endphp
+            <p style="margin: 10px 0;">
+                <strong>Địa chỉ giao hàng:</strong> {{ implode(
+                                    ', ',
+                                    array_filter(
+                                        [$addressData['addressDetail'], $addressData['ward'], $addressData['district'], $addressData['province']],
+                                        function ($value) {
+                                            return !is_null($value) && $value !== '';
+                                        }
+                                    )
+                                ) }}
+            </p>
             <p style="margin: 10px 0;"><strong>Ngày đặt hàng:</strong> {{ $order->created_at->format('d/m/Y') }}</p>
 
         </div>
@@ -54,10 +83,10 @@
             </table>
             <p style="margin: 10px 0;"><strong>Phí vận chuyển</strong> {{ number_format(30000) }} VND</p>
             <p style="margin: 10px 0;">
-                <strong>Mã giảm giá:</strong> 
+                <strong>Mã giảm giá:</strong>
                 {{ $order->voucher ? $order->voucher->discount .'%' : 'Không áp dụng' }}
             </p>
-            
+
             <p style="margin: 10px 0;"><strong>Tổng tiền:</strong> {{ number_format($order->total_amount) }} VND</p>
             <p style="margin: 10px 0;"><strong>Phương thức thanh toán:</strong> {{ ucfirst($order->payment_method) }}</p>
         </div>

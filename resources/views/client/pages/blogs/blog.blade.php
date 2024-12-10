@@ -103,7 +103,7 @@
                                             </div>
                                             <div class="content">
                                                 <h5 class="title mt-4"><a
-                                                        href="{{ route('blogs.show', $item) }}">{{ Str::limit(strip_tags($item->content), 36, '...') }}</a>
+                                                        href="{{ route('blogs.show', $item) }}">{!! Str::limit(strip_tags($item->content), 36, '...') !!}</a>
                                                 </h5>
                                             </div>
                                         </div>
@@ -134,7 +134,7 @@
                                             </div>
                                             <h3 class="title"><a
                                                     href="{{ route('blogs.show', $item) }}">{{ $item->title }}</a></h3>
-                                            <p class="blog-p">{{ Str::limit(strip_tags($item->content), 63, '...') }}</p>
+                                            <p class="blog-p">{!! Str::limit(strip_tags($item->content), 63, '...') !!}</p>
                                             <!-- Cắt nội dung -->
                                             <a href="{{ route('blogs.show', $item->id) }}" class="link">Xem bài</a>
                                         </div>

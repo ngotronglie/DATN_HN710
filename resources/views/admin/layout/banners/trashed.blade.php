@@ -68,7 +68,7 @@
                                     <td>{{ $key+1 }}</td>
                                     <td>{{ $item->title }}</td>
                                     <td>
-                                        <img src="{{$item->image}}" class="img-fluid" style="max-height: 100px; object-fit: cover;" alt="Banner Image">
+                                        <img src="{{ Storage::url($item->image)}}" class="img-fluid" style="max-height: 100px; object-fit: cover;" alt="Banner Image">
                                     </td> 
                                     <td>
                                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#restoreModal{{ $item->id }}" title="Khôi phục">

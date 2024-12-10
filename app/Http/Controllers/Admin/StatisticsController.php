@@ -13,7 +13,7 @@ class StatisticsController extends Controller
 {
     public function index()
     {
-        if (Auth::user()->role != 2) {
+        if (!in_array(Auth::user()->role, [1, 2])) {
             return back()->with('warning', 'Bạn không có quyền truy cập!');
         }
         
@@ -30,7 +30,7 @@ class StatisticsController extends Controller
     public function showStatistics(Request $request)
     {
         if (Auth::user()->role != 2) {
-            return back()->with('warning', 'Bạn không có quyền truy cập!');
+            return back()->with('warning', 'Bạn không có quyền!');
         }
 
         $request->validate([
@@ -47,6 +47,9 @@ class StatisticsController extends Controller
         $startDate = $request->input('start-date');
         $endDate = $request->input('end-date');
 
+        if(Auth::user()->role == 1){
+        
+        }
         // Thống kê doanh thu trong khoảng thời gian từ ngày bắt đầu đến ngày kết thúc
         $monthlyRevenue = Order::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, SUM(total_amount) as total_revenue')
             ->where('status', 4) // 4 là trạng thái hoàn tất
