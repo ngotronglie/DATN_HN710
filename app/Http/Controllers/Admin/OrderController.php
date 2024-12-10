@@ -78,7 +78,7 @@ class OrderController extends Controller
             $order->save();
             return redirect()->back()->with('success', 'Đơn hàng đã được xác nhận');
         } else {
-            return redirect()->back()->with('error', 'Không thể xác nhận đơn hàng với trạng thái hiện tại hoặc đơn hàng chưa được thanh toán');
+            return redirect()->back()->with('error', 'Không thể xác nhận đơn hàng với trạng thái hiện tại');
         }
     }
 
@@ -95,7 +95,7 @@ class OrderController extends Controller
             $order->save();
             return redirect()->back()->with('success', 'Đơn hàng đang được giao');
         } else {
-            return redirect()->back()->with('error', 'Không thể giao hàng với trạng thái hiện tại hoặc đơn hàng chưa được thanh toán');
+            return redirect()->back()->with('error', 'Không thể giao hàng với trạng thái hiện tại');
         }
     }
 
@@ -121,7 +121,7 @@ class OrderController extends Controller
             $order->save();
             return redirect()->back()->with('success', 'Đơn hàng đã được giao thành công');
         } else {
-            return redirect()->back()->with('error', 'Không thể xác nhận giao hàng với trạng thái hiện tại hoặc đơn hàng chưa được thanh toán');
+            return redirect()->back()->with('error', 'Không thể xác nhận giao hàng với trạng thái hiện tại');
         }
     }
 

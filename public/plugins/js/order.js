@@ -81,7 +81,7 @@
                 isValid = false;
             }
 
-            if ($('.wards').length && $('.wards').val() === '') {
+            if ($('.wards').length && ($('.wards').val() === ''|| $('.wards').val() == 0)) {
                 $('.error-message-wards').html('Vui lòng chọn phường/xã.');
                 isValid = false;
             }

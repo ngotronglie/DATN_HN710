@@ -12,7 +12,6 @@
                 url: '/ajax/shops/' + slug,
                 method: 'GET',
                 success: function (res) {
-console.log(res);
 
                     let idProduct = res.id;
                     let http = 'http://datn_hn710.test/';
