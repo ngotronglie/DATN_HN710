@@ -107,7 +107,16 @@
                                     @endphp
                                     {{ $role }}
                                 </td>
+
                             </tr>
+                            @if($account->role == 1)
+                            <tr>
+                                <th>Ca làm việc </th>
+                                <td>
+                                    {{$account->workShift->shift_name}} ({{$account->workShift->start_time}} - {{$account->workShift->end_time}})
+                                </td>
+                            </tr>
+                            @endif
                                 <tr>
                                     <th>Thời gian tạo</th>
                                     <td>{{ \Carbon\Carbon::parse($account->created_at)->format('d/m/Y H:i:s') }}</td>

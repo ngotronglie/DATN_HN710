@@ -2,6 +2,7 @@
 namespace App\Providers;
 
 use App\Models\ProductVariant;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use App\Models\CartItem;
@@ -132,6 +133,7 @@ class AppServiceProvider extends ServiceProvider
             }else{
                 $notifications = collect();
                 $unreadNotifications = collect();
+                $chat = collect();
             }
 
             $view->with([

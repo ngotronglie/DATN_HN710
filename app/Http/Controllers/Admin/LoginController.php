@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\RateLimiter;
@@ -53,20 +54,41 @@ class LoginController extends Controller
 
             $user = Auth::user();
 
+            if ($user->role == '1') {
+                $workShift = $user->workShift;
+                $now = Carbon::now();
+
+                $startTime = Carbon::createFromFormat('H:i:s', $workShift->start_time);
+                $endTime = Carbon::createFromFormat('H:i:s', $workShift->end_time);
+
+                if ($endTime->lessThan($startTime)) {
+                    if ($now->between($startTime, Carbon::createFromTime(23, 59, 59)) || $now->between(Carbon::createFromTime(0, 0, 0), $endTime)) {
+                        return redirect()->intended('admin')->with('success', 'Đăng nhập thành công');
+                    }
+                } else {
+                    if ($now->between($startTime, $endTime)) {
+                        return redirect()->intended('admin')->with('success', 'Đăng nhập thành công');
+                    }
+                }
+                Auth::logout();
+                return redirect()->route('admin.loginForm')->with('warning', 'Bạn chỉ có thể đăng nhập trong giờ làm việc.');
+            }
+
+
             if ($user && $user->email_verified_at == null) {
                 Auth::logout();
                 return back()->withErrors([
                     'err' => 'Email chưa được xác thực!',
                 ])->onlyInput('email');
             }
-    
+
             if ($user->is_active == 0) {
                 Auth::logout();
                 return back()->withErrors([
                     'err' => 'Tài khoản của bạn hiện tại không hoạt động.',
                 ]);
             }
-            
+
             if ($user->role == 2 || $user->role == 1) {
                 $request->session()->put('user_name', $user->name);
                 return redirect()->intended('admin')->with('success', 'Đăng nhập thành công');

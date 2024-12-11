@@ -147,7 +147,8 @@
 
 <script src="{{asset('plugins/js/checkall.js')}}"></script>
 
+<script src="{{asset('plugins/js/changeActive/Comment/changeActiveComment.js')}}"></script>
+
 <script src="{{asset('plugins/js/changeActive/Comment/changeAllActiveComment.js')}}"></script>
 
-<script src="{{asset('plugins/js/changeActive/Comment/changeActiveComment.js')}}"></script>
 @endsection

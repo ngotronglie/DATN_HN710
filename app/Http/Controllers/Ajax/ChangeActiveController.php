@@ -359,6 +359,32 @@ class ChangeActiveController extends Controller
         }
     }
 
+    public function changeActivdeAllBanner(Request $request)
+    {
+        if (auth()->user()->role != 2) {
+            return response()->json(['status' => false, 'message' => 'Bạn không có quyền']);
+        }
+        $id = $request->id;
+        $active = $request->is_active;
+        if (empty($id) || !is_array($id)) {
+            return response()->json(['status' => false, 'message' => 'ID không hợp lệ']);
+        }
+
+        $newActive = $active == 0 ? 1 : 0;
+
+        $updated = Banner::whereIn('id', $id)->update(['is_active' => $newActive]);
+
+        if ($updated) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Cập nhật trạng thái biểu ngữ thành công',
+                'newStatus' => $newActive,
+                'updatedCount' => $updated
+            ]);
+        }
+
+        return response()->json(['status' => false, 'message' => 'Không có biểu ngữ nào được cập nhật']);
+    }
     public function changeActiveAllComment(Request $request)
     {
         $id = $request->id;

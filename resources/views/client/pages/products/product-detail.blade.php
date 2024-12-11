@@ -105,6 +105,7 @@
                                     <li>
                                         <label class="color-btn colorGetSize {{ $index === 0 ? 'selected' : '' }}" data-id="{{ $variant->color->id }}"
                                             data-productId="{{ $product->id }}" data-max="{{ $product->max_price_sale }}"
+                                            title="{{$variant->color->name}}"
                                             data-min="{{ $product->min_price_sale }}"
                                             style="background-color: {{ $variant->color->hex_code }}"
                                             onclick="HT.selectColor(this, '{{ $variant->color->hex_code }}')" title="{{ $variant->color->name }}">
@@ -243,7 +244,7 @@
                                         {{ $comments->links('pagination::bootstrap-5') }}
                                     </div>
                                 </div>
-                                
+
                                 <div class="blog-comment-form-wrapper mt-10 aos-init" data-aos="fade-up" data-aos-delay="400">
                                     <div class="blog-comment-form-title">
                                         <h2 class="title">Để lại 1 bình luận</h2>
@@ -496,7 +497,7 @@ function showReplyForm(commentId) {
 
     document.querySelectorAll('.reply-form').forEach(form => {
         form.classList.add('d-none');
-        
+
         const textarea = form.querySelector('textarea');
         if (textarea) {
             textarea.value = '';
@@ -508,7 +509,7 @@ function showReplyForm(commentId) {
 
 function hideReplyForm(commentId) {
     const form = document.getElementById(`reply-form-${commentId}`);
-    
+
     // Ẩn form
     form.classList.add('d-none');
 
@@ -597,7 +598,7 @@ function hideReplyForm(commentId) {
                     for (let key in data.errors) {
                         if (data.errors.hasOwnProperty(key)) {
                             errorMessages += `${data.errors[key].join(', ')}\n`;
-                        } 
+                        }
                     }
                     swal.fire({
                         title: "Cảnh báo!",
@@ -670,7 +671,7 @@ function hideReplyForm(commentId) {
                         for (let key in data.errors) {
                             if (data.errors.hasOwnProperty(key)) {
                                 errorMessages += `${data.errors[key].join(', ')}\n`;
-                            } 
+                            }
                         }
                         swal.fire({
                             title: "Cảnh báo!",
