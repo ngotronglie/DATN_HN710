@@ -3,10 +3,10 @@
     <div class="footer-inner bg-white">
         <div class="row">
             <div class="col-sm-6">
-                Bản quyền © 2024 bởi nhóm HN_710
+                © 2024 nhóm WD116
             </div>
             <div class="col-sm-6 text-right">
-                Thiết kế bởi <a href="">Kien + Thao + Huy + My + Linh + Liem + Ban</a>
+                <span>Ban Kiên Thảo Huy My Linh Liêm</span>
             </div>
         </div>
     </div>

@@ -75,6 +75,17 @@
                             <li><a href="{{ route('admin.accounts.create') }}">Thêm mới</a></li>
                         </ul>
                     </li>
+                    @php $user = auth()->user(); @endphp
+                    @if ($user->role == 2)
+                    <li class="menu-item-has-children {{ Request::is('admin/shift*') ? 'active' : '' }} dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false"> <i class="menu-icon fa fa-user"></i>Quản lý ca làm</a>
+                        <ul class="sub-menu children dropdown-menu">
+                            <li><a href="{{ route('admin.shift.index') }}">Danh sách</a></li>
+                            <li><a href="{{ route('admin.shift.create') }}">Thêm mới</a></li>
+                        </ul>
+                    </li>
+                    @endif
                     {{-- end account --}}
                     {{-- comment --}}
                     <li class="menu-item-has-children {{ Request::is('admin/comments*') ? 'active' : '' }} dropdown">

@@ -280,7 +280,6 @@
                             '<li>' +
                             '<label class="size_detail size-btn ' + (index === 0 ? 'selected' : '') + '" ' +
                             'data-quantity="' + variant.quantity + '" ' +
-                            'title="' + variant.color.name + '"'+
                             'data-id="' + variant.id + '" ' +
                             'data-price="' + variant.price_sale + '" ' +
                             'onclick="HT.getSize(this, \'' + variant.size + '\', ' + idProduct + ')">' +

@@ -55,6 +55,20 @@
                                 @enderror
                             </div>
 
+                            <div class="form-group">
+                                <label for="shift" class="form-control-label">Ca làm việc</label>
+                                <select name="work_shifts_id" class="form-control select2 shift">
+                                    <option style="display: none" value="">--Vui lòng chọn--</option>
+                                    <option value="1" {{ old('work_shifts_id', $account->work_shifts_id) == 1 ? 'selected' : '' }}>Ca 1 (00:00:00 - 06:00:00)</option>
+                                    <option value="2" {{ old('work_shifts_id', $account->work_shifts_id) == 2 ? 'selected' : '' }}>Ca 2 (06:00:00 - 12:00:00)</option>
+                                    <option value="3" {{ old('work_shifts_id', $account->work_shifts_id) == 3 ? 'selected' : '' }}>Ca 3 (12:00:00 - 18:00:00)</option>
+                                    <option value="4" {{ old('work_shifts_id', $account->work_shifts_id) == 4 ? 'selected' : '' }}>Ca 4 (18:00:00 - 00:00:00)</option>
+                                </select>
+                                @error('work_shifts_id')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+
                             <button type="submit" class="btn btn-success mb-1">Cập nhật</button>
                         </form>
                     </div>

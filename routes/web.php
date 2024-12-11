@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ForgotPasswordController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\ShiftController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SizeController;
 use App\Http\Controllers\Admin\VoucherController;
@@ -155,12 +156,12 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
 });
 Route::get('verify-email/{token}', [ForgotPasswordController::class, 'verifyEmail'])->name('verify.email');
 
-Route::prefix('admin')->as('admin.')->middleware(['auth', 'isAdmin'])->group(function () {
+Route::prefix('admin')->as('admin.')->middleware(['check.working.shift','auth', 'isAdmin'])->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::delete('delete/{chat}', [SupportController::class, 'delete'])->name('chat.delete');
 
     Route::get('support/{chat}', [SupportController::class, 'show'])->name('chat');
-    
+
     // Các route tùy chỉnh
     Route::get('/accounts/my_account', [UserController::class, 'myAccount'])->name('accounts.myAccount');
     Route::put('accounts/my_account', [UserController::class, 'updateMyAcount'])->name('accounts.updateMyAccount');
@@ -171,6 +172,8 @@ Route::prefix('admin')->as('admin.')->middleware(['auth', 'isAdmin'])->group(fun
 
     // Quản lí tài khoản
     Route::resource('accounts', UserController::class)->except(['destroy']);
+    Route::resource('shift', ShiftController::class);
+
 
     // Quản lý các size đã bị xóa mềm
     Route::get('sizes/trashed', [SizeController::class, 'trashed'])->name('sizes.trashed');
@@ -256,6 +259,9 @@ Route::prefix('admin')->as('admin.')->middleware(['auth', 'isAdmin'])->group(fun
 //ajax category
 Route::post('categories/ajax/changeActiveCategory', [ChangeActiveController::class, 'changeActiveCategory']);
 Route::post('categories/ajax/changeAllActiveCategory', [ChangeActiveController::class, 'changeActiveAllCategory']);
+//ajax comment
+Route::post('comments/ajax/changeActiveComment', [ChangeActiveController::class, 'changeActiveComment']);
+Route::post('comments/ajax/changeAllActiveComment', [ChangeActiveController::class, 'changeActiveAllComment']);
 //ajax product
 Route::post('products/ajax/changeActiveProduct', [ChangeActiveController::class, 'changeActiveProduct']);
 Route::post('products/ajax/changeAllActiveProduct', [ChangeActiveController::class, 'changeActiveAllProduct']);

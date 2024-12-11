@@ -52,7 +52,7 @@
             if ($('.userEmail').length) {
                 let email = $('.userEmail').val().trim();
                 if (email === '') {
-                    $('.userEmail').next('.error-message').html('Email mail không được bỏ trống.');
+                    $('.userEmail').next('.error-message').html('Email không được bỏ trống.');
                     isValid = false;
                 } else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
                     $('.userEmail').next('.error-message').html('Email không đúng định dạng.');
@@ -111,6 +111,11 @@
         });
     });
 
+    $(document).ready(function() {
+        $('#coupon-title').click(function() {
+            $('#checkout_coupon').fadeToggle(300);
+        });
+    });
 
     $(document).ready(function() {
         //Aps vourcher

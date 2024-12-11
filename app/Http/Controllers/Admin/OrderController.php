@@ -73,8 +73,11 @@ class OrderController extends Controller
             return back()->with('warning', 'Bạn không có quyền xác nhận đơn hàng này!');
         }
 
+        $staff_id = auth()->user()->id;
+
         if ($order->status == 1) {
             $order->status = 2; // Chuyển sang "Chờ lấy hàng"
+            $order->staff_id = $staff_id;
             $order->save();
             return redirect()->back()->with('success', 'Đơn hàng đã được xác nhận');
         } else {
