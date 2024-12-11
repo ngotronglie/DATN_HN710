@@ -699,71 +699,72 @@
     };
         } else if (type === 'staffAdminStatistics') {
             if ({!! json_encode($staffAdminStatistics->isEmpty()) !!}) {
-        alert('Không có dữ liệu để hiển thị biểu đồ!');
-        return;
-    }
+    alert('Không có dữ liệu để hiển thị biểu đồ!');
+    return;
+}
 
-    chartData = {
-        type: 'bar',
-        data: {
-            labels: {!! json_encode($staffAdminStatistics->pluck('staff_name')) !!}, // Tên nhân viên
-            datasets: [
-                {
-                    label: 'Tổng số đơn hàng',
-                    data: {!! json_encode($staffAdminStatistics->pluck('total_orders')) !!}, // Số đơn hàng
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Màu xanh dương nhạt
-                    borderColor: 'rgba(54, 162, 235, 1)', // Đường viền xanh dương
-                    borderWidth: 1
-                },
-                {
-                    label: 'Tổng doanh thu (VNĐ)',
-                    data: {!! json_encode($staffAdminStatistics->pluck('total_revenue')) !!}, // Doanh thu
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)', // Màu xanh lá nhạt
-                    borderColor: 'rgba(75, 192, 192, 1)', // Đường viền xanh lá
-                    borderWidth: 1,
-                    yAxisID: 'y-axis-revenue' // Gắn với trục Y riêng
-                }
-            ]
-        },
-        options: {
-            indexAxis: 'y', // Biểu đồ ngang
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Giá trị'
-                    }
-                },
-                'y-axis-revenue': {
-                    beginAtZero: true,
-                    position: 'right',
-                    title: {
-                        display: true,
-                        text: 'Doanh thu (VNĐ)'
-                    },
-                    ticks: {
-                        callback: function(value) {
-                            return value.toLocaleString() + ' VNĐ'; // Định dạng số VNĐ
-                        }
-                    }
-                }
+chartData = {
+    type: 'bar',
+    data: {
+        labels: {!! json_encode($staffAdminStatistics->pluck('staff_name')) !!}, // Tên nhân viên
+        datasets: [
+            {
+                label: 'Tổng số đơn hàng',
+                data: {!! json_encode($staffAdminStatistics->pluck('total_orders')) !!}, // Số đơn hàng
+                backgroundColor: 'rgba(54, 162, 235, 0.2)', // Màu xanh dương nhạt
+                borderColor: 'rgba(54, 162, 235, 1)', // Đường viền xanh dương
+                borderWidth: 1,
+                yAxisID: 'y-axis-orders' // Trục Y riêng cho số đơn hàng
             },
-            plugins: {
+            {
+                label: 'Tổng doanh thu (VNĐ)',
+                data: {!! json_encode($staffAdminStatistics->pluck('total_revenue')) !!}, // Doanh thu
+                backgroundColor: 'rgba(255, 99, 132, 0.2)', // Màu đỏ nhạt
+                borderColor: 'rgba(255, 99, 132, 1)', // Đường viền đỏ đậm
+                borderWidth: 1,
+                yAxisID: 'y-axis-revenue' // Trục Y riêng cho doanh thu
+            }
+        ]
+    },
+    options: {
+        scales: {
+            'y-axis-orders': {
+                beginAtZero: true,
+                position: 'left',
                 title: {
                     display: true,
-                    text: 'Thống kê Nhân viên: Doanh thu & Số đơn hàng',
-                    font: {
-                        size: 16
-                    }
-                },
-                legend: {
+                    text: 'Số đơn hàng'
+                }
+            },
+            'y-axis-revenue': {
+                beginAtZero: true,
+                position: 'right',
+                title: {
                     display: true,
-                    position: 'top'
+                    text: 'Doanh thu (VNĐ)'
+                },
+                ticks: {
+                    callback: function(value) {
+                        return value.toLocaleString() + ' VNĐ'; // Định dạng VNĐ
+                    }
                 }
             }
+        },
+        plugins: {
+            title: {
+                display: true,
+                text: 'Thống kê Nhân viên: Doanh thu & Số đơn hàng',
+                font: {
+                    size: 16
+                }
+            },
+            legend: {
+                display: true,
+                position: 'top'
+            }
         }
-    };
+    }
+};
         }
 
         // Tạo biểu đồ
