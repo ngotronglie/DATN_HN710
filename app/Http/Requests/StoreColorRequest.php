@@ -22,7 +22,7 @@ class StoreColorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:colors,name',
+            'name' => 'required|string|max:255|unique:colors,name|regex:/^[a-zA-Z\s]+$/',
             'hex_code' => 'required|regex:/^#[0-9A-Fa-f]{6}$/|unique:colors,hex_code',
         ];
     }
@@ -33,6 +33,7 @@ class StoreColorRequest extends FormRequest
             'name.required' => 'Tên màu là bắt buộc',
             'name.max' => 'Tên màu không được dài quá 255 ký tự',
             'name.unique' => 'Tên màu này đã tồn tại trong hệ thống',
+            'name.regex' => 'Tên màu chỉ được phép chứa chữ cái',
 
             'hex_code.required' => 'Mã màu là bắt buộc',
             'hex_code.regex' => 'Mã màu phải phù hợp với định dạng mã màu hex (ví dụ: #FF5733)',

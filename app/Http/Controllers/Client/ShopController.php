@@ -51,13 +51,13 @@ class ShopController extends Controller
         if ($perPage != 'all') {
             $products = $query->paginate($perPage);
             $products->getCollection()->transform($calculatePriceRange);
-        return view('client.pages.products.shop', compact('products', 'categories', 'producthot', 'maxPrice'));
+            return view('client.pages.products.shop', compact('products', 'categories', 'producthot', 'maxPrice'));
         } else {
             $products = $query->get();
             $products->transform($calculatePriceRange);
             $total = $products->count();
             $lastItem = $products->last();
-        return view('client.pages.products.shop', compact('products', 'categories', 'producthot', 'maxPrice','total','lastItem'));
+            return view('client.pages.products.shop', compact('products', 'categories', 'producthot', 'maxPrice', 'total', 'lastItem'));
         }
     }
 
@@ -159,7 +159,8 @@ class ShopController extends Controller
             ->whereNull('parent_id')
             ->with([
                 'children' => function ($query) {
-                    $query->orderBy('created_at', 'desc');
+                    $query->where('is_active', 1) // Chỉ lấy bình luận con có is_active = 1
+                        ->orderBy('created_at', 'desc');
                 }
             ])
             ->orderBy('created_at', 'desc')

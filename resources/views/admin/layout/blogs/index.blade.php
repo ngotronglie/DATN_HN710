@@ -159,7 +159,7 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        Bạn có chắc chắn muốn xóa danh mục "{{ $item->name }}" không?
+                                                        Bạn có chắc chắn muốn xóa danh mục "{{ $item->title }}" không?
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-primary"

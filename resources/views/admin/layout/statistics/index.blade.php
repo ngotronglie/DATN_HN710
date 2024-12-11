@@ -155,6 +155,48 @@
                 </div>
             </div>
 
+            <!-- Thống kê nhân viên -->
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <strong class="card-title">Thống kê nhân viên</strong>
+                        <div>
+                            <a class="btn btn-primary mr-1" href="#" data-toggle="modal" data-target="{{$staffAdminStatistics->isEmpty() ? '' : '#chartModal'}}" onclick="showChart('staffAdminStatistics')">
+                                <i class="fa fa-signal"></i> Xem biểu đồ
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table id="" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tên nhân viên</th>
+                                    <th>Tổng số đơn hàng</th>
+                                    <th>Tổng doanh thu (VNĐ)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if($staffAdminStatistics->isEmpty())
+                                <tr>
+                                    <td colspan="4" class="text-center"><strong>Không có dữ liệu</strong></td>
+                                </tr>
+                                @else
+                                @foreach($staffAdminStatistics as $key => $data)
+                                <tr>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $data->staff_name }}</td>
+                                    <td>{{ $data->total_orders }}</td>
+                                    <td>{{ number_format($data->total_revenue, 0, ',', '.') }}</td>
+                                </tr>
+                                @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <!-- Sản phẩm bán chạy nhất -->
             <div class="col-md-12">
                 <div class="card">
@@ -245,9 +287,9 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong class="card-title">Sản phẩm không bán chạy</strong>
+                        <strong class="card-title">Thống kê nhân viên</strong>
                         <div>
-                            <a class="btn btn-primary mr-1" href="#" data-toggle="modal" data-target="{{$leastSellingProducts->isEmpty() ? '' : '#chartModal'}}" onclick="showChart('leastSellingProducts')">
+                            <a class="btn btn-primary mr-1" href="#" data-toggle="modal" data-target="{{$staffOrderStatistics->isEmpty() ? '' : '#chartModal'}}" onclick="showChart('staffOrderStatistics')">
                                 <i class="fa fa-signal"></i> Xem biểu đồ
                             </a>
                         </div>
@@ -257,25 +299,25 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Tên sản phẩm</th>
-                                    <th>Số lượng bán</th>
-                                    <th>Doanh thu</th>
-                                    <th>Phần trăm đóng góp doanh thu</th>
+                                    <th>Tháng</th>
+                                    <th>Tổng số đơn hàng</th>
+                                    <th>Tổng doanh thu</th>
+                                    <th>Doanh thu từ đơn hàng hoàn tất</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @if($leastSellingProducts->isEmpty())
+                                @if($staffOrderStatistics->isEmpty())
                                 <tr>
                                     <td colspan="5" class="text-center"><strong>Không có dữ liệu</strong></td>
                                 </tr>
                                 @else
-                                @foreach($leastSellingProducts as $key => $product)
+                                @foreach ($staffOrderStatistics as $key => $data)
                                 <tr>
-                                    <td>{{ $key+1 }}</td>
-                                    <td>{{ $product->product_name }}</td>
-                                    <td>{{ $product->total_sold }}</td>
-                                    <td>{{ number_format($product->total_revenue, 0, ',', '.') }} VND</td>
-                                    <td>{{ $product->revenue_percentage }}%</td>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ \Carbon\Carbon::createFromFormat('Y-m', $data->month)->format('m/Y') }}</td>
+                                    <td>{{ $data->total_orders }}</td>
+                                    <td>{{ number_format($data->total_revenue, 0, ',', '.') }} VND</td>
+                                    <td>{{ number_format($data->completed_revenue, 0, ',', '.') }} VND</td>
                                 </tr>
                                 @endforeach
                                 @endif
@@ -582,6 +624,146 @@
                     }
                 }
             };
+        } else if (type === 'staffOrderStatistics') {
+            if ({!! json_encode($staffOrderStatistics->isEmpty()) !!}) {
+        alert('Không có dữ liệu để hiển thị biểu đồ!');
+        return;
+    }
+
+    chartData = {
+        type: 'line',
+        data: {
+            labels: {!! json_encode($staffOrderStatistics->pluck('month')->map(function($month) {
+                return \Carbon\Carbon::createFromFormat('Y-m', $month)->format('m/Y');
+            })) !!},
+            datasets: [
+                {
+                    label: 'Tổng doanh thu (VNĐ)',
+                    data: {!! json_encode($staffOrderStatistics->pluck('total_revenue')) !!},
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    tension: 0.1,
+                    borderWidth: 2,
+                    fill: false
+                },
+                {
+                    label: 'Doanh thu hoàn tất (VNĐ)',
+                    data: {!! json_encode($staffOrderStatistics->pluck('completed_revenue')) !!},
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1,
+                    borderWidth: 2,
+                    fill: false
+                },
+                {
+                    label: 'Tổng số đơn hàng',
+                    data: {!! json_encode($staffOrderStatistics->pluck('total_orders')) !!},
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    tension: 0.1,
+                    borderWidth: 2,
+                    fill: false
+                }
+            ]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Giá trị'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Tháng'
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Biểu đồ Thống kê Đơn hàng & Doanh thu',
+                    font: {
+                        size: 16
+                    }
+                },
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            }
+        }
+    };
+        } else if (type === 'staffAdminStatistics') {
+            if ({!! json_encode($staffAdminStatistics->isEmpty()) !!}) {
+        alert('Không có dữ liệu để hiển thị biểu đồ!');
+        return;
+    }
+
+    chartData = {
+        type: 'bar',
+        data: {
+            labels: {!! json_encode($staffAdminStatistics->pluck('staff_name')) !!}, // Tên nhân viên
+            datasets: [
+                {
+                    label: 'Tổng số đơn hàng',
+                    data: {!! json_encode($staffAdminStatistics->pluck('total_orders')) !!}, // Số đơn hàng
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Màu xanh dương nhạt
+                    borderColor: 'rgba(54, 162, 235, 1)', // Đường viền xanh dương
+                    borderWidth: 1
+                },
+                {
+                    label: 'Tổng doanh thu (VNĐ)',
+                    data: {!! json_encode($staffAdminStatistics->pluck('total_revenue')) !!}, // Doanh thu
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)', // Màu xanh lá nhạt
+                    borderColor: 'rgba(75, 192, 192, 1)', // Đường viền xanh lá
+                    borderWidth: 1,
+                    yAxisID: 'y-axis-revenue' // Gắn với trục Y riêng
+                }
+            ]
+        },
+        options: {
+            indexAxis: 'y', // Biểu đồ ngang
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Giá trị'
+                    }
+                },
+                'y-axis-revenue': {
+                    beginAtZero: true,
+                    position: 'right',
+                    title: {
+                        display: true,
+                        text: 'Doanh thu (VNĐ)'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return value.toLocaleString() + ' VNĐ'; // Định dạng số VNĐ
+                        }
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Thống kê Nhân viên: Doanh thu & Số đơn hàng',
+                    font: {
+                        size: 16
+                    }
+                },
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            }
+        }
+    };
         }
 
         // Tạo biểu đồ
