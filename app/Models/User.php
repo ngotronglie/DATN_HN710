@@ -24,7 +24,7 @@ class User extends Authenticatable
         'point',
         'is_active',
         'date_of_birth',
-        'work_shifts_id',
+        'work_shift_id',
         'email_verified_at',
         'email_verification_expires_at',
     ];
@@ -72,7 +72,7 @@ class User extends Authenticatable
 
     public function workShift()
     {
-        return $this->belongsTo(WorkShift::class, 'work_shifts_id');
+        return $this->belongsTo(WorkShift::class, 'work_shift_id');
     }
 
 }

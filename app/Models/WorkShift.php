@@ -19,6 +19,6 @@ class WorkShift extends Model
 
     public function users()
     {
-        return $this->hasMany(User::class, 'work_shifts_id');
+        return $this->hasMany(User::class, 'work_shift_id');
     }
 }

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->integer('points')->default(0);
             $table->boolean('is_active')->default(true);
             $table->date('date_of_birth')->nullable();
-            $table->foreignIdFor(WorkShift::class)->nullable()->constrained()->onDelete('set null');;
+            $table->foreignIdFor(WorkShift::class)->nullable()->constrained()->onDelete('set null');
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('email_verification_expires_at')->nullable();
             $table->rememberToken();

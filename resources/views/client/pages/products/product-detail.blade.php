@@ -108,7 +108,7 @@
                                             title="{{$variant->color->name}}"
                                             data-min="{{ $product->min_price_sale }}"
                                             style="background-color: {{ $variant->color->hex_code }}"
-                                            onclick="HT.selectColor(this, '{{ $variant->color->hex_code }}')" title="{{ $variant->color->name }}">
+                                            onclick="HT.selectColor(this, '{{ $variant->color->hex_code }}')">
                                         </label>
                                     </li>
                                 @endforeach
