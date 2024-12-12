@@ -27,7 +27,7 @@ class StoreUserRequest extends FormRequest
             'provinces' => 'required|exists:provinces,code',
             'districs' => 'required|exists:districts,code',
             'wards' => 'required|exists:wards,code',
-            'work_shifts_id' => 'required|exists:work_shifts,id',
+            'work_shift_id' => 'required|exists:work_shifts,id|unique:work_shifts,id',
             'address' => 'required|string|max:255',
             'phone' => 'required|regex:/^0[0-9]{9}$/',
             'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
@@ -56,9 +56,10 @@ class StoreUserRequest extends FormRequest
             'address.max' => 'Địa chỉ không được vượt quá 255 ký tự.',
             'provinces.exists' => 'Vui lòng chọn tỉnh/thành phố',
 
-            'work_shifts_id.required' => 'Vui lòng chọn ca làm việc.',
-            'work_shifts_id.exists' => 'Ca làm việc không hợp lệ.',
-
+            'work_shift_id.required' => 'Vui lòng chọn ca làm việc.',
+            'work_shift_id.exists' => 'Ca làm việc không hợp lệ.',
+            'work_shift_id.unique' =>'Đã có nhân viên thuộc ca này',
+            
             'phone.required' => 'Số điện thoại là bắt buộc',
             'phone.regex' => 'Số điện thoại phải bắt đầu bằng số 0 và gồm 10 số',
 
