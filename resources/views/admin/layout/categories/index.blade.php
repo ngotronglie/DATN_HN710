@@ -75,9 +75,11 @@
                         <table id="bootstrap-data-table" class="table table-striped table-bordered" data-disable-sort="false">
                             <thead>
                                 <tr>
+                                    @if(Auth::user()->role == 2)
                                     <th>
                                         <input id="checkAllTable" type="checkbox">
                                     </th>
+                                    @endif
                                     <th>STT</th>
                                     <th>Tên danh mục</th>
                                     <th>Số lượng SP</th>
@@ -87,7 +89,9 @@
                             </thead>
                             <tfoot>
                                 <tr>
+                                    @if(Auth::user()->role == 2)
                                     <th></th>
+                                    @endif
                                     <th>STT</th>
                                     <th>Tên danh mục</th>
                                     <th>Số lượng SP</th>
@@ -98,14 +102,16 @@
                             <tbody class="null_Table">
                                 @foreach ($categories as $key => $item)
                                 <tr>
+                                    @if(Auth::user()->role == 2)
                                     <td>
                                         <input type="checkbox" class="checkBoxItem" data-id="{{ $item->id }}">
                                     </td>
+                                    @endif
                                     <td>{{ $key+1 }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->products_count }}</td>
                                     <td style="width: 12%" class="text-center">
-                                        <input type="checkbox" class="js-switch active" data-model="{{ $item->is_active }}"
+                                        <input type="checkbox" class="js-switch active"
                                             {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"
                                             data-modelId="{{ $item->id }}" data-title="{{ $item->name }}" @if(Auth::user()->role != 2) disabled @endif />
                                     </td>

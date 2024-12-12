@@ -20,8 +20,6 @@
                     '_token': token
                 }
 
-                console.log(option);
-
                 Swal.fire({
                     title: 'Đang xử lý...',
                     text: 'Vui lòng đợi trong giây lát.',
