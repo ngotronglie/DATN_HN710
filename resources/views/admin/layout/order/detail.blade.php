@@ -292,15 +292,43 @@
                             </p>
                             <div>
                             <div>
-                                @if ($order->status != 6 && $order->status != 4)
+                                @if ($order->status != 5 && $order->status != 4)
                                     Cập nhật đơn hàng:
                                     @if ($order->status == 1)
-                                        <a class="btn btn-success" onclick="return confirm('Bạn có chắc chắn muốn xác nhận đơn hàng này không?');" title="Chờ lấy hàng"
-                                            href="{{ route('admin.order.confirmOrder', $order->id) }}"><i
-                                                class="fa fa-check"></i></a>
-                                                <a class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');" title="Đã hủy"
-                                                href="{{ route('admin.order.cancelOrder', $order->id) }}"><i
-                                                    class="fa fa-times-circle"></i></a>
+                                    @php
+                                    $canConfirm = true; // Mặc định có thể xác nhận
+                                    foreach ($order->orderDetails as $detail) {
+                                        $productVariant = $detail->productVariant;
+                                        if ($productVariant) {
+                                            if ($productVariant->quantity < $detail->quantity) {
+                                                $canConfirm = false; // Không đủ số lượng
+                                                break;
+                                            }
+                                        } else {
+                                            $canConfirm = false; // Không tìm thấy biến thể sản phẩm
+                                            break;
+                                        }
+                                    }
+                                @endphp
+                                
+                                @if ($order->status == 1)
+                                    @if ($canConfirm)
+                                        <a class="btn btn-success" 
+                                           onclick="return confirm('Bạn có chắc chắn muốn xác nhận đơn hàng này không?');" 
+                                           title="Chờ lấy hàng"
+                                           href="{{ route('admin.order.confirmOrder', $order->id) }}">
+                                           <i class="fa fa-check"></i>
+                                        </a>
+                                    @else
+                                        <a class="btn btn-danger" 
+                                           onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');" 
+                                           title="Đã hủy"
+                                           href="{{ route('admin.order.cancelOrder', $order->id) }}">
+                                           <i class="fa fa-times-circle"></i>
+                                        </a>
+                                    @endif
+                                @endif
+                                
                                     @elseif($order->status == 2)
                                         <a class="btn btn-info" onclick="return confirm('Bạn có chắc chắn muốn giao đơn hàng này không?');" title="Đang giao hàng"
                                             href="{{ route('admin.order.shipOrder', $order->id) }}"><i
@@ -314,6 +342,7 @@
                                     @endif
                                 @endif
                             </div>
+                            
                             <div>
                                 @if ($order->status == 2 || $order->status == 4)
                                 In hóa đơn:

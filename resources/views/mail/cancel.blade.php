@@ -51,7 +51,7 @@
                                 ) }}
             </p>
             <p style="margin: 10px 0;"><strong>Ngày đặt hàng:</strong> {{ $order->created_at->format('d/m/Y') }}</p>
-            <p style="margin: 0 0 10px 0; font-size: 14px; color: #555;"><strong>Lý do:</strong> Rất tiếc, đơn hàng của bạn không thể xử lý vì các sản phẩm sau đã vượt quá số lượng tồn kho:</p> 
+            <p style="margin: 0 0 10px 0; font-size: 14px; color: #555;"><strong>Lý do:</strong> Rất tiếc, đơn hàng của bạn không thể xử lý vì các sản phẩm đã vượt quá số lượng tồn kho.</p> 
             <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
                 <thead>
                     <tr>
