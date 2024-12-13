@@ -351,7 +351,7 @@ class CheckoutController extends Controller
                             'color_name' => $colorName,
                         ]);
 
-                        $productVariant->decrement('quantity', $quantity);
+                       // $productVariant->decrement('quantity', $quantity);
                     }
                 }
 
@@ -652,7 +652,7 @@ class CheckoutController extends Controller
                 ]);
 
                 // Giảm số lượng sản phẩm
-                $productVariant->decrement('quantity', $orderDetails['quantity'][$i]);
+                //$productVariant->decrement('quantity', $orderDetails['quantity'][$i]);
             }
 
             // Xóa số lượng trong giỏ hàng
@@ -667,12 +667,6 @@ class CheckoutController extends Controller
                             }
                         }
                     }
-
-                    $count = CartItem::whereHas('cart', function ($query) use ($user) {
-                        $query->where('user_id', $user->id);
-                    })
-                        ->distinct('product_variant_id')
-                        ->count('product_variant_id');
                 } else {
                     $cart = Session::get('cart', []);
                     $updatedItems = collect($cart['items'])->filter(function ($item) use ($productVariantIds) {
@@ -680,8 +674,6 @@ class CheckoutController extends Controller
                     })->values()->toArray();
                     $cart['items'] = $updatedItems;
                     session()->put('cart', $cart);
-
-                    $count = count($updatedItems);
                 }
             }
 

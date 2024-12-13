@@ -104,8 +104,6 @@
                                                 @elseif($item->status == 4)
                                                     <span class="badge badge-success">Giao hàng thành công</span>
                                                 @elseif($item->status == 5)
-                                                    <span class="badge badge-secondary">Chờ hủy</span>
-                                                @elseif($item->status == 6)
                                                     <span class="badge badge-danger">Đã hủy</span>
                                                 @endif
                                             </td>
@@ -113,29 +111,50 @@
                                                 <a class="btn btn-primary" href="{{ route('admin.order.detail', $item) }}" title="Xem chi tiết">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
-                                                @if ($item->status != 6 && $item->status != 4)
-                                                    @if($item->status == 1)
+                                                @if ($item->status != 5 && $item->status != 4)
+                                                @php
+                                                    $canConfirm = true; // Mặc định có thể xác nhận
+                                                    foreach ($item->orderDetails as $detail) {
+                                                        $productVariant = $detail->productVariant;
+                                                        if ($productVariant) {
+                                                            if ($productVariant->quantity < $detail->quantity) {
+                                                                $canConfirm = false; // Không đủ số lượng
+                                                                break;
+                                                            }
+                                                        } else {
+                                                            $canConfirm = false; // Không tìm thấy biến thể sản phẩm
+                                                            break;
+                                                        }
+                                                    }
+                                                @endphp
+                                            
+                                                @if($item->status == 1)
+                                                    @if ($canConfirm)
                                                         <a class="btn btn-success ml-2" href="{{ route('admin.order.confirmOrder', $item->id) }}"
                                                            onclick="return confirm('Bạn có chắc chắn muốn xác nhận đơn hàng này không?');" title="Chờ lấy hàng">
                                                            <i class="fa fa-check"></i>
                                                         </a>
-                                                    @elseif($item->status == 2)
-                                                        <a class="btn btn-info ml-2" href="{{ route('admin.order.shipOrder', $item->id) }}"
-                                                           onclick="return confirm('Bạn có chắc chắn muốn giao đơn hàng này không?');" title="Đang giao hàng">
-                                                           <i class="fa fa-truck"></i>
-                                                        </a>
-                                                    @elseif($item->status == 3)
-                                                        <a class="btn btn-success ml-2" href="{{ route('admin.order.confirmShipping', $item->id) }}"
-                                                           onclick="return confirm('Bạn có chắc chắn đơn hàng này đã được giao không?');" title="Giao hàng thành công">
-                                                           <i class="fa fa-check-circle-o"></i>
-                                                        </a>
-                                                    @elseif($item->status == 5)
+                                                    @else
                                                         <a class="btn btn-danger ml-2" href="{{ route('admin.order.cancelOrder', $item->id) }}"
                                                            onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');" title="Đã hủy">
                                                            <i class="fa fa-times-circle"></i>
                                                         </a>
                                                     @endif
+                                                @elseif($item->status == 2)
+                                                    <a class="btn btn-info ml-2" href="{{ route('admin.order.shipOrder', $item->id) }}"
+                                                       onclick="return confirm('Bạn có chắc chắn muốn giao đơn hàng này không?');" title="Đang giao hàng">
+                                                       <i class="fa fa-truck"></i>
+                                                    </a>
+                                                @elseif($item->status == 3)
+                                                    <a class="btn btn-success ml-2" href="{{ route('admin.order.confirmShipping', $item->id) }}"
+                                                       onclick="return confirm('Bạn có chắc chắn đơn hàng này đã được giao không?');" title="Giao hàng thành công">
+                                                       <i class="fa fa-check-circle-o"></i>
+                                                    </a>
                                                 @endif
+                                            @endif
+                                            
+
+                                                
                                                 @if ($item->status == 2 || $item->status == 4)
                                                 <a class="btn btn-hover-d btn-dark ml-2" onclick="return confirm('Bạn có muốn in hóa đơn, đơn hàng này không?');" target="_blank" href="{{route('admin.order.printOrder', $item->order_code)}}" title="In đơn hàng">
                                                     <i class="fa fa-print"></i>
