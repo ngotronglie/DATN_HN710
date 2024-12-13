@@ -104,8 +104,6 @@
                                                 @elseif($item->status == 4)
                                                     <span class="badge badge-success">Giao hàng thành công</span>
                                                 @elseif($item->status == 5)
-                                                    <span class="badge badge-secondary">Chờ hủy</span>
-                                                @elseif($item->status == 6)
                                                     <span class="badge badge-danger">Đã hủy</span>
                                                 @endif
                                             </td>
@@ -119,6 +117,10 @@
                                                            onclick="return confirm('Bạn có chắc chắn muốn xác nhận đơn hàng này không?');" title="Chờ lấy hàng">
                                                            <i class="fa fa-check"></i>
                                                         </a>
+                                                        <a class="btn btn-danger ml-2" href="{{ route('admin.order.cancelOrder', $item->id) }}"
+                                                            onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');" title="Đã hủy">
+                                                            <i class="fa fa-times-circle"></i>
+                                                         </a>
                                                     @elseif($item->status == 2)
                                                         <a class="btn btn-info ml-2" href="{{ route('admin.order.shipOrder', $item->id) }}"
                                                            onclick="return confirm('Bạn có chắc chắn muốn giao đơn hàng này không?');" title="Đang giao hàng">
@@ -129,11 +131,7 @@
                                                            onclick="return confirm('Bạn có chắc chắn đơn hàng này đã được giao không?');" title="Giao hàng thành công">
                                                            <i class="fa fa-check-circle-o"></i>
                                                         </a>
-                                                    @elseif($item->status == 5)
-                                                        <a class="btn btn-danger ml-2" href="{{ route('admin.order.cancelOrder', $item->id) }}"
-                                                           onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');" title="Đã hủy">
-                                                           <i class="fa fa-times-circle"></i>
-                                                        </a>
+                                                       
                                                     @endif
                                                 @endif
                                                 @if ($item->status == 2 || $item->status == 4)

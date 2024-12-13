@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\District;
 use App\Models\Order;
+use App\Models\OrderDetail;
+use App\Models\ProductVariant;
 use App\Models\Province;
 use App\Models\User;
 use App\Models\Ward;
@@ -76,6 +78,24 @@ class OrderController extends Controller
         $staff_id = auth()->user()->id;
 
         if ($order->status == 1) {
+           
+            foreach ($order->orderDetails as $detail) {
+                $productVariant = $detail->productVariant;
+                if ($productVariant) {
+                    if ($productVariant->quantity < $detail->quantity) {
+                        return back()->with('error', 'Số lượng trong kho không đủ cho sản phẩm');
+                    }
+                } else {
+                    return back()->with('error', 'Không tìm thấy biến thể sản phẩm: ' . $detail->product_variant_id);
+                }
+            }
+               foreach ($order->orderDetails as $detail) {
+                $productVariant = $detail->productVariant;
+                if ($productVariant) {
+                    $productVariant->quantity -= $detail->quantity;
+                    $productVariant->save();
+                }
+            }
             $order->status = 2; // Chuyển sang "Chờ lấy hàng"
             $order->staff_id = $staff_id;
             $order->save();
@@ -124,7 +144,7 @@ class OrderController extends Controller
             $order->save();
             return redirect()->back()->with('success', 'Đơn hàng đã được giao thành công');
         } else {
-            return redirect()->back()->with('error', 'Không thể xác nhận giao hàng với trạng thái hiện tại');
+            return redirect()->back()->with('error', 'Không thể xác nhận giao hàng thành công với trạng thái hiện tại');
         }
     }
 
@@ -136,16 +156,16 @@ class OrderController extends Controller
             return back()->with('warning', 'Bạn không có quyền hủy đơn hàng này!');
         }
 
-        if ($order->status == 5) {
-            $order->status = 6;
+        if ($order->status == 1) {
+            $order->status = 5;
             $order->save();
-            foreach ($order->orderDetails as $detail) {
-                $productVariant = $detail->productVariant;
-                if ($productVariant) {
-                    $productVariant->quantity += $detail->quantity;
-                    $productVariant->save();
-                }
-            }
+            // foreach ($order->orderDetails as $detail) {
+            //     $productVariant = $detail->productVariant;
+            //     if ($productVariant) {
+            //         $productVariant->quantity += $detail->quantity;
+            //         $productVariant->save();
+            //     }
+            // }
             return redirect()->back()->with('success', 'Đơn hàng đã bị hủy');
         } else {
             return redirect()->back()->with('error', 'Không thể hủy đơn hàng với trạng thái hiện tại');
