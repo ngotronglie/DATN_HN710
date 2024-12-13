@@ -22,7 +22,6 @@ use App\Http\Controllers\Ajax\ShopAjaxController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\FavoriteController;
 use App\Http\Controllers\Client\PointController;
-
 use App\Http\Controllers\Ajax\DeleteController;
 use App\Http\Controllers\Ajax\ChangeActiveController;
 use App\Http\Controllers\Client\HomeController;
