@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\CancelMail;
+use Illuminate\Support\Facades\Mail;
 use App\Models\District;
 use App\Models\Order;
 use App\Models\OrderDetail;
@@ -125,7 +127,7 @@ class OrderController extends Controller
     public function confirmShipping($order_id)
     {
         $order = Order::findOrFail($order_id);
-
+        
         if (Gate::denies('confirmShipping', $order)) {
             return back()->with('warning', 'Bạn không có quyền xác nhận giao hàng!');
         }
@@ -155,18 +157,14 @@ class OrderController extends Controller
         if (Gate::denies('cancel', $order)) {
             return back()->with('warning', 'Bạn không có quyền hủy đơn hàng này!');
         }
-
+        
         if ($order->status == 1) {
             $order->status = 5;
             $order->save();
-            // foreach ($order->orderDetails as $detail) {
-            //     $productVariant = $detail->productVariant;
-            //     if ($productVariant) {
-            //         $productVariant->quantity += $detail->quantity;
-            //         $productVariant->save();
-            //     }
-            // }
+            Mail::to($order->user_email)->send(new CancelMail($order));
             return redirect()->back()->with('success', 'Đơn hàng đã bị hủy');
+            
+
         } else {
             return redirect()->back()->with('error', 'Không thể hủy đơn hàng với trạng thái hiện tại');
         }
