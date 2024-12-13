@@ -9,6 +9,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Ward;
+use App\Models\WorkShift;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
@@ -51,8 +52,8 @@ class UserController extends Controller
             return back()->with('warning', 'Bạn không có quyền!');
         }
         $provinces = Province::all();
-
-        return view(self::PATH_VIEW . __FUNCTION__, compact('provinces'));
+        $shift=WorkShift::all();
+        return view(self::PATH_VIEW . __FUNCTION__, compact('provinces','shift'));
     }
 
     /**
@@ -117,7 +118,8 @@ class UserController extends Controller
         if (Gate::denies('update', $account)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
-        return view(self::PATH_VIEW . __FUNCTION__, compact('account'));
+        $shift=WorkShift::all();
+        return view(self::PATH_VIEW . __FUNCTION__, compact('account','shift'));
     }
 
     /**
@@ -125,10 +127,15 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $account)
     {
+
+
         if (Gate::denies('update', $account)) {
             return redirect()->route('admin.accounts.index')->with('warning', 'Bạn không có quyền!');
         }
         $data = $request->all();
+        if($request->role=='0'){
+        $data['work_shift_id']=null;
+        }
         if ($account->email_verified_at == null) {
             $data['email_verified_at'] = now();
         } else {

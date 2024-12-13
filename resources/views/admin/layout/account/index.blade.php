@@ -114,8 +114,11 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if($item->role == 1)
-                                        {{$item->workShift->shift_name}} ({{$item->workShift->start_time}} - {{$item->workShift->end_time}})
+                                        
+                                        @if($item->role == 1 && $item->work_shift_id !=null)
+                                           
+                                            {{$item->workShift->shift_name}} ({{$item->workShift->start_time}} - {{$item->workShift->end_time}})
+                                          
                                         @elseif($item->role == 2)
                                         Admin
                                         @else

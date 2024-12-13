@@ -15,7 +15,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Danh sách danh mục</h1>
+                        <h1>Danh sách ca làm việc</h1>
                     </div>
                 </div>
             </div>
@@ -24,8 +24,8 @@
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Bảng điều khiển</a></li>
-                            <li><a href="#">Quản lí danh mục</a></li>
-                            <li class="active">Danh sách danh mục</li>
+                            <li><a href="#">Quản lí ca làm việc</a></li>
+                            <li class="active">Danh sách ca làm việc</li>
                         </ol>
                     </div>
                 </div>
@@ -43,9 +43,9 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong class="card-title">Danh sách danh mục</strong>
+                        <strong class="card-title">Danh sách ca làm việc</strong>
                         <div class="d-flex">
-                            <a class="btn btn-primary mr-2" href="{{ route('admin.categories.create') }}">
+                            <a class="btn btn-primary mr-2" href="{{ route('admin.shift.create') }}">
                                 <i class="fa fa-plus"></i> Thêm mới
                             </a>
                         </div>
@@ -77,9 +77,15 @@
                                 <tr>
                                     <td>{{ $key+1 }}</td>
                                     <td>{{ $item->shift_name }}</td>
-                                    <td>{{ $item->start_time }}</td>
-                                    <td>{{ $item->end_time }}</td>
-                                    <td></td>
+                                    <td>{{ \Carbon\Carbon::parse($item->start_time)->format('h:i A') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->end_time)->format('h:i A') }}</td>
+                                    
+                                    
+                                    <td>
+                                    @foreach ($item->users as $user)
+                                    {{ $user->name }}@if (!$loop->last), @endif
+                                @endforeach
+                            </td>
                                     <td class="d-flex">
                                         <a class="btn btn-warning mr-2" href="{{route('admin.shift.edit', $item)}}" title="Sửa"><i class="fa fa-edit"></i></a>
                                         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $item->id }}" title="Xóa">
@@ -104,7 +110,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
-                                                <form action="{{ route('admin.categories.destroy', $item) }}" method="POST">
+                                                <form action="{{ route('admin.shift.destroy', $item) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
