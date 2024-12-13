@@ -271,9 +271,7 @@
                                                 <button class="btn btn-sm btn-outline-primary filter-btn"
                                                     data-status="4">Giao thành công</button>
                                                 <button class="btn btn-sm btn-outline-primary filter-btn"
-                                                    data-status="5">Chờ hủy</button>
-                                                <button class="btn btn-sm btn-outline-primary filter-btn"
-                                                    data-status="6">Đã hủy</button>
+                                                    data-status="5">Đã hủy</button>
                                             </div>
 
                                             <!-- Bảng hiển thị đơn hàng -->
@@ -316,10 +314,6 @@
                                                                             @break
 
                                                                             @case(5)
-                                                                                Chờ hủy
-                                                                            @break
-
-                                                                            @case(6)
                                                                                 Đã hủy
                                                                             @break
 

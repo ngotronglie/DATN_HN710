@@ -118,7 +118,7 @@
                                             <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
 
                                             <!-- Order Details -->
-                                            <div class="myaccount-table"
+                                            {{-- <div class="myaccount-table"
                                                  style="display: grid; grid-template-columns: {{ $order->orderDetails->count() === 1 ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))' }}; gap: 20px;">
                                                 @foreach ($order->orderDetails as $detail)
                                                     <div class="bill-card"
@@ -156,7 +156,52 @@
                                                     </div>
                                                 @endforeach
                                             </div>
+                                        </div> --}}
+
+                                        <div class="order-details-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax({{$order->orderDetails->count() ==1 ? 'auto' : '240px'}}, 1fr)); gap: 18px; padding: 15px;">
+                                            @foreach ($order->orderDetails as $detail)
+                                            @php
+                                                $id = $detail->product_variant_id;
+                                                $productVariantIds = \App\Models\ProductVariant::select('product_id')->where('id', $id)->first();
+                                                $productImgThumb = \App\Models\Product::select('img_thumb')->where('id', $productVariantIds->product_id)->first();
+                                            @endphp
+                                            <div class="order-card" style="background-color: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);">
+                                                <!-- Product Image -->
+                                                <div class="product-image" style="position: relative; overflow: hidden; width: 100%; height: 200px;">
+                                                    <img src="{{ Storage::url($productImgThumb->img_thumb) }}" alt="{{ $detail->product_name }}"
+                                                        style="width: 100%; height: 100%; object-fit: contain; padding-top: 15px;">
+                                                </div>
+
+                                                <!-- Product Content -->
+                                                <div class="product-content" style="padding: 15px; display: flex; flex-direction: column; justify-content: space-between;">
+                                                    <!-- Product Name -->
+                                                    <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 8px;text-align: center">{{ $detail->product_name }}</h2>
+
+                                                    <!-- Product Info -->
+                                                    <div class="product-info" style="margin-bottom: 10px;">
+                                                        <div class="info-row" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                                            <strong style="color: #555; font-weight: 600;">Kích cỡ:</strong>
+                                                            <span style="color: #333;">{{ $detail->size_name }}</span>
+                                                        </div>
+                                                        <div class="info-row" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                                            <strong style="color: #555; font-weight: 600;">Màu sắc:</strong>
+                                                            <span style="color: #333;">{{ $detail->color_name }}</span>
+                                                        </div>
+                                                        <div class="info-row" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                                            <strong style="color: #555; font-weight: 600;">Số Lượng:</strong>
+                                                            <span style="color: #333;">x{{ $detail->quantity }}</span>
+                                                        </div>
+                                                        <div class="info-row" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                                            <strong style="color: #555; font-weight: 600;">Giá:</strong>
+                                                            <span style="color: #f91919; font-weight: 700;">{{ number_format($detail->price, 0, ',', '.') }} đ</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endforeach
                                         </div>
+
+
                                     </div>
                                 </div>
                             </div> <!-- My Account Tab Content End -->

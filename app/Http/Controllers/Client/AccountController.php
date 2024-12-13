@@ -324,11 +324,21 @@ class AccountController extends Controller
     {
         $order = Order::find($id);
 
+        if ($order->voucher_id != '') {
+            $voucher = UserVoucher::where('voucher_id', $order->voucher_id)->first();
+
+            if ($voucher) {
+                $voucher->status = 'not_used';
+                $voucher->save();
+                $message = 'Đơn hàng đã được hủy thành công và mã giảm giá đã được hoàn trả.';
+            }
+        }
+
         if ($order && $order->status == 1) {
             $order->status = 5;
             $order->save();
 
-            return redirect()->back()->with('success', 'Đơn hàng đã được hủy thành công.');
+            return redirect()->back()->with('success', isset($message) ? $message : 'Đơn hàng đã được hủy thành công.');
         } else {
             return redirect()->back()->with('error', 'Đơn hàng không thể hủy.');
         }

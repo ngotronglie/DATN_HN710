@@ -125,16 +125,31 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserRequest $request, User $account)
+    public function update(Request $request, User $account)
     {
-
-
         if (Gate::denies('update', $account)) {
             return redirect()->route('admin.accounts.index')->with('warning', 'Bạn không có quyền!');
         }
+
+        $request->validate([
+            'role' => 'required|in:0,1',
+            'work_shift_id' => [
+                'nullable',
+                'required_if:role,1',
+                'exists:work_shifts,id',
+                'unique:users,work_shift_id,' . $account->id,
+            ],
+        ], [
+            'role.required' => 'Vui lòng chọn chức vụ.',
+            'role.in' => 'Chức vụ không hợp lệ.',
+            'work_shift_id.required_if' => 'Vui lòng chọn ca làm việc khi chức vụ là Nhân viên.',
+            'work_shift_id.exists' => 'Ca làm việc không tồn tại.',
+            'work_shift_id.unique' => 'Ca làm việc đã được sử dụng.',
+        ]);
+
         $data = $request->all();
-        if($request->role=='0'){
-        $data['work_shift_id']=null;
+        if ($request->role == '0') {
+            $data['work_shift_id'] = null;
         }
         if ($account->email_verified_at == null) {
             $data['email_verified_at'] = now();
