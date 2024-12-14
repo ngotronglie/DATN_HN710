@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -59,6 +60,31 @@ class ShopController extends Controller
             $lastItem = $products->last();
             return view('client.pages.products.shop', compact('products', 'categories', 'producthot', 'maxPrice', 'total', 'lastItem'));
         }
+    }
+
+    public function compare($id){
+        $product = Product::where('category_id', $id)
+            ->where('is_active', 1)
+            ->whereHas('category', function ($query) {
+                $query->where('is_active', 1)
+                    ->whereNull('deleted_at');
+            })
+            ->with([
+                'galleries',
+                'variants' => function ($query) {
+                    $query->whereHas('size', function ($query) {
+                        $query->whereNull('deleted_at');
+                    })->whereHas('color', function ($query) {
+                        $query->whereNull('deleted_at');
+                    });
+                }
+            ])
+            ->get();
+
+            $calculatePrices = $this->getPriceProduct();
+
+            $product->transform($calculatePrices);
+        return view('client.pages.products.compare', compact('product'));
     }
 
     public function showByCategory($id)

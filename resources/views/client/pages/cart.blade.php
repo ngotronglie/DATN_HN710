@@ -5,7 +5,8 @@
         input[type="checkbox"] {
             display: block;
         }
-        .hidenInput{
+
+        .hidenInput {
             display: none;
         }
     </style>
@@ -65,11 +66,16 @@
                                 @if (!empty($processedItems))
                                     @foreach ($processedItems as $item)
                                         <tr class="remove-cart">
+                                            @if ($item->productVariant->quantity != 0)
                                             <td>
                                                 <input type="checkbox" id="checked-{{ $item->id }}" class="checkBoxItem"
-                                                    data-id="{{ $item->productVariant->id }}" data-total="{{ $item->total_price }}"
+                                                    data-id="{{ $item->productVariant->id }}"
+                                                    data-total="{{ $item->total_price }}"
                                                     data-quantity="{{ $item->quantity }}">
                                             </td>
+                                            @else
+                                                <td class="out-of-stock" style="text-align: center; color: #ff0000;">Hết hàng</td>
+                                            @endif
                                             <td><a href="{{ route('shops.show', $item->productVariant->product->slug) }}"><img
                                                         style="width: 45%" class="img-fluid"
                                                         src="{{ Storage::url($item->productVariant->product->img_thumb) }}"
@@ -84,7 +90,7 @@
                                             <td class="pro-quantity">
                                                 <div class="quantity">
                                                     <div class="cart-plus-minus">
-                                                        <input class="cart-plus-minus-box" value="{{ $item->quantity }}"
+                                                        <input class="cart-plus-minus-box" value="{{$item->quantity }}"
                                                             type="text">
                                                         <div class="dec qtybutton">-</div>
                                                         <div class="inc qtybutton">+</div>
@@ -155,25 +161,12 @@
                             <!-- Responsive Table End -->
 
                         </div>
-                        <!-- Cart Calculate Items End -->
-                        <!-- Cart Checktout Button Start -->
                         <div class="checkout-button-container text-center mt-4">
-
-                            {{-- <form action="{{ route('checkout') }}" method="post">
-                                @csrf
-                                <input type="hidden" class="hidenInput" name="item" id="item"> <br>
-                                <input type="hidden" class="hidenInput" name="totalMyprd" id="totalMyprd">
-                                <button type="submit" class="btn btn-dark btn-hover-primary rounded-0 w-100">
-                                    Thanh toán
-                                </button>
-                            </form> --}}
-<a class="btn btn-dark btn-hover-primary rounded-0 w-100" href="{{route('checkout')}}">Thanh toán</a>
+                            <a class="btn btn-dark btn-hover-primary rounded-0 w-100" href="{{ route('checkout') }}">Thanh
+                                toán</a>
                         </div>
-                        {{-- <a href="checkout.html" class="btn btn-dark btn-hover-primary rounded-0 w-100">Thanh toán</a> --}}
-                        <!-- Cart Checktout Button End -->
 
                     </div>
-                    <!-- Cart Calculation Area End -->
 
                 </div>
             </div>

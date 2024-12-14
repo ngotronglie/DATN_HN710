@@ -57,11 +57,15 @@
             let $this = $(this);
             let id = $this.closest('tr').find('.deleteCart').data('id');
             let input = $this.siblings('input.cart-plus-minus-box');
-            let maxQuantity = $this.closest('tr').find('.deleteCart').data('quantity') || 10;
+            let maxQuantity = $this.closest('tr').find('.deleteCart').data('quantity');
             let previousQuantity = parseInt(input.val()) || 1;
             let quantityOld = parseInt(input.data('previousQuantity') || previousQuantity - 1);
-
             let quantity = previousQuantity;
+            if (maxQuantity == 0) {
+                input.val(quantityOld);
+                swalError('Sản phẩm đã hết hàng');
+                return;
+            }
 
             if ($this.hasClass('inc')) {
                 quantity = previousQuantity++;
@@ -99,8 +103,14 @@
                 let input = $(this);
                 let id = input.closest('tr').find('.deleteCart').data('id');
                 let quantity = parseInt(input.val());
-                let maxQuantity = input.closest('tr').find('.deleteCart').data('quantity') || 10;
+                let maxQuantity = input.closest('tr').find('.deleteCart').data('quantity');
                 let previousQuantity = input.data('previousQuantity') || 1;
+                let quantityOld = parseInt(input.data('previousQuantity') || previousQuantity - 1);
+                if (maxQuantity == 0) {
+                    input.val(quantityOld);
+                    swalError('Sản phẩm đã hết hàng');
+                    return;
+                }
                 $('.inc').closest('tr').find('#checked-' + id).prop('checked', false);
                 $('.checkCart').prop('checked', false);
                 updateCheckedItemsAndTotal();
@@ -137,53 +147,11 @@
         });
     };
 
-    // $(document).on('change', '.checkBoxItem, .checkCart', function () {
-
-    //     if ($(this).hasClass('checkCart')) {
-    //         let isCheckAll = $(this).prop('checked');
-    //         $('.checkBoxItem').prop('checked', isCheckAll);
-    //     }
-
-    //     updateCheckedItemsAndTotal();
-    // });
-
-    // function updateCheckedItemsAndTotal() {
-    //     let total = 0;
-    //     let items = [];
-
-    //     $('.checkBoxItem:checked').each(function () {
-    //         let checkbox = $(this);
-
-    //         let price = parseFloat(checkbox.attr('data-total')) || 0;
-    //         total += price;
-
-    //         let item = {
-    //             id: checkbox.attr('data-id'),
-    //             quantity: checkbox.attr('data-quantity')
-    //         };
-    //         items.push(item);
-    //     });
-
-    //     let formatTotal = new Intl.NumberFormat('vi-VN').format(total) + ' đ';
-    //     let formatTotalShip = new Intl.NumberFormat('vi-VN').format(total + 30000) + ' đ';
-
-    //     if (total > 0) {
-    //         $('.totalAll').html(formatTotal);
-    //         $('.total-amount').html(formatTotalShip);
-    //     } else {
-    //         $('.totalAll').html('0 đ');
-    //         $('.total-amount').html('0 đ');
-    //     }
-    //     $('#item').val(JSON.stringify(items));
-    //     $('#totalMyprd').val(total);
-    // }
-
     $(document).on('change', '.checkBoxItem, .checkCart', function () {
         if ($(this).hasClass('checkCart')) {
             let isCheckAll = $(this).prop('checked');
             $('.checkBoxItem').prop('checked', isCheckAll);
         }
-
         updateCheckedItemsAndTotal();
     });
 

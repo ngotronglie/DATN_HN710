@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Mail\CancelMail;
+use App\Models\UserVoucher;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 use App\Models\District;
 use App\Models\Order;
@@ -76,11 +78,17 @@ class OrderController extends Controller
         if (Gate::denies('confirm', $order)) {
             return back()->with('warning', 'Bạn không có quyền xác nhận đơn hàng này!');
         }
+        $timeDifference = Carbon::now()->diffInMinutes($order->created_at);
+
+        if ($timeDifference < 10) {
+            $remainingTime = 10 - $timeDifference;
+            return back()->with('warning', 'Bạn chỉ có thể xác nhận đơn hàng sau ' . $remainingTime . ' phút nữa.');
+        }
 
         $staff_id = auth()->user()->id;
 
         if ($order->status == 1) {
-           
+
             foreach ($order->orderDetails as $detail) {
                 $productVariant = $detail->productVariant;
                 if ($productVariant) {
@@ -127,7 +135,7 @@ class OrderController extends Controller
     public function confirmShipping($order_id)
     {
         $order = Order::findOrFail($order_id);
-        
+
         if (Gate::denies('confirmShipping', $order)) {
             return back()->with('warning', 'Bạn không có quyền xác nhận giao hàng!');
         }
@@ -157,13 +165,22 @@ class OrderController extends Controller
         if (Gate::denies('cancel', $order)) {
             return back()->with('warning', 'Bạn không có quyền hủy đơn hàng này!');
         }
-        
+
+        if ($order->voucher_id != '') {
+            $voucher = UserVoucher::where('voucher_id', $order->voucher_id)->first();
+
+            if ($voucher) {
+                $voucher->status = 'not_used';
+                $voucher->save();
+                $message = 'Đơn hàng đã được hủy thành công và mã giảm giá đã được hoàn trả.';
+            }
+        }
+
         if ($order->status == 1) {
             $order->status = 5;
             $order->save();
             Mail::to($order->user_email)->send(new CancelMail($order));
-            return redirect()->back()->with('success', 'Đơn hàng đã bị hủy');
-            
+            return redirect()->back()->with('success', isset($message) ? $message : 'Đơn hàng đã bị hủy.');
 
         } else {
             return redirect()->back()->with('error', 'Không thể hủy đơn hàng với trạng thái hiện tại');

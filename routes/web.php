@@ -62,6 +62,7 @@ Route::get('/api/wards', [LocationController::class, 'getWardLoad']);
 
 // Shop
 Route::get('/shops', [ShopController::class, 'index'])->name('shops.index');
+Route::get('/compare/{id}', [ShopController::class, 'compare'])->name('shops.compare');
 Route::get('/shops/category/{id}', [ShopController::class, 'showByCategory'])->name('shops.category');
 Route::get('/shops/{slug}', [ShopController::class, 'show'])->name('shops.show');
 Route::get('/ajax/shops/{slug}', [ShopAjaxController::class, 'showAjax']);
