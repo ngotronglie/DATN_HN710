@@ -37,40 +37,30 @@
                             <i class="fa fa-arrow-left mr-1"></i> Quay lại
                         </a>
                     </div>
-                    @if($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
                     <div class="card-body card-block">
                         <form action="{{ route('admin.shift.update',$shift)}}" method="post">
                             @csrf
                             @method('PUT')
                             <div class="form-group">
-                                <label for="name" class=" form-control-label">Ca làm việc</label>
-                                <input type="text" id="name" name="shift_name" placeholder="Nhập tên ca làm việc" class="form-control" value="{{ old('shift_name', $shift->shift_name) }}">
-                                {{-- @error('name')
+                                <label for="shift_name" class=" form-control-label">Ca làm việc</label>
+                                <input type="text" id="shift_name" name="shift_name" placeholder="Nhập tên ca làm việc" class="form-control" value="{{ old('shift_name', $shift->shift_name) }}">
+                                @error('shift_name')
                                 <small class="text-danger">{{ $message }}</small>
-                                @enderror --}}
+                                @enderror
                             </div>
                             <div class="form-group">
-                                <label for="name" class=" form-control-label">Thời gian bắt đầu</label>
-                                <input type="time" id="name" name="start_time" placeholder="Nhập ca làm việc" class="form-control" value="{{ old('start_time', $shift->start_time) }}">
-                                {{-- @error('name')
+                                <label for="start_time" class=" form-control-label">Thời gian bắt đầu</label>
+                                <input type="time" id="start_time" name="start_time" class="form-control" value="{{ old('start_time', $shift->start_time) }}">
+                                @error('start_time')
                                 <small class="text-danger">{{ $message }}</small>
-                                @enderror --}}
+                                @enderror
                             </div>
                             <div class="form-group">
-                                <label for="name" class=" form-control-label">Thời gian kết thúc</label>
-                                <input type="time" id="name" name="end_time" placeholder="Nhập ca làm việc" class="form-control" value="{{ old('end_time', $shift->end_time) }}">
-                                {{-- @error('name')
+                                <label for="end_time" class=" form-control-label">Thời gian kết thúc</label>
+                                <input type="time" id="end_time" name="end_time" class="form-control" value="{{ old('end_time', $shift->end_time) }}">
+                                @error('end_time')
                                 <small class="text-danger">{{ $message }}</small>
-                                @enderror --}}
+                                @enderror
                             </div>
                             <!-- Phần trạng thái đã được loại bỏ. Nếu cần thiết, có thể thêm lại sau -->
                             <button type="submit" class="btn btn-success mb-1">Cập nhật</button>

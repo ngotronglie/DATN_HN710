@@ -27,7 +27,7 @@ class StoreUserRequest extends FormRequest
             'provinces' => 'required|exists:provinces,code',
             'districs' => 'required|exists:districts,code',
             'wards' => 'required|exists:wards,code',
-            'work_shift_id' => 'required|exists:work_shifts,id|unique:work_shifts,id',
+            'work_shift_id' => 'required|exists:work_shifts,id|unique:users,work_shift_id',
             'address' => 'required|string|max:255',
             'phone' => 'required|regex:/^0[0-9]{9}$/',
             'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',

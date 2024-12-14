@@ -171,7 +171,7 @@ Route::prefix('admin')->as('admin.')->middleware(['check.working.shift','auth', 
 
     // Quản lí tài khoản
     Route::resource('accounts', UserController::class)->except(['destroy']);
-    Route::resource('shift', ShiftController::class);
+    Route::resource('shift', ShiftController::class)->except(['show']);
 
 
     // Quản lý các size đã bị xóa mềm
