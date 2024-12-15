@@ -7,6 +7,7 @@ use App\Events\CommentEvent;
 use App\Models\Chat;
 use App\Models\ChatDetail;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,56 +22,68 @@ class ChatController extends Controller
     
 
     public function createRoom()
-{
-    $user_id = Auth::id();
-    $existingChat = Chat::where('user_id', $user_id)->exists();
-
-    // Nếu đã có phòng chat, không cho tạo mới
-    if ($existingChat) {
-        return redirect()->back()->with('error', 'Hiện tại không còn nhân viên hỗ trợ nào.');
+    {
+        $user_id = Auth::id();
+        $existingChat = Chat::where('user_id', $user_id)->exists();
+    
+        // Nếu đã có phòng chat, không cho tạo mới
+        if ($existingChat) {
+            return redirect()->back()->with('error', 'Hiện tại không còn nhân viên hỗ trợ nào.');
+        }
+    
+        // Thời gian hiện tại
+        $now = Carbon::now();
+    
+        // Tìm kiếm nhân viên khả dụng (role '1'), chưa có phòng chat, và đang trong ca làm việc
+        $availableStaffs = User::where('role', '1')
+            ->whereNotIn('id', function ($query) {
+                $query->select('staff_id')
+                    ->from('chats')
+                    ->groupBy('staff_id')
+                    ->havingRaw('COUNT(*) >= 1');
+            })
+            ->whereHas('workShift', function ($query) use ($now) {
+                $query->where(function ($q) use ($now) {
+                    $q->whereTime('start_time', '<=', $now->toTimeString())
+                      ->whereTime('end_time', '>=', $now->toTimeString());
+                })->orWhere(function ($q) use ($now) {
+                    // Trường hợp giờ kết thúc nhỏ hơn giờ bắt đầu (qua ngày hôm sau)
+                    $q->whereTime('end_time', '<', 'start_time')
+                      ->where(function ($subQuery) use ($now) {
+                          $subQuery->whereTime('start_time', '<=', $now->toTimeString())
+                                   ->orWhereTime('end_time', '>=', $now->toTimeString());
+                      });
+                });
+            })
+            ->get();
+    
+        // Kiểm tra nếu không có nhân viên khả dụng
+        if ($availableStaffs->isEmpty()) {
+            return redirect()->back()->with('error', 'Hiện không còn nhân viên hỗ trợ nào');
+        }
+    
+        // Chọn nhân viên đầu tiên trong danh sách khả dụng
+        $staff = $availableStaffs->first();
+    
+        // Kiểm tra nếu user_id và staff_id không trùng nhau
+        if ($user_id === $staff->id) {
+            return redirect()->back()->with('error', 'Bạn không thể trò chuyện với chính mình.');
+        }
+    
+        // Kiểm tra xem đã tồn tại phòng chat giữa người dùng và nhân viên này chưa
+        $chat = Chat::where(function ($query) use ($user_id, $staff) {
+            $query->where('user_id', $user_id)->where('staff_id', $staff->id)
+                ->orWhere('user_id', $staff->id)->where('staff_id', $user_id);
+        })->first();
+    
+        if (!$chat) {
+            $chat = Chat::create([
+                'user_id' => $user_id,
+                'staff_id' => $staff->id,
+            ]);
+        }
+            return redirect()->route('chat.show', $chat);
     }
-    // Tìm kiếm nhân viên khả dụng (role '1') chưa có phòng chat
-    $availableStaffs = User::where('role', '1')
-        ->whereNotIn('id', function ($query) {
-            $query->select('staff_id')
-                ->from('chats')
-                ->groupBy('staff_id')
-                ->havingRaw('COUNT(*) >= 1');
-        })
-        ->get();
-
-    // Kiểm tra nếu không có nhân viên khả dụng
-    if ($availableStaffs->isEmpty()) {
-        return redirect()->back()->with('success', 'Hiện không còn nhân viên hỗ trợ nào');
-    }
-
-    // Chọn ngẫu nhiên một nhân viên từ danh sách khả dụng
-    $staff = $availableStaffs->random();
-
-    // Kiểm tra nếu user_id và staff_id không trùng nhau
-    if ($user_id === $staff->id) {
-        return redirect()->back()->with('error', 'Bạn không thể trò chuyện với chính mình.');
-    }
-
-   
-
-    // Kiểm tra xem đã tồn tại phòng chat giữa người dùng và nhân viên này chưa
-    $chat = Chat::where(function ($query) use ($user_id, $staff) {
-        $query->where('user_id', $user_id)->where('staff_id', $staff->id)
-            ->orWhere('user_id', $staff->id)->where('staff_id', $user_id);
-    })->first();
-
-    // Nếu chưa có phòng chat, tạo mới
-    if (!$chat) {
-        $chat = Chat::create([
-            'user_id' => $user_id,
-            'staff_id' => $staff->id,
-        ]);
-    }
-
-    // Điều hướng đến trang hiển thị chat
-    return redirect()->route('chat.show', $chat);
-}
 
     
     

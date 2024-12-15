@@ -31,7 +31,7 @@ class CancelMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Hủy hóa đơn',
+            subject: 'Hủy đơn hàng',
         );
     }
 
