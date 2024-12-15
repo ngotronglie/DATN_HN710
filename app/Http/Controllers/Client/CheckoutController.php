@@ -31,11 +31,9 @@ class CheckoutController extends Controller
     public function storeData(Request $request)
     {
         $items = $request->input('items');
-        $total = $request->input('total');
 
         session(['user_cart' => [
             'cart_items' => $items,
-            'cart_total' => $total
         ]]);
 
         return response()->json(['success' => true]);
@@ -54,7 +52,6 @@ class CheckoutController extends Controller
         }
 
         $items = $cartData['cart_items'];
-        $total = $cartData['cart_total'];
 
         if (empty($items)) {
             return redirect()->back()->with('error', 'Vui lòng chọn sản phẩm trong giỏ hàng trước khi thanh toán');
@@ -62,6 +59,12 @@ class CheckoutController extends Controller
 
         $ids = array_column($items, 'id');  // Lấy mảng các id từ items
         $productVariants = ProductVariant::whereIn('id', $ids)->get();
+
+        foreach ($productVariants as $key => $value) {
+            if ($value->quantity == 0) {
+                return back()->with('error', 'Sản phẩm đã hết hàng.');
+            }
+        }
 
         if ($productVariants->isEmpty()) {
             return redirect()->back()->with('error', 'Không tìm thấy sản phẩm nào.');
@@ -80,6 +83,8 @@ class CheckoutController extends Controller
             return $variant;
         });
 
+        $totalSum = $products->sum('sumtotal');
+
         if ($user) {
             $validVouchers = Voucher::where('end_date', '>=', Carbon::now()->startOfDay())
                 ->where('is_active', 1)
@@ -88,18 +93,18 @@ class CheckoutController extends Controller
                     $query->where('user_id', $user->id)
                         ->where('status', 'not_used');
                 })
-                ->where(function ($query) use ($total) {
-                    $query->where('min_money', '<=', $total)
-                        ->where('max_money', '>=', $total);
+                ->where(function ($query) use ($totalSum) {
+                    $query->where('min_money', '<=', $totalSum)
+                        ->where('max_money', '>=', $totalSum);
                 })
                 ->get();
 
-            session(['totalAmount' => $total]);
+            session(['totalAmount' => $totalSum]);
         }
 
         $provinces = Province::all();
 
-        return view('client.pages.checkouts.show_checkout', ['products' => $products, 'total' => $total, 'validVouchers' => $validVouchers, 'provinces' => $provinces]);
+        return view('client.pages.checkouts.show_checkout', ['products' => $products, 'validVouchers' => $validVouchers, 'provinces' => $provinces, 'totalSum' => $totalSum]);
     }
 
 

@@ -96,78 +96,11 @@
         </div>
         <!-- Breadcrumb Area End -->
     </div>
-    <!-- Breadcrumb Section End -->
-
-    <!-- Checkout Section Start -->
     <div class="section section-margin">
         <div class="container">
             <div class="row">
                 <div class="col-12">
                     @if (Auth::check())
-                        <!-- Coupon Accordion Start -->
-                        {{-- <div class="coupon-accordion">
-                            <!-- Title Start -->
-                            <h3 class="title">Có phiếu giảm giá? Nhấp vào đây để nhập mã của
-                                    bạn</span></h3>
-                            <!-- Title End -->
-
-                            <!-- Checkout Coupon Start -->
-                            <div id="checkout_coupon" class="coupon-checkout-content">
-                                <div class="coupon-info">
-                                    <div id="saved-vouchers" class="mt-4">
-                                        <div class="row">
-                                            @foreach ($validVouchers as $voucher)
-                                                <div class="col-md-4 mb-3">
-                                                    <div class="card shadow-sm border-0">
-                                                        <div class="card-body d-flex align-items-center">
-                                                            <!-- Icon voucher -->
-                                                            <div class="voucher-icon mr-3 text-primary"
-                                                                style="font-size: 24px;">
-                                                                <i class="fa fa-tags"></i>
-                                                            </div>
-                                                            <!-- Mã voucher -->
-                                                            <div class="voucher-details flex-grow-1">
-                                                                <h6 class="mb-1 text-dark font-weight-bold">
-                                                                    {{ $voucher->code }}</h6>
-                                                                <small class="text-muted">Giảm giá:
-                                                                    {{ $voucher->discount ?? 0 }}%</small>
-                                                                <br>
-                                                                @php
-                                                                    $minMoney = $voucher->min_money;
-                                                                    $maxMoney = $voucher->max_money;
-                                                                    $formattedMinMoney =  $minMoney >= 1_000_000 ? number_format ( $minMoney / 1_000_000, 0, ',','', )
-                                                                    . 'tr' : number_format( $minMoney / 1_000, 0,',','',) . 'k';
-                                                                    $formattedMaxMoney =
-                                                                        $maxMoney >= 1_000_000 ? number_format( $maxMoney / 1_000_000, 0,',','', )
-                                                                    . 'tr' : number_format(   $maxMoney / 1_000, 0,',', '', ) . 'k';
-                                                                @endphp
-                                                                <small>Tối thiểu: {{ $formattedMinMoney }} - Tối đa:
-                                                                    {{ $formattedMaxMoney }}</small>
-                                                                <br>
-                                                                <small>HSD:
-                                                                    {{ \Carbon\Carbon::parse($voucher->end_date)->format('d/m/Y') }}</small>
-                                                            </div>
-                                                            <!-- Nút sử dụng -->
-                                                            <button class="btn btn-outline-primary btn-sm use-voucher"
-                                                                data-code="{{ $voucher->code }}"
-                                                                data-used="{{ session('active_voucher') === $voucher->code ? 'true' : 'false' }}">
-                                                                @if (session('active_voucher') === $voucher->code)
-                                                                    Đã dùng
-                                                                @else
-                                                                    Dùng
-                                                                @endif
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Checkout Coupon End -->
-                        </div> --}}
-                        
                         @php $point = auth()->user()->points @endphp
 
                         <div class="coupon-accordion">
@@ -230,7 +163,7 @@
                                         </div>
                                         @else
                                             <p class="no-coupon-message">Bạn không có mã giảm giá nào, bạn có thể đổi <span><a style="color: #de471d" href="/my_account">{{$point}}</a> điểm</span> lấy ưu đãi.</p>
-                                            <p>Chú ý: Nếu bạn đã lưu hoặc đổi điểm thưởng lấy mã giảm giá thành công nhưng giá trị đơn hàng không đáp ứng đủ điều kiện tối thiểu hoặc tối đa, mã giảm giá sẽ không được hiển thị hoặc áp dụng cho đơn hàng</p>
+                                            <p>Chú ý: Nếu bạn đã lưu hoặc đổi điểm thưởng lấy mã giảm giá thành công nhưng giá trị đơn hàng không đáp ứng đủ điều kiện tối thiểu hoặc tối đa, mã giảm giá sẽ không được hiển thị hoặc áp dụng cho đơn hàng.</p>
                                         @endif
                                     </div>
                                 </div>
@@ -418,7 +351,7 @@
                                                 value="{{ $product->id }}">
                                         @endforeach
 
-                                        <input type="hidden" name="total_amount" value="{{ $total }}">
+                                        <input type="hidden" name="total_amount" value="{{ $totalSum }}">
 
 
                                     </tbody>
@@ -427,13 +360,13 @@
                                         <tr class="cart-subtotal">
                                             <th class="text-start ps-0">Tổng Cộng</th>
                                             <td class="text-end pe-0">
-                                                <span class="amount">{{ number_format($total, 0, ',', '.') }} đ</span>
+                                                <span class="amount">{{ number_format($totalSum, 0, ',', '.') }} đ</span>
                                             </td>
                                         </tr>
                                         <tr class="cart-subtotal">
                                             <th class="text-start ps-0">Phí vận chuyển</th>
                                             <td class="text-end pe-0">
-                                                <span class="amount">+30,000 đ</span>
+                                                <span class="amount">+30.000 đ</span>
                                             </td>
                                         </tr>
                                         @if (Auth::check())
@@ -454,14 +387,14 @@
                                             <td class="text-end pe-0">
                                                 <strong>
                                                     <span class="amount" id="total-amount">
-                                                        {{ session('voucher_id') ? number_format(session('totalAmountWithDiscount')) : number_format($total + 30000, 0, ',', '.') }}
+                                                        {{ session('voucher_id') ? number_format(session('totalAmountWithDiscount')) : number_format($totalSum + 30000, 0, ',', '.') }}
                                                         đ
                                                     </span>
                                                 </strong>
                                             </td>
                                         </tr>
                                         @php
-                                            $totalAll = $total + 30000;
+                                            $totalAll = $totalSum + 30000;
                                             $pointsToAdd = floor($totalAll / 100000) * 10;
 
                                             $nextPointTarget = ($pointsToAdd == 0) ? 10 : $pointsToAdd + 10;
@@ -476,7 +409,7 @@
                                                 <span class="amount">+{{ $pointsToAdd }} điểm sau khi đơn hàng được giao thành công </span>
                                                 <br>
                                                 <span style="color: #de1d1d;">
-                                                    Mua thêm {{ number_format($neededAmount) }}đ để nhận ngay {{ $nextPointTarget }} điểm. <span class="rules-order">Quy tắc</span>
+                                                    Mua thêm {{ number_format($neededAmount, 0, ',', '.') }}đ để nhận ngay {{ $nextPointTarget }} điểm. <span class="rules-order">Quy tắc</span>
                                                 </span>
                                             </td>
                                         </tr>
@@ -490,7 +423,7 @@
                                                 </span>
                                                 <br>
                                                 <span style="color: #de1d1d;">
-                                                    Mua thêm {{ number_format($neededAmount) }}đ để nhận ngay{{ $nextPointTarget }} điểm. <span class="rules-order">Quy tắc</span>
+                                                    Mua thêm {{ number_format($neededAmount, 0, ',', '.') }}đ để nhận ngay{{ $nextPointTarget }} điểm. <span class="rules-order">Quy tắc</span>
                                                 </span>
                                             </td>
                                         </tr>

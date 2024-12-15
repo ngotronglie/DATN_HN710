@@ -95,18 +95,32 @@
                 event.preventDefault();
             }
             else{
+                event.preventDefault();
                 Swal.fire({
-                title: 'Đang xử lý...',
-                text: 'Vui lòng chờ trong giây lát!',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
+                    title: 'Xác nhận đặt hàng',
+                    text: "Đơn hàng sẽ được xác nhận sau khoảng 10 phút. Sau khi xác nhận, bạn không thể hủy đơn hàng. Mọi thắc mắc, vui lòng liên hệ Zalo: 0376 900 771 để được giải quyết. Xin cảm ơn!",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Xác nhận',
+                    cancelButtonText: 'Hủy',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.submit();
+                        Swal.fire({
+                            title: 'Đang xử lý...',
+                            text: 'Vui lòng chờ trong giây lát!',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                            });
+                            setTimeout(() => {
+                                Swal.close();
+                            }, 4000);
+                    } else {
+                        event.preventDefault();
+                    }
                 });
-                setTimeout(() => {
-                    Swal.close();  // Đóng Swal sau 4 giây
-                }, 4000);  //
-                this.submit();
             }
         });
     });

@@ -404,9 +404,6 @@
                                                 <img class="first-image" src="{{ Storage::url($item->img_thumb) }}" alt="Product" />
                                                 <img class="second-image" src="{{ Storage::url($item->first_image) }}" alt="Product" />
                                             </a>
-                                            <span class="badges">
-                                                    <span class="sale">New</span>
-                                            </span>
                                             <div class="actions">
                                                 <span class="action addFavorite"
                                                 data-slug="{{ $item->slug }}"
