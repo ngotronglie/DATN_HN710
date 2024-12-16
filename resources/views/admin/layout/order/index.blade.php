@@ -161,7 +161,7 @@
                                             <div class="modal fade" id="confirmModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel{{ $item->id }}" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
-                                                        <div class="modal-header">
+                                                        <div class="modal-header d-flex">
                                                             <h5 class="modal-title" id="confirmModalLabel{{ $item->id }}">CẬP NHẬT TRẠNG THÁI</h5>
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
@@ -185,7 +185,7 @@
                                             <div class="modal fade" id="shipModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="shipModalLabel{{ $item->id }}" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
-                                                        <div class="modal-header">
+                                                        <div class="modal-header d-flex">
                                                             <h5 class="modal-title" id="shipModalLabel{{ $item->id }}">CẬP NHẬT TRẠNG THÁI</h5>
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
@@ -209,7 +209,7 @@
                                             <div class="modal fade" id="successModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="successModalLabel{{ $item->id }}" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
-                                                        <div class="modal-header">
+                                                        <div class="modal-header d-flex">
                                                             <h5 class="modal-title" id="shipModalLabel{{ $item->id }}">CẬP NHẬT TRẠNG THÁI</h5>
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
@@ -232,7 +232,7 @@
                                             <div class="modal fade" id="cancelModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel{{ $item->id }}" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
-                                                        <div class="modal-header">
+                                                        <div class="modal-header d-flex">
                                                             <h5 class="modal-title" id="shipModalLabel{{ $item->id }}">CẬP NHẬT TRẠNG THÁI</h5>
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
