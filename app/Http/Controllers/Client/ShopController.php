@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -51,14 +52,39 @@ class ShopController extends Controller
         if ($perPage != 'all') {
             $products = $query->paginate($perPage);
             $products->getCollection()->transform($calculatePriceRange);
-        return view('client.pages.products.shop', compact('products', 'categories', 'producthot', 'maxPrice'));
+            return view('client.pages.products.shop', compact('products', 'categories', 'producthot', 'maxPrice'));
         } else {
             $products = $query->get();
             $products->transform($calculatePriceRange);
             $total = $products->count();
             $lastItem = $products->last();
-        return view('client.pages.products.shop', compact('products', 'categories', 'producthot', 'maxPrice','total','lastItem'));
+            return view('client.pages.products.shop', compact('products', 'categories', 'producthot', 'maxPrice', 'total', 'lastItem'));
         }
+    }
+
+    public function compare($id){
+        $product = Product::where('category_id', $id)
+            ->where('is_active', 1)
+            ->whereHas('category', function ($query) {
+                $query->where('is_active', 1)
+                    ->whereNull('deleted_at');
+            })
+            ->with([
+                'galleries',
+                'variants' => function ($query) {
+                    $query->whereHas('size', function ($query) {
+                        $query->whereNull('deleted_at');
+                    })->whereHas('color', function ($query) {
+                        $query->whereNull('deleted_at');
+                    });
+                }
+            ])
+            ->get();
+
+            $calculatePrices = $this->getPriceProduct();
+
+            $product->transform($calculatePrices);
+        return view('client.pages.products.compare', compact('product'));
     }
 
     public function showByCategory($id)
@@ -159,7 +185,8 @@ class ShopController extends Controller
             ->whereNull('parent_id')
             ->with([
                 'children' => function ($query) {
-                    $query->orderBy('created_at', 'desc');
+                    $query->where('is_active', 1) // Chỉ lấy bình luận con có is_active = 1
+                        ->orderBy('created_at', 'desc');
                 }
             ])
             ->orderBy('created_at', 'desc')

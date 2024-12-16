@@ -2,6 +2,7 @@
     <aside id="left-panel" class="left-panel">
         <nav class="navbar navbar-expand-sm navbar-default">
             <div id="main-menu" class="main-menu collapse navbar-collapse">
+                @php $user = auth()->user(); @endphp
                 <ul class="nav navbar-nav">
                     <li class="{{ Request::routeIs('admin.dashboard') ? 'active' : '' }}">
                         <a href="{{ route('admin.dashboard') }}"><i class="menu-icon fa fa-laptop"></i>Bảng điều khiển</a>
@@ -31,6 +32,7 @@
                         </ul>
                     </li>
                     {{-- end product --}}
+                    @if ($user->role == 2)
                     {{-- color --}}
                     <li class="menu-item-has-children {{ Request::is('admin/colors*') ? 'active' : '' }} dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
@@ -47,7 +49,7 @@
                     <li class="menu-item-has-children {{ Request::is('admin/sizes*') ? 'active' : '' }} dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false">
-                            <i class="menu-icon fa fa-text-height"></i>Quản lý size
+                            <i class="menu-icon fa fa-text-height"></i>Quản lý kích cỡ
                         </a>
                         <ul class="sub-menu children dropdown-menu">
                             <li><a href="{{ route('admin.sizes.index') }}">Danh sách</a></li>
@@ -58,14 +60,16 @@
                     {{-- voucher --}}
                     <li class="menu-item-has-children {{ Request::is('admin/vouchers*') ? 'active' : '' }} dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false"> <i class="menu-icon fa fa-ticket"></i>Quản lý vouchers</a>
+                            aria-expanded="false"> <i class="menu-icon fa fa-ticket"></i>Quản lý khuyến mại</a>
                         <ul class="sub-menu children dropdown-menu">
                             <li></i><a href="{{ route('admin.vouchers.index') }}">Danh sách</a></li>
                             <li></i><a href="{{ route('admin.vouchers.create') }}">Thêm mới</a></li>
                         </ul>
                     </li>
                     {{-- end voucher --}}
+                    @endif
                     <li class="menu-title">Khách hàng & Nội dung</li><!-- /.menu-title -->
+                    @if ($user->role == 2)
                     {{-- account --}}
                     <li class="menu-item-has-children {{ Request::is('admin/accounts*') ? 'active' : '' }} dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
@@ -75,7 +79,16 @@
                             <li><a href="{{ route('admin.accounts.create') }}">Thêm mới</a></li>
                         </ul>
                     </li>
+                    <li class="menu-item-has-children {{ Request::is('admin/shift*') ? 'active' : '' }} dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false"> <i class="menu-icon fa fa-clipboard"></i>Quản lý ca làm</a>
+                        <ul class="sub-menu children dropdown-menu">
+                            <li><a href="{{ route('admin.shift.index') }}">Danh sách</a></li>
+                            <li><a href="{{ route('admin.shift.create') }}">Thêm mới</a></li>
+                        </ul>
+                    </li>
                     {{-- end account --}}
+                    @endif
                     {{-- comment --}}
                     <li class="menu-item-has-children {{ Request::is('admin/comments*') ? 'active' : '' }} dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"

@@ -10,9 +10,9 @@
         <!-- Header -->
         <div style="background-color: #007bff; color: #ffffff; padding: 20px; text-align: center;">
             <h1 style="margin: 0; font-size: 24px;">Hóa đơn</h1>
-            <p style="margin: 5px 0; font-size: 14px;">Cửa hàng: Tên Cửa Hàng</p>
-            <p style="margin: 5px 0; font-size: 14px;">Địa chỉ: 123 Đường ABC, Quận XYZ, TP.HCM</p>
-            <p style="margin: 5px 0; font-size: 14px;">Số điện thoại: 0123 456 789</p>
+            <p style="margin: 5px 0; font-size: 14px;">Cửa hàng: Fashion Wave</p>
+            <p style="margin: 5px 0; font-size: 14px;">Địa chỉ: 132 Xuân Phương - Hà Nội</p>
+            <p style="margin: 5px 0; font-size: 14px;">Số điện thoại: 0376 900 771</p>
         </div>
 
         <!-- Thông tin khách hàng -->
@@ -23,7 +23,36 @@
             <p style="margin: 10px 0;"><strong>Người đặt hàng:</strong> {{ $order->user_name }}</p>
             <p style="margin: 10px 0;"><strong>Email:</strong> {{ $order->user_email }}</p>
             <p style="margin: 10px 0;"><strong>Số điện thoại:</strong> {{ $order->user_phone }}</p>
-            <p style="margin: 10px 0;"><strong>Địa chỉ giao hàng:</strong> {{ $order->user_address }}</p>
+            @php
+            use App\Models\Province;
+            use App\Models\District;
+            use App\Models\Ward;
+
+            $addressParts = explode(',', $order->user_address);
+            $addressData = [
+            'province' => isset($addressParts[3])
+            ? Province::where('code', trim($addressParts[3]))->value('full_name')
+            : null,
+            'district' => isset($addressParts[2])
+            ? District::where('code', trim($addressParts[2]))->value('full_name')
+            : null,
+            'ward' => isset($addressParts[1])
+            ? Ward::where('code', trim($addressParts[1]))->value('full_name')
+            : null,
+            'addressDetail' => isset($addressParts[0]) ? $addressParts[0] : null,
+            ];
+            @endphp
+            <p style="margin: 10px 0;">
+                <strong>Địa chỉ giao hàng:</strong> {{ implode(
+                                    ', ',
+                                    array_filter(
+                                        [$addressData['addressDetail'], $addressData['ward'], $addressData['district'], $addressData['province']],
+                                        function ($value) {
+                                            return !is_null($value) && $value !== '';
+                                        }
+                                    )
+                                ) }}
+            </p>
             <p style="margin: 10px 0;"><strong>Ngày đặt hàng:</strong> {{ $order->created_at->format('d/m/Y') }}</p>
 
         </div>
@@ -54,18 +83,18 @@
             </table>
             <p style="margin: 10px 0;"><strong>Phí vận chuyển</strong> {{ number_format(30000) }} VND</p>
             <p style="margin: 10px 0;">
-                <strong>Mã giảm giá:</strong> 
+                <strong>Mã giảm giá:</strong>
                 {{ $order->voucher ? $order->voucher->discount .'%' : 'Không áp dụng' }}
             </p>
-            
+
             <p style="margin: 10px 0;"><strong>Tổng tiền:</strong> {{ number_format($order->total_amount) }} VND</p>
             <p style="margin: 10px 0;"><strong>Phương thức thanh toán:</strong> {{ ucfirst($order->payment_method) }}</p>
         </div>
 
         <!-- Footer -->
         <div style="background-color: #f1f1f1; text-align: center; padding: 10px; font-size: 14px; color: #555;">
-            <p style="margin: 0;">Cảm ơn bạn đã mua sắm tại <strong>Tên Cửa Hàng</strong>!</p>
-            <p style="margin: 0;">&copy; {{ date('Y') }} Tên Cửa Hàng. Mọi quyền được bảo lưu.</p>
+            <p style="margin: 0;">Cảm ơn bạn đã mua sắm tại <strong>Fashion Wave</strong>!</p>
+            <p style="margin: 0;">&copy; {{ date('Y') }} Fashion Wave. Mọi quyền được bảo lưu.</p>
         </div>
     </div>
 </body>

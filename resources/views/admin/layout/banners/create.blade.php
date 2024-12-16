@@ -41,26 +41,26 @@
                         <form action="{{ route('admin.banners.store') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
-                                <label for="title" class=" form-control-label">Tiêu đề</label><input type="text" id="title" name="title" placeholder="Nhập tiêu đề" class="form-control" value="{{ old('title') }}" required>
+                                <label for="title" class=" form-control-label">Tiêu đề</label><input type="text" id="title" name="title" placeholder="Nhập tiêu đề" class="form-control" value="{{ old('title') }}">
                                 @error('title')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label for="link" class=" form-control-label">Link</label><input type="url" id="link" name="link" placeholder="https://example.com" class="form-control" value="{{ old('link') }}" required>
+                                <label for="link" class=" form-control-label">Link</label><input type="url" id="link" name="link" placeholder="https://example.com" class="form-control" value="{{ old('link') }}">
                                 @error('link')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label for="image" class=" form-control-label">Banner</label><input type="file" id="image" name="image" class="form-control" required accept="image/*">
+                                <label for="image" class=" form-control-label">Banner</label><input type="file" id="image" name="image" class="form-control" accept="image/*">
                                 <img id="preview" src="#" alt="Xem trước ảnh" style="display:none; max-width: 100%; height: auto; margin-top: 10px;">
                                 @error('image')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label for="description" class=" form-control-label">Mô tả</label><textarea name="description" class="form-control" id="description" cols="30" rows="5" required>{{ old('description') }}</textarea>
+                                <label for="description" class=" form-control-label">Mô tả</label><textarea name="description" class="form-control" id="description" cols="30" rows="5">{{ old('description') }}</textarea>
                                 @error('description')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror

@@ -9,6 +9,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Ward;
+use App\Models\WorkShift;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
@@ -51,8 +52,8 @@ class UserController extends Controller
             return back()->with('warning', 'Bạn không có quyền!');
         }
         $provinces = Province::all();
-
-        return view(self::PATH_VIEW . __FUNCTION__, compact('provinces'));
+        $shift=WorkShift::all();
+        return view(self::PATH_VIEW . __FUNCTION__, compact('provinces','shift'));
     }
 
     /**
@@ -117,18 +118,39 @@ class UserController extends Controller
         if (Gate::denies('update', $account)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
-        return view(self::PATH_VIEW . __FUNCTION__, compact('account'));
+        $shift=WorkShift::all();
+        return view(self::PATH_VIEW . __FUNCTION__, compact('account','shift'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserRequest $request, User $account)
+    public function update(Request $request, User $account)
     {
         if (Gate::denies('update', $account)) {
             return redirect()->route('admin.accounts.index')->with('warning', 'Bạn không có quyền!');
         }
+
+        $request->validate([
+            'role' => 'required|in:0,1',
+            'work_shift_id' => [
+                'nullable',
+                'required_if:role,1',
+                'exists:work_shifts,id',
+                'unique:users,work_shift_id,' . $account->id,
+            ],
+        ], [
+            'role.required' => 'Vui lòng chọn chức vụ.',
+            'role.in' => 'Chức vụ không hợp lệ.',
+            'work_shift_id.required_if' => 'Vui lòng chọn ca làm việc khi chức vụ là Nhân viên.',
+            'work_shift_id.exists' => 'Ca làm việc không tồn tại.',
+            'work_shift_id.unique' => 'Ca làm việc đã được sử dụng.',
+        ]);
+
         $data = $request->all();
+        if ($request->role == '0') {
+            $data['work_shift_id'] = null;
+        }
         if ($account->email_verified_at == null) {
             $data['email_verified_at'] = now();
         } else {

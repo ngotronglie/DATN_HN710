@@ -7,7 +7,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Sửa size</h1>
+                        <h1>Sửa kích cỡ</h1>
                     </div>
                 </div>
             </div>
@@ -17,7 +17,7 @@
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Bảng điều khiển</a></li>
                             <li><a href="{{ route('admin.sizes.index') }}">Danh sách kích cỡ</a></li>
-                            <li class="active">Sửa size</li>
+                            <li class="active">Sửa kích cỡ</li>
                         </ol>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                             @csrf
                             @method('PUT')
                             <div class="form-group">
-                                <label for="name" class=" form-control-label">Kích cỡ</label><input type="text" id="name" name="name" placeholder="Nhập tên size" class="form-control" value="{{ old('name', $size->name) }}" required>
+                                <label for="name" class=" form-control-label">Kích cỡ</label><input type="text" id="name" name="name" placeholder="Nhập tên kích cỡ" class="form-control" value="{{ old('name', $size->name) }}">
                                 @error('name')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror

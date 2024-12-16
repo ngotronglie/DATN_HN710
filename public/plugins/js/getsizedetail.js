@@ -68,6 +68,7 @@
                                 '<li>' +
                                 '<label id="color-btn" class="color-btn_click color-btn colorGetSize ' + (index === 0 ? 'selectedActive' : '') + '" ' +
                                 'data-id="' + variant.color.id + '" ' +
+                                'title="' + variant.color.name + '"'+
                                 'data-productId="' + idProduct + '" ' +
                                 'data-max="' + maxPrice + '" ' +
                                 'data-min="' + minPrice + '" ' +

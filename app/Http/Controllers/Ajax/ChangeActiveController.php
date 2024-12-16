@@ -18,29 +18,29 @@ class ChangeActiveController extends Controller
     public function changeActiveCategory(Request $request)
     {
         $id = $request->id;
-        $isActive = $request->is_active;
 
         $category = Category::find($id);
         if (!$category) {
             return response()->json(['status' => false, 'message' => 'Danh mục không tìm thấy']);
         }
 
-        // Cập nhật trạng thái is_active
-        $newActive = $isActive == 1 ? 0 : 1;
-        $updated = $category->update(['is_active' => $newActive]);
+        $category->is_active = !$category->is_active;
+        $category->save();
 
-        if ($updated) {
-            return response()->json([
-                'status' => true,
-                'message' => 'Cập nhật trạng thái danh mục thành công',
-            ]);
-        } else {
-            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại']);
-        }
+        return response()->json([
+            'status' => true,
+            'active' => $category->is_active,
+            'message' => 'Cập nhật trạng thái danh mục thành công',
+        ]);
     }
+
 
     public function changeActiveAllCategory(Request $request)
     {
+        if (auth()->user()->role != 2) {
+            return response()->json(['status' => false, 'message' => 'Bạn không có quyền']);
+        }
+
         $id = $request->id;
         $active = $request->is_active;
         if (empty($id) || !is_array($id)) {
@@ -67,30 +67,28 @@ class ChangeActiveController extends Controller
     public function changeActiveProduct(Request $request)
     {
         $id = $request->id;
-        $isActive = $request->is_active;
 
         $product = Product::find($id);
         if (!$product) {
-            return response()->json(['status' => false, 'message' => 'Sản phẩm không tìm thấy']);
+            return response()->json(['status' => false, 'message' => 'Không tìm thấy sản phẩm']);
         }
 
-        $newActive = $isActive == 1 ? 0 : 1;
-        $updated = $product->update(['is_active' => $newActive]);
+        $product->is_active = !$product->is_active;
+        $product->save();
 
-        if ($updated) {
-            return response()->json([
-                'status' => true,
-                'message' => 'Cập nhật trạng thái sản phẩm thành công',
-                'newStatus' => $newActive,
-                'product' => $product
-            ]);
-        } else {
-            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại']);
-        }
+        return response()->json([
+            'status' => true,
+            'active' => $product->is_active,
+            'message' => 'Cập nhật trạng thái sản phẩm  thành công',
+        ]);
     }
 
     public function changeActiveAllProduct(Request $request)
     {
+        if (auth()->user()->role != 2) {
+            return response()->json(['status' => false, 'message' => 'Bạn không có quyền']);
+        }
+
         $id = $request->id;
         $active = $request->is_active;
         if (empty($id) || !is_array($id)) {
@@ -117,27 +115,22 @@ class ChangeActiveController extends Controller
     public function changeActiveAccount(Request $request)
     {
         $id = $request->id;
-        $isActive = $request->is_active;
 
-        $account = User::find($id);
-        if (!$account) {
-            return response()->json(['status' => false, 'message' => 'Tài khoản không tìm thấy']);
+        $item = User::find($id);
+        if (!$item) {
+            return response()->json(['status' => false, 'message' => 'Không tìm thấy tài khoản']);
         }
 
-        $newActive = $isActive == 1 ? 0 : 1;
-        $updated = $account->update(['is_active' => $newActive]);
+        $item->is_active = !$item->is_active;
+        $item->save();
 
-        if ($updated) {
-            return response()->json([
-                'status' => true,
-                'message' => 'Cập nhật trạng thái tài khoản thành công',
-                'newStatus' => $newActive,
-                'account' => $account
-            ]);
-        } else {
-            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại']);
-        }
+        return response()->json([
+            'status' => true,
+            'active' => $item->is_active,
+            'message' => 'Cập nhật trạng thái tài khoản thành công',
+        ]);
     }
+
 
     public function changeActiveAllAccount(Request $request)
     {
@@ -167,30 +160,27 @@ class ChangeActiveController extends Controller
     public function changeActiveCategoryBlog(Request $request)
     {
         $id = $request->id;
-        $isActive = $request->is_active;
 
-        $categoryBlog = CategoryBlog::find($id);
-        if (!$categoryBlog) {
-            return response()->json(['status' => false, 'message' => 'Danh mục bài viết không tìm thấy']);
+        $item = CategoryBlog::find($id);
+        if (!$item) {
+            return response()->json(['status' => false, 'message' => 'Không tìm thấy danh mục bài viết']);
         }
 
-        $newActive = $isActive == 1 ? 0 : 1;
-        $updated = $categoryBlog->update(['is_active' => $newActive]);
+        $item->is_active = !$item->is_active;
+        $item->save();
 
-        if ($updated) {
-            return response()->json([
-                'status' => true,
-                'message' => 'Cập nhật trạng thái danh mục bài viết thành công',
-                'newStatus' => $newActive,
-                'categoryBlog' => $categoryBlog
-            ]);
-        } else {
-            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại']);
-        }
+        return response()->json([
+            'status' => true,
+            'active' => $item->is_active,
+            'message' => 'Cập nhật trạng thái danh mục bài viết thành công',
+        ]);
     }
 
     public function changeActiveAllCategoryBlog(Request $request)
     {
+        if (auth()->user()->role != 2) {
+            return response()->json(['status' => false, 'message' => 'Bạn không có quyền']);
+        }
         $id = $request->id;
         $active = $request->is_active;
         if (empty($id) || !is_array($id)) {
@@ -217,30 +207,27 @@ class ChangeActiveController extends Controller
     public function changeActiveBlog(Request $request)
     {
         $id = $request->id;
-        $isActive = $request->is_active;
 
-        $blog = Blog::find($id);
-        if (!$blog) {
-            return response()->json(['status' => false, 'message' => 'Bài viết không tìm thấy']);
+        $item = Blog::find($id);
+        if (!$item) {
+            return response()->json(['status' => false, 'message' => 'Không tìm thấy bài viết']);
         }
 
-        $newActive = $isActive == 1 ? 0 : 1;
-        $updated = $blog->update(['is_active' => $newActive]);
+        $item->is_active = !$item->is_active;
+        $item->save();
 
-        if ($updated) {
-            return response()->json([
-                'status' => true,
-                'message' => 'Cập nhật trạng thái bài viết thành công',
-                'newStatus' => $newActive,
-                'blog' => $blog
-            ]);
-        } else {
-            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại']);
-        }
+        return response()->json([
+            'status' => true,
+            'active' => $item->is_active,
+            'message' => 'Cập nhật trạng thái bài viết thành công',
+        ]);
     }
 
     public function changeActiveAllBlog(Request $request)
     {
+        if (auth()->user()->role != 2) {
+            return response()->json(['status' => false, 'message' => 'Bạn không có quyền']);
+        }
         $id = $request->id;
         $active = $request->is_active;
         if (empty($id) || !is_array($id)) {
@@ -267,30 +254,27 @@ class ChangeActiveController extends Controller
     public function changeActiveBanner(Request $request)
     {
         $id = $request->id;
-        $isActive = $request->is_active;
 
-        $banner = Banner::find($id);
-        if (!$banner) {
-            return response()->json(['status' => false, 'message' => 'không tìm thấy']);
+        $item = Banner::find($id);
+        if (!$item) {
+            return response()->json(['status' => false, 'message' => 'Không tìm thấy biểu ngữ']);
         }
 
-        $newActive = $isActive == 1 ? 0 : 1;
-        $updated = $banner->update(['is_active' => $newActive]);
+        $item->is_active = !$item->is_active;
+        $item->save();
 
-        if ($updated) {
-            return response()->json([
-                'status' => true,
-                'message' => 'Cập nhật trạng thái biểu ngữ thành công',
-                'newStatus' => $newActive,
-                'banner' => $banner
-            ]);
-        } else {
-            return response()->json(['status' => false, 'message' => 'Cập nhật thất bại']);
-        }
+        return response()->json([
+            'status' => true,
+            'active' => $item->is_active,
+            'message' => 'Cập nhật trạng thái biểu ngữ thành công',
+        ]);
     }
 
     public function changeActiveAllBanner(Request $request)
     {
+        if (auth()->user()->role != 2) {
+            return response()->json(['status' => false, 'message' => 'Bạn không có quyền']);
+        }
         $id = $request->id;
         $active = $request->is_active;
         if (empty($id) || !is_array($id)) {
@@ -321,7 +305,7 @@ class ChangeActiveController extends Controller
 
         $comment = Comment::find($id);
         if (!$comment) {
-            return response()->json(['status' => false, 'message' => 'Comment không tìm thấy']);
+            return response()->json(['status' => false, 'message' => 'bình luận không tìm thấy']);
         }
 
         $newActive = $isActive == 1 ? 0 : 1;
@@ -333,7 +317,7 @@ class ChangeActiveController extends Controller
             }
             return response()->json([
                 'status' => true,
-                'message' => 'Cập nhật trạng thái comment thành công',
+                'message' => 'Cập nhật trạng thái bình luận thành công',
                 'newStatus' => $newActive,
                 'comment' => $comment
             ]);
@@ -359,7 +343,7 @@ class ChangeActiveController extends Controller
         if ($updated) {
             return response()->json([
                 'status' => true,
-                'message' => 'Cập nhật trạng thái comment thành công',
+                'message' => 'Cập nhật trạng thái bình luận thành công',
                 'newStatus' => $newActive,
                 'updatedCount' => $updated
             ]);

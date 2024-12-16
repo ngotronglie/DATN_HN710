@@ -15,9 +15,8 @@
                 _this.addClass('processing').prop('disabled', true);
 
                 let option = {
-                    'id': _this.attr('data-modelId'),
-                    'is_active': _this.attr('data-model'),
-                    '_token': token
+                    id: _this.attr('data-modelId'),
+                    _token: token
                 };
 
                 Swal.fire({
@@ -35,25 +34,15 @@
                     data: option,
                     dataType: 'json',
                     success: function (res) {
-                        if (res.status == true) {
-                            Swal.close();
+                        if (res.status) {
                             swalSuccessAd(res.message);
-
-                            _this
-                                .data('model', res.newStatus)
-                                .attr('data-model', res.newStatus);
                         } else {
                             swalErrorAd(res.message);
                         }
                     },
                     error: function (xhr, status, error) {
                         let message = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : error;
-                        console.log('Đã xảy ra lỗi: ' + message);
-                        console.error('Error:', error);
-                        console.error('XHR:', xhr);
-                        console.error('Status:', xhr.status);
-                        console.error('Response Text:', xhr.responseText);
-                        console.error('Status Description:', status);
+                        console.error('Error:', message);
                     },
                     complete: function () {
                         _this.removeClass('processing').prop('disabled', false);

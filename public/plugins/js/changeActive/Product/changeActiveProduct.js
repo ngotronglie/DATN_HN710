@@ -6,7 +6,7 @@
     HT.changeStt = () => {
         if ($('.active').length) {
             $(document).on('change', '.active', function () {
-                let _this = $(this)
+                let _this = $(this);
 
                 if (_this.hasClass('processing')) {
                     return;
@@ -15,10 +15,9 @@
                 _this.addClass('processing').prop('disabled', true);
 
                 let option = {
-                    'id': _this.attr('data-modelId'),
-                    'is_active': _this.attr('data-model'),
-                    '_token': token
-                }
+                    id: _this.attr('data-modelId'),
+                    _token: token
+                };
 
                 Swal.fire({
                     title: 'Đang xử lý...',
@@ -29,36 +28,26 @@
                     }
                 });
 
-                    $.ajax({
-                        type: 'POST',
-                        url: 'products/ajax/changeActiveProduct',
-                        data: option,
-                        dataType: 'json',
-                        success: function (res) {
-                            if (res.status == true) {
-                            Swal.close();
+                $.ajax({
+                    type: 'POST',
+                    url: 'products/ajax/changeActiveProduct',
+                    data: option,
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.status) {
                             swalSuccessAd(res.message);
-
-                            _this
-                                .data('model', res.newStatus)
-                                .attr('data-model', res.newStatus);
                         } else {
                             swalErrorAd(res.message);
                         }
-                        },
-                        error: function (xhr, status, error) {
-                            let message = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : error;
-                            console.log('Đã xảy ra lỗi: ' + message);
-                            console.error('Error:', error);
-                            console.error('XHR:', xhr);
-                            console.error('Status:', xhr.status);
-                            console.error('Response Text:', xhr.responseText);
-                            console.error('Status Description:', status)
-                        },
-                        complete: function () {
-                            _this.removeClass('processing').prop('disabled', false);
-                        }
-                    });
+                    },
+                    error: function (xhr, status, error) {
+                        let message = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : error;
+                        console.error('Error:', message);
+                    },
+                    complete: function () {
+                        _this.removeClass('processing').prop('disabled', false);
+                    }
+                });
             });
         }
     };

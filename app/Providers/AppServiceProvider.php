@@ -2,10 +2,12 @@
 namespace App\Providers;
 
 use App\Models\ProductVariant;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use App\Models\CartItem;
 use App\Models\Category;
+use App\Models\Chat;
 use Illuminate\Support\Facades\Auth;
 
 class AppServiceProvider extends ServiceProvider
@@ -124,14 +126,20 @@ class AppServiceProvider extends ServiceProvider
             if ($user) {
                 $notifications = $user->notifications()->orderBy('id', 'desc')->get();
                 $unreadNotifications = $user->unreadNotifications()->get();
+                $chat = Chat::where('staff_id', $user->id)
+                ->with(['user', 'staff'])
+                ->orderBy('created_at', 'desc')
+                ->first();
             }else{
                 $notifications = collect();
                 $unreadNotifications = collect();
+                $chat = collect();
             }
 
             $view->with([
                 'notifications' => $notifications,
                 'unreadNotifications' => $unreadNotifications,
+                'chat'=>$chat,
             ]);
         });
 

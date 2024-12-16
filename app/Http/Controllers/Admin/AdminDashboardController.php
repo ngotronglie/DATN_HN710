@@ -25,7 +25,22 @@ class AdminDashboardController extends Controller
         $productCount = Product::count();
 
         $usersCount = User::where('role', '0')->count();
-        
-        return view('admin.layout.yeld', compact('usersCount', 'productCount', 'ordersCount', 'totalRevenue'));
+
+        $dailyRevenueLast7Days = Order::where('status', 4)
+            ->whereBetween('created_at', [now()->subDays(7), now()])
+            ->selectRaw('DATE(created_at) as date, SUM(total_amount) as total')
+            ->groupBy('date')
+            ->orderBy('date', 'asc')
+            ->get();
+
+        // Chuyển dữ liệu sang mảng
+        $dates = [];
+        $revenues = [];
+        foreach ($dailyRevenueLast7Days as $data) {
+            $dates[] = Carbon::parse($data->date)->format('d/m/Y');
+            $revenues[] = $data->total;
+        }
+
+        return view('admin.layout.yeld', compact('usersCount', 'productCount', 'ordersCount', 'totalRevenue', 'dates', 'revenues'));
     }
 }

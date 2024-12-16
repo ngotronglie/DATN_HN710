@@ -99,7 +99,8 @@
                                                     data-bs-target="#exampleModalCenter">
                                                     <i class="pe-7s-search"></i>
                                                 </span>
-                                                <a href="#" class="action compare"><i class="pe-7s-shuffle"></i></a>
+                                                <a href="{{route('shops.compare', $item->category->id)}}" class="action compare"><i
+                                                    class="pe-7s-shuffle"></i></a>
                                             </div>
                                         </div>
 

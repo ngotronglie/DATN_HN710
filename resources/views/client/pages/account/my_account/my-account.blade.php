@@ -90,7 +90,7 @@
                                     <a href="#payment-method" data-bs-toggle="tab" data-bs-target="#payment-method"><i
                                             class="fa fa-credit-card"></i> Mã giảm giá của tôi</a>
                                     <a href="#point" data-bs-toggle="tab" data-bs-target="#point"><i
-                                            class="fa fa-credit-card"></i> Đổi điểm</a>
+                                            class="fa fa-gift"></i> Đổi điểm</a>
                                 </div>
                             </div>
                             <!-- My Account Tab Menu End -->
@@ -233,7 +233,7 @@
                                                                 <label for="address" class="required mb-1">Tên đường/tòa
                                                                     nhà/số nhà</label>
                                                                 <input style="color: rgb(112, 110, 110)" class="input_address" type="text"
-                                                                    placeholder="Tên đường/tòa nhà/số nhà" name="address">
+                                                                    placeholder="Tên đường/tòa nhà/số nhà" name="address" value="{{ $adressDetail }}">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -271,9 +271,7 @@
                                                 <button class="btn btn-sm btn-outline-primary filter-btn"
                                                     data-status="4">Giao thành công</button>
                                                 <button class="btn btn-sm btn-outline-primary filter-btn"
-                                                    data-status="5">Chờ hủy</button>
-                                                <button class="btn btn-sm btn-outline-primary filter-btn"
-                                                    data-status="6">Đã hủy</button>
+                                                    data-status="5">Đã hủy</button>
                                             </div>
 
                                             <!-- Bảng hiển thị đơn hàng -->
@@ -316,10 +314,6 @@
                                                                             @break
 
                                                                             @case(5)
-                                                                                Chờ hủy
-                                                                            @break
-
-                                                                            @case(6)
                                                                                 Đã hủy
                                                                             @break
 
@@ -333,8 +327,7 @@
                                                                         <a
                                                                             href="{{ route('viewBillDetail', $item->id) }}">Xem</a>
                                                                         @if ($item->status == 1)
-                                                                            | <a href="{{ route('cancelOrder', $item->id) }}"
-                                                                                onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?')">Hủy</a>
+                                                                            | <a href="{{ route('cancelOrder', $item->id) }}" class="cancelOrderLink">Hủy</a>
                                                                         @endif
                                                                     </td>
                                                                 </tr>
@@ -600,6 +593,25 @@
 <script src="{{ asset('plugins/js/getVoucher.js') }}"></script>
 <script src="{{ asset('plugins/js/location.js') }}"></script>
 <script>
+    $(document).ready(function() {
+        $('.cancelOrderLink').on('click', function(event) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: '<h3>Bạn có chắc chắn muốn hủy đơn hàng này không?</h3>',
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonText: 'Xác nhận',
+                cancelButtonText: 'Hủy',
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = $(this).attr('href');
+                }
+            });
+        });
+    });
     // Hiển thị ảnh đã chọn
     function previewImage() {
         var file = document.getElementById("avatar").files[0];

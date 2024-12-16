@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class CommentController extends Controller
@@ -51,7 +52,18 @@ class CommentController extends Controller
 
         return response()->json([
             'success' => true,
-            'comment' => $comment->load('user'),
+            'comment' => [
+                'id' => $comment->id,
+                'content' => $comment->content,
+                'created_at' => $comment->created_at,
+                'user' => [
+                    'id' => $comment->user->id,
+                    'name' => $comment->user->name,
+                    'avatar' => $comment->user->avatar
+                        ? Storage::url($comment->user->avatar)
+                        : asset('/theme/client/assets/images/logo/avata.jpg'),
+                ],
+            ],
             'time' => $comment->created_at->diffForHumans(),
             'total' => $totalComments,
             'product_id' => $request->product_id,

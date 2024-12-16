@@ -25,7 +25,7 @@ class UpdateSizeRequest extends FormRequest
         $id = $this->route('size')->id;
 
         return [
-            'name' => 'required|string|max:255|unique:sizes,name,'.$id,
+            'name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/|unique:sizes,name,'.$id,
         ];
     }
 
@@ -35,6 +35,7 @@ class UpdateSizeRequest extends FormRequest
             'name.required' => 'Tên size là bắt buộc',
             'name.max' => 'Tên size không được dài quá 255 ký tự',
             'name.unique' => 'Tên size này đã tồn tại trong hệ thống',
+            'name.regex' => 'Tên size chỉ được phép chứa chữ cái',
         ];
     }
 }

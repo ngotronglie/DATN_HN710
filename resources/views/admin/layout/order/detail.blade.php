@@ -38,48 +38,49 @@
                             </a>
                         </div>
                         <div class="card-body">
-                            @if($order->user_id != null)
-                            <table class="table table-bordered">
-                                <tbody>
-                                    <tr>
-                                        <th>Tên người đặt</th>
-                                        <td>{{ $order->user->name }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Email</th>
-                                        <td>{{ $order->user->email }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Điện Thoại</th>
-                                        <td>
-                                            @if($order->user->phone)
-                                            {{ $order->user->phone }}
-                                            @else
-                                            Chưa cập nhật!
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>Địa chỉ</th>
-                                        <td>
-                                            @if($order->user->address)
-                                            {{ implode(', ', array_filter([
-                                                        $addressData['addressDetail'],
-                                                        $addressData['ward'],
-                                                        $addressData['district'],
-                                                        $addressData['province']
-                                                    ], function($value) {
-                                                        return !is_null($value) && $value !== '';
-                                                    })) }}
-                                            @else
-                                            Chưa cập nhật!
-                                            @endif
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            @if ($order->user_id != null)
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <th>Tên người đặt</th>
+                                            <td>{{ $order->user->name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Email</th>
+                                            <td>{{ $order->user->email }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Điện Thoại</th>
+                                            <td>
+                                                @if ($order->user->phone)
+                                                    {{ $order->user->phone }}
+                                                @else
+                                                    Chưa cập nhật!
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Địa chỉ</th>
+                                            <td>
+                                                @if ($order->user->address)
+                                                    {{ implode(
+                                                        ', ',
+                                                        array_filter(
+                                                            [$addressData['addressDetail'], $addressData['ward'], $addressData['district'], $addressData['province']],
+                                                            function ($value) {
+                                                                return !is_null($value) && $value !== '';
+                                                            },
+                                                        ),
+                                                    ) }}
+                                                @else
+                                                    Chưa cập nhật!
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             @elseif($order->user_id == null)
-                            <strong>Khách vãng lai</strong>
+                                <strong>Khách vãng lai</strong>
                             @endif
                         </div>
                     </div>
@@ -109,14 +110,16 @@
                                     </tr>
                                     <tr>
                                         <th>Địa chỉ</th>
-                                        <td>{{ implode(', ', array_filter([
-                                            $addressData['addressDetail'],
-                                            $addressData['ward'],
-                                            $addressData['district'],
-                                            $addressData['province']
-                                        ], function($value) {
-                                            return !is_null($value) && $value !== '';
-                                        })) }}</td>
+                                        <td>{{ implode(
+                                            ', ',
+                                            array_filter(
+                                                [$addressData['addressDetail'], $addressData['ward'], $addressData['district'], $addressData['province']],
+                                                function ($value) {
+                                                    return !is_null($value) && $value !== '';
+                                                },
+                                            ),
+                                        ) }}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>Đơn hàng</th>
@@ -130,8 +133,6 @@
                                             @elseif($order->status == 4)
                                                 <span class="badge badge-success">Giao hàng thành công</span>
                                             @elseif($order->status == 5)
-                                                <span class="badge badge-secondary">Chờ hủy</span>
-                                            @elseif($order->status == 6)
                                                 <span class="badge badge-danger">Đã hủy</span>
                                             @endif
                                         </td>
@@ -169,10 +170,10 @@
                                     </tr>
                                     <tr>
                                         <th>Ghi chú</th>
-                                        @if($order->note)
-                                        <td>{{ $order->note }}</td>
+                                        @if ($order->note)
+                                            <td>{{ $order->note }}</td>
                                         @else
-                                          <td>Không có ghi chú!</td>
+                                            <td>Không có ghi chú!</td>
                                         @endif
                                     </tr>
                                     <tr>
@@ -212,17 +213,19 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>
-                                                @if($orderDetail->product_variant_id)
-                                                <img src="{{ Storage::url($orderDetail->productVariant->product->img_thumb) }}" alt="Product" style="width: 100px; height: 150px; object-fit: contain;">
+                                                @if ($orderDetail->product_variant_id)
+                                                    <img src="{{ Storage::url($orderDetail->productVariant->product->img_thumb) }}"
+                                                        alt="Product"
+                                                        style="width: 100px; height: 150px; object-fit: contain;">
                                                 @else
-                                                <span>Không tìm thấy ảnh!</span>
+                                                    <span>Không tìm thấy ảnh!</span>
                                                 @endif
                                             </td>
                                             <td>
-                                                @if($orderDetail->product_variant_id)
-                                                {{ $orderDetail->productVariant->product->name }}
+                                                @if ($orderDetail->product_variant_id)
+                                                    {{ $orderDetail->productVariant->product->name }}
                                                 @else
-                                                Sản phẩm hiện tại đã bị xóa
+                                                    Sản phẩm hiện tại đã bị xóa
                                                 @endif
                                             </td>
                                             <td>{{ $orderDetail->product_name }}</td>
@@ -230,16 +233,17 @@
                                             <td>{{ $orderDetail->color_name }}</td>
                                             <td>{{ $orderDetail->quantity }}</td>
                                             <td>{{ number_format($orderDetail->price, 0, ',', '.') }} VND</td>
-                                            <td>{{ number_format($orderDetail->quantity * $orderDetail->price, 0, ',', '.')  }} VND</td>
+                                            <td>{{ number_format($orderDetail->quantity * $orderDetail->price, 0, ',', '.') }}
+                                                VND</td>
                                         </tr>
                                     @endforeach
                                     <tr>
                                         <td colspan="6">
                                             @php
-                                            // Tính tổng tiền
-                                            $totalPrice = $order->orderDetails->sum(function($orderDetail) {
-                                            return $orderDetail->quantity * $orderDetail->price;
-                                            });
+                                                // Tính tổng tiền
+                                                $totalPrice = $order->orderDetails->sum(function ($orderDetail) {
+                                                    return $orderDetail->quantity * $orderDetail->price;
+                                                });
                                             @endphp
                                             <strong>Tổng tiền:</strong>
                                         </td>
@@ -253,8 +257,9 @@
                                             <strong>Giảm {{ $order->discount }}%</strong>
                                         </td>
                                         <td colspan="3" class="text-center">
-                                            @if($order->discount)
-                                            {{ '- ' . number_format(($totalPrice * $order->discount) / 100, 0, ',', '.') }} VND
+                                            @if ($order->discount)
+                                                {{ '- ' . number_format(($totalPrice * $order->discount) / 100, 0, ',', '.') }}
+                                                VND
                                             @else
                                                 Không áp dụng voucher
                                             @endif
@@ -265,7 +270,7 @@
                                             <strong>Phí vận chuyển:</strong>
                                         </td>
                                         <td colspan="3" class="text-center">
-                                            {{ '+ '.number_format(30000, 0, ',', '.') }} VND
+                                            {{ '+ ' . number_format(30000, 0, ',', '.') }} VND
                                         </td>
                                     </tr>
                                     <tr>
@@ -279,52 +284,167 @@
                                 </tbody>
                             </table>
                             <div class="d-flex justify-content-between align-items-center">
-                            <p><strong>Mã Voucher:</strong>
-                                @if($order->voucher_id && $order->discount)
-                                    {{ $order->voucher->code ?? 'Không xác định' }}
-                                    ({{ $order->voucher->discount ?? 'N/A' }}% giảm giá)
-                                @elseif(!$order->voucher_id && !$order->discount)
-                                    Không áp dụng voucher
-                                @elseif($order->voucher_id == null && $order->discount != null)
-                                    Voucher đã bị xóa!
-                                @else
-                                    Không xác định!
-                                @endif
-                            </p>
-                            <div>
-                            <div>
-                                @if ($order->status != 6 && $order->status != 4)
-                                    Cập nhật đơn hàng:
-                                    @if ($order->status == 1)
-                                        <a class="btn btn-success" onclick="return confirm('Bạn có chắc chắn muốn xác nhận đơn hàng này không?');" title="Chờ lấy hàng"
-                                            href="{{ route('admin.order.confirmOrder', $order->id) }}"><i
-                                                class="fa fa-check"></i></a>
-                                    @elseif($order->status == 2)
-                                        <a class="btn btn-info" onclick="return confirm('Bạn có chắc chắn muốn giao đơn hàng này không?');" title="Đang giao hàng"
-                                            href="{{ route('admin.order.shipOrder', $order->id) }}"><i
-                                                class="fa fa-truck"></i></a>
-                                    @elseif($order->status == 3)
-                                        <a class="btn btn-success" onclick="return confirm('Bạn có chắc chắn đơn hàng này đã được giao không?');" title="Giao hàng thành công"
-                                            href="{{ route('admin.order.confirmShipping', $order->id) }}"><i
-                                                class="fa fa-check-circle-o"></i></a>
-                                    @elseif($order->status == 5)
-                                        <a class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');" title="Đã hủy"
-                                            href="{{ route('admin.order.cancelOrder', $order->id) }}"><i
-                                                class="fa fa-times-circle"></i></a>
+                                <p><strong>Mã Voucher:</strong>
+                                    @if ($order->voucher_id && $order->discount)
+                                        {{ $order->voucher->code ?? 'Không xác định' }}
+                                        ({{ $order->voucher->discount ?? 'N/A' }}% giảm giá)
+                                    @elseif(!$order->voucher_id && !$order->discount)
+                                        Không áp dụng voucher
+                                    @elseif($order->voucher_id == null && $order->discount != null)
+                                        Voucher đã bị xóa!
+                                    @else
+                                        Không xác định!
                                     @endif
-                                @endif
-                            </div>
-                            <div>
-                                @if ($order->status == 2 || $order->status == 4)
-                                In hóa đơn:
-                                    <a class="btn btn-hover-d btn-dark ml-2" target="_blank" onclick="return confirm('Bạn có muốn in hóa đơn, đơn hàng này không?');"
-                                        href="{{ route('admin.order.printOrder', $order->order_code) }}"
-                                        title="In đơn hàng">
-                                        <i class="fa fa-print"></i>
-                                    </a>
-                                @endif
-                            </div>
-                            </div>
+                                </p>
+                                <div>
+                                    <div>
+                                        @if ($order->status != 5 && $order->status != 4)
+                                            Cập nhật đơn hàng:
+                                            @if ($order->status == 1)
+                                                @php
+                                                    $canConfirm = true; // Mặc định có thể xác nhận
+                                                    foreach ($order->orderDetails as $detail) {
+                                                        $productVariant = $detail->productVariant;
+                                                        if ($productVariant) {
+                                                            if ($productVariant->quantity < $detail->quantity) {
+                                                                $canConfirm = false; // Không đủ số lượng
+                                                                break;
+                                                            }
+                                                        } else {
+                                                            $canConfirm = false; // Không tìm thấy biến thể sản phẩm
+                                                            break;
+                                                        }
+                                                    }
+                                                @endphp
+
+                                                @if ($order->status == 1)
+                                                    @if ($canConfirm)
+                                                    <button type="button" class="btn btn-success ml-2" data-toggle="modal" data-target="#confirmModal{{ $order->id }}" title="Chờ lấy hàng">
+                                                        <i class="fa fa-check"></i>
+                                                    </button>
+                                                    @else
+                                                    <button type="button" class="btn btn-danger ml-2" data-toggle="modal" data-target="#cancelModal{{ $order->id }}" title="Đã hủy">
+                                                        <i class="fa fa-times-circle"></i>
+                                                    </button>
+                                                    @endif
+                                                @endif
+                                            @elseif($order->status == 2)
+                                            <button type="button" class="btn btn-info ml-2" data-toggle="modal" data-target="#shipModal{{ $order->id }}" title="Đang giao hàng">
+                                                <i class="fa fa-truck"></i>
+                                            </button>
+                                            @elseif($order->status == 3)
+                                            <button type="button" class="btn btn-success ml-2" data-toggle="modal" data-target="#successModal{{ $order->id }}" title="Giao hàng thành công">
+                                                <i class="fa fa-check-circle-o"></i>
+                                              </button>
+                                            @endif
+                                        @endif
+                                    </div>
+
+                                    <div>
+                                        @if ($order->status == 2 || $order->status == 4)
+                                            In hóa đơn:
+                                            <a class="btn btn-hover-d btn-dark ml-2" target="_blank"
+                                                href="{{ route('admin.order.printOrder', $order->order_code) }}"
+                                                title="In đơn hàng">
+                                                <i class="fa fa-print"></i>
+                                            </a>
+                                        @endif
+                                    </div>
+                                    <div class="modal fade" id="confirmModal{{ $order->id }}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel{{ $order->id }}" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header d-flex">
+                                                    <h5 class="modal-title" id="confirmModalLabel{{ $order->id }}">CẬP NHẬT TRẠNG THÁI</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Bạn có chắc chắn muốn cập nhật đơn hàng "{{ $order->order_code }}" thành **Chờ lấy hàng** không?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                                    <form action="{{ route('admin.order.confirmOrder', $order->id) }}" method="GET">
+                                                        @csrf
+                                                        
+                                                        <input type="hidden" name="status" value="2"> 
+                                                        <button type="submit" class="btn btn-success">Xác nhận</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="shipModal{{ $order->id }}" tabindex="-1" role="dialog" aria-labelledby="shipModalLabel{{ $order->id }}" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header d-flex">
+                                                    <h5 class="modal-title" id="shipModalLabel{{ $order->id }}">CẬP NHẬT TRẠNG THÁI</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Bạn có chắc chắn muốn cập nhật đơn hàng "{{ $order->order_code }}" thành **Đang giao hàng** không?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                                    <form action="{{ route('admin.order.shipOrder', $order->id) }}" method="GET">
+                                                        @csrf
+                                                      
+                                                        <input type="hidden" name="status" value="3"> <!-- Đã giao -->
+                                                        <button type="submit" class="btn btn-info">Xác nhận</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="successModal{{ $order->id }}" tabindex="-1" role="dialog" aria-labelledby="successModalLabel{{ $order->id }}" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header d-flex">
+                                                    <h5 class="modal-title" id="shipModalLabel{{ $order->id }}">CẬP NHẬT TRẠNG THÁI</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Bạn có chắc chắn muốn cập nhật đơn hàng "{{ $order->order_code }}" thành **Giao hàng thành công** không?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                                    <form action="{{ route('admin.order.confirmShipping', $order->id) }}" method="GET">
+                                                        @csrf
+                                                        <input type="hidden" name="status" value="4"> 
+                                                        <button type="submit" class="btn btn-info">Xác nhận</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>   
+                                    <div class="modal fade" id="cancelModal{{ $order->id }}" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel{{ $order->id }}" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header d-flex">
+                                                    <h5 class="modal-title" id="shipModalLabel{{ $order->id }}">CẬP NHẬT TRẠNG THÁI</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Bạn có chắc chắn muốn hủy đơn hàng "{{ $order->order_code }}" không?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                                    <form action="{{ route('admin.order.cancelOrder', $order->id) }}" method="GET">
+                                                        @csrf
+                                                        <input type="hidden" name="status" value="5"> 
+                                                        <button type="submit" class="btn btn-info">Xác nhận</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                </div>
                             </div>
                         </div>
 

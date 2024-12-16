@@ -8,7 +8,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Ela Admin - HTML5 Admin Template</title>
+    <title>Bảng điều khiển</title>
     <meta name="description" content="Ela Admin - HTML5 Admin Template">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -44,7 +44,7 @@
                         @csrf
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" name="email" class="form-control" placeholder="Email" value="{{ old('email') }}" required>
+                            <input type="email" name="email" class="form-control" placeholder="Email" value="{{ old('email') }}">
                             @error('email')
                             <small class="text-danger">{{ $message }}</small>
                             @enderror
@@ -53,7 +53,7 @@
                             <label>Mật khẩu</label>
                             <div class="input-group">
                                 <input type="password" id="password" name="password" class="form-control"
-                                    placeholder="Mật khẩu" required>
+                                    placeholder="Mật khẩu">
                                 <div class="input-group-append">
                                     <span class="input-group-text" onclick="togglePassword()">
                                         <i class="fa fa-eye" id="eyeIcon"></i>

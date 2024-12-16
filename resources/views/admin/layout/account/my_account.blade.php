@@ -42,6 +42,15 @@
                                 </div>
                             </div>
 
+                            @if (auth()->user()->role==1)
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Ca làm việc</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-plaintext">{{auth()->user()->workShift->shift_name}} ({{auth()->user()->workShift->start_time}} - {{auth()->user()->workShift->end_time}})</p>
+                                </div>
+                            </div>
+                            @endif
+
                             <div class="form-group row">
                                 <label for="image" class="col-sm-3 col-form-label">Ảnh đại diện</label>
                                 <div class="col-sm-9">

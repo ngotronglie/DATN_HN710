@@ -7,7 +7,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Chi tiết sản phẩm</h1>
+                        <h1>Chi tiết bài viết</h1>
                     </div>
                 </div>
             </div>
@@ -38,7 +38,7 @@
                         </a>
                     </div>
                     <div class="card-body">
-                        <table class="table table-bordered">
+                        {{-- <table class="table table-bordered">
                             <tbody>
                                 <tr>
                                     <th>Tên bài viết</th>
@@ -108,7 +108,42 @@
                                     <td>{{ $blog->updated_at }}</td>
                                 </tr>
                             </tbody>
-                        </table>
+                        </table> --}}
+                        <div class="content aos-init" data-aos="fade-up" data-aos-delay="300">
+                            <h2 class="title mb-3" style="text-align: center">{{ $blog->title }}</h2>
+                            <div class="meta-list mb-3">
+                                <span>Tác giả:
+                                    <span style="font-weight: 600;color: black" class="meta-item author mr-1">{{ $blog->user->name }},</span>
+                                </span>
+                                <span class="meta-item date">{{ \Carbon\Carbon::parse($blog->created_at)->format('d/m/Y') }}</span>
+                                <span class="meta-item comment"><a href="#">{{ $blog->view }} Lượt xem</a></span>
+                            </div>
+                            <div class="desc content aos-init aos-animate" data-aos="fade-right" data-aos-delay="300">
+                                {!! $blog->content !!}
+                            </div>
+                            <div class="meta-list mb-3" style="float: right">
+                                <span>
+                                   Ngày sửa:
+                                </span>
+                                <span class="meta-item date">{{ \Carbon\Carbon::parse($blog->updated_at)->format('d/m/Y') }},</span>
+                                <span>
+                                    Trạng thái:
+                                 </span>
+                                 <span class="meta-item date">
+                                    @if($blog->is_active)
+                                        Hoạt động,
+                                        @else
+                                        Không hoạt động,
+                                        @endif
+                                 </span>
+                                 <span>
+                                    Danh mục:
+                                 </span>
+                                 <span class="meta-item date">
+                                    {{$blog->categoryBlog->name}}
+                                 </span>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-footer">
                         <a href="{{ route('admin.blogs.edit', $blog) }}" class="btn btn-warning btn-icon-split">
@@ -130,7 +165,7 @@
         document.getElementById('shortDescription').style.display = 'none'; // Hide short description
         document.getElementById('fullDescription').style.display = 'block'; // Show full description
     }
-    
+
     function showLess() {
         document.getElementById('shortDescription').style.display = 'block'; // Show short description
         document.getElementById('fullDescription').style.display = 'none'; // Hide full description

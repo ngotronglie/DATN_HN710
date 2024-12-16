@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ForgotPasswordController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\ShiftController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SizeController;
 use App\Http\Controllers\Admin\VoucherController;
@@ -21,7 +22,6 @@ use App\Http\Controllers\Ajax\ShopAjaxController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\FavoriteController;
 use App\Http\Controllers\Client\PointController;
-
 use App\Http\Controllers\Ajax\DeleteController;
 use App\Http\Controllers\Ajax\ChangeActiveController;
 use App\Http\Controllers\Client\HomeController;
@@ -30,7 +30,8 @@ use App\Http\Controllers\Client\ShopController;
 use App\Http\Controllers\Client\AccountController;
 use App\Http\Controllers\Client\CheckoutController;
 use App\Http\Controllers\Client\CommentController as ClientCommentController;
-
+use App\Http\Controllers\Admin\SupportController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -61,6 +62,7 @@ Route::get('/api/wards', [LocationController::class, 'getWardLoad']);
 
 // Shop
 Route::get('/shops', [ShopController::class, 'index'])->name('shops.index');
+Route::get('/compare/{id}', [ShopController::class, 'compare'])->name('shops.compare');
 Route::get('/shops/category/{id}', [ShopController::class, 'showByCategory'])->name('shops.category');
 Route::get('/shops/{slug}', [ShopController::class, 'show'])->name('shops.show');
 Route::get('/ajax/shops/{slug}', [ShopAjaxController::class, 'showAjax']);
@@ -92,10 +94,16 @@ Route::get('/blogs/{id}', [ClientBlogController::class, 'show'])->name('blogs.sh
 Route::get('/blogs-search', [ClientBlogController::class, 'search'])->name('blogs.search');
 Route::post('/voucher/apply-code', [ClientBlogController::class, 'applyVoucher'])->name('voucher.apply_code');
 
-// Contact
-Route::get('/contact', function () {
-    return view('client.pages.contact');
+// Chat
+Route::get('/support', [ChatController::class, 'index'])->name('support');
+Route::middleware('auth')->group(function () {
+    Route::get('/chats', [ChatController::class, 'index'])->name('chat.index');
+    Route::get('/chats/create', [ChatController::class, 'createRoom'])->name('chat.createRoom');
+    Route::get('/chats/{chat}', [ChatController::class, 'show'])->name('chat.show');
+    Route::post('/chats/{chat}/send', [ChatController::class, 'sendMessage'])->name('chat.sendMessage');
 });
+
+
 // Checkout
  Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
  Route::post('/store-session-data', [CheckoutController::class, 'storeData']);
@@ -130,13 +138,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/my_acount/update-password/{id}', [AccountController::class, 'updatePassword'])->name('user.updatePassword');
     Route::get('/my_acount/{id}/bill_detail', [AccountController::class, 'orderBillDetail'])->name('viewBillDetail');
     Route::get('my_acount/orders/cancel/{id}', [AccountController::class, 'cancelOrder'])->name('cancelOrder');
-    // Route::get('/orders/status/{status?}', [AccountController::class, 'getOrdersByStatus'])->name('orders.byStatus');
-    // Route::get('/voucher/status/{status?}', [AccountController::class, 'getVouchersByStatus'])->name('voucher.byStatus');
-
 });
 Route::get('/verify/{token}', [AccountController::class, 'verify'])->name('verify');
-
-
 
 // ----------------------------END CLIENT ROUTES--------------------------------
 
@@ -153,9 +156,11 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
 });
 Route::get('verify-email/{token}', [ForgotPasswordController::class, 'verifyEmail'])->name('verify.email');
 
-//
-Route::prefix('admin')->as('admin.')->middleware(['auth', 'isAdmin'])->group(function () {
+Route::prefix('admin')->as('admin.')->middleware(['check.working.shift','auth', 'isAdmin'])->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::delete('delete/{chat}', [SupportController::class, 'delete'])->name('chat.delete');
+
+    Route::get('support/{chat}', [SupportController::class, 'show'])->name('chat');
 
     // Các route tùy chỉnh
     Route::get('/accounts/my_account', [UserController::class, 'myAccount'])->name('accounts.myAccount');
@@ -167,6 +172,8 @@ Route::prefix('admin')->as('admin.')->middleware(['auth', 'isAdmin'])->group(fun
 
     // Quản lí tài khoản
     Route::resource('accounts', UserController::class)->except(['destroy']);
+    Route::resource('shift', ShiftController::class)->except(['show']);
+
 
     // Quản lý các size đã bị xóa mềm
     Route::get('sizes/trashed', [SizeController::class, 'trashed'])->name('sizes.trashed');
@@ -228,7 +235,6 @@ Route::prefix('admin')->as('admin.')->middleware(['auth', 'isAdmin'])->group(fun
     // Quản lí banner
     Route::resource('banners', BannerController::class);
 
-
     //Quản lý đơn hàng
     Route::get('order', [OrderController::class, 'index'])->name('order.index');
     Route::get('order/{order_id}/order-detail', [OrderController::class, 'detail'])->name('order.detail');
@@ -253,6 +259,9 @@ Route::prefix('admin')->as('admin.')->middleware(['auth', 'isAdmin'])->group(fun
 //ajax category
 Route::post('categories/ajax/changeActiveCategory', [ChangeActiveController::class, 'changeActiveCategory']);
 Route::post('categories/ajax/changeAllActiveCategory', [ChangeActiveController::class, 'changeActiveAllCategory']);
+//ajax comment
+Route::post('comments/ajax/changeActiveComment', [ChangeActiveController::class, 'changeActiveComment']);
+Route::post('comments/ajax/changeAllActiveComment', [ChangeActiveController::class, 'changeActiveAllComment']);
 //ajax product
 Route::post('products/ajax/changeActiveProduct', [ChangeActiveController::class, 'changeActiveProduct']);
 Route::post('products/ajax/changeAllActiveProduct', [ChangeActiveController::class, 'changeActiveAllProduct']);

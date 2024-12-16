@@ -104,8 +104,6 @@
                                                 @elseif($item->status == 4)
                                                     <span class="badge badge-success">Giao hàng thành công</span>
                                                 @elseif($item->status == 5)
-                                                    <span class="badge badge-secondary">Chờ hủy</span>
-                                                @elseif($item->status == 6)
                                                     <span class="badge badge-danger">Đã hủy</span>
                                                 @endif
                                             </td>
@@ -113,35 +111,148 @@
                                                 <a class="btn btn-primary" href="{{ route('admin.order.detail', $item) }}" title="Xem chi tiết">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
-                                                @if ($item->status != 6 && $item->status != 4)
-                                                    @if($item->status == 1)
-                                                        <a class="btn btn-success ml-2" href="{{ route('admin.order.confirmOrder', $item->id) }}"
-                                                           onclick="return confirm('Bạn có chắc chắn muốn xác nhận đơn hàng này không?');" title="Chờ lấy hàng">
-                                                           <i class="fa fa-check"></i>
-                                                        </a>
-                                                    @elseif($item->status == 2)
-                                                        <a class="btn btn-info ml-2" href="{{ route('admin.order.shipOrder', $item->id) }}"
-                                                           onclick="return confirm('Bạn có chắc chắn muốn giao đơn hàng này không?');" title="Đang giao hàng">
-                                                           <i class="fa fa-truck"></i>
-                                                        </a>
-                                                    @elseif($item->status == 3)
-                                                        <a class="btn btn-success ml-2" href="{{ route('admin.order.confirmShipping', $item->id) }}"
-                                                           onclick="return confirm('Bạn có chắc chắn đơn hàng này đã được giao không?');" title="Giao hàng thành công">
-                                                           <i class="fa fa-check-circle-o"></i>
-                                                        </a>
-                                                    @elseif($item->status == 5)
-                                                        <a class="btn btn-danger ml-2" href="{{ route('admin.order.cancelOrder', $item->id) }}"
-                                                           onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');" title="Đã hủy">
-                                                           <i class="fa fa-times-circle"></i>
-                                                        </a>
+                                                @if ($item->status != 5 && $item->status != 4)
+                                                @php
+                                                    $canConfirm = true; // Mặc định có thể xác nhận
+                                                    foreach ($item->orderDetails as $detail) {
+                                                        $productVariant = $detail->productVariant;
+                                                        if ($productVariant) {
+                                                            if ($productVariant->quantity < $detail->quantity) {
+                                                                $canConfirm = false; // Không đủ số lượng
+                                                                break;
+                                                            }
+                                                        } else {
+                                                            $canConfirm = false; // Không tìm thấy biến thể sản phẩm
+                                                            break;
+                                                        }
+                                                    }
+                                                @endphp
+                                            
+                                                @if($item->status == 1)
+                                                    @if ($canConfirm)
+                                                    <button type="button" class="btn btn-success ml-2" data-toggle="modal" data-target="#confirmModal{{ $item->id }}" title="Chờ lấy hàng">
+                                                        <i class="fa fa-check"></i>
+                                                    </button>
+                                                    @else
+                                                    <button type="button" class="btn btn-danger ml-2" data-toggle="modal" data-target="#cancelModal{{ $item->id }}" title="Đã hủy">
+                                                        <i class="fa fa-times-circle"></i>
+                                                    </button>
                                                     @endif
+                                                @elseif($item->status == 2)
+                                                <button type="button" class="btn btn-info ml-2" data-toggle="modal" data-target="#shipModal{{ $item->id }}" title="Đang giao hàng">
+                                                    <i class="fa fa-truck"></i>
+                                                </button>
+                                                @elseif($item->status == 3)
+                                                       <button type="button" class="btn btn-success ml-2" data-toggle="modal" data-target="#successModal{{ $item->id }}" title="Giao hàng thành công">
+                                                        <i class="fa fa-check-circle-o"></i>
+                                                      </button>
+                                                    </a>
                                                 @endif
+                                            @endif
+                                            
+
+                                                
                                                 @if ($item->status == 2 || $item->status == 4)
-                                                <a class="btn btn-hover-d btn-dark ml-2" onclick="return confirm('Bạn có muốn in hóa đơn, đơn hàng này không?');" target="_blank" href="{{route('admin.order.printOrder', $item->order_code)}}" title="In đơn hàng">
+                                                <a class="btn btn-hover-d btn-dark ml-2" target="_blank" href="{{route('admin.order.printOrder', $item->order_code)}}" title="In đơn hàng">
                                                     <i class="fa fa-print"></i>
                                                 </a>
                                                 @endif
-                                            </td>                                      
+                                            </td>    
+                                            <div class="modal fade" id="confirmModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel{{ $item->id }}" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header d-flex">
+                                                            <h5 class="modal-title" id="confirmModalLabel{{ $item->id }}">CẬP NHẬT TRẠNG THÁI</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Bạn có chắc chắn muốn cập nhật đơn hàng "{{ $item->order_code }}" thành **Chờ lấy hàng** không?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                                            <form action="{{ route('admin.order.confirmOrder', $item->id) }}" method="GET">
+                                                                @csrf
+                                                                
+                                                                <input type="hidden" name="status" value="2"> 
+                                                                <button type="submit" class="btn btn-success">Xác nhận</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal fade" id="shipModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="shipModalLabel{{ $item->id }}" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header d-flex">
+                                                            <h5 class="modal-title" id="shipModalLabel{{ $item->id }}">CẬP NHẬT TRẠNG THÁI</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Bạn có chắc chắn muốn cập nhật đơn hàng "{{ $item->order_code }}" thành **Đang giao hàng** không?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                                            <form action="{{ route('admin.order.shipOrder', $item->id) }}" method="GET">
+                                                                @csrf
+                                                              
+                                                                <input type="hidden" name="status" value="3"> <!-- Đã giao -->
+                                                                <button type="submit" class="btn btn-info">Xác nhận</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal fade" id="successModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="successModalLabel{{ $item->id }}" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header d-flex">
+                                                            <h5 class="modal-title" id="shipModalLabel{{ $item->id }}">CẬP NHẬT TRẠNG THÁI</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Bạn có chắc chắn muốn cập nhật đơn hàng "{{ $item->order_code }}" thành **Giao hàng thành công** không?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                                            <form action="{{ route('admin.order.confirmShipping', $item->id) }}" method="GET">
+                                                                @csrf
+                                                                <input type="hidden" name="status" value="4"> 
+                                                                <button type="submit" class="btn btn-info">Xác nhận</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>   
+                                            <div class="modal fade" id="cancelModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel{{ $item->id }}" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header d-flex">
+                                                            <h5 class="modal-title" id="shipModalLabel{{ $item->id }}">CẬP NHẬT TRẠNG THÁI</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Bạn có chắc chắn muốn hủy đơn hàng "{{ $item->order_code }}" không?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                                            <form action="{{ route('admin.order.cancelOrder', $item->id) }}" method="GET">
+                                                                @csrf
+                                                                <input type="hidden" name="status" value="5"> 
+                                                                <button type="submit" class="btn btn-info">Xác nhận</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>   
+                                                              
                                         </tr>
                                     @endforeach
 

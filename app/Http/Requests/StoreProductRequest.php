@@ -32,8 +32,8 @@ class StoreProductRequest extends FormRequest
             // Thêm validation cho biến thể
             'variants.*.size_id' => 'required|exists:sizes,id',
             'variants.*.color_id' => 'required|exists:colors,id',
-            'variants.*.price' => 'required|numeric|min:0',
-            'variants.*.price_sale' => 'required|numeric|min:0|lt:variants.*.price',
+            'variants.*.price' => 'required|integer|min:0',
+            'variants.*.price_sale' => 'required|integer|min:0|lt:variants.*.price',
             'variants.*.quantity' => 'required|integer|min:1',
             // Thư viện ảnh
             'product_galleries' => 'required',
@@ -92,10 +92,10 @@ class StoreProductRequest extends FormRequest
             'variants.*.color_id.required' => 'Màu sắc là bắt buộc',
             'variants.*.color_id.exists' => 'Màu sắc không hợp lệ',
             'variants.*.price.required' => 'Giá là bắt buộc',
-            'variants.*.price.numeric' => 'Giá phải là số',
+            'variants.*.price.integer' => 'Giá phải là số',
             'variants.*.price.min' => 'Giá phải lớn hơn hoặc bằng 0',
             'variants.*.price_sale.required' => 'Giá khuyến mãi là bắt buộc',
-            'variants.*.price_sale.numeric' => 'Giá khuyến mãi phải là số',
+            'variants.*.price_sale.integer' => 'Giá khuyến mãi phải là số',
             'variants.*.price_sale.min' => 'Giá khuyến mãi phải lớn hơn hoặc bằng 0',
             'variants.*.price_sale.lt' => 'Giá khuyến mãi phải nhỏ hơn giá gốc',
             'variants.*.quantity.required' => 'Số lượng là bắt buộc',

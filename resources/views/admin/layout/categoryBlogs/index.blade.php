@@ -50,6 +50,7 @@
                             <a class="btn btn-danger countTrash" href="{{ route('admin.category_blogs.trashed') }}">
                                 <i class="fa fa-trash"></i> Thùng rác <span class="countTrashBlog">({{ $trashedCount }})</span>
                             </a>
+                            @if(Auth::user()->role == 2)
                             <div class="dropdown float-right ml-2">
                                 <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-cogs"></i> Tùy chọn
@@ -66,15 +67,18 @@
                                     </a>
                                 </div>
                             </div>
+                            @endif
                         </div>
                     </div>
                     <div class="card-body">
                         <table id="bootstrap-data-table" class="table table-striped table-bordered" data-disable-sort="false">
                             <thead>
                                 <tr>
+                                    @if(Auth::user()->role == 2)
                                     <th>
                                         <input id="checkAllTable" type="checkbox">
                                     </th>
+                                    @endif
                                     <th>STT</th>
                                     <th>Tên danh mục bài viết</th>
                                     <th>Số lượng bài viết</th>
@@ -84,7 +88,9 @@
                             </thead>
                             <tfoot>
                                 <tr>
+                                    @if(Auth::user()->role == 2)
                                     <th></th>
+                                    @endif
                                     <th>STT</th>
                                     <th>Tên danh mục bài viết</th>
                                     <th>Số lượng bài viết</th>
@@ -95,16 +101,18 @@
                             <tbody class="null_Table">
                                 @foreach ($data as $key => $item)
                                 <tr>
+                                    @if(Auth::user()->role == 2)
                                     <td>
                                         <input type="checkbox" class="checkBoxItem" data-id="{{ $item->id }}">
                                     </td>
+                                    @endif
                                 <td>{{ $key+1 }}</td>
                                 <td>{{ $item->name }}</td>
                                 <td>{{ $item->blogs_count }}</td>
                                 <td style="width: 12%" class="text-center">
                                     <input type="checkbox" class="js-switch active" data-model="{{ $item->is_active }}"
                                         {{ $item->is_active == 1 ? 'checked' : '' }} data-switchery="true"
-                                        data-modelId="{{ $item->id }}" data-title="{{ $item->name }}" />
+                                        data-modelId="{{ $item->id }}" data-title="{{ $item->name }}" @if(Auth::user()->role != 2) disabled @endif />
                                 </td>
                                 <td class="d-flex">
                                     <a class="btn btn-primary mr-2" href="{{route('admin.category_blogs.show', $item)}}" title="Xem chi tiết"><i class="fa fa-eye"></i></a>

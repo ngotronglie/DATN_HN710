@@ -23,25 +23,25 @@ class OrderPolicy
     public function confirm(User $user, Order $order)
     {
         // Xác nhận đơn hàng
-        return in_array($user->role, [1, 2]) && $order->status == 1;
+        return in_array($user->role, [1, 2]);
     }
 
     public function ship(User $user, Order $order)
     {
         // Xác nhận giao hàng
-        return in_array($user->role, [1, 2]) && $order->status == 2;
+        return in_array($user->role, [1, 2]);
     }
 
     public function confirmShipping(User $user, Order $order)
     {
         // Xác nhận đã giao hàng
-        return in_array($user->role, [1, 2]) && $order->status == 3;
+        return in_array($user->role, [1, 2]);
     }
 
     public function cancel(User $user, Order $order)
     {
         // Hủy đơn hàng
-        return in_array($user->role, [1, 2]) && $order->status == 5;
+        return in_array($user->role, [1, 2]);
     }
 
     public function print(User $user, Order $order)

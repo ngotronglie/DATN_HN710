@@ -18,7 +18,7 @@ class VoucherController extends Controller
         if (Gate::denies('viewAny', Voucher::class)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
-        
+
         $vouchers = Voucher::orderBy('id', 'desc')->get();
 
         return view(self::PATH_VIEW . 'index', compact('vouchers'));
@@ -38,6 +38,8 @@ class VoucherController extends Controller
             return redirect()->route('admin.vouchers.index')->with('warning', 'Bạn không có quyền!');
         }
         $data = $request->all();
+        $startDate = Carbon::parse($data['start_date']);
+        $data['is_active'] = $startDate->isFuture() ? 0 : 1;
         Voucher::create($data);
 
         return redirect()->route('admin.vouchers.index')->with('success', 'Thêm Voucher thành công');
@@ -65,6 +67,8 @@ class VoucherController extends Controller
             return redirect()->route('admin.vouchers.index')->with('warning', 'Bạn không có quyền!');
         }
         $data = $request->all();
+        $startDate = Carbon::parse($data['start_date']);
+        $data['is_active'] = $startDate->isFuture() ? 0 : 1;
         $voucher->update($data);
 
         return redirect()->route('admin.vouchers.index')->with('success', 'Sửa Voucher thành công');

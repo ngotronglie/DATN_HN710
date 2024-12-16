@@ -78,6 +78,7 @@
                                     <th>Tên</th>
                                     <th>Email</th>
                                     <th>Chức vụ</th>
+                                    <th>Ca làm việc</th>
                                     <th>Trạng thái</th>
                                     <th>Hành động</th>
                                 </tr>
@@ -89,6 +90,7 @@
                                     <th>Tên</th>
                                     <th>Email</th>
                                     <th>Chức vụ</th>
+                                    <th>Ca làm việc</th>
                                     <th>Trạng thái</th>
                                     <th>Hành động</th>
                                 </tr>
@@ -105,6 +107,18 @@
                                     <td>
                                         @if($item->role == 1)
                                         Nhân viên
+                                        @elseif($item->role == 2)
+                                        Admin
+                                        @else
+                                        Không xác định
+                                        @endif
+                                    </td>
+                                    <td>
+                                        
+                                        @if($item->role == 1 && $item->work_shift_id !=null)
+                                           
+                                            {{$item->workShift->shift_name}} ({{$item->workShift->start_time}} - {{$item->workShift->end_time}})
+                                          
                                         @elseif($item->role == 2)
                                         Admin
                                         @else

@@ -65,6 +65,7 @@
                             $('#color_prd').append(
                                 '<li>' +
                                 '<label class="color-btn colorGetSize ' + (index === 0 ? 'selected' : '') + '" ' +
+                                'title="' + variant.color.name + '"'+
                                 'data-id="' + variant.color.id + '" ' +
                                 'data-productId="' + idProduct + '" ' +
                                 'data-max="' + maxPrice + '" ' +

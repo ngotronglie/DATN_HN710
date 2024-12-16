@@ -70,6 +70,12 @@
         .required {
             color: rgb(247, 49, 49);
         }
+
+        .rules-order{
+            color: #1f1f1f;
+            text-decoration:underline;
+            cursor:pointer
+        }
     </style>
 @section('main')
     <!-- Breadcrumb Section Start -->
@@ -90,25 +96,25 @@
         </div>
         <!-- Breadcrumb Area End -->
     </div>
-    <!-- Breadcrumb Section End -->
-
-    <!-- Checkout Section Start -->
     <div class="section section-margin">
         <div class="container">
             <div class="row">
                 <div class="col-12">
                     @if (Auth::check())
-                        <!-- Coupon Accordion Start -->
+                        @php $point = auth()->user()->points @endphp
+
                         <div class="coupon-accordion">
                             <!-- Title Start -->
-                            <h3 class="title">Có phiếu giảm giá? <span id="showcoupon">Nhấp vào đây để nhập mã của
-                                    bạn</span></h3>
+                            <h3 class="title">
+                                Có phiếu giảm giá? <span id="coupon-title" style="text-decoration: underline">Nhấp vào đây để sử dụng</span>
+                            </h3>
                             <!-- Title End -->
 
                             <!-- Checkout Coupon Start -->
-                            <div id="checkout_coupon" class="coupon-checkout-content">
+                            <div id="checkout_coupon" class="coupon-checkout-content" style="display: none;">
                                 <div class="coupon-info">
                                     <div id="saved-vouchers" class="mt-4">
+                                        @if (!$validVouchers->isEmpty())
                                         <div class="row">
                                             @foreach ($validVouchers as $voucher)
                                                 <div class="col-md-4 mb-3">
@@ -121,8 +127,6 @@
                                                             </div>
                                                             <!-- Mã voucher -->
                                                             <div class="voucher-details flex-grow-1">
-                                                                <h6 class="mb-1 text-dark font-weight-bold">
-                                                                    {{ $voucher->code }}</h6>
                                                                 <small class="text-muted">Giảm giá:
                                                                     {{ $voucher->discount ?? 0 }}%</small>
                                                                 <br>
@@ -155,13 +159,15 @@
                                                     </div>
                                                 </div>
                                             @endforeach
+                                            <p>Chú ý: Nếu bạn đã lưu hoặc đổi điểm thưởng lấy mã giảm giá thành công nhưng giá trị đơn hàng không đáp ứng đủ điều kiện tối thiểu hoặc tối đa, mã giảm giá sẽ không được hiển thị hoặc áp dụng cho đơn hàng</p>
                                         </div>
+                                        @else
+                                            <p class="no-coupon-message">Bạn không có mã giảm giá nào, bạn có thể đổi <span><a style="color: #de471d" href="/my_account">{{$point}}</a> điểm</span> lấy ưu đãi.</p>
+                                            <p>Chú ý: Nếu bạn đã lưu hoặc đổi điểm thưởng lấy mã giảm giá thành công nhưng giá trị đơn hàng không đáp ứng đủ điều kiện tối thiểu hoặc tối đa, mã giảm giá sẽ không được hiển thị hoặc áp dụng cho đơn hàng.</p>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
-
-
-
                             <!-- Checkout Coupon End -->
                         </div>
                         <!-- Coupon Accordion End -->
@@ -345,7 +351,7 @@
                                                 value="{{ $product->id }}">
                                         @endforeach
 
-                                        <input type="hidden" name="total_amount" value="{{ $total }}">
+                                        <input type="hidden" name="total_amount" value="{{ $totalSum }}">
 
 
                                     </tbody>
@@ -354,13 +360,13 @@
                                         <tr class="cart-subtotal">
                                             <th class="text-start ps-0">Tổng Cộng</th>
                                             <td class="text-end pe-0">
-                                                <span class="amount">{{ number_format($total, 0, ',', '.') }} đ</span>
+                                                <span class="amount">{{ number_format($totalSum, 0, ',', '.') }} đ</span>
                                             </td>
                                         </tr>
                                         <tr class="cart-subtotal">
                                             <th class="text-start ps-0">Phí vận chuyển</th>
                                             <td class="text-end pe-0">
-                                                <span class="amount">+30,000 đ</span>
+                                                <span class="amount">+30.000 đ</span>
                                             </td>
                                         </tr>
                                         @if (Auth::check())
@@ -381,21 +387,29 @@
                                             <td class="text-end pe-0">
                                                 <strong>
                                                     <span class="amount" id="total-amount">
-                                                        {{ session('voucher_id') ? number_format(session('totalAmountWithDiscount')) : number_format($total + 30000, 0, ',', '.') }}
+                                                        {{ session('voucher_id') ? number_format(session('totalAmountWithDiscount')) : number_format($totalSum + 30000, 0, ',', '.') }}
                                                         đ
                                                     </span>
                                                 </strong>
                                             </td>
                                         </tr>
                                         @php
-                                            $pointsToAdd = floor($total / 100000) * 10;
+                                            $totalAll = $totalSum + 30000;
+                                            $pointsToAdd = floor($totalAll / 100000) * 10;
+
+                                            $nextPointTarget = ($pointsToAdd == 0) ? 10 : $pointsToAdd + 10;
+
+                                            $neededAmount = ceil(($nextPointTarget / 10) * 100000) - $totalAll;
                                         @endphp
+
                                         @if (Auth::check())
                                         <tr class="cart-subtotal">
                                             <th class="text-start ps-0" style="font-size: 17px">Nhận điểm</th>
                                             <td class="text-end pe-0">
-                                                <span class="amount">+{{ $pointsToAdd }} điểm sau khi đơn hàng được giao
-                                                    thành công
+                                                <span class="amount">+{{ $pointsToAdd }} điểm sau khi đơn hàng được giao thành công </span>
+                                                <br>
+                                                <span style="color: #de1d1d;">
+                                                    Mua thêm {{ number_format($neededAmount, 0, ',', '.') }}đ để nhận ngay {{ $nextPointTarget }} điểm. <span class="rules-order">Quy tắc</span>
                                                 </span>
                                             </td>
                                         </tr>
@@ -404,7 +418,12 @@
                                             <th class="text-start ps-0" style="font-size: 17px">Nhận điểm</th>
                                             <td class="text-end pe-0">
                                                 <a style="color: #de1d1d;" href="/login">Đăng nhập</a>
-                                                <span class="amount"> để nhận +{{ $pointsToAdd }} điểm và đổi lấy ưu đãi hấp dẫn
+                                                <span class="amount">
+                                                    để nhận +{{ $pointsToAdd }} điểm và đổi lấy ưu đãi.
+                                                </span>
+                                                <br>
+                                                <span style="color: #de1d1d;">
+                                                    Mua thêm {{ number_format($neededAmount, 0, ',', '.') }}đ để nhận ngay{{ $nextPointTarget }} điểm. <span class="rules-order">Quy tắc</span>
                                                 </span>
                                             </td>
                                         </tr>
@@ -468,113 +487,5 @@
 @endsection
 @section('script')
     <script src="{{ asset('plugins/js/location.js') }}"></script>
-    <script>
-        $(document).ready(function () {
-            $('.userName').on('input', function () {
-                $('.userName').next('.error-message').html('');
-            });
-
-            $('.userEmail').on('input', function () {
-                $('.userEmail').next('.error-message').html('');
-            });
-
-            $('.userPhone').on('input', function () {
-                $('.userPhone').next('.error-message').html('');
-            });
-
-            $('#addressForm').submit(function (event) {
-                let isValid = true;
-
-                $('.error-message').text('');
-
-                if ($('.userName').val() == '') {
-                    $('.userName').next('.error-message').html('Vui lòng nhập tên người nhận.');
-                    isValid = false;
-                }
-
-                if ($('.userEmail').val() == '') {
-                    $('.userEmail').next('.error-message').html('Vui lòng nhập email.');
-                    isValid = false;
-                }else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test($('.userEmail').val())) {
-                     $('.userEmail').next('.error-message').html('Vui lòng nhập email hợp lệ.');
-                     isValid = false;
-                }
-
-                if ($('.userPhone').val() == '') {
-                    $('.userPhone').next('.error-message').html('Vui lòng nhập số điện thoại.');
-                    isValid = false;
-                } else if (!/^(0(3[2-9]|5[2689]|7[0-9]|8[1-9]|9[0-9]))[0-9]{7}$/.test($('.userPhone').val())) {
-                    $('.userPhone').next('.error-message').html('Vui lòng nhập số điện thoại di động hợp lệ.');
-                    isValid = false;
-                }
-
-                if (!isValid) {
-                    event.preventDefault();
-                }
-            });
-        });
-
-        $(document).ready(function() {
-            //Aps vourcher
-            $(document).on('click', '.use-voucher', function() {
-                let voucherButton = $(this);
-                let voucherCode = voucherButton.data('code');
-                $.ajax({
-                    url: '{{ route('voucher.apply') }}',
-                    method: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        voucher_code: voucherCode
-                    },
-                    success: function(response) {
-                        console.log(response);
-                        if (response.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Thành công',
-                                text: response.message,
-                            });
-
-                            $('.use-voucher').each(function() {
-                                $(this).data('used', 'false').text('Dùng').removeClass(
-                                    'disabled').attr('disabled', false);
-                            });
-
-                            voucherButton.data('used', 'true').text('Đã dùng').addClass(
-                                'disabled').attr('disabled', true);
-
-                            $('#total-amount').text(response.totalAmountWithDiscount
-                                .toLocaleString() + ' đ');
-                            $('#discount-amount').text('-' + response.discount
-                                .toLocaleString() + ' đ');
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Lỗi',
-                                text: response.message,
-                            });
-                        }
-                    },
-                    error: function() {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Lỗi',
-                            text: 'Đã xảy ra lỗi khi áp dụng mã giảm giá.',
-                        });
-                    }
-                });
-            });
-
-            //  mô tả phương thức thanh toán
-            document.querySelectorAll('input[name="payment_method"]').forEach((elem) => {
-                elem.addEventListener('change', function() {
-                    document.querySelectorAll('.payment-description').forEach((desc) => {
-                        desc.style.display = 'none';
-                    });
-                    this.closest('.form-check').querySelector('.payment-description').style
-                        .display = 'block';
-                });
-            });
-        });
-    </script>
+    <script src="{{ asset('plugins/js/order.js') }}"></script>
 @endsection
