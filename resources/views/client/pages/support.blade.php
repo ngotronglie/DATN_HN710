@@ -58,7 +58,7 @@
                             </div>
                             <div class="single-contact-title-content">
                                 <h4 class="title">Điện Thoại</h4>
-                                <p>Nhân viên:<br>0376900771<br>0379478204</p>
+                                <p>Nhân viên: 0376900771</p>
                             </div>
                         </div>
                         <div class="single-contact-info mb-6">

@@ -154,7 +154,7 @@
                             <a href="{{ route('blogs.index') }}">Bài viết</a>
                         </li>
                         <li class="has-children">
-                            <a href="/contact">Liên hệ</a>
+                            <a href="/support"> Hỗ trợ</a>
                         </li>
                         <li class="has-children">
                             <a href="{{ route('bill.search') }}">Tra cứu</a>
