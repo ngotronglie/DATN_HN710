@@ -98,7 +98,7 @@
                 event.preventDefault();
                 Swal.fire({
                     title: 'Xác nhận đặt hàng',
-                    text: "Đơn hàng sẽ được xác nhận sau khoảng 10 phút. Sau khi xác nhận, bạn không thể hủy đơn hàng. Mọi thắc mắc, vui lòng liên hệ Zalo: 0376 900 771 để được giải quyết. Xin cảm ơn!",
+                    text: "Đơn hàng sẽ được xác nhận sau khoảng 10 phút. Sau khi hệ thống xác nhận đơn hàng, bạn không thể hủy đơn hàng. Mọi thắc mắc, vui lòng liên hệ Zalo: 0376 900 771 để được giải quyết. Xin cảm ơn!",
                     icon: 'question',
                     showCancelButton: true,
                     confirmButtonText: 'Xác nhận',
