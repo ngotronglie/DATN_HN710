@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         //->everyMinute()
         //->dailyAt('00:00')
-        $schedule->command('app:update-voucher-status')->dailyAt('00:00')
+        $schedule->command('app:update-voucher-status')->everyMinute()
             ->before(function () {
                 Log::info('Bắt đầu kiểm tra voucher hết hạn lúc ' . now());
             })

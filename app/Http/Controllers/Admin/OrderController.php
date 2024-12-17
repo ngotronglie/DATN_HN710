@@ -85,8 +85,6 @@ class OrderController extends Controller
             return back()->with('warning', 'Bạn chỉ có thể xác nhận đơn hàng sau ' . $remainingTime . ' phút nữa.');
         }
 
-        $staff_id = auth()->user()->id;
-
         if ($order->status == 1) {
 
             foreach ($order->orderDetails as $detail) {
@@ -99,13 +97,14 @@ class OrderController extends Controller
                     return back()->with('error', 'Không tìm thấy biến thể sản phẩm: ' . $detail->product_variant_id);
                 }
             }
-               foreach ($order->orderDetails as $detail) {
+            foreach ($order->orderDetails as $detail) {
                 $productVariant = $detail->productVariant;
                 if ($productVariant) {
                     $productVariant->quantity -= $detail->quantity;
                     $productVariant->save();
                 }
             }
+            $staff_id = auth()->user()->id;
             $order->status = 2; // Chuyển sang "Chờ lấy hàng"
             $order->staff_id = $staff_id;
             $order->save();
@@ -181,7 +180,6 @@ class OrderController extends Controller
             $order->save();
             Mail::to($order->user_email)->send(new CancelMail($order));
             return redirect()->back()->with('success', isset($message) ? $message : 'Đơn hàng đã bị hủy.');
-
         } else {
             return redirect()->back()->with('error', 'Không thể hủy đơn hàng với trạng thái hiện tại');
         }
@@ -207,12 +205,12 @@ class OrderController extends Controller
             'ward' => isset($addressParts[1]) ? Ward::where('code', trim($addressParts[1]))->value('full_name') : null,
             'addressDetail' => isset($addressParts[0]) ? $addressParts[0] : null,
         ];
-         $fulladdress =implode(', ', array_filter([
+        $fulladdress = implode(', ', array_filter([
             $addressData['addressDetail'],
             $addressData['ward'],
             $addressData['district'],
             $addressData['province']
-        ], function($value) {
+        ], function ($value) {
             return !is_null($value) && $value !== '';
         }));
 

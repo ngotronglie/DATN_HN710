@@ -18,7 +18,7 @@
     <!-- Product Section End -->
 
     <!-- Banner Fullwidth Start -->
-    @include('client.includes.banner-fullwidth')
+    {{-- @include('client.includes.banner-fullwidth') --}}
     <!-- Banner Fullwidth End -->
 
     <!-- Banner Section Start -->

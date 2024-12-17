@@ -14,7 +14,7 @@
                     <div class="info">
                         <div class="small-banner-content">
                             <h4 class="sub-title">Giảm đến <span>50%</span></h4>
-                            <h3 class="title">Đầm công sơ</h3>
+                            <h3 class="title">Trang phục công sơ</h3>
                             <a href="#" class="btn btn-primary btn-hover-dark btn-sm">Mua ngay</a>
                         </div>
                     </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -61,8 +62,11 @@ class StatisticsController extends Controller
             'end-date.before_or_equal' => 'Ngày kết thúc không được vượt quá ngày hiện tại',
         ]);
 
-        $startDate = $request->input('start-date');
-        $endDate = $request->input('end-date');
+        $startDate1 = $request->input('start-date');
+        $endDate1 = $request->input('end-date');
+
+        $startDate = Carbon::parse($startDate1)->startOfDay();
+        $endDate = Carbon::parse($endDate1)->endOfDay();
 
         if (Auth::user()->role == 1) {
             // Thống kê đơn hàng của nhân viên
@@ -119,13 +123,14 @@ class StatisticsController extends Controller
                 DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
                 DB::raw('COUNT(*) as total_orders'), // Đếm tổng số đơn hàng
                 DB::raw('SUM(CASE WHEN status = 4 THEN 1 ELSE 0 END) as completed_orders'), // Đếm số đơn hàng hoàn thành
-                DB::raw('SUM(CASE WHEN status = 6 THEN 1 ELSE 0 END) as canceled_orders') // Đếm số đơn hàng bị hủy
+                DB::raw('SUM(CASE WHEN status = 5 THEN 1 ELSE 0 END) as canceled_orders') // Đếm số đơn hàng bị hủy
             )
             ->whereBetween('created_at', [$startDate, $endDate]) // Lọc theo khoảng thời gian
             ->groupBy('month') // Nhóm theo tháng
             ->orderByDesc('month') // Sắp xếp theo tháng giảm dần
             ->get();
 
+        //Thống kê nhân viên admin
         $staffAdminStatistics = DB::table('orders')
             ->join('users', 'orders.staff_id', '=', 'users.id')
             ->select(

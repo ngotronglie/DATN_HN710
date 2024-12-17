@@ -10,8 +10,8 @@
                                 alt="Feature Icon">
                         </div>
                         <div class="content">
-                            <h5 class="title">Miễn phí vận chuyển</h5>
-                            <p>Miễn phí vận chuyển cho các đơn hàng</p>
+                            <h5 class="title">Phí vận chuyển 30k</h5>
+                            <p>Cố định toàn quốc</p>
                         </div>
                     </div>
                 </div>

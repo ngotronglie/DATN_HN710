@@ -47,7 +47,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table id="bootstrap-data-table" class="table table-striped table-bordered" data-disable-sort="false">
+                        <table id="bootstrap-data-table" class="table table-striped table-bordered" data-disable-sort="true">
                             <thead>
                                 <tr>
                                     <th>STT</th>
