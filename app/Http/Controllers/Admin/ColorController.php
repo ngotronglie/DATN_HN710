@@ -97,6 +97,10 @@ class ColorController extends Controller
             return back()->with('warning', 'Bạn không có quyền!');
         }
 
+
+        $productCount = ProductVariant::whereNotNull('color_id')->where('')->count();
+
+        dd($productCount);
         // Xóa mềm màu
         $color->delete();
 

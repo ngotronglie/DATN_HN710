@@ -137,17 +137,31 @@ class UserController extends Controller
                 'nullable',
                 'required_if:role,1',
                 'exists:work_shifts,id',
-                'unique:users,work_shift_id,' . $account->id,
             ],
         ], [
             'role.required' => 'Vui lòng chọn chức vụ.',
             'role.in' => 'Chức vụ không hợp lệ.',
             'work_shift_id.required_if' => 'Vui lòng chọn ca làm việc khi chức vụ là Nhân viên.',
             'work_shift_id.exists' => 'Ca làm việc không tồn tại.',
-            'work_shift_id.unique' => 'Ca làm việc đã được sử dụng.',
         ]);
 
-        $data = $request->all();
+        $user = User::where('work_shift_id', $request->work_shift_id)->first();
+        if ($user != null) {
+            $work_shift_id = $user->work_shift_id;
+            $user->work_shift_id = $account->work_shift_id;
+            $user->save();
+
+            $data = $request->all();
+            $data['work_shift_id'] = $work_shift_id;
+        if ($account->email_verified_at == null) {
+            $data['email_verified_at'] = now();
+        } else {
+            $data['email_verified_at'] = $account->email_verified_at;
+        }
+            $account->update($data);
+            return redirect()->route('admin.accounts.index')->with('success', 'Sửa thành công');
+        }else{
+            $data = $request->all();
         if ($request->role == '0') {
             $data['work_shift_id'] = null;
         }
@@ -156,8 +170,9 @@ class UserController extends Controller
         } else {
             $data['email_verified_at'] = $account->email_verified_at;
         }
-        $account->update($data);
-        return redirect()->route('admin.accounts.index')->with('success', 'Sửa thành công');
+            $account->update($data);
+            return redirect()->route('admin.accounts.index')->with('success', 'Sửa thành công');
+        }
     }
 
     public function myAccount()

@@ -140,9 +140,11 @@ class OrderController extends Controller
         }
 
         $user = User::where('id', $order->user_id)->first();
+        $ordetail = OrderDetail::where('order_id', $order->id)->first();
+        $total = $ordetail->price * $ordetail->quantity;
 
         if ($user) {
-            $pointsToAdd = floor($order->total_amount / 100000) * 10;
+            $pointsToAdd = floor($total / 100000) * 10;
             $user->points += $pointsToAdd;
             $user->save();
         }
