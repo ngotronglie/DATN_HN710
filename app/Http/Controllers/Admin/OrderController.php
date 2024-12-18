@@ -170,9 +170,15 @@ class OrderController extends Controller
             $voucher = UserVoucher::where('voucher_id', $order->voucher_id)->first();
 
             if ($voucher) {
-                $voucher->status = 'not_used';
-                $voucher->save();
-                $message = 'Đơn hàng đã được hủy thành công và mã giảm giá đã được hoàn trả.';
+                $now = Carbon::now(); 
+                $endDate = Carbon::parse($voucher->voucher->end_date);
+                if ($now <= $endDate)  {
+                    $voucher->status = 'not_used';
+                } else {
+                    $voucher->status = 'expired';
+                }
+                $voucher->save(); 
+                $message = 'Đơn hàng đã được hủy thành công và trạng thái mã giảm giá đã được cập nhật.';
             }
         }
 
