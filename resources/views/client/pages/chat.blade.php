@@ -50,7 +50,7 @@
                         </div>
                        
                     </div>
-                    <p id="userOnline"></p>
+                   
                     <div class="d-flex mt-2">
                         <input type="text" placeholder="Gửi tin nhắn..." class="form-control" id="inputMessage" style="margin-right: 20px">
                         <button class="btn btn-dark" id="btnSendMessage">   <i class="fa fa-paper-plane"></i></button>

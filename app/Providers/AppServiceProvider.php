@@ -127,19 +127,24 @@ class AppServiceProvider extends ServiceProvider
                 $notifications = $user->notifications()->orderBy('id', 'desc')->get();
                 $unreadNotifications = $user->unreadNotifications()->get();
                 $chat = Chat::where('staff_id', $user->id)
-                ->with(['user', 'staff'])
-                ->orderBy('created_at', 'desc')
-                ->first();
+                ->with(['user', 'staff']) // Eager load user và staff liên quan
+                ->orderBy('created_at', 'desc') // Sắp xếp theo thời gian tạo (mới nhất trước)
+                ->get();
+                $userCount = Chat::where('staff_id', $user->id)
+                ->distinct('user_id') 
+                ->count('user_id');
             }else{
                 $notifications = collect();
                 $unreadNotifications = collect();
                 $chat = collect();
+                $userCount =collect();
             }
 
             $view->with([
                 'notifications' => $notifications,
                 'unreadNotifications' => $unreadNotifications,
                 'chat'=>$chat,
+                'userCount' =>$userCount
             ]);
         });
 

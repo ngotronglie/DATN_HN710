@@ -158,8 +158,6 @@ Route::get('verify-email/{token}', [ForgotPasswordController::class, 'verifyEmai
 
 Route::prefix('admin')->as('admin.')->middleware(['check.working.shift','auth', 'isAdmin'])->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
-    Route::delete('delete/{chat}', [SupportController::class, 'delete'])->name('chat.delete');
-
     Route::get('support/{chat}', [SupportController::class, 'show'])->name('chat');
 
     // Các route tùy chỉnh

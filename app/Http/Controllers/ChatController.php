@@ -15,8 +15,16 @@ class ChatController extends Controller
 {
     public function index()
     {
-      
-    
+        $user_id = Auth::id();
+
+        $chat = Chat::where('user_id', $user_id)->first();
+
+        if ($chat) {
+            $messages = ChatDetail::where('chat_id', $chat->id)->with('sender')->get();
+
+            return view('client.pages.chat', compact('chat','messages'));
+        }
+
         return view('client.pages.support');
     }
     
@@ -34,14 +42,8 @@ class ChatController extends Controller
         // Thời gian hiện tại
         $now = Carbon::now();
     
-        // Tìm kiếm nhân viên khả dụng (role '1'), chưa có phòng chat, và đang trong ca làm việc
+        // Tìm kiếm nhân viên khả dụng (role '1'), và đang trong ca làm việc
         $availableStaffs = User::where('role', '1')
-            ->whereNotIn('id', function ($query) {
-                $query->select('staff_id')
-                    ->from('chats')
-                    ->groupBy('staff_id')
-                    ->havingRaw('COUNT(*) >= 1');
-            })
             ->whereHas('workShift', function ($query) use ($now) {
                 $query->where(function ($q) use ($now) {
                     $q->whereTime('start_time', '<=', $now->toTimeString())
@@ -56,7 +58,6 @@ class ChatController extends Controller
                 });
             })
             ->get();
-    
         // Kiểm tra nếu không có nhân viên khả dụng
         if ($availableStaffs->isEmpty()) {
             return redirect()->back()->with('error', 'Hiện không còn nhân viên hỗ trợ nào');

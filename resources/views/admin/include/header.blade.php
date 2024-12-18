@@ -50,31 +50,28 @@
                     </div>
 
                 </div>
-               
-                
-               
                 <div class="dropdown for-message">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="message"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-envelope"></i>
-                        <span class="count bg-primary">{{$chat?1:0}}</span>
+                        <span class="count bg-primary">{{$userCount}}</span>
                     </button>
                     @if($chat)
                     <div class="dropdown-menu" aria-labelledby="message">
                         <p class="red">Trò chuyện với</p>
                       
                        
-                    
-                            <a class="dropdown-item media" href="{{route('admin.chat',$chat)}}">
+                      @foreach($chat as $c)
+                            <a class="dropdown-item media" href="{{route('admin.chat',$c)}}">
                                 <span class="photo media-left" style="display: flex; align-items: center;">
-                                    <img alt="avatar" src="{{$chat->user->avata ? Storage::url($chat->user->avatar) : asset('/theme/client/assets/images/logo/avata.jpg') }}" 
+                                    <img alt="avatar" src="{{$c->user->avata ? Storage::url($c->user->avatar) : asset('/theme/client/assets/images/logo/avata.jpg') }}" 
                                          style="border-radius: 50%; width: 25px; height: 25px; object-fit: cover;">
                                 </span>
                                 <div class="message media-body" style="display: flex; align-items: center;">
-                                    <span class="name float-left" style="margin-left: 10px;">{{$chat->user->name}}</span>
+                                    <span class="name float-left" style="margin-left: 10px;">{{$c->user->name}}</span>
                                 </div>
                             </a>
-                    
+                     @endforeach
                         
                         
                        

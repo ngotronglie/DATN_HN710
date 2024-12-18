@@ -16,7 +16,6 @@ class SupportController extends Controller
     public function show(Chat $chat)
     {
         $chat = Chat::find($chat->id);
-
         $messages = ChatDetail::where('chat_id', $chat->id)->with('sender')->get();
         return view('admin.layout.chat', compact('chat', 'messages'));
     }
@@ -34,12 +33,6 @@ class SupportController extends Controller
         return response()->json([
             'log'   => 'success'
         ], 201);
-    }
-    public function delete(Chat $chat)
-    {
-        
-        $chat->delete(); // Xóa chat đã được truyền
-        return redirect()->route('admin.dashboard');
     }
     
 }
