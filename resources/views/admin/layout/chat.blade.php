@@ -25,6 +25,10 @@
             </div>
         </div>
     </div>
+    <div id="notification-area" style="position: fixed; top: 10px; right: 10px; z-index: 9999;">
+        <!-- Các thông báo mới sẽ được thêm tại đây -->
+    </div>
+    
     <div class="content mb-5">
         <div class="animated fadeIn">
             <div class="row">
@@ -33,11 +37,6 @@
                         <!-- Chat Header -->
                         <div style="display: flex; justify-content: space-between; align-items: center; background-color: #007bff; color: white; padding: 15px; border-radius: 8px 8px 0 0;">
                             <h4 style="margin: 0;">Trò chuyện với {{ $chat->user->name }}</h4>
-                            <form action="{{ route('admin.chat.delete', $chat->id) }}" method="post" style="margin: 0;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"  style="background-color: #dc3545; border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer;"><i class="fa fa-times"></i> </button>
-                            </form>
                         </div>
     
                         <!-- Chat Messages -->

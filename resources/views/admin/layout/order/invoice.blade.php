@@ -119,7 +119,6 @@
             <h4>Chi Tiết Đơn Hàng</h4>
             <p>Mã Hóa Đơn:</strong> {{ $order->order_code }}</p>
             <p>Phương Thức Thanh Toán:</strong> {{ $order->payment_method === 'cod' ? 'Thanh toán khi nhận hàng' : 'Thanh toán online' }}</p>
-            <p>Trạng Thái Thanh Toán:</strong> {{ $order->payment_method === 'cod' ? 'Chưa thanh toán' : 'Đã thanh toán' }}</p>
             <table>
                 <thead>
                 <tr>

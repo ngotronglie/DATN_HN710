@@ -1,44 +1,22 @@
 import './bootstrap'
-
-let userOnline = document.querySelector("#userOnline")
 window.Echo.join('comment' + chatId)
-    .here(users => {
-        let UI = ''
-        users.forEach(user => {
-            if (userSignIn != user.id) {
-                UI += `<li class="list-group-item user-${user.id}">${user.name}</li>`
-            }
-        })
-        userOnline.insertAdjacentHTML('beforebegin', UI)
-    })
-    .joining(user => {
-        let UI = `<li class="list-group-item user-${user.id}">${user.name}</li>`;
-        userOnline.insertAdjacentHTML('beforebegin', UI);
-        const chatBox = document.querySelector('.contentBlock');
-        chatBox.insertAdjacentHTML(
-            'beforeend',
-            `<p style="text-align: center; font-size: 12px; color: gray;">${user.name} vừa vào phòng chat</p>`
-        );
-    })
-    .leaving(user => {
-        let userDom = document.querySelector(`.user-${user.id}`);
-        if (userDom) {
-            userDom.remove();
-        }
-
-        const chatBox = document.querySelector('.contentBlock');
-        chatBox.insertAdjacentHTML(
-            'beforeend',
-            `<p style="text-align: center; font-size: 12px; color: gray;">${user.name} vừa thoát phòng chat</p>`
-        );
-    })
-
-
-    .listen('CommentEvent', function (event) {
-        updateUiMessage(event);
-    })
-
-
+.joining(user => {
+    const chatBox = document.querySelector('.contentBlock');
+    chatBox.insertAdjacentHTML(
+        'beforeend',
+        `<p style="text-align: center; font-size: 12px; color: gray;">${user.name} vừa vào phòng chat</p>`
+    );
+})
+.leaving(user => {
+    const chatBox = document.querySelector('.contentBlock');
+    chatBox.insertAdjacentHTML(
+        'beforeend',
+        `<p style="text-align: center; font-size: 12px; color: gray;">${user.name} vừa thoát phòng chat</p>`
+    );
+})
+.listen('CommentEvent', function (event) {
+    updateUiMessage(event);
+});
 let btnSendMessage = document.querySelector('#btnSendMessage')
 let inputMessage = document.querySelector("#inputMessage")
 
@@ -87,3 +65,4 @@ function updateUiMessage(event) {
 
     contentBlock.scrollTop = contentBlock.scrollHeight;
 }
+
