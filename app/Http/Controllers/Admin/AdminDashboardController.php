@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\NewMessageNotification;
 use App\Http\Controllers\Controller;
+use App\Models\Chat;
+use App\Models\ChatDetail;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
 
 class AdminDashboardController extends Controller
 {
@@ -43,4 +48,5 @@ class AdminDashboardController extends Controller
 
         return view('admin.layout.yeld', compact('usersCount', 'productCount', 'ordersCount', 'totalRevenue', 'dates', 'revenues'));
     }
+
 }

@@ -16,8 +16,12 @@ class SupportController extends Controller
     public function show(Chat $chat)
     {
         $chat = Chat::find($chat->id);
+        if ($chat->is_read == false) {
+            $chat->is_read = true;
+            $chat->save();
+        }
         $messages = ChatDetail::where('chat_id', $chat->id)->with('sender')->get();
-        return view('admin.layout.chat', compact('chat', 'messages'));
+                return view('admin.layout.chat', compact('chat', 'messages'));
     }
     
     public function sendMessage(Request $request, Chat $chat)

@@ -1,8 +1,6 @@
 <?php
 namespace App\Http\Controllers;
-
-use App\Events\AdminNotificationEvent;
-use App\Events\ChatClosedEvent;
+use App\Events\NewMessageNotification;
 use App\Events\CommentEvent;
 use App\Models\Chat;
 use App\Models\ChatDetail;
@@ -107,12 +105,18 @@ class ChatController extends Controller
 
     public function sendMessage(Request $request, Chat $chat)
     {
+        $chat = Chat::find($chat->id);
       $message= ChatDetail::create([
              'chat_id' => $chat->id,
             'sender_id' => Auth::id(),
             'content'=>$request->message
        ]);
+      
+        $chat->is_read = false;
+        $chat->save();
+    
         broadcast(new CommentEvent(Chat::find($chat->id),  $message));
+        broadcast(new NewMessageNotification($message))->toOthers();
         return response()->json([
             'log'   => 'success'
         ], 201);

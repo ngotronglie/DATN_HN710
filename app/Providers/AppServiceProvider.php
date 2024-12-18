@@ -1,6 +1,7 @@
 <?php
 namespace App\Providers;
 
+use App\Events\NewMessageNotification;
 use App\Models\ProductVariant;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\View;

@@ -65,3 +65,4 @@ function updateUiMessage(event) {
 
     contentBlock.scrollTop = contentBlock.scrollHeight;
 }
+

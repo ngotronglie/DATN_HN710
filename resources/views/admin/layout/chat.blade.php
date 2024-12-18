@@ -25,6 +25,10 @@
             </div>
         </div>
     </div>
+    <div id="notification-area" style="position: fixed; top: 10px; right: 10px; z-index: 9999;">
+        <!-- Các thông báo mới sẽ được thêm tại đây -->
+    </div>
+    
     <div class="content mb-5">
         <div class="animated fadeIn">
             <div class="row">

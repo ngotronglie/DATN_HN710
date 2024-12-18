@@ -1,6 +1,7 @@
 @include('admin.include.head')
 
 <body>
+   
     @include('admin.include.aside')
 
     <!-- Right Panel -->
