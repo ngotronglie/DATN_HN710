@@ -108,8 +108,18 @@ class CategoryBlogController extends Controller
         if (Gate::denies('delete', $categoryBlog)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
-        $categoryBlog->delete();
-        return redirect()->route('admin.category_blogs.index')->with('success', 'Xóa thành công');
+
+        $count = Blog::whereNotNull('category_blog_id')->where('category_blog_id', $categoryBlog->id)->count();
+
+        if ($count == 0) {
+
+            $categoryBlog->delete();
+
+            return redirect()->route('admin.category_blogs.index')->with('success', 'Xóa thành công');
+        } else {
+            return back()->with('error', 'Danh mục bài viết này đang được sử dụng trong các bài viết. Không thể xóa!');
+        }
+
     }
 
 

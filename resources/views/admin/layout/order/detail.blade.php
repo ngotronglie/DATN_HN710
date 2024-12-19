@@ -214,7 +214,7 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>
                                                 @if ($orderDetail->product_variant_id)
-                                                    <img src="{{ Storage::url($orderDetail->productVariant->product->img_thumb) }}"
+                                                    <img src="{{ Storage::url($orderDetail->productVariant->product->img_thumb ?? '') }}"
                                                         alt="Product"
                                                         style="width: 100px; height: 150px; object-fit: contain;">
                                                 @else
@@ -223,7 +223,7 @@
                                             </td>
                                             <td>
                                                 @if ($orderDetail->product_variant_id)
-                                                    {{ $orderDetail->productVariant->product->name }}
+                                                    {{ $orderDetail->product_name }}
                                                 @else
                                                     Sản phẩm hiện tại đã bị xóa
                                                 @endif
@@ -366,8 +366,8 @@
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                                                     <form action="{{ route('admin.order.confirmOrder', $order->id) }}" method="GET">
                                                         @csrf
-                                                        
-                                                        <input type="hidden" name="status" value="2"> 
+
+                                                        <input type="hidden" name="status" value="2">
                                                         <button type="submit" class="btn btn-success">Xác nhận</button>
                                                     </form>
                                                 </div>
@@ -390,7 +390,7 @@
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                                                     <form action="{{ route('admin.order.shipOrder', $order->id) }}" method="GET">
                                                         @csrf
-                                                      
+
                                                         <input type="hidden" name="status" value="3"> <!-- Đã giao -->
                                                         <button type="submit" class="btn btn-info">Xác nhận</button>
                                                     </form>
@@ -414,13 +414,13 @@
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                                                     <form action="{{ route('admin.order.confirmShipping', $order->id) }}" method="GET">
                                                         @csrf
-                                                        <input type="hidden" name="status" value="4"> 
+                                                        <input type="hidden" name="status" value="4">
                                                         <button type="submit" class="btn btn-info">Xác nhận</button>
                                                     </form>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>   
+                                    </div>
                                     <div class="modal fade" id="cancelModal{{ $order->id }}" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel{{ $order->id }}" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
@@ -437,17 +437,34 @@
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                                                     <form action="{{ route('admin.order.cancelOrder', $order->id) }}" method="GET">
                                                         @csrf
-                                                        <input type="hidden" name="status" value="5"> 
+                                                        <input type="hidden" name="status" value="5">
                                                         <button type="submit" class="btn btn-info">Xác nhận</button>
                                                     </form>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div> 
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <strong>Nhân viên xác nhận đơn</strong>
+                            <span></span>
+                        </div>
+                        <div class="card-body">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr style="text-align: center">
+                                            <th>Nhân viên</th>
+                                            <td>{{ $staff ?? 'Chưa có nhân viên xác nhận.' }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                        </div>
                     </div>
 
                 </div>

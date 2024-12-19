@@ -117,47 +117,6 @@
                                             <!-- Horizontal Divider -->
                                             <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
 
-                                            <!-- Order Details -->
-                                            {{-- <div class="myaccount-table"
-                                                 style="display: grid; grid-template-columns: {{ $order->orderDetails->count() === 1 ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))' }}; gap: 20px;">
-                                                @foreach ($order->orderDetails as $detail)
-                                                    <div class="bill-card"
-                                                         style="background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                                                        <!-- Product Name -->
-                                                        <div class="info-row"
-                                                             style="display: flex; justify-content: space-between;">
-                                                            <strong style="font-weight: 600;">Tên Sản Phẩm:</strong>
-                                                            <span style="max-width: 300px; word-wrap: break-word; white-space: normal;">{{ $detail->product_name }}</span>
-                                                        </div>
-                                                        <!-- Size -->
-                                                        <div class="info-row"
-                                                             style="display: flex; justify-content: space-between;">
-                                                            <strong style="font-weight: 600;">Kích cỡ:</strong>
-                                                            <span>{{ $detail->size_name }}</span>
-                                                        </div>
-                                                        <!-- Color -->
-                                                        <div class="info-row"
-                                                             style="display: flex; justify-content: space-between;">
-                                                            <strong style="font-weight: 600;">Màu sắc:</strong>
-                                                            <span>{{ $detail->color_name }}</span>
-                                                        </div>
-                                                        <!-- Quantity -->
-                                                        <div class="info-row"
-                                                             style="display: flex; justify-content: space-between;">
-                                                            <strong style="font-weight: 600;">Số Lượng:</strong>
-                                                            <span>{{ $detail->quantity }}</span>
-                                                        </div>
-                                                        <!-- Price -->
-                                                        <div class="info-row"
-                                                             style="display: flex; justify-content: space-between;">
-                                                            <strong style="font-weight: 600;">Giá:</strong>
-                                                            <span>{{ number_format($detail->price, 0, ',', '.') }} VND</span>
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        </div> --}}
-
                                         <div class="order-details-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax({{$order->orderDetails->count() ==1 ? 'auto' : '240px'}}, 1fr)); gap: 18px; padding: 15px;">
                                             @foreach ($order->orderDetails as $detail)
                                             @php

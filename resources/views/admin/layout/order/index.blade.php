@@ -113,21 +113,41 @@
                                                 </a>
                                                 @if ($item->status != 5 && $item->status != 4)
                                                 @php
-                                                    $canConfirm = true; // Mặc định có thể xác nhận
-                                                    foreach ($item->orderDetails as $detail) {
-                                                        $productVariant = $detail->productVariant;
-                                                        if ($productVariant) {
-                                                            if ($productVariant->quantity < $detail->quantity) {
-                                                                $canConfirm = false; // Không đủ số lượng
-                                                                break;
-                                                            }
-                                                        } else {
-                                                            $canConfirm = false; // Không tìm thấy biến thể sản phẩm
+                                                // Biến cờ kiểm tra trạng thái xác nhận đơn hàng
+                                                $canConfirm = true;
+
+                                                // Kiểm tra số lượng sản phẩm trong mỗi chi tiết đơn hàng
+                                                foreach ($item->orderDetails as $detail) {
+                                                    $productVariant = $detail->productVariant;
+                                                    if ($productVariant) {
+                                                        if ($productVariant->quantity < $detail->quantity) {
+                                                            $canConfirm = false; // Không đủ số lượng, không thể xác nhận
                                                             break;
                                                         }
+                                                    } else {
+                                                        $canConfirm = false; // Không tìm thấy biến thể sản phẩm, không thể xác nhận
+                                                        break;
                                                     }
-                                                @endphp
-                                            
+                                                }
+
+                                                // Lấy danh sách product_variant_id từ order_details
+                                                $product_variant_ids = App\Models\OrderDetail::where('order_id', $item->id)
+                                                                                            ->pluck('product_variant_id');
+
+                                                // Lấy product_id từ product_variants tương ứng với product_variant_ids
+                                                $product_ids = App\Models\ProductVariant::whereIn('id', $product_variant_ids)
+                                                                                        ->pluck('product_id');
+
+                                                // Đếm số lượng sản phẩm liên quan
+                                                $productCount = App\Models\Product::whereIn('id', $product_ids)->count();
+
+                                                // Kiểm tra xem có sản phẩm nào không
+                                                if ($productCount == 0) {
+                                                    $canConfirm = false;
+                                                }
+                                            @endphp
+
+
                                                 @if($item->status == 1)
                                                     @if ($canConfirm)
                                                     <button type="button" class="btn btn-success ml-2" data-toggle="modal" data-target="#confirmModal{{ $item->id }}" title="Chờ lấy hàng">
@@ -149,15 +169,13 @@
                                                     </a>
                                                 @endif
                                             @endif
-                                            
 
-                                                
                                                 @if ($item->status == 2 || $item->status == 4)
                                                 <a class="btn btn-hover-d btn-dark ml-2" target="_blank" href="{{route('admin.order.printOrder', $item->order_code)}}" title="In đơn hàng">
                                                     <i class="fa fa-print"></i>
                                                 </a>
                                                 @endif
-                                            </td>    
+                                            </td>
                                             <div class="modal fade" id="confirmModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel{{ $item->id }}" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
@@ -174,8 +192,8 @@
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                                                             <form action="{{ route('admin.order.confirmOrder', $item->id) }}" method="GET">
                                                                 @csrf
-                                                                
-                                                                <input type="hidden" name="status" value="2"> 
+
+                                                                <input type="hidden" name="status" value="2">
                                                                 <button type="submit" class="btn btn-success">Xác nhận</button>
                                                             </form>
                                                         </div>
@@ -198,7 +216,7 @@
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                                                             <form action="{{ route('admin.order.shipOrder', $item->id) }}" method="GET">
                                                                 @csrf
-                                                              
+
                                                                 <input type="hidden" name="status" value="3"> <!-- Đã giao -->
                                                                 <button type="submit" class="btn btn-info">Xác nhận</button>
                                                             </form>
@@ -222,13 +240,13 @@
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                                                             <form action="{{ route('admin.order.confirmShipping', $item->id) }}" method="GET">
                                                                 @csrf
-                                                                <input type="hidden" name="status" value="4"> 
+                                                                <input type="hidden" name="status" value="4">
                                                                 <button type="submit" class="btn btn-info">Xác nhận</button>
                                                             </form>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>   
+                                            </div>
                                             <div class="modal fade" id="cancelModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel{{ $item->id }}" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
@@ -245,14 +263,14 @@
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                                                             <form action="{{ route('admin.order.cancelOrder', $item->id) }}" method="GET">
                                                                 @csrf
-                                                                <input type="hidden" name="status" value="5"> 
+                                                                <input type="hidden" name="status" value="5">
                                                                 <button type="submit" class="btn btn-info">Xác nhận</button>
                                                             </form>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>   
-                                                              
+                                            </div>
+
                                         </tr>
                                     @endforeach
 

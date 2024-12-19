@@ -97,38 +97,37 @@ class ColorController extends Controller
             return back()->with('warning', 'Bạn không có quyền!');
         }
 
+        $productCount = ProductVariant::whereNotNull('color_id')->where('color_id', $color->id)->count();
 
-        $productCount = ProductVariant::whereNotNull('color_id')->where('')->count();
+        if ($productCount == 0) {
+            // Xóa mềm màu
+            $color->delete();
 
-        dd($productCount);
-        // Xóa mềm màu
-        $color->delete();
+            // Lấy tất cả các sản phẩm có biến thể liên quan đến màu này
+            $products = ProductVariant::where('color_id', $color->id)->pluck('product_id')->unique();
 
-        // Lấy tất cả các sản phẩm có biến thể liên quan đến màu này
-        $products = ProductVariant::where('color_id', $color->id)->pluck('product_id')->unique();
-
-        foreach ($products as $productId) {
-            // Kiểm tra còn lại các biến thể của sản phẩm
-            $remainingVariants = ProductVariant::where('product_id', $productId)
-                ->whereHas('color', function ($query) {
-                    $query->whereNull('deleted_at'); // Kiểm tra các màu chưa bị xóa mềm
-                })
-                ->whereHas('size', function ($query) { // Kiểm tra cả kích thước chưa bị xóa mềm
-                    $query->whereNull('deleted_at');
-                })
-                ->count();
-            if ($remainingVariants == 0) {
-                // Nếu không còn biến thể, cập nhật is_active về 0
-                $product = Product::find($productId);
-                $product->is_active = 0;
-                $product->save();
+            foreach ($products as $productId) {
+                // Kiểm tra còn lại các biến thể của sản phẩm
+                $remainingVariants = ProductVariant::where('product_id', $productId)
+                    ->whereHas('color', function ($query) {
+                        $query->whereNull('deleted_at'); // Kiểm tra các màu chưa bị xóa mềm
+                    })
+                    ->whereHas('size', function ($query) { // Kiểm tra cả kích thước chưa bị xóa mềm
+                        $query->whereNull('deleted_at');
+                    })
+                    ->count();
+                if ($remainingVariants == 0) {
+                    // Nếu không còn biến thể, cập nhật is_active về 0
+                    $product = Product::find($productId);
+                    $product->is_active = 0;
+                    $product->save();
+                }
             }
+            return redirect()->route('admin.colors.index')->with('success', 'Xóa thành công');
+        } else {
+            return back()->with('error', 'Màu này đang được sử dụng trong các sản phẩm. Không thể xóa!');
         }
-
-        return redirect()->route('admin.colors.index')->with('success', 'Xóa thành công');
     }
-
-
 
     /**
      * Hiển thị danh sách danh mục đã bị xóa mềm.

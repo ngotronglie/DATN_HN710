@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Mail\CancelMail;
+use App\Models\Product;
 use App\Models\UserVoucher;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Models\District;
 use App\Models\Order;
@@ -57,6 +59,15 @@ class OrderController extends Controller
             return back()->with('warning', 'Bạn không có quyền xem đơn hàng này!');
         }
 
+        $user = Auth::user();
+
+        $notification = $user->notifications()->where('data->order_id', $order->id)->first();
+        if ($notification) {
+            $notification->markAsRead();
+        }
+
+        $staff = User::where('id', $order->staff_id)->value('name');
+
         $address = $order->user_address;
 
         $addressParts = explode(',', $address);
@@ -68,16 +79,26 @@ class OrderController extends Controller
             'addressDetail' => isset($addressParts[0]) ? $addressParts[0] : null,
         ];
 
-        return view('admin.layout.order.detail', compact('order', 'addressData'));
+        return view('admin.layout.order.detail', compact('order', 'addressData', 'staff'));
     }
 
     public function confirmOrder($order_id)
     {
         $order = Order::findOrFail($order_id);
+        $product_variant_id = OrderDetail::where('order_id', $order->id)->pluck('product_variant_id');
+
+        $product_id = ProductVariant::whereIn('id', $product_variant_id)->pluck('product_id');
+
+        $productCount = Product::whereIn('id', $product_id)->count();
 
         if (Gate::denies('confirm', $order)) {
             return back()->with('warning', 'Bạn không có quyền xác nhận đơn hàng này!');
         }
+
+        if ($productCount == 0) {
+            return back()->with('error', 'Không thể xác nhận đơn hàng! Sản phẩm hiện không tồn tại.');
+        }
+
         $timeDifference = Carbon::now()->diffInMinutes($order->created_at);
 
         if ($timeDifference < 10) {
@@ -108,6 +129,14 @@ class OrderController extends Controller
             $order->status = 2; // Chuyển sang "Chờ lấy hàng"
             $order->staff_id = $staff_id;
             $order->save();
+
+            $user = Auth::user();
+
+            $notification = $user->notifications()->where('data->order_id', $order->id)->first();
+            if ($notification) {
+                $notification->markAsRead();
+            }
+
             return redirect()->back()->with('success', 'Đơn hàng đã được xác nhận');
         } else {
             return redirect()->back()->with('error', 'Không thể xác nhận đơn hàng với trạng thái hiện tại');
@@ -134,7 +163,6 @@ class OrderController extends Controller
     public function confirmShipping($order_id)
     {
         $order = Order::findOrFail($order_id);
-
         if (Gate::denies('confirmShipping', $order)) {
             return back()->with('warning', 'Bạn không có quyền xác nhận giao hàng!');
         }

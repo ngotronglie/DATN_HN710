@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\District;
 use App\Models\Order;
 use App\Models\Province;
+use App\Models\User;
 use App\Models\Ward;
 use Illuminate\Support\Facades\Auth;
 
@@ -37,12 +38,14 @@ class NotificationController extends Controller
             'addressDetail' => isset($addressParts[0]) ? $addressParts[0] : null,
         ];
 
+        $staff = User::where('id', $order->staff_id)->value('name');
+
         $notification = $user->notifications()->find($id);
         if ($notification) {
             $notification->markAsRead();
         }
 
-        return view('admin.layout.order.notificationOrder', compact('order', 'addressData'));
+        return view('admin.layout.order.notificationOrder', compact('order', 'addressData', 'staff'));
     }
 
     public function delete($id)

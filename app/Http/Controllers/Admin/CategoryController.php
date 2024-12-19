@@ -55,26 +55,26 @@ class CategoryController extends Controller
      * Display the specified resource.
      */
     public function show(Category $category)
-{
-    if (Gate::denies('view', $category)) {
-        return back()->with('warning', 'Bạn không có quyền!');
+    {
+        if (Gate::denies('view', $category)) {
+            return back()->with('warning', 'Bạn không có quyền!');
+        }
+
+        $products = Product::with(['variants' => function ($query) {
+            $query->whereHas('size', function ($q) {
+                $q->whereNull('deleted_at');
+            })->whereHas('category', function ($q) {
+                $q->whereNull('deleted_at');
+            });
+        }])->where('category_id', $category->id)
+            ->whereNull('deleted_at')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $productCount = $products->count();
+
+        return view(self::PATH_VIEW . __FUNCTION__, compact('category', 'productCount', 'products'));
     }
-
-    $products = Product::with(['variants' => function ($query) {
-        $query->whereHas('size', function ($q) {
-            $q->whereNull('deleted_at');
-        })->whereHas('color', function ($q) {
-            $q->whereNull('deleted_at');
-        });
-    }])->where('category_id', $category->id)
-        ->whereNull('deleted_at')
-        ->orderBy('id', 'desc')
-        ->get();
-
-    $productCount = $products->count();
-
-    return view(self::PATH_VIEW . __FUNCTION__, compact('category', 'productCount', 'products'));
-}
 
     /**
      * Show the form for editing the specified resource.
@@ -108,10 +108,18 @@ class CategoryController extends Controller
         if (Gate::denies('delete', $category)) {
             return back()->with('warning', 'Bạn không có quyền!');
         }
-        $category->delete();
-        return back()->with('success', 'Xóa thành công');
-    }
 
+        $productCount = Product::whereNotNull('category_id')->where('category_id', $category->id)->count();
+
+        if ($productCount == 0) {
+
+            $category->delete();
+
+            return redirect()->route('admin.categories.index')->with('success', 'Xóa thành công');
+        } else {
+            return back()->with('error', 'Danh mục này đang được sử dụng trong các sản phẩm. Không thể xóa!');
+        }
+    }
     /**
      * Hiển thị danh sách danh mục đã bị xóa mềm.
      */
