@@ -320,48 +320,31 @@
 
                             <div class="tab-pane fade" id="connect-4" role="tabpanel" aria-labelledby="review-tab">
                                 <div class="size-tab table-responsive-lg">
-                                    <h4 class="title-3 mb-4">Bảng kích thước</h4>
                                     <table class="table border mb-0">
                                         <tbody>
                                             <tr>
-                                                <td class="cun-name"><span>UK</span></td>
-                                                <td>18</td>
-                                                <td>20</td>
-                                                <td>22</td>
-                                                <td>24</td>
-                                                <td>26</td>
+                                                <td class="cun-name"><span>Size</span></td>
+                                                <td>S</td>
+                                                <td>M</td>
+                                                <td>L</td>
+                                                <td>XL</td>
+                                                <td>XXL</td>
                                             </tr>
                                             <tr>
-                                                <td class="cun-name"><span>European</span></td>
-                                                <td>46</td>
-                                                <td>48</td>
-                                                <td>50</td>
-                                                <td>52</td>
-                                                <td>54</td>
+                                                <td class="cun-name"><span>Chiều cao (cm)</span></td>
+                                                <td>148 - 153</td>
+                                                <td>157 - 158</td>
+                                                <td>159 - 165</td>
+                                                <td>166 - 170</td>
+                                                <td>Trên 170</td>
                                             </tr>
                                             <tr>
-                                                <td class="cun-name"><span>usa</span></td>
-                                                <td>14</td>
-                                                <td>16</td>
-                                                <td>18</td>
-                                                <td>20</td>
-                                                <td>22</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="cun-name"><span>Australia</span></td>
-                                                <td>28</td>
-                                                <td>10</td>
-                                                <td>12</td>
-                                                <td>14</td>
-                                                <td>16</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="cun-name"><span>Canada</span></td>
-                                                <td>24</td>
-                                                <td>18</td>
-                                                <td>14</td>
-                                                <td>42</td>
-                                                <td>36</td>
+                                                <td class="cun-name"><span>Cân nặng (kg)</span></td>
+                                                <td>38 - 43</td>
+                                                <td>43 - 46</td>
+                                                <td>46 - 53</td>
+                                                <td>53 - 57</td>
+                                                <td>57 - 66</td>
                                             </tr>
                                         </tbody>
                                     </table>
