@@ -22,7 +22,16 @@ class HomeController extends Controller
                 $query->where('is_active', 1)
                     ->whereNull('deleted_at');
             })
-            ->with(['galleries', 'variants'])
+            ->with([
+                'galleries',
+                'variants' => function ($query) {
+                    $query->whereHas('size', function ($query) {
+                        $query->whereNull('deleted_at');
+                    })->whereHas('color', function ($query) {
+                        $query->whereNull('deleted_at');
+                    });
+                }
+            ])
             ->orderByDesc('view')
             ->take(10)
             ->get();

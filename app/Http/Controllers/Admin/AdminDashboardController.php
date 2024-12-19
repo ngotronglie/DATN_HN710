@@ -20,7 +20,7 @@ class AdminDashboardController extends Controller
         $today = Carbon::today();
 
         $totalRevenue = Order::where('status', 4)
-            ->whereDate('created_at', $today)
+            ->whereDate('updated_at', $today)
             ->sum('total_amount');
 
         $ordersCount = Order::where('status', 4)
@@ -32,8 +32,8 @@ class AdminDashboardController extends Controller
         $usersCount = User::where('role', '0')->count();
 
         $dailyRevenueLast7Days = Order::where('status', 4)
-            ->whereBetween('created_at', [now()->subDays(7), now()])
-            ->selectRaw('DATE(created_at) as date, SUM(total_amount) as total')
+            ->whereBetween('updated_at', [now()->subDays(7), now()])
+            ->selectRaw('DATE(updated_at) as date, SUM(total_amount) as total')
             ->groupBy('date')
             ->orderBy('date', 'asc')
             ->get();

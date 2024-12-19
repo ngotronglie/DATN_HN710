@@ -47,8 +47,8 @@
                     <div class="col-xl-2 col-6">
                         <div class="header-actions">
                             
-                            <a href="javascript:void(0)" class="header-action-btn header-action-btn-search"><i
-                                class="pe-7s-search"></i></a>
+                            {{-- <a href="javascript:void(0)" class="header-action-btn header-action-btn-search"><i
+                                class="pe-7s-search"></i></a> --}}
 
                             @if (Auth::check())
                                 <div class="main-menu position-relative">
@@ -71,8 +71,8 @@
 
                                             <ul class="sub-menu">
                                                 <li><a href="my_account">Thông tin cá nhân</a></li>
-                                                <li><a href="">Thông báo</a></li>
-                                                <li><a href="">Trung tâm trợ giúp</a></li>
+                                                {{-- <li><a href="">Thông báo</a></li>
+                                                <li><a href="">Trung tâm trợ giúp</a></li> --}}
                                                 @if ((Auth::check() && Auth::user()->role == 1) || Auth::user()->role == 2)
                                                     <li><a href="{{ route('admin.dashboard') }}">Quản trị viên</a></li>
                                                 @endif

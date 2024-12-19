@@ -71,9 +71,9 @@ class StatisticsController extends Controller
         if (Auth::user()->role == 1) {
             // Thống kê đơn hàng của nhân viên
             $staffOrderStatistics = Order::where('staff_id', Auth::id())
-                ->whereBetween('created_at', [$startDate, $endDate])
+                ->whereBetween('updated_at', [$startDate, $endDate])
                 ->select(
-                    DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
+                    DB::raw('DATE_FORMAT(updated_at, "%Y-%m") as month'),
                     DB::raw('COUNT(*) as total_orders'), // Tổng số đơn hàng
                     DB::raw('SUM(total_amount) as total_revenue'), // Tổng doanh thu
                     DB::raw('SUM(CASE WHEN status = 4 THEN total_amount ELSE 0 END) as completed_revenue') // Doanh thu từ đơn hàng hoàn tất
@@ -89,9 +89,9 @@ class StatisticsController extends Controller
             return redirect()->route('admin.statistics.index');
         }
         // Thống kê doanh thu trong khoảng thời gian từ ngày bắt đầu đến ngày kết thúc
-        $monthlyRevenue = Order::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, SUM(total_amount) as total_revenue')
+        $monthlyRevenue = Order::selectRaw('DATE_FORMAT(updated_at, "%Y-%m") as month, SUM(total_amount) as total_revenue')
             ->where('status', 4) // 4 là trạng thái hoàn tất
-            ->whereBetween('created_at', [$startDate, $endDate]) // Lọc theo ngày
+            ->whereBetween('updated_at', [$startDate, $endDate]) // Lọc theo ngày
             ->groupBy('month')
             ->orderBy('month', 'desc')
             ->get();
@@ -138,7 +138,7 @@ class StatisticsController extends Controller
                 DB::raw('COUNT(orders.id) as total_orders'), // Tổng số đơn hàng do nhân viên xử lý
                 DB::raw('SUM(orders.total_amount) as total_revenue') // Tổng doanh thu do nhân viên xử lý
             )
-            ->whereBetween('orders.created_at', [$startDate, $endDate]) // Lọc theo khoảng thời gian
+            ->whereBetween('orders.updated_at', [$startDate, $endDate]) // Lọc theo khoảng thời gian
             ->where('orders.status', 4) // Chỉ lấy các đơn hàng hoàn tất
             ->groupBy('users.id', 'users.name') // Nhóm theo nhân viên
             ->orderBy('total_revenue', 'desc') // Sắp xếp theo doanh thu giảm dần
@@ -146,7 +146,7 @@ class StatisticsController extends Controller
 
         // Tổng doanh thu của tất cả các đơn hàng hoàn tất trong khoảng thời gian
         $totalRevenue = Order::where('status', 4)
-            ->whereBetween('created_at', [$startDate, $endDate]) // Lọc theo ngày
+            ->whereBetween('updated_at', [$startDate, $endDate]) // Lọc theo ngày
             ->sum('total_amount');
 
         // Thống kê sản phẩm bán chạy nhất với phần trăm đóng góp doanh thu trong khoảng thời gian
@@ -156,7 +156,7 @@ class StatisticsController extends Controller
             ->join('orders', 'order_details.order_id', '=', 'orders.id')
             ->where('orders.status', 4) // Chỉ lấy đơn hàng đã hoàn tất
             ->whereNotNull('order_details.product_variant_id')
-            ->whereBetween('orders.created_at', [$startDate, $endDate]) // Lọc theo ngày
+            ->whereBetween('orders.updated_at', [$startDate, $endDate]) // Lọc theo ngày
             ->groupBy('products.name')
             ->orderBy('total_sold', 'desc')
             ->limit(5) // Giới hạn 5 sản phẩm bán chạy nhất
@@ -169,7 +169,7 @@ class StatisticsController extends Controller
             ->join('orders', 'order_details.order_id', '=', 'orders.id')
             ->where('orders.status', 4) // Chỉ lấy đơn hàng đã hoàn tất
             ->whereNotNull('order_details.product_variant_id')
-            ->whereBetween('orders.created_at', [$startDate, $endDate]) // Lọc theo ngày
+            ->whereBetween('orders.updated_at', [$startDate, $endDate]) // Lọc theo ngày
             ->groupBy('products.name')
             ->orderBy('total_sold', 'asc') // Sắp xếp theo số lượng bán giảm dần
             ->limit(5) // Giới hạn 5 sản phẩm bán ít nhất

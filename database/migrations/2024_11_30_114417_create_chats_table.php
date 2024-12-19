@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('staff_id');
+            $table->boolean('is_read')->default(false);
             $table->timestamps();
         
             // Ràng buộc khóa ngoại
