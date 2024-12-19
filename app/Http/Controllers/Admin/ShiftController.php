@@ -132,7 +132,7 @@ class ShiftController extends Controller
             $user->work_shift_id = null;
             $user->save();
         }
-        //$shift->delete();
+        $shift->delete();
         return redirect()->route('admin.shift.index')->with('success', 'Xóa thành công');
     }
 }

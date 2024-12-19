@@ -63,7 +63,7 @@ class CategoryController extends Controller
         $products = Product::with(['variants' => function ($query) {
             $query->whereHas('size', function ($q) {
                 $q->whereNull('deleted_at');
-            })->whereHas('category', function ($q) {
+            })->whereHas('color', function ($q) {
                 $q->whereNull('deleted_at');
             });
         }])->where('category_id', $category->id)
