@@ -127,7 +127,7 @@
                                             <div class="order-card" style="background-color: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);">
                                                 <!-- Product Image -->
                                                 <div class="product-image" style="position: relative; overflow: hidden; width: 100%; height: 200px;">
-                                                    <img src="{{ Storage::url($productImgThumb->img_thumb) }}" alt="{{ $detail->product_name }}"
+                                                    <img src="{{ Storage::url($productImgThumb->img_thumb ?? '') }}" alt="{{ $detail->product_name }}"
                                                         style="width: 100%; height: 100%; object-fit: contain; padding-top: 15px;">
                                                 </div>
 

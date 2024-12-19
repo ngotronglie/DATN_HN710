@@ -96,7 +96,7 @@
                                                     <li class="list-group-item border-0">
                                                         <div class="row">
                                                             <div class="col-md-4">
-                                                                <img src="{{ Storage::url($detail->productVariant->product->img_thumb) }}" alt="{{ $detail->product_name }}" class="img-fluid">
+                                                                <img src="{{ Storage::url($detail->productVariant->product->img_thumb ?? '') }}" alt="{{ $detail->product_name }}" class="img-fluid">
                                                             </div>
                                                             <div class="col-md-8">
                                                                 <p><strong>Sản phẩm:</strong> {{ $detail->product_name }}</p>
