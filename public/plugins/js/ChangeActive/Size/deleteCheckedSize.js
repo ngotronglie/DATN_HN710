@@ -43,10 +43,8 @@
                             data: option,
                             dataType: 'json',
                             success: function (res) {
-                                console.log(res);
-
                                 if (res.totalCountAfter > 0) {
-                                    if (res.status) {
+                                    if (res.status == true) {
                                         swalSuccessAd(res.message);
                                         id.forEach(function (deletedId) {
                                             $('input[data-id="' + deletedId + '"]').closest('tr').remove();

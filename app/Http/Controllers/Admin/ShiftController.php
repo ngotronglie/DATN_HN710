@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\WorkShift;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,7 @@ class ShiftController extends Controller
         if (Auth::user()->role != 2) {
             return back()->with('warning', 'Bạn không có quyền truy cập!');
         }
-        $shift = WorkShift::with('users')->get();
+        $shift = WorkShift::with('users')->orderBy('start_time', 'asc')->get();
 
         return view(self::PATH_VIEW . __FUNCTION__, compact('shift'));
     }
@@ -124,7 +125,14 @@ class ShiftController extends Controller
         if (Auth::user()->role != 2) {
             return back()->with('warning', 'Bạn không có quyền truy cập!');
         }
-        $shift->delete();
+        $user = User::where('work_shift_id', $shift->id)->first();
+
+        if ($user) {
+            $user->role = '0';
+            $user->work_shift_id = null;
+            $user->save();
+        }
+        //$shift->delete();
         return redirect()->route('admin.shift.index')->with('success', 'Xóa thành công');
     }
 }

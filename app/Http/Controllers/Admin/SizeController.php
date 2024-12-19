@@ -94,10 +94,13 @@ class SizeController extends Controller
             return back()->with('warning', 'Bạn không có quyền!');
         }
 
-        // Xóa mềm kích thước
-        $size->delete();
+        $count = ProductVariant::whereNotNull('size_id')->where('size_id', $size->id)->count();
 
-        // Lấy tất cả các sản phẩm có biến thể liên quan đến kích thước này
+        if ($count == 0) {
+
+            $size->delete();
+
+            // Lấy tất cả các sản phẩm có biến thể liên quan đến kích thước này
         $products = ProductVariant::where('size_id', $size->id)->pluck('product_id')->unique();
 
         foreach ($products as $productId) {
@@ -118,8 +121,10 @@ class SizeController extends Controller
                 $product->save();
             }
         }
-
-        return redirect()->route('admin.sizes.index')->with('success', 'Xóa thành công');
+            return redirect()->route('admin.sizes.index')->with('success', 'Xóa thành công');
+        } else {
+            return back()->with('error', 'Kích cỡ này đang được sử dụng trong các sản phẩm. Không thể xóa!');
+        }
     }
 
 

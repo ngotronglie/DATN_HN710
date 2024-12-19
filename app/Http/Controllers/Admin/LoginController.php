@@ -79,6 +79,13 @@ class LoginController extends Controller
             if ($user->role == 2 || $user->role == 1) {
                 // Kiểm tra giới hạn giờ làm việc (chỉ với role 1)
                 if ($user->role == 1) {
+
+                    if ($user->work_shift_id == null) {
+                        Auth::logout();
+                                return redirect()->route('admin.loginForm')
+                                    ->with('warning', 'Bạn chưa có ca làm việc.');
+                    }
+
                     $workShift = $user->workShift;
 
                     if ($workShift) {

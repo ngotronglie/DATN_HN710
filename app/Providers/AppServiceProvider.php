@@ -70,7 +70,20 @@ class AppServiceProvider extends ServiceProvider
                 $sessionCart = session()->get('cart', ['items' => []]);
 
                 $cartItems = collect($sessionCart['items'])->map(function ($item) {
-                    $productVariant = ProductVariant::with('product', 'size', 'color')->find($item['product_variant_id']);
+                    //$productVariant = ProductVariant::with('product', 'size', 'color')->find($item['product_variant_id']);
+                    $productVariant = ProductVariant::with([
+                        'product' => function ($query) {
+                            $query->whereNull('deleted_at')
+                                  ->where('is_active', 1);
+                        },
+                        'size' => function ($query) {
+                            $query->whereNull('deleted_at');
+                        },
+                        'color' => function ($query) {
+                            $query->whereNull('deleted_at');
+                        },
+                    ])->find($item['product_variant_id']);
+                    
                     return (object) [
                         'productVariant' => $productVariant,
                         'quantity' => $item['quantity'],

@@ -44,7 +44,7 @@
                             dataType: 'json',
                             success: function (res) {
                                 if (res.totalCountAfter > 0) {
-                                    if (res.status) {
+                                    if (res.status == true) {
                                         swalSuccessAd(res.message);
                                         id.forEach(function (deletedId) {
                                             $('input[data-id="' + deletedId + '"]').closest('tr').remove();
@@ -65,7 +65,8 @@
                                 let message = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : error;
                                 alert('Đã xảy ra lỗi: ' + message);
                             }
-                        });                    }
+                        });
+                    }
                 });
             });
         }

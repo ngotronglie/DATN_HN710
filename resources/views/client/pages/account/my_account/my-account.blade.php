@@ -518,7 +518,7 @@
                                             @php $user = Auth::user() @endphp
                                             <div style="display: flex;justify-content: space-between">
                                                 <h3 class="title">Tất cả mã giảm giá</h3>
-                                                <h6 id="my-point">Điểm của bạn: {{$user->points}} </h6>
+                                                <h6 id="my-point">Điểm của bạn: {{$user->points ?? 0}}</h6>
                                             </div>
 
                                             <div class="row" id="voucher-container2">
