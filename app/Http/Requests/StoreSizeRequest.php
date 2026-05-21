@@ -31,8 +31,8 @@ class StoreSizeRequest extends FormRequest
         return [
             'name.required' => 'Tên size là bắt buộc',
             'name.max' => 'Tên size không được dài quá 255 ký tự',
-            'name.unique' => 'Tên size này đã tồn tại trong hệ thống',
-            'name.regex' => 'Tên size chỉ được phép chứa chữ cái',
+            'name.unique' => 'Tên size này đã tồn tại trong hệ thống'
+            // 'name.regex' => 'Tên size chỉ được phép chứa chữ cái',
         ];
     }
 }

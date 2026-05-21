@@ -49,7 +49,7 @@ class BannerController extends Controller
         $data = $request->except('image');
         $data['user_id'] = Auth::id();
         if ($request->hasFile('image')) {
-            $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
+          $data['image'] = $request->file('image')->store(self::PATH_UPLOAD, 'public');
         } else {
             $data['image'] = '';
         }
@@ -94,7 +94,7 @@ class BannerController extends Controller
 
         $data = $request->except('image');
         if ($request->hasFile('image')) {
-            $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
+          $data['image'] = $request->file('image')->store(self::PATH_UPLOAD, 'public');
             if (!empty($banner->image) && Storage::exists($banner->image)) {
                 Storage::delete($banner->image);
             }
